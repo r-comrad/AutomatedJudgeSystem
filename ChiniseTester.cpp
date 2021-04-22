@@ -385,68 +385,91 @@ LPCWSTR getConstWideStringPointer(const std::wstring& str) {
     return str.c_str();
 }
 
-void myJudger(std::wstring aName, std::wstring aInputFilePath, std::wstring aOutputFilePath)
+void IORedirection(STARTUPINFO& aStartInfo, std::wstring& aInputPath, std::wstring& aOutputPath)
 {
-    LPCWSTR name = aName.c_str();
-    LPCWSTR inputFilePath = aInputFilePath.c_str();
-    LPCWSTR outputFilePath = aOutputFilePath.c_str();
-
-    long long timeUsage = 1000;
-    long long reservedTime = 200;
-
-    HANDLE              hInput = { 0 };
-    HANDLE              hOutput = { 0 };
-    STARTUPINFOW        startupInfo = { 0 };
-
-
-
     SECURITY_ATTRIBUTES sa;
     sa.nLength = sizeof(sa);
     sa.lpSecurityDescriptor = NULL;
     sa.bInheritHandle = TRUE;
 
-    //STARTUPINFO cif;
+    HANDLE inputHandle = CreateFile(aInputPath.c_str(),
+        GENERIC_READ,
+        FILE_SHARE_READ,
+        &sa,
+        OPEN_EXISTING,
+        FILE_ATTRIBUTE_NORMAL,
+        NULL);
 
-    ZeroMemory(&startupInfo, sizeof(STARTUPINFO));
+    HANDLE outputHandle = CreateFile(aOutputPath.c_str(),
+        FILE_APPEND_DATA,
+        FILE_SHARE_WRITE,
+        &sa,
+        OPEN_ALWAYS,
+        FILE_ATTRIBUTE_NORMAL,
+        NULL);
+
     PROCESS_INFORMATION pi;
-    ZeroMemory(&pi, sizeof(PROCESS_INFORMATION));
-    startupInfo.dwFlags |= STARTF_USESTDHANDLES;
+    BOOL ret = FALSE;
+    DWORD flags = 0;// CREATE_NO_WINDOW;
 
-    if (!setupIoRedirection(inputFilePath, outputFilePath, hInput, hOutput))
-    {
-        std::cout << "ERROR #1: can't redirection paths" << std::endl;
-    }
+    ZeroMemory(&aStartInfo, sizeof(STARTUPINFO));
+    aStartInfo.cb = sizeof(STARTUPINFO);
+    aStartInfo.dwFlags |= STARTF_USESTDHANDLES;
+    aStartInfo.hStdInput = inputHandle;
+    aStartInfo.hStdError = outputHandle;
+    aStartInfo.hStdOutput = outputHandle;
+}
 
-    setupStartupInfo(startupInfo, hInput, hOutput);
+void myJudger(std::wstring aName, std::wstring aInputFilePath, std::wstring aOutputFilePath)
+{
+    LPCWSTR name = aName.c_str();
 
-    // long long startTime = getMillisecondsNow();
+    long long timeUsage = 1000;
+    long long reservedTime = 200;
+
+    //if (!setupIoRedirection(inputFilePath, outputFilePath, hInput, hOutput))
+    //{
+    //    std::cout << "ERROR #1: can't redirection paths" << std::endl;
+    //}
+
+    PROCESS_INFORMATION processInfo;
+    ZeroMemory(&processInfo, sizeof(PROCESS_INFORMATION));
+
+    STARTUPINFOW startupInfo = { 0 };
+    IORedirection(startupInfo, aInputFilePath, aOutputFilePath);
+
+     long long startTime = getMillisecondsNow();
   /*   if (!CreateProcess(name, NULL,
          NULL, NULL, FALSE, CREATE_UNICODE_ENVIRONMENT | CREATE_SUSPENDED | CREATE_NO_WINDOW, NULL, NULL, &startupInfo, &pi) == TRUE)*/
-    if (!CreateProcess(name, NULL,
-        NULL, NULL, FALSE, CREATE_NEW_CONSOLE, NULL, NULL, &startupInfo, &pi) == TRUE)
+     TCHAR cmd[] = TEXT("D:\\projects\\VS 2019\\ChiniseTester\\Resources\\YesInput3.exe");
+     if (!CreateProcess( NULL, cmd,
+        NULL, NULL, TRUE, CREATE_NEW_CONSOLE, NULL, NULL, &startupInfo, &processInfo) == TRUE)
     {
         std::cout << "ERROR #2: can't start process" << std::endl;
     }
-    ResumeThread(pi.hThread);
-    WaitForSingleObject(pi.hProcess, 1000);
-    //WaitForSingleObject(pi.hProcess, timeUsage + reservedTime);
-    //long long endTime = getMillisecondsNow();
+    //ResumeThread(pi.hThread);
+    WaitForSingleObject(processInfo.hProcess, 1000);
+    if (getExitCode(processInfo.hProcess) == STILL_ACTIVE) {
+        std::cout << "Alive" << std::endl;
+        killProcess(processInfo);
+    }
+    long long endTime = getMillisecondsNow();
 
-    CloseHandle(hInput);
-    CloseHandle(hOutput);
+    //CloseHandle(hInput);
+    //CloseHandle(hOutput);
 
-    //std::cout << "time usage: " << endTime - startTime;
+    std::cout << "time usage: " << endTime - startTime;
 
 }
 
 #include <vector>
 #include <iostream>
 #include <string>
-int mmain()
+int main()
 {
     std::wstring programPath = L"D:\\projects\\VS 2019\\ChiniseTester\\Resources\\YesInput.exe";
     std::wstring inputPath = L"D:\\projects\\VS 2019\\ChiniseTester\\Resources\\input.txt";
-    std::wstring outputPath = L"D:\\projects\\VS 2019\\ChiniseTester\\Resources\\input.txt";
+    std::wstring outputPath = L"D:\\projects\\VS 2019\\ChiniseTester\\Resources\\output.txt";
     myJudger(programPath, inputPath, outputPath);
 
     //foo("U:\\_Private\\Tester\\Programs\\b.exe", NULL,
