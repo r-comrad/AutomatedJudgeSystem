@@ -221,8 +221,20 @@ void myJudger(std::wstring aName, std::wstring aInputFilePath, std::wstring aOut
     /*   if (!CreateProcess(name, NULL,
            NULL, NULL, FALSE, CREATE_UNICODE_ENVIRONMENT | CREATE_SUSPENDED | CREATE_NO_WINDOW, NULL, NULL, &startupInfo, &pi) == TRUE)*/
     ResumeThread(processInfo.hThread);
+    DWORD waitResult = WaitForSingleObject(processInfo.hProcess, INFINITE);
     //ResumeThread(pi.hThread);
-    WaitForSingleObject(processInfo.hProcess, 1000);
+    if (waitResult == WAIT_FAILED)
+    {
+        std::cout << "ERROR #3: WAIT_FAILED" << std::endl;
+    }
+    if (waitResult == WAIT_OBJECT_0)
+    {
+        std::cout << "Code complite\n" << std::endl;
+    }
+    if (waitResult == WAIT_TIMEOUT)
+    {
+        std::cout << "Time out\n" << std::endl;
+    }
     if (getExitCode(processInfo.hProcess) == STILL_ACTIVE) {
         std::cout << "Alive" << std::endl;
         //killProcess(processInfo);
