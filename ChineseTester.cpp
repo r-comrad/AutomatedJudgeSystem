@@ -20,6 +20,8 @@
 #include <psapi.h>
 #include <tlhelp32.h>
 
+#include "Domain.h"
+
 /**
  * Function Prototypes.
  */
@@ -359,58 +361,41 @@ void myJudger2(std::wstring aName, std::wstring aInputFilePath, std::wstring aOu
 int __cdecl myJudger3(std::wstring aName, std::wstring aInputFilePath, std::wstring aOutputFilePath)
 {
     CHandle Job(CreateJobObject(nullptr, nullptr));
-    if (!Job) {
-        wprintf(L"CreateJobObject, error % d\n", GetLastError());
-        return 0;
-    }
-
+    if (!Job) WERROR(1, MJ_BEFST_CREATE_JOB_OBJECT, "create job object");
 
     CHandle IOPort(CreateIoCompletionPort(INVALID_HANDLE_VALUE,
         nullptr, 0, 1));
-    if (!IOPort) {
-        wprintf(L"CreateIoCompletionPort, error % d\n",
-            GetLastError());
-        return 0;
-    }
-
+    if (!IOPort) WERROR(2, MJ_BEFST_CREATE_IO_PORT, "create IO completion port");
 
     JOBOBJECT_ASSOCIATE_COMPLETION_PORT Port;
     Port.CompletionKey = Job;
     Port.CompletionPort = IOPort;
     if (!SetInformationJobObject(Job,
         JobObjectAssociateCompletionPortInformation,
-        &Port, sizeof(Port))) {
-        wprintf(L"SetInformation, error % d\n", GetLastError());
-        return 0;
-    }
-
+        &Port, sizeof(Port))) WERROR(3, MJ_BEFST_SET_INFO, "set information");
 
     PROCESS_INFORMATION ProcessInformation;
     STARTUPINFO StartupInfo = { sizeof(StartupInfo) };
     IORedirection(StartupInfo, aInputFilePath, aOutputFilePath);
     //PWSTR CommandLine = aName.c_str();
     TCHAR cmd[] = TEXT("U:\\_Public\\Programs\\a.exe");
+    //TCHAR cmdd[] = aName.c_str();
+    //PWSTR CommandLine = PathGetArgs(GetCommandLine());
 
-    /*
-    
-    if (CreateProcess(NULL, cmd,
-        NULL, NULL, TRUE, CREATE_UNICODE_ENVIRONMENT | CREATE_SUSPENDED | CREATE_NO_WINDOW, NULL, NULL, &startupInfo, &processInfo) == FALSE)
-    {
-    */
     long long memoryLimit = 2e6;
     auto feature = std::async(std::launch::async, getMaxMemoryUsage, std::ref(ProcessInformation), memoryLimit);
 
     if (!CreateProcess(nullptr, cmd, nullptr, nullptr,
         TRUE, CREATE_UNICODE_ENVIRONMENT | CREATE_SUSPENDED | CREATE_NO_WINDOW, nullptr, nullptr,
         &StartupInfo, &ProcessInformation)) {
-        wprintf(L"CreateProcess, error % d\n", GetLastError());
+        std::cout << "E4 | CREATE_PROCESS ERROR : error code is " << GetLastError() << std::endl;
         return 0;
     }
 
 
     if (!AssignProcessToJobObject(Job,
         ProcessInformation.hProcess)) {
-        wprintf(L"Assign, error % d\n", GetLastError());
+        std::cout << "E5 | ASSIGN ERROR : error code is " << GetLastError() << std::endl;
         return 0;
     }
 
@@ -431,7 +416,7 @@ int __cdecl myJudger3(std::wstring aName, std::wstring aInputFilePath, std::wstr
         &CompletionKey, &Overlapped, INFINITE) &&
         !((HANDLE)CompletionKey == Job &&
             CompletionCode == JOB_OBJECT_MSG_ACTIVE_PROCESS_ZERO)) {
-        wprintf(L"Still waiting…\n");
+        wprintf(L"Still waiting...\n");
     }
     long long endTime = getMillisecondsNow();
 
