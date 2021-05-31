@@ -147,6 +147,9 @@ std::string getErrorMessage(const std::string& apiName) {
     return "";
 }
 
+HANDLE inputHandle;
+HANDLE outputHandle;
+
 void IORedirection(STARTUPINFO& aStartInfo, std::wstring& aInputPath, std::wstring& aOutputPath)
 {
     SECURITY_ATTRIBUTES sa;
@@ -154,7 +157,7 @@ void IORedirection(STARTUPINFO& aStartInfo, std::wstring& aInputPath, std::wstri
     sa.lpSecurityDescriptor = NULL;
     sa.bInheritHandle = TRUE;
 
-    HANDLE inputHandle = CreateFile(aInputPath.c_str(),
+    inputHandle = CreateFile(aInputPath.c_str(),
         GENERIC_READ,
         FILE_SHARE_READ,
         &sa,
@@ -162,7 +165,7 @@ void IORedirection(STARTUPINFO& aStartInfo, std::wstring& aInputPath, std::wstri
         FILE_ATTRIBUTE_NORMAL,
         NULL);
 
-    HANDLE outputHandle = CreateFile(aOutputPath.c_str(),
+    outputHandle = CreateFile(aOutputPath.c_str(),
         FILE_APPEND_DATA,
         FILE_SHARE_WRITE,
         &sa,
@@ -182,79 +185,107 @@ void IORedirection(STARTUPINFO& aStartInfo, std::wstring& aInputPath, std::wstri
     aStartInfo.hStdOutput = outputHandle;
 }
 
-DWORD runProcess(PROCESS_INFORMATION& processInfo, long long timeLimit,
-    long long memoryLimit, long long& timeUsage, long long& memoryUsage) {
+DWORD runProcess(std::wstring aName, std::wstring aInputFilePath, std::wstring aOutputFilePath) {
+    PROCESS_INFORMATION processInfo;
+    ZeroMemory(&processInfo, sizeof(PROCESS_INFORMATION));
+
+    STARTUPINFOW startupInfo = { 0 };
+    IORedirection(startupInfo, aInputFilePath, aOutputFilePath);
+    wchar_t* cmd = const_cast<wchar_t*>(aName.c_str());
+
+    auto feature = std::async(std::launch::async, getMaxMemoryUsage, std::ref(processInfo), 1000);
+
+    if (CreateProcess(NULL, cmd,
+        //   NULL, NULL, TRUE, CREATE_UNICODE_ENVIRONMENT | CREATE_SUSPENDED | CREATE_NO_WINDOW, NULL, NULL, &startupInfo, &processInfo) == FALSE)
+        NULL, NULL, TRUE, CREATE_UNICODE_ENVIRONMENT | CREATE_SUSPENDED | CREATE_NO_WINDOW, NULL, NULL, &startupInfo, &processInfo) == FALSE)
+    {
+        std::cout << "ERROR #2: can't start process" << std::endl;
+    }
+
     int  reservedTime = 200;
-    auto feature = std::async(std::launch::async, getMaxMemoryUsage, std::ref(processInfo), memoryLimit);
+
 
     ResumeThread(processInfo.hThread);
     long long startTime = getMillisecondsNow();
-    WaitForSingleObject(processInfo.hProcess, timeLimit + reservedTime);
-    long long endTime = getMillisecondsNow();
-    timeUsage = endTime - startTime;
-
-    if (getExitCode(processInfo.hProcess) == STILL_ACTIVE) {
+    //WaitForSingleObject(processInfo.hProcess, 1 + reservedTime);
+    WaitForSingleObject(processInfo.hProcess, INFINITE);
+    if (getExitCode(processInfo.hProcess) == STILL_ACTIVE)
+    {
         killProcess(processInfo);
     }
-    memoryUsage = feature.get();
+    //LPDWORD res = 0;
 
+    //while (GetExitCodeProcess(processInfo.hProcess, res) == STILL_ACTIVE)
+    //{
+    //    std::cout << "working\n";
+    //}
+
+
+    long long endTime = getMillisecondsNow();
+    uint_64 timeUsage = endTime - startTime;
+
+    //if (getExitCode(processInfo.hProcess) == STILL_ACTIVE) {
+    //    killProcess(processInfo);
+    //}
+    uint_64 memoryUsage = feature.get();
+
+    std::cout << "time usage: " << endTime - startTime << std::endl;
+    std::cout << "memory usage: " << memoryUsage << std::endl;
+
+    CloseHandle(inputHandle);
+    CloseHandle(outputHandle);
     return getExitCode(processInfo.hProcess);
-    return 0;
 }
 
-//void myJudger(std::wstring aName, std::wstring aInputFilePath, std::wstring aOutputFilePath)
-//{
-//    //LPCWSTR name = aName.c_str();
-//
-//    long long timeUsage = 1000;
-//    long long reservedTime = 200;
-//    long long memoryLimit = 200;
-//
-//    PROCESS_INFORMATION processInfo;
-//    ZeroMemory(&processInfo, sizeof(PROCESS_INFORMATION));
-//
-//    STARTUPINFOW startupInfo = { 0 };
-//    IORedirection(startupInfo, aInputFilePath, aOutputFilePath);
-//
-//    auto feature = std::async(std::launch::async, getMaxMemoryUsage, std::ref(processInfo), memoryLimit);
-//    //TCHAR cmd[] = TEXT("U:\\_Public\\Programs\\a.exe");
-//    //TCHAR cmd[] = TEXT(aName);
-//    if (CreateProcess(NULL, cmd,
-//        NULL, NULL, TRUE, CREATE_UNICODE_ENVIRONMENT | CREATE_SUSPENDED | CREATE_NO_WINDOW, NULL, NULL, &startupInfo, &processInfo) == FALSE)
-//    {
-//        std::cout << "ERROR #2: can't start process" << std::endl;
-//    }
-//    long long startTime = getMillisecondsNow();
-//    /*   if (!CreateProcess(name, NULL,
-//           NULL, NULL, FALSE, CREATE_UNICODE_ENVIRONMENT | CREATE_SUSPENDED | CREATE_NO_WINDOW, NULL, NULL, &startupInfo, &pi) == TRUE)*/
-//    ResumeThread(processInfo.hThread);
-//    DWORD waitResult = WaitForSingleObject(processInfo.hProcess, INFINITE);
-//    if (waitResult == WAIT_FAILED)
-//    {
-//        std::cout << "ERROR #3: WAIT_FAILED" << std::endl;
-//    }
-//    if (waitResult == WAIT_OBJECT_0)
-//    {
-//        std::cout << "Code complite\n" << std::endl;
-//    }
-//    if (waitResult == WAIT_TIMEOUT)
-//    {
-//        std::cout << "Time out\n" << std::endl;
-//    }
-//    if (getExitCode(processInfo.hProcess) == STILL_ACTIVE) {
-//        std::cout << "Alive" << std::endl;
-//        //killProcess(processInfo);
-//    }
-//    long long endTime = getMillisecondsNow();
-//    long long memoryUsage = feature.get();
-//
-//    //CloseHandle(hInput);
-//    //CloseHandle(hOutput);
-//
-//    std::cout << "time usage: " << endTime - startTime << std::endl;
-//    std::cout << "memory usage: " << memoryUsage << std::endl;
-//}
+void myJudger(std::wstring aName, std::wstring aInputFilePath, std::wstring aOutputFilePath)
+{
+    long long timeUsage = 1000;
+    long long reservedTime = 200;
+    long long memoryLimit = 200;
 
+    PROCESS_INFORMATION processInfo;
+    ZeroMemory(&processInfo, sizeof(PROCESS_INFORMATION));
+
+    STARTUPINFOW startupInfo = { 0 };
+    IORedirection(startupInfo, aInputFilePath, aOutputFilePath);
+
+    wchar_t* cmd = const_cast<wchar_t*>(aName.c_str());
+    auto feature = std::async(std::launch::async, getMaxMemoryUsage, std::ref(processInfo), memoryLimit);
+    if (CreateProcess(NULL, cmd,
+        NULL, NULL, TRUE, CREATE_UNICODE_ENVIRONMENT | CREATE_SUSPENDED | CREATE_NO_WINDOW, NULL, NULL, &startupInfo, &processInfo) == FALSE)
+    {
+        std::cout << "ERROR #2: can't start process" << std::endl;
+    }
+    long long startTime = getMillisecondsNow();
+    ResumeThread(processInfo.hThread);
+    //DWORD waitResult = 
+    LPDWORD waitResult = 0;
+    while ((GetExitCodeProcess(processInfo.hProcess, waitResult) == STILL_ACTIVE))
+    {
+        std::cout << "working...\n";
+    }
+    /*   if (waitResult == WAIT_FAILED)
+       {
+           std::cout << "ERROR #3: WAIT_FAILED" << std::endl;
+       }
+       if (waitResult == WAIT_OBJECT_0)
+       {
+           std::cout << "Code complite\n" << std::endl;
+       }
+       if (waitResult == WAIT_TIMEOUT)
+       {
+           std::cout << "Time out\n" << std::endl;
+       }
+       if  (false){
+           std::cout << "Alive" << std::endl;
+           killProcess(processInfo);
+       }*/
+    long long endTime = getMillisecondsNow();
+    long long memoryUsage = feature.get();
+
+    std::cout << "time usage: " << endTime - startTime << std::endl;
+    std::cout << "memory usage: " << memoryUsage << std::endl;
+}
 void myJudger2(std::wstring aName, std::wstring aInputFilePath, std::wstring aOutputFilePath)
 {
     long long timeUsage = 1000;
@@ -285,7 +316,7 @@ void myJudger2(std::wstring aName, std::wstring aInputFilePath, std::wstring aOu
         std::cout << "ERROR #x: SetInformation, error " << GetLastError() << std::endl;
         return;
     }
-    
+
     PROCESS_INFORMATION processInfo;
     ZeroMemory(&processInfo, sizeof(PROCESS_INFORMATION));
 
@@ -355,10 +386,27 @@ void myJudger2(std::wstring aName, std::wstring aInputFilePath, std::wstring aOu
     std::cout << "memory usage: " << memoryUsage << std::endl;
 }
 
-int __cdecl myJudger3(std::wstring aName, std::wstring aInputFilePath, std::wstring aOutputFilePath)
+void a(int t)
 {
+    std::cout << "lll";
+}
+
+void myJudger3(std::wstring aName, std::wstring aInputFilePath, std::wstring aOutputFilePath)
+{
+
+    JOBOBJECT_BASIC_LIMIT_INFORMATION limits;
+    limits.LimitFlags |= JOB_OBJECT_LIMIT_PRIORITY_CLASS;
+    limits.LimitFlags |= JOB_OBJECT_LIMIT_PROCESS_TIME;
+    limits.LimitFlags |= JOB_OBJECT_LIMIT_PROCESS_MEMORY;
+    limits.PerJobUserTimeLimit.QuadPart = long long(1e1);
+    //limits.PriorityClass = HIGH_PRIORITY_CLASS;
+
     CHandle Job(CreateJobObject(nullptr, nullptr));
     if (!Job) WERROR(1, MJ_BEFST_CREATE_JOB_OBJECT, "create job object");
+
+    SetInformationJobObject(Job, JobObjectBasicLimitInformation, &limits, sizeof(limits));
+    std::cout << GetLastError() << std::endl;
+    AssignProcessToJobObject(Job, GetCurrentProcess());
 
     CHandle IOPort(CreateIoCompletionPort(INVALID_HANDLE_VALUE,
         nullptr, 0, 1));
@@ -384,6 +432,8 @@ int __cdecl myJudger3(std::wstring aName, std::wstring aInputFilePath, std::wstr
         &StartupInfo, &ProcessInformation))
         WERROR(4, MJ_BEFST_CREATE_PROC, "create process");
 
+    std::cout << "Child process priority = " << GetPriorityClass(ProcessInformation.hProcess);
+
     if (!AssignProcessToJobObject(Job,
         ProcessInformation.hProcess)) WERROR(4, MJ_BEFST_ASSUGN_PROC, "assign process");
 
@@ -393,6 +443,7 @@ int __cdecl myJudger3(std::wstring aName, std::wstring aInputFilePath, std::wstr
 
     uint_64 memoryUsage = feature.get();
 
+    CloseHandle(Job);
     CloseHandle(ProcessInformation.hThread);
     CloseHandle(ProcessInformation.hProcess);
 
@@ -426,9 +477,6 @@ int __cdecl myJudger3(std::wstring aName, std::wstring aInputFilePath, std::wstr
 
 
     wprintf(L"All done\n");
-
-
-    return 0;
 }
 
 #include <vector>
@@ -443,10 +491,12 @@ int main()
     //std::wstring programPath = L"D:\\projects\\VS 2019\\ChiniseTester\\Resources\\YesInput.exe";
     //std::wstring inputPath = L"D:\\projects\\VS 2019\\ChiniseTester\\Resources\\input.txt";
     //std::wstring outputPath = L"D:\\projects\\VS 2019\\ChiniseTester\\Resources\\output.txt";
-    std::wstring programPath =  L"U:\\_Public\\Programs\\a.exe";
-    std::wstring inputPath =    L"U:\\_Public\\Programs\\input";
-    std::wstring outputPath =   L"U:\\_Public\\Programs\\output";
-    myJudger3(programPath, inputPath, outputPath);
+    std::wstring path = L"U:\\_Public\\Programs\\";
+    std::wstring programPath = path + L"NeoTest.exe";
+    std::wstring inputPath = path + L"input";
+    std::wstring outputPath = path + L"output";
+    //myJudger(programPath, inputPath, outputPath);
+    runProcess(programPath, inputPath, outputPath);
 
     //foo("U:\\_Private\\Tester\\Programs\\b.exe", NULL,
     //    NULL, NULL, NULL, 1000,
