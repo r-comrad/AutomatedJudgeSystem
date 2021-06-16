@@ -10,6 +10,8 @@ typedef signed short	sint_16;
 typedef unsigned short	uint_16;
 typedef signed long		sint_32;
 typedef unsigned long	uint_32;
+typedef signed long	long	sint_64;
+typedef unsigned long long	uint_64;
 
 #define WERROR(aNumber, aName, aMessege)                                    \
     {                                                                       \
@@ -19,6 +21,6 @@ typedef unsigned long	uint_32;
         exit(0);                                                            \
     }
 
-
+#define _(aName) #aName
 
 #endif //DOMAIN_H
