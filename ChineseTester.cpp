@@ -193,10 +193,9 @@ DWORD runProcess(std::wstring aName, std::wstring aInputFilePath, std::wstring a
     IORedirection(startupInfo, aInputFilePath, aOutputFilePath);
     wchar_t* cmd = const_cast<wchar_t*>(aName.c_str());
 
-    auto feature = std::async(std::launch::async, getMaxMemoryUsage, std::ref(processInfo), 1000);
+    auto feature = std::async(std::launch::async, getMaxMemoryUsage, std::ref(processInfo), 1000000);
 
     if (CreateProcess(NULL, cmd,
-        //   NULL, NULL, TRUE, CREATE_UNICODE_ENVIRONMENT | CREATE_SUSPENDED | CREATE_NO_WINDOW, NULL, NULL, &startupInfo, &processInfo) == FALSE)
         NULL, NULL, TRUE, CREATE_UNICODE_ENVIRONMENT | CREATE_SUSPENDED | CREATE_NO_WINDOW, NULL, NULL, &startupInfo, &processInfo) == FALSE)
     {
         std::cout << "ERROR #2: can't start process" << std::endl;
@@ -207,27 +206,17 @@ DWORD runProcess(std::wstring aName, std::wstring aInputFilePath, std::wstring a
 
     ResumeThread(processInfo.hThread);
     long long startTime = getMillisecondsNow();
-    //WaitForSingleObject(processInfo.hProcess, 1 + reservedTime);
     WaitForSingleObject(processInfo.hProcess, INFINITE);
     if (getExitCode(processInfo.hProcess) == STILL_ACTIVE)
     {
         killProcess(processInfo);
     }
-    //LPDWORD res = 0;
-
-    //while (GetExitCodeProcess(processInfo.hProcess, res) == STILL_ACTIVE)
-    //{
-    //    std::cout << "working\n";
-    //}
-
 
     long long endTime = getMillisecondsNow();
     uint_64 timeUsage = endTime - startTime;
 
-    //if (getExitCode(processInfo.hProcess) == STILL_ACTIVE) {
-    //    killProcess(processInfo);
-    //}
-    uint_64 memoryUsage = feature.get();
+    uint_64 memoryUsage = 0;
+    memoryUsage = feature.get();
 
     std::cout << "time usage: " << endTime - startTime << std::endl;
     std::cout << "memory usage: " << memoryUsage << std::endl;
@@ -237,303 +226,25 @@ DWORD runProcess(std::wstring aName, std::wstring aInputFilePath, std::wstring a
     return getExitCode(processInfo.hProcess);
 }
 
-void myJudger(std::wstring aName, std::wstring aInputFilePath, std::wstring aOutputFilePath)
-{
-    long long timeUsage = 1000;
-    long long reservedTime = 200;
-    long long memoryLimit = 200;
-
-    PROCESS_INFORMATION processInfo;
-    ZeroMemory(&processInfo, sizeof(PROCESS_INFORMATION));
-
-    STARTUPINFOW startupInfo = { 0 };
-    IORedirection(startupInfo, aInputFilePath, aOutputFilePath);
-
-    wchar_t* cmd = const_cast<wchar_t*>(aName.c_str());
-    auto feature = std::async(std::launch::async, getMaxMemoryUsage, std::ref(processInfo), memoryLimit);
-    if (CreateProcess(NULL, cmd,
-        NULL, NULL, TRUE, CREATE_UNICODE_ENVIRONMENT | CREATE_SUSPENDED | CREATE_NO_WINDOW, NULL, NULL, &startupInfo, &processInfo) == FALSE)
-    {
-        std::cout << "ERROR #2: can't start process" << std::endl;
-    }
-    long long startTime = getMillisecondsNow();
-    ResumeThread(processInfo.hThread);
-    //DWORD waitResult = 
-    LPDWORD waitResult = 0;
-    while ((GetExitCodeProcess(processInfo.hProcess, waitResult) == STILL_ACTIVE))
-    {
-        std::cout << "working...\n";
-    }
-    /*   if (waitResult == WAIT_FAILED)
-       {
-           std::cout << "ERROR #3: WAIT_FAILED" << std::endl;
-       }
-       if (waitResult == WAIT_OBJECT_0)
-       {
-           std::cout << "Code complite\n" << std::endl;
-       }
-       if (waitResult == WAIT_TIMEOUT)
-       {
-           std::cout << "Time out\n" << std::endl;
-       }
-       if  (false){
-           std::cout << "Alive" << std::endl;
-           killProcess(processInfo);
-       }*/
-    long long endTime = getMillisecondsNow();
-    long long memoryUsage = feature.get();
-
-    std::cout << "time usage: " << endTime - startTime << std::endl;
-    std::cout << "memory usage: " << memoryUsage << std::endl;
-}
-void myJudger2(std::wstring aName, std::wstring aInputFilePath, std::wstring aOutputFilePath)
-{
-    long long timeUsage = 1000;
-    long long reservedTime = 200;
-    long long memoryLimit = 200;
-
-    CHandle Job(CreateJobObject(nullptr, nullptr));
-    if (!Job) {
-        std::cout << "ERROR #x: CreateJobObject, error " << GetLastError() << std::endl;
-        return;
-    }
-
-
-    CHandle IOPort(CreateIoCompletionPort(INVALID_HANDLE_VALUE,
-        nullptr, 0, 1));
-    if (!IOPort) {
-        std::cout << "ERROR #x: CreateIoCompletionPort, error " << GetLastError() << std::endl;
-        return;
-    }
-
-
-    JOBOBJECT_ASSOCIATE_COMPLETION_PORT Port;
-    Port.CompletionKey = Job;
-    Port.CompletionPort = IOPort;
-    if (!SetInformationJobObject(Job,
-        JobObjectAssociateCompletionPortInformation,
-        &Port, sizeof(Port))) {
-        std::cout << "ERROR #x: SetInformation, error " << GetLastError() << std::endl;
-        return;
-    }
-
-    PROCESS_INFORMATION processInfo;
-    ZeroMemory(&processInfo, sizeof(PROCESS_INFORMATION));
-
-    STARTUPINFOW startupInfo = { 0 };
-    IORedirection(startupInfo, aInputFilePath, aOutputFilePath);
-
-    TCHAR cmd[] = TEXT("U:\\_Public\\Programs\\a.exe");
-    //TCHAR cmd[] = TEXT("U:\\_Public\\Programs\\Sleepy.exe");
-    //TCHAR cmd[] = TEXT("U:\\_Public\\Programs\\summa.exe");
-
-    auto feature = std::async(std::launch::async, getMaxMemoryUsage, std::ref(processInfo), memoryLimit);
-
-    if (CreateProcess(NULL, cmd,
-        NULL, NULL, TRUE, CREATE_UNICODE_ENVIRONMENT | CREATE_SUSPENDED | CREATE_NO_WINDOW, NULL, NULL, &startupInfo, &processInfo) == FALSE)
-    {
-        std::cout << "ERROR #2: can't start process" << std::endl;
-    }
-    long long startTime = getMillisecondsNow();
-    ResumeThread(processInfo.hThread);
-    DWORD waitResult = WaitForSingleObject(processInfo.hProcess, INFINITE);
-    if (waitResult == WAIT_FAILED)
-    {
-        std::cout << "ERROR #3: WAIT_FAILED" << std::endl;
-    }
-    if (waitResult == WAIT_OBJECT_0)
-    {
-        std::cout << "Code complite\n" << std::endl;
-    }
-    if (waitResult == WAIT_TIMEOUT)
-    {
-        std::cout << "Time out\n" << std::endl;
-    }
-    if (getExitCode(processInfo.hProcess) == STILL_ACTIVE) {
-        std::cout << "Alive" << std::endl;
-    }
-
-
-    if (!AssignProcessToJobObject(Job,
-        processInfo.hProcess)) {
-        std::cout << "ERROR #x: Assign, error " << GetLastError() << std::endl;
-        return;
-    }
-
-
-    ResumeThread(processInfo.hThread);
-    CloseHandle(processInfo.hThread);
-    CloseHandle(processInfo.hProcess);
-
-
-    DWORD CompletionCode;
-    ULONG_PTR CompletionKey;
-    LPOVERLAPPED Overlapped;
-
-
-    while (GetQueuedCompletionStatus(IOPort, &CompletionCode,
-        &CompletionKey, &Overlapped, INFINITE) &&
-        !((HANDLE)CompletionKey == Job &&
-            CompletionCode == JOB_OBJECT_MSG_ACTIVE_PROCESS_ZERO)) {
-
-    }
-
-
-    long long endTime = getMillisecondsNow();
-    long long memoryUsage = feature.get();
-
-    std::cout << "time usage: " << endTime - startTime << std::endl;
-    std::cout << "memory usage: " << memoryUsage << std::endl;
-}
-
-void a(int t)
-{
-    std::cout << "lll";
-}
-
-void myJudger3(std::wstring aName, std::wstring aInputFilePath, std::wstring aOutputFilePath)
-{
-
-    JOBOBJECT_BASIC_LIMIT_INFORMATION limits;
-    limits.LimitFlags |= JOB_OBJECT_LIMIT_PRIORITY_CLASS;
-    limits.LimitFlags |= JOB_OBJECT_LIMIT_PROCESS_TIME;
-    limits.LimitFlags |= JOB_OBJECT_LIMIT_PROCESS_MEMORY;
-    limits.PerJobUserTimeLimit.QuadPart = long long(1e1);
-    //limits.PriorityClass = HIGH_PRIORITY_CLASS;
-
-    CHandle Job(CreateJobObject(nullptr, nullptr));
-    if (!Job) WERROR(1, MJ_BEFST_CREATE_JOB_OBJECT, "create job object");
-
-    SetInformationJobObject(Job, JobObjectBasicLimitInformation, &limits, sizeof(limits));
-    std::cout << GetLastError() << std::endl;
-    AssignProcessToJobObject(Job, GetCurrentProcess());
-
-    CHandle IOPort(CreateIoCompletionPort(INVALID_HANDLE_VALUE,
-        nullptr, 0, 1));
-    if (!IOPort) WERROR(2, MJ_BEFST_CREATE_IO_PORT, "create IO completion port");
-
-    JOBOBJECT_ASSOCIATE_COMPLETION_PORT Port;
-    Port.CompletionKey = Job;
-    Port.CompletionPort = IOPort;
-    if (!SetInformationJobObject(Job,
-        JobObjectAssociateCompletionPortInformation,
-        &Port, sizeof(Port))) WERROR(3, MJ_BEFST_SET_INFO, "set information");
-
-    PROCESS_INFORMATION ProcessInformation;
-    STARTUPINFO StartupInfo = { sizeof(StartupInfo) };
-    IORedirection(StartupInfo, aInputFilePath, aOutputFilePath);
-    wchar_t* cmd = const_cast<wchar_t*>(aName.c_str());
-
-    long long memoryLimit = 2e6;
-    auto feature = std::async(std::launch::async, getMaxMemoryUsage, std::ref(ProcessInformation), memoryLimit);
-
-    if (!CreateProcess(nullptr, cmd, nullptr, nullptr,
-        TRUE, CREATE_UNICODE_ENVIRONMENT | CREATE_SUSPENDED | CREATE_NO_WINDOW, nullptr, nullptr,
-        &StartupInfo, &ProcessInformation))
-        WERROR(4, MJ_BEFST_CREATE_PROC, "create process");
-
-    std::cout << "Child process priority = " << GetPriorityClass(ProcessInformation.hProcess);
-
-    if (!AssignProcessToJobObject(Job,
-        ProcessInformation.hProcess)) WERROR(4, MJ_BEFST_ASSUGN_PROC, "assign process");
-
-    long long startTime = getMillisecondsNow();
-    ResumeThread(ProcessInformation.hThread);
-
-
-    uint_64 memoryUsage = feature.get();
-
-    CloseHandle(Job);
-    CloseHandle(ProcessInformation.hThread);
-    CloseHandle(ProcessInformation.hProcess);
-
-    DWORD CompletionCode;
-    ULONG_PTR CompletionKey;
-    LPOVERLAPPED Overlapped;
-
-    GetQueuedCompletionStatus(IOPort, &CompletionCode,
-        &CompletionKey, &Overlapped, 1000000);
-    //&&
-    //    !((HANDLE)CompletionKey == Job &&
-     //       CompletionCode == JOB_OBJECT_MSG_ACTIVE_PROCESS_ZERO);
-    //wprintf(L"Still waiting...\n");
-    //std::ofstream fileee("sosat");
-    //if (getMillisecondsNow() - startTime < 100)
-    {
-        std::cout << _(suka);
-    }
-    std::cout << "Still waiting...   " << getMillisecondsNow() - startTime << std::endl;
-    long long endTime = getMillisecondsNow();
-
-    std::cout << "\n\ntime usage: " << endTime - startTime << std::endl;
-    std::cout << "\n\nmemory usage: " << memoryUsage << std::endl;
-
-
-
-
-
-
-
-
-
-    wprintf(L"All done\n");
-}
-
 #include <vector>
 #include <iostream>
 #include <string>
-int main()
+#include "core.h"
+
+
+int mainn()
 {
-    //long long ll = GetProcessTimes();
-    //long long ll = GetProcessMemoryInfo ();
+    int num;
 
-
-    //std::wstring programPath = L"D:\\projects\\VS 2019\\ChiniseTester\\Resources\\YesInput.exe";
-    //std::wstring inputPath = L"D:\\projects\\VS 2019\\ChiniseTester\\Resources\\input.txt";
-    //std::wstring outputPath = L"D:\\projects\\VS 2019\\ChiniseTester\\Resources\\output.txt";
-    std::wstring path = L"U:\\_Public\\Programs\\";
-    std::wstring programPath = path + L"NeoTest.exe";
+    std::wstring path = L"D:\\projects\\VS\\Tester\\Tester\\Resources\\";
+    std::wstring programPath = path + L"NeoTest2.exe";
     std::wstring inputPath = path + L"input";
-    std::wstring outputPath = path + L"output";
-    //myJudger(programPath, inputPath, outputPath);
-    runProcess(programPath, inputPath, outputPath);
+    std::wstring outputPath = path + L"output.b";
 
-    //foo("U:\\_Private\\Tester\\Programs\\b.exe", NULL,
-    //    NULL, NULL, NULL, 1000,
-    //    1000);
-    //foo("c:\\c.exe", "",
-    //    "", "", "", 1000,
-    //    1000);
+    //runProcess(programPath, inputPath, outputPath);
 
-    //STARTUPINFO cif;
-    //ZeroMemory(&cif, sizeof(STARTUPINFO));
-    //PROCESS_INFORMATION pi;
-    //if (CreateProcess(L"c:\\c.exe", NULL,
-    //    NULL, NULL, FALSE, NULL, NULL, NULL, &cif, &pi) == TRUE)
-    //{
-    //    //cout << "process" << endl;
-    //    //cout << "handle " << pi.hProcess << endl;
-    //    //Sleep(1000);                // подождать
-    //    //TerminateProcess(pi.hProcess, NO_ERROR);    // убрать процесс
-    //}
-
-    //long long                timeUsage = 1000;
-    //long long                memoryUsage = 0;
-    //int  reservedTime = 0;
-    //WaitForSingleObject(pi.hProcess, timeUsage + reservedTime);
-    //TerminateProcess(pi.hProcess, NO_ERROR);
-
-    //STARTUPINFO cif;
-    //ZeroMemory(&cif, sizeof(STARTUPINFO));
-    //PROCESS_INFORMATION pi;
-    //if (CreateProcess(L"c:\\windows\\notepad.exe", NULL,
-    //    NULL, NULL, FALSE, NULL, NULL, NULL, &cif, &pi) == TRUE)
-    //{
-    //    std::cout << "process" << std::endl;
-    //    std::cout << "handle " << pi.hProcess << std::endl;
-    //    Sleep(10000);                // подождать
-    //    TerminateProcess(pi.hProcess, NO_ERROR);    // убрать процесс
-    //}
+    Core core;
+    core.runProcess(programPath, inputPath, outputPath);
 
     return 0;
 }
