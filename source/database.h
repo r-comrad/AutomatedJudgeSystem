@@ -15,9 +15,14 @@ class Database
 public:
 	Database(std::string aPath);
 	void select(std::string aTableName, std::string aColum = "", std::string aConditon = "");
-	auto getNextRow(int aColumNumber);
 	void clouseStatment();
-	int takeProblemId(sqlite3* ppDb);
+	//int takeProblemId(sqlite3* ppDb);
+
+	void step();
+
+	const unsigned char* getTextFromRow(int aColumNumber);
+	int getIntFromRow(int aColumNumber);
+	sint_64 getInt64FromRow(int aColumNumber);
 
 private:
 	Base* mBase;
