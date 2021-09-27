@@ -43,7 +43,7 @@ sint_64 Database::getInt64FromRow(int aColumNumber)
     return sqlite3_column_int64(mStatement, aColumNumber);
 }
 
-void Database::clouseStatment()
+void Database::closeStatment()
 {
     sqlite3_finalize(mStatement);
 }

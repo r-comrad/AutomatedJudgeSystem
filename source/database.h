@@ -15,7 +15,7 @@ class Database
 public:
 	Database(std::string aPath);
 	void select(std::string aTableName, std::string aColum = "", std::string aConditon = "");
-	void clouseStatment();
+	void closeStatment();
 	//int takeProblemId(sqlite3* ppDb);
 
 	void step();

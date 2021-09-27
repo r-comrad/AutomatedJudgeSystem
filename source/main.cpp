@@ -70,7 +70,7 @@ void A()
 {
     sqlite3* ppDb = NULL;
 
-    if (sqlite3_open("D:\\projects\\VS 2019\\ChineseTester\\resources\\db.sqlite3", &ppDb)
+    if (sqlite3_open("U:\\_Private\\ChineseTester\\ChineseTester\\resources\\db.sqlite3", &ppDb)
         != SQLITE_OK)
     {
         std::cout << "ERROR: can't open database";
@@ -85,29 +85,46 @@ void A()
 
 void B()
 {
-    int num;
+    //int num;
     //std::cin >> num;
 
-    Database base("D:\\projects\\VS 2019\\ChineseTester\\resources\\data_base.sqlite3");
-    //base.select("core_solution", "file_name, contest_id", "id = " + std::to_string(num));
-    base.select("core_solutions", "", "");
+    //Database base("D:\\projects\\VS 2019\\ChineseTester\\resources\\data_base.sqlite3");
+    Database base("U:\\_Private\\ChineseTester\\ChineseTester\\resources\\data_base.sqlite3");
+    base.select("core_solutions", "file_name, contest_id", "id = " + std::to_string(10));
+    //base.select("core_solutions", "", "");
+
+
+    //contest
 
     //int n = *(static_cast<const int*> (base.getNextRow(1)));
     base.step();
     //for(int i = 0; i < 4; ++i)
     //const unsigned char* ss = base.sqlite3_column_int64(4);
-    int ss = base.getInt64FromRow(4);
-    cout << ss;
-    
+    //int ss = base.getInt64FromRow(4);
+    //int ss = base.getInt64FromRow(0);
+    //cout << ss << " ";
+    const unsigned char* fileName =  base.getTextFromRow(0);
+    int cnt = 0;
+    while (fileName[cnt]) cout << fileName[cnt++];
+    int contest_id = base.getInt64FromRow(1);
+    cout << " " << contest_id << "\n";
+    base.closeStatment();
+
     //for (auto& i : ss) cout << i;
     //for (int i = 0; ss[i] != 0; ++i) cout << i;
     //cout << n;
     //cout << (std::string) base.getNextRow(1);
 
+    base.select("core_contests", "time_limit, memory_limit", "id = " + std::to_string(contest_id));
+    base.step();
+    int time_limit = base.getInt64FromRow(0);
+    int memory_limit = base.getInt64FromRow(1);
+    cout << time_limit << " " << memory_limit << "\n";
     std::wstring path = L"D:\\projects\\VS\\Tester\\Tester\\Resources\\";
     std::wstring programPath = path + L"NeoTest2.exe";
     std::wstring inputPath = path + L"input";
     std::wstring outputPath = path + L"output.b";
+
 
     Core core;
     //core.runProcess(programPath, inputPath, outputPath);
