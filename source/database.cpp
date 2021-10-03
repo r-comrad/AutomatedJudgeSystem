@@ -33,6 +33,12 @@ const unsigned char* Database::getTextFromRow(int aColumNumber)
     return sqlite3_column_text(mStatement, aColumNumber);
 }
 
+
+const void* Database::getText16FromRow(int aColumNumber)
+{
+    return sqlite3_column_text16(mStatement, aColumNumber);
+}
+
 int Database::getIntFromRow(int aColumNumber)
 {
     return sqlite3_column_int(mStatement, aColumNumber);
@@ -68,4 +74,14 @@ void Database::closeStatment()
 void Database::step()
 {
     sqlite3_step(mStatement);
+}
+#include <stdlib.h>
+char* Database::toAscii(const unsigned char* s)
+{
+    int cnt = 0;
+    while (s[cnt++]);
+    char* result = (char*) malloc(sizeof(char) * (cnt));
+    result[cnt - 1] = 0;
+    for (int i = 0; s[i];) result[i] = s[i++];
+    return result;
 }

@@ -104,9 +104,15 @@ void B()
     //int ss = base.getInt64FromRow(0);
     //cout << ss << " ";
     const unsigned char* fileName =  base.getTextFromRow(0);
-    int cnt = 0;
-    while (fileName[cnt]) cout << fileName[cnt++];
+    cout << "\nFile name: ";
+    for (int i = 0; fileName[i];) cout << fileName[i++];
+
+    cout << "\n";
+    char* sss = base.toAscii(fileName);
+    for (int i = 0; sss[i];) cout << sss[i++];
+
     int contest_id = base.getInt64FromRow(1);
+    cout << "\nID: ";
     cout << " " << contest_id << "\n";
     base.closeStatment();
 
@@ -119,21 +125,46 @@ void B()
     base.step();
     int time_limit = base.getInt64FromRow(0);
     int memory_limit = base.getInt64FromRow(1);
-    cout << time_limit << " " << memory_limit << "\n";
-    std::wstring path = L"D:\\projects\\VS\\Tester\\Tester\\Resources\\";
-    std::wstring programPath = path + L"NeoTest2.exe";
-    std::wstring inputPath = path + L"input";
-    std::wstring outputPath = path + L"output.b";
+    cout << "\nTime limit: ";
+    cout << time_limit;
+    cout << "\nMemory limit: "<< memory_limit << "\n";
+    base.closeStatment();
+    //std::wstring path = L"D:\\projects\\VS\\Tester\\Tester\\Resources\\";
+    //std::wstring programPath = path + L"NeoTest2.exe";
+    //std::wstring inputPath = path + L"input";
+    //std::wstring outputPath = path + L"output.b";
 
+
+
+    base.select("core_test", "input, output", "contest_id = " + std::to_string(contest_id));
+    base.step();
+    const unsigned char* input = base.getTextFromRow(0);
+    input[0];
+    input[1];
+    input[2];
+    const unsigned char* output = base.getTextFromRow(1);
+    for (int i = 0; input[i];) cout << input[i++];
+    cout << "\n";
+    for (int i = 0; output[i];) cout << output[i++];
+    cout << "\n";
+
+    base.step();
+    for (int i = 0; input[i];) cout << input[i++];
+    cout << "\n";
+    for (int i = 0; output[i];) cout << output[i++];
+    cout << "\n";
+    base.closeStatment();
 
     Core core;
     //core.runProcess(programPath, inputPath, outputPath);
+
+    //SELECT input, output FROM core_test WHERE contest_id = 4
 }
 
 int main()
 {
-    cout << "A: ";
+    cout << "-----------------Function A: ";
     A();
-    cout << "\nB: ";
+    cout << "\n\n\n-----------------Function B: ";
     B();
 }

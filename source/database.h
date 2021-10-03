@@ -21,12 +21,16 @@ public:
 	void step();
 
 	const unsigned char* getTextFromRow(int aColumNumber);
+	const void* getText16FromRow(int aColumNumber);
 	int getIntFromRow(int aColumNumber);
 	sint_64 getInt64FromRow(int aColumNumber);
+	char* toAscii(const unsigned char* input);
 
 private:
 	Base* mBase;
 	Statement* mStatement;
+
+
 };
 
 #endif
