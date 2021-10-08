@@ -71,14 +71,19 @@ void Run::IORedirection(std::wstring& aInputPath, std::wstring& aOutputPath)
     mStartupInfo.hStdOutput = mOutputHandle;
 }
 
-void Run::runProcess(std::wstring aName, std::wstring aInputFilePath, std::wstring aOutputFilePath) {
+void Run::runProcess(std::wstring aName, std::wstring aInputFilePath, std::wstring aOutputFilePath, std::wstring aParameters) {
     IORedirection(aInputFilePath, aOutputFilePath);
     wchar_t* cmd = const_cast<wchar_t*>(aName.c_str());
+    wchar_t* cmd2 = const_cast<wchar_t*>(aParameters.c_str());
+    //wchar_t* cmd2 = const_cast<wchar_t*>(aName.c_str() + wchar_t(L"55 C/abc/ff"));
 
     PROCESS_INFORMATION pi;
 
-    if (CreateProcess(NULL, cmd,
-        NULL, NULL, TRUE, CREATE_UNICODE_ENVIRONMENT | CREATE_SUSPENDED | CREATE_NO_WINDOW, NULL, NULL, &mStartupInfo, &mProcessInfo) == FALSE)
+    //if (CreateProcess(NULL, cmd,
+    //    NULL, NULL, TRUE, CREATE_UNICODE_ENVIRONMENT | CREATE_SUSPENDED | CREATE_NO_WINDOW, NULL, NULL, &mStartupInfo, &mProcessInfo) == FALSE)
+    //{
+    if (CreateProcess(cmd, cmd2,
+        NULL, NULL, TRUE, CREATE_UNICODE_ENVIRONMENT | CREATE_NO_WINDOW, NULL, NULL, &mStartupInfo, &mProcessInfo) == FALSE)
     {
 #ifdef DBG
         std::cout << "ERROR #2: can't start process" << std::endl;
@@ -86,7 +91,7 @@ void Run::runProcess(std::wstring aName, std::wstring aInputFilePath, std::wstri
     }
 
     int  reservedTime = 200;
-
+    //ResumeThread(mProcessInfo.hThread);
 
     WaitForSingleObject(mProcessInfo.hProcess, INFINITE);
     //if (getExitCode(mProcessInfo.hProcess) == STILL_ACTIVE) //TODO: get 

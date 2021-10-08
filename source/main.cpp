@@ -2,6 +2,7 @@
 
 #include "core.h"
 #include "database.h"
+#include "run.h"
 
 int takeProblemId(sqlite3* ppDb)
 {
@@ -161,12 +162,51 @@ void B()
     //SELECT input, output FROM core_test WHERE contest_id = 4
 }
 
+#include <vector>
+
+std::wstring getMainPath() {
+#ifdef WINDOWS_OSS
+    TCHAR buffer[MAX_PATH] = { 0 };
+    uint_8 size = GetModuleFileName(NULL, buffer, MAX_PATH);
+    for (int i = 0; i < 2; ++i) while (buffer[--size] != L'\\');
+    return std::wstring(buffer).substr(0, size + 1);
+#endif
+}
+
 int main()
 {
-    cout << "-----------------Function A: ";
-   // A();
-    cout << "\n\n\n-----------------Function B: ";
-  //  B();
+    std::wstring mainPath = getMainPath();
+    
+    cout << std::endl << "---\n";
+
+    std::wstring path = L"D:\\projects\\VS_2019\\ChineseTester\\resources\\";
+    std::wstring programPath = path + L"MikeMirzayanov.exe";
+    //std::wstring programPath = path + L"ConsoleApplication1.exe";
+    std::wstring inputPath = path + L"input.txt";
+    std::wstring outputPath = path + L"output.txt";
+
+wchar_t c1[] = 
+L"sas "
+
+L"D:\\projects\\VS_2019\\ChineseTester\\resources\\cinput.txt "
+
+L"D:\\projects\\VS_2019\\ChineseTester\\resources\\coutput.txt "
+
+L"D:\\projects\\VS_2019\\ChineseTester\\resources\\canswer.txt";
 
 
+    std::wstring parameters = c1;
+    //runProcess(programPath, inputPath, outputPath);
+
+    Run run;
+    run.runProcess(programPath, inputPath, outputPath, parameters);
+
+//    for (int i = 0; i < 3; ++i)
+//    {
+//        Core core;
+//
+//        //    Run run;
+////    run.runProcess(programPath, inputPath, outputPath, parameters);
+//    }
 }
+
