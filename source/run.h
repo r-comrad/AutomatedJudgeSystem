@@ -40,7 +40,7 @@ class Run
 {
 public:
 	Run();
-	void runProcess(std::wstring aName, std::wstring aInputFilePath, std::wstring aOutputFilePath);
+	void runProcess(std::wstring aName, std::wstring aInputFilePath, std::wstring aOutputFilePath, std::wstring aParameters);
 
 public:
 	HANDLE mInputHandle;
