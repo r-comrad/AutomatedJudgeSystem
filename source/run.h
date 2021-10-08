@@ -1,5 +1,5 @@
-#ifndef CORE_H
-#define CORE_H
+#ifndef RUN_H
+#define RUN_H
 
 #include <string>
 
@@ -9,7 +9,7 @@
 #include <tlhelp32.h>
 #include <atlconv.h>
 
-#include "domain.h"
+#include "Domain.h"
 
 #include <cstdint> 
 #include <future>
@@ -34,12 +34,12 @@
 #include <fstream>
 
 
-#include "Domain.h"
+#include "domain.h"
 
-class Core
+class Run
 {
 public:
-	Core();
+	Run();
 	void runProcess(std::wstring aName, std::wstring aInputFilePath, std::wstring aOutputFilePath);
 
 public:
@@ -50,11 +50,7 @@ public:
 	STARTUPINFOW mStartupInfo;
 
 	void IORedirection(std::wstring& aInputPath, std::wstring& aOutputPath);
-	long long getMaxMemoryUsage(PROCESS_INFORMATION&, long long);
-	long long getCurrentMemoryUsage(HANDLE&);
-	DWORD getExitCode(HANDLE&);
-	bool killProcess(PROCESS_INFORMATION&);
-	long long getMillisecondsNow();
+
 };
 
 #endif //CORE_H

@@ -2,5 +2,5 @@
 
 void MMCommunication::run()
 {
-	registerTestlibCmd(4, char* argv[]);
+	//registerTestlibCmd(4, char* argv[]);
 }

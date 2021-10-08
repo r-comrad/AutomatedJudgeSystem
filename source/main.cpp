@@ -164,7 +164,9 @@ void B()
 int main()
 {
     cout << "-----------------Function A: ";
-    A();
+   // A();
     cout << "\n\n\n-----------------Function B: ";
-    B();
+  //  B();
+
+
 }

@@ -71,11 +71,6 @@ void Core::IORedirection(std::wstring& aInputPath, std::wstring& aOutputPath)
     mStartupInfo.hStdOutput = mOutputHandle;
 }
 
-long long foo(PROCESS_INFORMATION pi, long long i)
-{
-    return 10;
-}
-
 void Core::runProcess(std::wstring aName, std::wstring aInputFilePath, std::wstring aOutputFilePath) {
     IORedirection(aInputFilePath, aOutputFilePath);
     wchar_t* cmd = const_cast<wchar_t*>(aName.c_str());
