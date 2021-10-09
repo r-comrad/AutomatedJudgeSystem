@@ -51,11 +51,18 @@ void Run::IORedirection(std::wstring& aInputPath, std::wstring& aOutputPath)
         FILE_ATTRIBUTE_NORMAL,
         NULL);
 
+    //mOutputHandle = CreateFile(aOutputPath.c_str(),
+    //    FILE_APPEND_DATA,
+    //    FILE_SHARE_WRITE,
+    //    &sa,
+    //    OPEN_ALWAYS,
+    //    FILE_ATTRIBUTE_NORMAL,
+    //    NULL);
     mOutputHandle = CreateFile(aOutputPath.c_str(),
-        FILE_APPEND_DATA,
+        FILE_WRITE_DATA,
         FILE_SHARE_WRITE,
         &sa,
-        OPEN_ALWAYS,
+        CREATE_ALWAYS,
         FILE_ATTRIBUTE_NORMAL,
         NULL);
 

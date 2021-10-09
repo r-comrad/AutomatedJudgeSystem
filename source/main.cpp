@@ -163,6 +163,7 @@ void B()
 }
 
 #include <vector>
+#include <fstream>
 
 std::wstring getMainPath() {
 #ifdef WINDOWS_OSS
@@ -173,10 +174,66 @@ std::wstring getMainPath() {
 #endif
 }
 
+#define RESOURCES L"resources\\"
+
+void check()
+{
+    std::wstring curPath = getMainPath() + RESOURCES + L"task1\\";
+
+    std::string resultSS;
+    int testNum = 1;
+    for (; testNum <= 5; ++testNum)
+    {
+        Core core;
+        std::wstring testAddress = curPath + L"tests\\" + std::to_wstring(testNum);
+        std::wstring outAddress = curPath + L"output\\" + std::to_wstring(testNum);
+        core.runProcess(curPath + L"plus.exe", testAddress, outAddress);
+
+        Run run;
+        std::wstring answerAddress = curPath + L"answer\\" + std::to_wstring(testNum);
+        std::wstring resultAddress = curPath + L"result\\" + std::to_wstring(testNum);
+        std::wstring parameters = L"sas input " + outAddress + L" " + answerAddress;
+        run.runProcess(curPath + L"checker.exe", L"", resultAddress, parameters);
+
+        std::ifstream resultFile(resultAddress);
+        resultFile >> resultSS;
+        if (resultSS != "ok") break;
+    }
+    cout << resultSS << endl;
+}
+
+void makeTestCatalog()
+{
+
+}
+
 int main()
 {
-    std::wstring mainPath = getMainPath();
-    
+    //std::wstring resoPath = getMainPath() + RESOURCES;
+
+    std::wstring curPath = getMainPath() + RESOURCES + L"task1\\";
+
+    std::string resultSS;
+    int testNum = 1;
+    for (; testNum <= 5; ++testNum)
+    {
+        Core core;
+        std::wstring testAddress = curPath + L"tests\\" + std::to_wstring(testNum);
+        std::wstring outAddress = curPath + L"output\\" + std::to_wstring(testNum);
+        core.runProcess(curPath + L"plus.exe", testAddress, outAddress);
+
+        Run run;
+        std::wstring answerAddress = curPath + L"answer\\" + std::to_wstring(testNum);
+        std::wstring resultAddress = curPath + L"result\\" + std::to_wstring(testNum);
+        std::wstring parameters = L"sas input " + outAddress + L" " + answerAddress;
+        run.runProcess(curPath + L"checker.exe", L"", resultAddress, parameters);
+
+        std::ifstream resultFile(resultAddress);
+        resultFile >> resultSS;
+        if (resultSS != "ok") break;
+    }
+    cout << resultSS << endl;
+
     cout << std::endl << "---\n";
 
     std::wstring path = L"D:\\projects\\VS_2019\\ChineseTester\\resources\\";
@@ -199,7 +256,7 @@ L"D:\\projects\\VS_2019\\ChineseTester\\resources\\canswer.txt";
     //runProcess(programPath, inputPath, outputPath);
 
     Run run;
-    run.runProcess(programPath, inputPath, outputPath, parameters);
+    
 
 //    for (int i = 0; i < 3; ++i)
 //    {

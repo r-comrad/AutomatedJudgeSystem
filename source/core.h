@@ -42,7 +42,7 @@ public:
 	Core();
 	void runProcess(std::wstring aName, std::wstring aInputFilePath, std::wstring aOutputFilePath);
 
-public:
+private:
 	HANDLE mInputHandle;
 	HANDLE mOutputHandle;
 
