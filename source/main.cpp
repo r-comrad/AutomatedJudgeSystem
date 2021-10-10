@@ -151,6 +151,65 @@ void makeTestCatalog(int ID, std::wstring aTaskName)
     }
 }
 
+#include <string>
+#include <iostream>
+#include <fstream>
+
+void makeChecker(std::wstring aTaskName)
+{
+    std::wstring TEST = getMainPath() + RESOURCES + L"MikeMirzayanov.cpp";
+    std::wstring checkerkath = getMainPath() + RESOURCES + aTaskName + L"\\checker\\";
+
+    std::ifstream fromFile(TEST);
+    std::wstring sss = checkerkath + L"checker.cpp";
+    std::wstring checkerEXE = checkerkath + L"checker.exe";
+    std::ofstream toFile(sss);
+    
+    std::string s;
+    //while (fromFile >> c) toFile << c;
+    //while (fscanf(fromFile, "%c", &c)) toFile << c;
+    while (std::getline(fromFile, s)) toFile << s << '\n';
+
+    //C:\Windows\SysWOW64\WindowsPowerShell\v1.0\\powershell.exe
+
+    Run run;
+    //std::wstring answerAddress = curPath + L"answer\\" + std::to_wstring(testNum);
+    //std::wstring resultAddress = curPath + L"result\\" + std::to_wstring(testNum);
+    //std::wstring parameters = L"sas input " + outAddress + L" " + answerAddress;
+
+
+        //C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\Tools\Launch-VsDevShell.ps1
+      //  run.runProcess( L"C:\\Windows\\SysWOW64\\WindowsPowerShell\\v1.0\\powershell.exe",
+        //run.runProcess( L"C:\\VsDevCmd2.bat",
+      //      L"", L"", L"cd " + checkerkath + L"\n" + L"cl /EHsc checker.cpp");
+       //     L"", L"", L"C:\\Windows\\SysWOW64\\WindowsPowerShell\\v1.0\\powershell.exe cl /EHsc checker.cpp");
+
+
+    //run.runProcess(L"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Common7\\Tools\\VsDevCmd.bat & cl /EHsc " + sss, L"", L"", L"");
+    std::string ssss = "\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Common7\\Tools\\VsDevCmd.bat\" & cl /EHsc \""
+        + getString(sss) + "\""
+        //+  " /LINK /OUT:\"" + getString(checkerEXE) + "\""
+        ;
+    cout << endl << ssss << endl;
+    WinExec(ssss.c_str(), SW_SHOWNORMAL);
+    //SW_HIDE
+
+    int cnt = 1e9;
+    while (--cnt);
+    cout << "--------------";
+
+    std::wstring stupidChecker = getMainPath() + L"\ChineseTester\checker.exe";
+    CopyFile(stupidChecker.c_str(), checkerEXE.c_str(), FALSE);
+    //std::ifstream fromFile2(stupidChecker, std::ios::in | std::ios::binary);
+    //std::ofstream toFile2(checkerEXE, std::ios::out | std::ios::binary);
+   // std::copy(std::istreambuf_iterator<char>(fromFile2), std::istreambuf_iterator<char>(),
+    //    std::ostreambuf_iterator<char>(toFile2));
+    //char c;
+//while (fromFile2 >> c) toFile2 << c;
+    //CopyFile(szFilePath.c_str(), szCopyPath.c_str(), FALSE);
+
+}
+
 void check()
 {
     std::wstring curPath = getMainPath() + RESOURCES + L"task1\\";
@@ -162,13 +221,13 @@ void check()
         Core core;
         std::wstring testAddress = curPath + L"tests\\" + std::to_wstring(testNum);
         std::wstring outAddress = curPath + L"output\\" + std::to_wstring(testNum);
-        core.runProcess(curPath + L"plus.exe", testAddress, outAddress);
+        core.runProcess(curPath + L"solution\\plus.exe", testAddress, outAddress);
 
         Run run;
         std::wstring answerAddress = curPath + L"answer\\" + std::to_wstring(testNum);
         std::wstring resultAddress = curPath + L"result\\" + std::to_wstring(testNum);
         std::wstring parameters = L"sas input " + outAddress + L" " + answerAddress;
-        run.runProcess(curPath + L"checker.exe", L"", resultAddress, parameters);
+        run.runProcess(curPath + L"checker\\checker.exe", L"", resultAddress, parameters);
 
         std::ifstream resultFile(resultAddress);
         resultFile >> resultSS;
@@ -179,8 +238,9 @@ void check()
 
 int main()
 {
-    std::string
-    while (std::cin >> ss);
+    makeChecker(L"task1");
+    check();
+    return 0;
 
 
     //B();
@@ -196,13 +256,15 @@ int main()
         Core core;
         std::wstring testAddress = curPath + L"tests\\" + std::to_wstring(testNum);
         std::wstring outAddress = curPath + L"output\\" + std::to_wstring(testNum);
-        core.runProcess(curPath + L"plus.exe", testAddress, outAddress);
+        core.runProcess(curPath + L"solution\\plus.exe", testAddress, outAddress);
 
         Run run;
         std::wstring answerAddress = curPath + L"answer\\" + std::to_wstring(testNum);
         std::wstring resultAddress = curPath + L"result\\" + std::to_wstring(testNum);
         std::wstring parameters = L"sas input " + outAddress + L" " + answerAddress;
-        run.runProcess(curPath + L"checker.exe", L"", resultAddress, parameters);
+
+        std::wstring sss = curPath + L"checker\\checker.exe";
+        run.runProcess(sss, L"", resultAddress, parameters);
 
         std::ifstream resultFile(resultAddress);
         resultFile >> resultSS;
