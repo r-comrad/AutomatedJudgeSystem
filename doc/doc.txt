@@ -7,3 +7,6 @@ registerTestlibCmd(int argc, char *argv[]) {
     inf.init(argv[1], _input);
     ouf.init(argv[2], _output);
     ans.init(argv[3], _answer);
+
+
+https://docs.microsoft.com/ru-ru/cpp/build/walkthrough-compiling-a-native-cpp-program-on-the-command-line?view=msvc-160&viewFallbackFrom=vs-2019

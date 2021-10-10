@@ -18,7 +18,7 @@ public:
 	void closeStatment();
 	//int takeProblemId(sqlite3* ppDb);
 
-	void step();
+	int step();
 
 	const unsigned char* getTextFromRow(int aColumNumber);
 	const void* getText16FromRow(int aColumNumber);

@@ -71,9 +71,9 @@ void Database::closeStatment()
 //    return result;
 //}
 
-void Database::step()
+int Database::step()
 {
-    sqlite3_step(mStatement);
+    return sqlite3_step(mStatement);
 }
 #include <stdlib.h>
 char* Database::toAscii(const unsigned char* s)

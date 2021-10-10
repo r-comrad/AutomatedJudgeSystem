@@ -84,83 +84,6 @@ void A()
     sqlite3_close(ppDb);
 }
 
-void B()
-{
-    //int num;
-    //std::cin >> num;
-
-    //Database base("D:\\projects\\VS 2019\\ChineseTester\\resources\\data_base.sqlite3");
-    Database base("U:\\_Private\\ChineseTester\\ChineseTester\\resources\\data_base.sqlite3");
-    base.select("core_solutions", "file_name, contest_id", "id = " + std::to_string(10));
-    //base.select("core_solutions", "", "");
-
-
-    //contest
-
-    //int n = *(static_cast<const int*> (base.getNextRow(1)));
-    base.step();
-    //for(int i = 0; i < 4; ++i)
-    //const unsigned char* ss = base.sqlite3_column_int64(4);
-    //int ss = base.getInt64FromRow(4);
-    //int ss = base.getInt64FromRow(0);
-    //cout << ss << " ";
-    const unsigned char* fileName =  base.getTextFromRow(0);
-    cout << "\nFile name: ";
-    for (int i = 0; fileName[i];) cout << fileName[i++];
-
-    cout << "\n";
-    char* sss = base.toAscii(fileName);
-    for (int i = 0; sss[i];) cout << sss[i++];
-
-    int contest_id = base.getInt64FromRow(1);
-    cout << "\nID: ";
-    cout << " " << contest_id << "\n";
-    base.closeStatment();
-
-    //for (auto& i : ss) cout << i;
-    //for (int i = 0; ss[i] != 0; ++i) cout << i;
-    //cout << n;
-    //cout << (std::string) base.getNextRow(1);
-
-    base.select("core_contests", "time_limit, memory_limit", "id = " + std::to_string(contest_id));
-    base.step();
-    int time_limit = base.getInt64FromRow(0);
-    int memory_limit = base.getInt64FromRow(1);
-    cout << "\nTime limit: ";
-    cout << time_limit;
-    cout << "\nMemory limit: "<< memory_limit << "\n";
-    base.closeStatment();
-    //std::wstring path = L"D:\\projects\\VS\\Tester\\Tester\\Resources\\";
-    //std::wstring programPath = path + L"NeoTest2.exe";
-    //std::wstring inputPath = path + L"input";
-    //std::wstring outputPath = path + L"output.b";
-
-
-
-    base.select("core_test", "input, output", "contest_id = " + std::to_string(contest_id));
-    base.step();
-    const unsigned char* input = base.getTextFromRow(0);
-    input[0];
-    input[1];
-    input[2];
-    const unsigned char* output = base.getTextFromRow(1);
-    for (int i = 0; input[i];) cout << input[i++];
-    cout << "\n";
-    for (int i = 0; output[i];) cout << output[i++];
-    cout << "\n";
-
-    base.step();
-    for (int i = 0; input[i];) cout << input[i++];
-    cout << "\n";
-    for (int i = 0; output[i];) cout << output[i++];
-    cout << "\n";
-    base.closeStatment();
-
-    Core core;
-    //core.runProcess(programPath, inputPath, outputPath);
-
-    //SELECT input, output FROM core_test WHERE contest_id = 4
-}
 
 #include <vector>
 #include <fstream>
@@ -174,7 +97,59 @@ std::wstring getMainPath() {
 #endif
 }
 
+std::string getString(std::wstring aBadString)
+{
+    std::string goodString;
+    for (auto& i : aBadString) goodString.push_back(char(i));
+    return goodString;
+}
+
 #define RESOURCES L"resources\\"
+
+void makeTestCatalog(int ID, std::wstring aTaskName)
+{
+    std::wstring taskath = getMainPath() + RESOURCES + aTaskName;
+    std::ofstream taskFile(taskath + L"init");
+
+    std::wstring basePath = getMainPath() + RESOURCES;
+    Database base(getString(basePath) + "data_base.sqlite3");
+
+    base.select("core_solutions", "file_name, contest_id", "id = " + std::to_string(ID));
+    base.step();
+
+    const unsigned char* fileName =  base.getTextFromRow(0);
+    taskFile << "File_name: ";
+    for (int i = 0; fileName[i];) taskFile << fileName[i++];
+
+    int contest_id = base.getInt64FromRow(1);
+    base.closeStatment();
+
+    base.select("core_contests", "time_limit, memory_limit", "id = " + std::to_string(contest_id));
+    base.step();
+    int time_limit = base.getInt64FromRow(0);
+    int memory_limit = base.getInt64FromRow(1);
+    taskFile << "\nTime limit: " << time_limit;
+    taskFile << "\nMemory limit: "<< memory_limit << "\n";
+    base.closeStatment();
+
+    base.select("core_test", "input, output", "contest_id = " + std::to_string(contest_id));
+    std::wstring testAddress = taskath + L"tests\\";
+    std::wstring ansAddress = taskath + L"answer\\";
+    for(int i = 0; i < 1; ++i)
+    {
+        if (base.step() != 0) break;
+        const unsigned char* input = base.getTextFromRow(0);
+        const unsigned char* output = base.getTextFromRow(1);
+
+        std::ofstream taskFile(testAddress + std::to_wstring(i));
+        std::ofstream ansFile(testAddress + std::to_wstring(i));
+
+        for (int i = 0; input[i];) taskFile << input[i++];
+        for (int i = 0; output[i];) ansFile << output[i++];
+
+        base.closeStatment();
+    }
+}
 
 void check()
 {
@@ -202,13 +177,14 @@ void check()
     cout << resultSS << endl;
 }
 
-void makeTestCatalog()
-{
-
-}
-
 int main()
 {
+    std::string
+    while (std::cin >> ss);
+
+
+    //B();
+
     //std::wstring resoPath = getMainPath() + RESOURCES;
 
     std::wstring curPath = getMainPath() + RESOURCES + L"task1\\";
