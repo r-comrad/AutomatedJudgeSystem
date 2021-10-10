@@ -81,6 +81,7 @@ void Run::IORedirection(std::wstring& aInputPath, std::wstring& aOutputPath)
 void Run::runProcess(std::wstring aName, std::wstring aInputFilePath, std::wstring aOutputFilePath, std::wstring aParameters) {
     IORedirection(aInputFilePath, aOutputFilePath);
     wchar_t* cmd = const_cast<wchar_t*>(aName.c_str());
+    if (aName == L"") cmd = NULL;
     wchar_t* cmd2 = const_cast<wchar_t*>(aParameters.c_str());
     //wchar_t* cmd2 = const_cast<wchar_t*>(aName.c_str() + wchar_t(L"55 C/abc/ff"));
 

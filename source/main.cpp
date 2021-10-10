@@ -238,9 +238,9 @@ void check()
 
 int main()
 {
-    makeChecker(L"task1");
-    check();
-    return 0;
+    //makeChecker(L"task1");
+    //check();
+    //return 0;
 
 
     //B();
@@ -253,10 +253,16 @@ int main()
     int testNum = 1;
     for (; testNum <= 5; ++testNum)
     {
-        Core core;
+        //Core core;
+        //std::wstring testAddress = curPath + L"tests\\" + std::to_wstring(testNum);
+        //std::wstring outAddress = curPath + L"output\\" + std::to_wstring(testNum);
+        //core.runProcess(curPath + L"solution\\plus.exe", testAddress, outAddress);
         std::wstring testAddress = curPath + L"tests\\" + std::to_wstring(testNum);
         std::wstring outAddress = curPath + L"output\\" + std::to_wstring(testNum);
-        core.runProcess(curPath + L"solution\\plus.exe", testAddress, outAddress);
+        std::wstring pasarg = curPath + L"solution\\plus.py";
+        std::wstring parameters1 = L"python " + pasarg;
+        Run run1;
+        run1.runProcess(L"", testAddress, outAddress, parameters1);
 
         Run run;
         std::wstring answerAddress = curPath + L"answer\\" + std::to_wstring(testNum);
