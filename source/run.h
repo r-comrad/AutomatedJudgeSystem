@@ -41,6 +41,8 @@ class Run
 public:
 	Run();
 	void runProcess(std::wstring aName, std::wstring aInputFilePath, std::wstring aOutputFilePath, std::wstring aParameters);
+	void createProcess();
+
 
 public:
 	HANDLE mInputHandle;

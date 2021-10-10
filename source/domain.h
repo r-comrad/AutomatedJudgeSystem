@@ -7,12 +7,6 @@
 
 #define WINDOWS_OSS
 
-#ifdef DBG
-#include <iostream>
-using std::cout;
-using std::endl;
-#endif
-
 #define _(aName) #aName
 
 #define WERROR(aNumber, aName, aMessege)                                    \

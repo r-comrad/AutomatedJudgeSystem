@@ -186,6 +186,9 @@ void makeChecker(std::wstring aTaskName)
 
 
     //run.runProcess(L"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Common7\\Tools\\VsDevCmd.bat & cl /EHsc " + sss, L"", L"", L"");
+    
+    
+    
     std::string ssss = "\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Common7\\Tools\\VsDevCmd.bat\" & cl /EHsc \""
         + getString(sss) + "\""
         //+  " /LINK /OUT:\"" + getString(checkerEXE) + "\""
@@ -194,7 +197,7 @@ void makeChecker(std::wstring aTaskName)
     WinExec(ssss.c_str(), SW_SHOWNORMAL);
     //SW_HIDE
 
-    int cnt = 1e9;
+    int cnt = 10e9;
     while (--cnt);
     cout << "--------------";
 
@@ -210,18 +213,33 @@ void makeChecker(std::wstring aTaskName)
 
 }
 
-void check()
+void check(std::wstring aSolutionName)
 {
     std::wstring curPath = getMainPath() + RESOURCES + L"task1\\";
 
     std::string resultSS;
     int testNum = 1;
+
+    std::wstring comand;
+    if (aSolutionName.back() == 'y')
+    {
+        comand = L"python " + curPath + L"solution\\plus.py";
+    }
+    else if (aSolutionName.back() == 'p')
+    {
+        // TODO: compilation
+        comand = curPath + L"solution\\plus.exe";
+    }
+
+
     for (; testNum <= 5; ++testNum)
     {
         Core core;
         std::wstring testAddress = curPath + L"tests\\" + std::to_wstring(testNum);
         std::wstring outAddress = curPath + L"output\\" + std::to_wstring(testNum);
-        core.runProcess(curPath + L"solution\\plus.exe", testAddress, outAddress);
+
+        //core.runProcess(curPath + L"solution\\plus.exe", testAddress, outAddress);
+        core.runProcess(comand, testAddress, outAddress);
 
         Run run;
         std::wstring answerAddress = curPath + L"answer\\" + std::to_wstring(testNum);
@@ -238,9 +256,9 @@ void check()
 
 int main()
 {
-    //makeChecker(L"task1");
-    //check();
-    //return 0;
+    makeChecker(L"task1");
+    check(L"plus.py");
+    return 0;
 
 
     //B();
@@ -253,7 +271,7 @@ int main()
     int testNum = 1;
     for (; testNum <= 5; ++testNum)
     {
-        //Core core;
+        Core core;
         //std::wstring testAddress = curPath + L"tests\\" + std::to_wstring(testNum);
         //std::wstring outAddress = curPath + L"output\\" + std::to_wstring(testNum);
         //core.runProcess(curPath + L"solution\\plus.exe", testAddress, outAddress);
@@ -261,8 +279,9 @@ int main()
         std::wstring outAddress = curPath + L"output\\" + std::to_wstring(testNum);
         std::wstring pasarg = curPath + L"solution\\plus.py";
         std::wstring parameters1 = L"python " + pasarg;
-        Run run1;
-        run1.runProcess(L"", testAddress, outAddress, parameters1);
+        //Run run1;
+        //run1.runProcess(L"", testAddress, outAddress, parameters1);
+        core.runProcess(parameters1, testAddress, outAddress);
 
         Run run;
         std::wstring answerAddress = curPath + L"answer\\" + std::to_wstring(testNum);
