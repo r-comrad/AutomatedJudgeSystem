@@ -25,7 +25,7 @@
 #include <atlalloc.h>
 #include <shlwapi.h>
 
-#include <windows.h>
+//#include <windows.h>
 #include <userenv.h>
 #include <psapi.h>
 #include <tlhelp32.h>
@@ -36,13 +36,14 @@
 
 #include "domain.h"
 
-class Run
+class Process
 {
 public:
-	Run();
-	void runProcess(std::wstring aName, std::wstring aInputFilePath, std::wstring aOutputFilePath, std::wstring aParameters);
-	void createProcess();
-
+	Process();
+	void run();
+	void run(uint_64 aTimeLimit, uint_64 aMemoryLimit);
+	void create(std::wstring aName, std::wstring aInputFilePath);
+	void IORedirection(std::wstring aInputPath, std::wstring aOutputPath);
 
 public:
 	HANDLE mInputHandle;
@@ -50,9 +51,13 @@ public:
 
 	PROCESS_INFORMATION mProcessInfo;
 	STARTUPINFOW mStartupInfo;
+	std::future<long long> mFuture;
 
-	void IORedirection(std::wstring& aInputPath, std::wstring& aOutputPath);
-
+	long long getMaxMemoryUsage(PROCESS_INFORMATION&, long long);
+	long long getCurrentMemoryUsage(HANDLE&);
+	DWORD getExitCode(HANDLE&);
+	bool killProcess(PROCESS_INFORMATION&);
+	long long getMillisecondsNow();
 };
 
 #endif //CORE_H

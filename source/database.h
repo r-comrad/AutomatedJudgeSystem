@@ -2,6 +2,7 @@
 #define DATABASE_H
 
 #include <string>
+#include <iostream>
 
 #include "sqlite3.h"
 
@@ -13,7 +14,7 @@ typedef sqlite3_stmt Statement;
 class Database
 {
 public:
-	Database(std::string aPath);
+	Database(std::wstring aPath);
 	void select(std::string aTableName, std::string aColum = "", std::string aConditon = "");
 	void closeStatment();
 	//int takeProblemId(sqlite3* ppDb);
@@ -29,8 +30,6 @@ public:
 private:
 	Base* mBase;
 	Statement* mStatement;
-
-
 };
 
 #endif

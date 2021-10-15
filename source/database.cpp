@@ -1,14 +1,16 @@
 #include "database.h"
 
-Database::Database(std::string aPath) :
+Database::Database(std::wstring aPath) :
     mBase(NULL)
 {
-    if (sqlite3_open(aPath.c_str(), &mBase)
+    if (sqlite3_open(makeGoodString(aPath).c_str(), &mBase)
     //const char* Bb;
     //if (sqlite3_open_v2(aPath.c_str(), &mBase, SQLITE_OPEN_READWRITE, Bb)
         != SQLITE_OK)
     {
-        std::cout << "ERROR: can't open database";
+#ifdef  _DBG_
+        std::cout << "!!!!!! ERROR: can't open database";
+#endif //  _DBG_
     }
 }
 
@@ -19,13 +21,18 @@ void Database::select(std::string aTableName, std::string aColum, std::string aC
     if (aConditon != "") aConditon = " WHERE " + aConditon;
     std::string ss = "SELECT " + aColum + " FROM " + aTableName + aConditon;
     //std::cout << ss << std::endl;
-    sqlite3_prepare_v2(
+    if (sqlite3_prepare_v2(
         mBase,              /* Database handle */
         ss.c_str(),             /* SQL statement, UTF-8 encoded */
         -1,                 /* Maximum length of zSql in bytes. */
         &mStatement,             /* OUT: Statement handle */
         NULL                /* OUT: Pointer to unused portion of zSql */
-    );
+    ) != SQLITE_OK)
+    {
+#ifdef  _DBG_
+        std::cout << "!!!!!! ERROR: prepare statement " + ss << std::endl;;
+#endif //  _DBG_
+    }
 }
 
 const unsigned char* Database::getTextFromRow(int aColumNumber)
