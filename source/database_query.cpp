@@ -80,7 +80,7 @@
 //    sqlite3_close(ppDb);
 //}
 
-DatabaseQuery::DatabaseQuery(std::wstring aDatabasePath, std::wstring aTaskPath) :
+MDatabaseQuery::MDatabaseQuery(std::wstring aDatabasePath, std::wstring aTaskPath) :
     mDatabase(aDatabasePath)
 {
     mTaskPath = aTaskPath;
@@ -92,12 +92,12 @@ DatabaseQuery::DatabaseQuery(std::wstring aDatabasePath, std::wstring aTaskPath)
 
 }
 
-DatabaseQuery::~DatabaseQuery()
+MDatabaseQuery::~MDatabaseQuery()
 {
     mTaskFile.close();
 }
 
-void DatabaseQuery::makeTestCatalog(int aID)
+void MDatabaseQuery::makeTestCatalog(int aID)
 {
    // mDatabase.select("core_test", "input, output", "contest_id = " + std::to_string(mContestID));
 
@@ -107,12 +107,31 @@ void DatabaseQuery::makeTestCatalog(int aID)
     getTests();
 }
 
-void DatabaseQuery::getIDInformation(int aID)
+//UPDATE core_solutions SET result = hh WHERE id = 10
+//SELECT * FROM core_solutions WHERE id = 10
+
+void MDatabaseQuery::writeResult(std::string aResult, int aTime, int aMemory)
+{
+#ifdef  _DBG_
+    std::cout << "Updating database" << std::endl;
+#endif //  _DBG_
+
+    mDatabase.update("core_solutions", "result = '" + aResult + "'" +
+        ", time = " + std::to_string(aTime) +
+        ", memory = " + std::to_string(aMemory), "id = " + std::to_string(mGlobalId));
+    mDatabase.step();
+    mDatabase.closeStatment();
+}
+
+void MDatabaseQuery::getIDInformation(int aID)
 {
 #ifdef  _DBG_
     std::cout << "Geting ID and name from database" << std::endl;
 #endif //  _DBG_
 
+    mGlobalId = aID;
+
+    //SELECT * FROM core_solutions WHERE id = 10
     mDatabase.select("core_solutions", "file_name, contest_id", "id = " + std::to_string(aID));
     mDatabase.step();
 
@@ -130,7 +149,7 @@ void DatabaseQuery::getIDInformation(int aID)
 #endif //  _DBG_
 }
 
-void DatabaseQuery::getLimitsInformation()
+void MDatabaseQuery::getLimitsInformation()
 {
 #ifdef  _DBG_
     std::cout << "Geting limits from database" << std::endl;
@@ -145,7 +164,7 @@ void DatabaseQuery::getLimitsInformation()
     mDatabase.closeStatment();
 }
 
-void DatabaseQuery::getTests()
+void MDatabaseQuery::getTests()
 {
 #ifdef  _DBG_
     std::cout << "Geting test from database" << std::endl;

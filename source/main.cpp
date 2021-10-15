@@ -58,7 +58,11 @@ void makeChecker(std::wstring aTaskName)
     //CopyFile(szFilePath.c_str(), szCopyPath.c_str(), FALSE);
 
 }
-
+//MDatabaseQuery* aDBQqq;
+//void checkkk(std::wstring aSolutionName, MDatabaseQuery* aDBQq)
+std::string resSS;
+int resTime;
+int resMemory;
 void check(std::wstring aSolutionName)
 {
     std::wstring curPath = getMainPath() + RESOURCES + L"task1\\";
@@ -82,6 +86,7 @@ void check(std::wstring aSolutionName)
         comand = curPath + L"solution\\plus.exe";
     }
 
+    std::pair<uint_64, uint_64> results = { 0,0 };
     for (; testNum <= 5; ++testNum)
     {
         Process code;
@@ -93,7 +98,10 @@ void check(std::wstring aSolutionName)
         //code.create(comand, L"");
         //code.create(L"", curPath + L"solution\\plus.exe",);
         code.create(L"", comand);
-        code.run(0, 0);
+        std::pair<uint_64, uint_64> cur = code.run(0, 0);
+
+        results.first = max(results.first, cur.first);
+        results.second = max(results.second, cur.second);
 
         Process checker;
         std::wstring answerAddress = curPath + L"answer\\" + std::to_wstring(testNum);
@@ -113,7 +121,16 @@ void check(std::wstring aSolutionName)
 #endif
         }
     }
-    std::cout << resultSS << std::endl;
+    //aDBQq->writeResult(resultSS, results.first, results.second);
+   // aDBQqq->writeResult(resultSS, results.first, results.second);
+
+    resSS = resultSS;
+    resTime = results.first;
+    resMemory = results.second;
+
+    std::cout << "Final result : " << resSS << std::endl;
+    std::cout << "Final time : " << resTime << std::endl;
+    std::cout << "Final memory : " << resMemory << std::endl;
 }
 #include "database_query.h"
 int main()
@@ -121,11 +138,17 @@ int main()
     std::wstring aTaskName = L"task2";
     std::wstring basePath = getMainPath() + RESOURCES + L"data_base.sqlite3";
     std::wstring taskPath = getMainPath() + RESOURCES + aTaskName + L"\\";
-    DatabaseQuery DBQ(basePath, taskPath);
+    MDatabaseQuery DBQ(basePath, taskPath);
     DBQ.makeTestCatalog(10);
+    //aDBQqq = new MDatabaseQuery(basePath, taskPath);
+    //aDBQqq->makeTestCatalog(10);
 
     //makeChecker(L"task1");
+    //checkkk(L"plus.py", &DBQq);
     check(L"plus.py");
+    //resTime = 12345;
+    //resMemory = 12345;
+    DBQ.writeResult(resSS, resTime, resMemory);
     //check(L"plus.exe");
     return 0;
 

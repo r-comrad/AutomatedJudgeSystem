@@ -41,7 +41,7 @@ class Process
 public:
 	Process();
 	void run();
-	void run(uint_64 aTimeLimit, uint_64 aMemoryLimit);
+	std::pair<uint_64, uint_64> run(uint_64 aTimeLimit, uint_64 aMemoryLimit);
 	void create(std::wstring aName, std::wstring aInputFilePath);
 	void IORedirection(std::wstring aInputPath, std::wstring aOutputPath);
 

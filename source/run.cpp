@@ -129,7 +129,7 @@ void Process::run()
     CloseHandle(mOutputHandle);
 }
 
-void Process::run(uint_64 aTimeLimit, uint_64 aMemoryLimit)
+std::pair<uint_64, uint_64> Process::run(uint_64 aTimeLimit, uint_64 aMemoryLimit)
 {
 #ifdef _DBG_
     std::cout << "Runing process with time and memory evaluation" << std::endl;
@@ -158,6 +158,8 @@ void Process::run(uint_64 aTimeLimit, uint_64 aMemoryLimit)
 
     CloseHandle(mInputHandle);
     CloseHandle(mOutputHandle);
+
+    return { endTime - startTime , memoryUsage };
 }
 
 long long Process::getMillisecondsNow() {

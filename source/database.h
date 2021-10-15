@@ -16,6 +16,7 @@ class Database
 public:
 	Database(std::wstring aPath);
 	void select(std::string aTableName, std::string aColum = "", std::string aConditon = "");
+	void update(std::string aTableName, std::string aValue, std::string aConditon);
 	void closeStatment();
 	//int takeProblemId(sqlite3* ppDb);
 

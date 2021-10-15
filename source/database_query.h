@@ -5,17 +5,19 @@
 
 #include "database.h"
 
-class DatabaseQuery
+class MDatabaseQuery
 {
 public:
-	DatabaseQuery(std::wstring aDatabasePath, std::wstring aTaskPath);
-	~DatabaseQuery();
+	//MDatabaseQuery() {};
+	MDatabaseQuery(std::wstring aDatabasePath, std::wstring aTaskPath);
+	~MDatabaseQuery();
 	
 	//takeProblemId(sqlite3* ppDb);
 	//coutRows(sqlite3* ppDb, int problemNum);
 	//takeProblemId(sqlite3* ppDb, int problemNum);
 
 	void makeTestCatalog(int aID);
+	void writeResult(std::string aResult, int aTime, int aMemory);
 
 private:
 	Database mDatabase;
@@ -28,6 +30,7 @@ private:
 
 	std::wstring mTaskPath;
 
+	int mGlobalId;
 	int mContestID;
 	const unsigned char* mFileName;
 

@@ -35,6 +35,24 @@ void Database::select(std::string aTableName, std::string aColum, std::string aC
     }
 }
 
+void Database::update(std::string aTableName, std::string aValue, std::string aConditon)
+{
+    std::string ss = "UPDATE " + aTableName + " SET " + aValue + " WHERE " + aConditon;
+    //std::cout << ss << std::endl;
+    if (sqlite3_prepare_v2(
+        mBase,              /* Database handle */
+        ss.c_str(),             /* SQL statement, UTF-8 encoded */
+        -1,                 /* Maximum length of zSql in bytes. */
+        &mStatement,             /* OUT: Statement handle */
+        NULL                /* OUT: Pointer to unused portion of zSql */
+    ) != SQLITE_OK)
+    {
+#ifdef  _DBG_
+        std::cout << "!!!!!! ERROR: prepare statement " + ss << std::endl;;
+#endif //  _DBG_
+    }
+}
+
 const unsigned char* Database::getTextFromRow(int aColumNumber)
 {
     return sqlite3_column_text(mStatement, aColumNumber);
