@@ -44,6 +44,7 @@ typedef unsigned long long	uint_64;
 std::wstring getMainPath();
 
 std::string makeGoodString(std::wstring aBadString);
+std::wstring makeBadString(std::string aGoodString);
 //std::string makeGoodString(std::wstring aSS);
 
 #endif //DOMAIN_H

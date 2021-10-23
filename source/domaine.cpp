@@ -16,3 +16,10 @@ std::string makeGoodString(std::wstring aBadString)
     return goodString;
 }
 
+std::wstring makeBadString(std::string aGoodString)
+{
+    std::wstring badString;
+    for (auto& i : aGoodString) badString.push_back(char(i));
+    return badString;
+}
+

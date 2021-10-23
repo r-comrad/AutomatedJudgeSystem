@@ -1,5 +1,6 @@
 #include "database.h"
 #include "run.h"
+#include "database_query.h"
 
 void makeChecker(std::wstring aTaskName)
 {
@@ -35,12 +36,15 @@ void makeChecker(std::wstring aTaskName)
     
     
     
-    std::string ssss = "\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Common7\\Tools\\VsDevCmd.bat\" & cl /EHsc \""
-        + makeGoodString(sss) + "\""
+    //std::string ssss = "\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Common7\\Tools\\VsDevCmd.bat\" & cl /EHsc \""
+    std::string ssss = "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Common7\\Tools\\VsDevCmd.bat cl /EHsc "
+        + makeGoodString(sss)
         //+  " /LINK /OUT:\"" + getString(checkerEXE) + "\""
         ;
     std::cout << std::endl << ssss << std::endl;
-    WinExec(ssss.c_str(), SW_SHOWNORMAL);
+    process.create(makeBadString(ssss), L"");
+    process.run();
+    //WinExec(ssss.c_str(), SW_SHOWNORMAL);
     //SW_HIDE
 
     int cnt = 10e9;
@@ -58,12 +62,13 @@ void makeChecker(std::wstring aTaskName)
     //CopyFile(szFilePath.c_str(), szCopyPath.c_str(), FALSE);
 
 }
-//MDatabaseQuery* aDBQqq;
-//void checkkk(std::wstring aSolutionName, MDatabaseQuery* aDBQq)
-std::string resSS;
-int resTime;
-int resMemory;
-void check(std::wstring aSolutionName)
+
+/*
+
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\Tools\VsDevCmd.bat cl /EHsc U:\_Private\ChineseTester\ChineseTester\ChineseTester\resources\task2\checker\checker.cpp
+*/
+
+void check(std::wstring aSolutionName, MDatabaseQuery& aDBQ)
 {
     std::wstring curPath = getMainPath() + RESOURCES + L"task1\\";
 
@@ -121,35 +126,23 @@ void check(std::wstring aSolutionName)
 #endif
         }
     }
-    //aDBQq->writeResult(resultSS, results.first, results.second);
-   // aDBQqq->writeResult(resultSS, results.first, results.second);
+    aDBQ.writeResult(resultSS, results.first, results.second);
 
-    resSS = resultSS;
-    resTime = results.first;
-    resMemory = results.second;
-
-    std::cout << "Final result : " << resSS << std::endl;
-    std::cout << "Final time : " << resTime << std::endl;
-    std::cout << "Final memory : " << resMemory << std::endl;
+    std::cout << "Final result : " << resultSS << std::endl;
+    std::cout << "Final time : " << results.first << std::endl;
+    std::cout << "Final memory : " << results.second << std::endl;
 }
 #include "database_query.h"
 int main()
 {
+    makeChecker(L"task2");
+    return 0;
     std::wstring aTaskName = L"task2";
     std::wstring basePath = getMainPath() + RESOURCES + L"data_base.sqlite3";
     std::wstring taskPath = getMainPath() + RESOURCES + aTaskName + L"\\";
     MDatabaseQuery DBQ(basePath, taskPath);
     DBQ.makeTestCatalog(10);
-    //aDBQqq = new MDatabaseQuery(basePath, taskPath);
-    //aDBQqq->makeTestCatalog(10);
-
-    //makeChecker(L"task1");
-    //checkkk(L"plus.py", &DBQq);
-    check(L"plus.py");
-    //resTime = 12345;
-    //resMemory = 12345;
-    DBQ.writeResult(resSS, resTime, resMemory);
-    //check(L"plus.exe");
+    check(L"plus.py", DBQ);
     return 0;
 
 
