@@ -1,56 +1,53 @@
 #include "database.h"
 
-Database::Database(std::wstring aPath) :
+Database::Database
+(
+    std::wstring aPath
+) :
     mBase(NULL)
 {
-    if (sqlite3_open(makeGoodString(aPath).c_str(), &mBase)
-    //const char* Bb;
-    //if (sqlite3_open_v2(aPath.c_str(), &mBase, SQLITE_OPEN_READWRITE, Bb)
-        != SQLITE_OK)
-    {
-#ifdef  _DBG_
-        std::cout << "!!!!!! ERROR: can't open database";
-#endif //  _DBG_
-    }
+    if (sqlite3_open(makeGoodString(aPath).c_str(), &mBase) != SQLITE_OK) 
+        WD_ERROR(database.0, "Can't open database " + makeGoodString(aPath));
+    //TODO: check don't work
 }
 
-void Database::select(std::string aTableName, std::string aColum, std::string aConditon)
+void Database::select
+(
+    std::string aTableName,
+    std::string aColum, 
+    std::string aConditon
+)
 {
     mStatement = NULL;
     if (aColum == "") aColum = "*";
     if (aConditon != "") aConditon = " WHERE " + aConditon;
-    std::string ss = "SELECT " + aColum + " FROM " + aTableName + aConditon;
+    std::string statement = "SELECT " + aColum + " FROM " + aTableName + aConditon;
     //std::cout << ss << std::endl;
     if (sqlite3_prepare_v2(
         mBase,              /* Database handle */
-        ss.c_str(),             /* SQL statement, UTF-8 encoded */
+        statement.c_str(),             /* SQL statement, UTF-8 encoded */
         -1,                 /* Maximum length of zSql in bytes. */
         &mStatement,             /* OUT: Statement handle */
         NULL                /* OUT: Pointer to unused portion of zSql */
-    ) != SQLITE_OK)
-    {
-#ifdef  _DBG_
-        std::cout << "!!!!!! ERROR: prepare statement " + ss << std::endl;;
-#endif //  _DBG_
-    }
+    ) != SQLITE_OK) WD_ERROR(database.1, "Can't prepare statement " + statement);
 }
 
-void Database::update(std::string aTableName, std::string aValue, std::string aConditon)
+void Database::update
+(
+    std::string aTableName,
+    std::string aValue,
+    std::string aConditon
+)
 {
-    std::string ss = "UPDATE " + aTableName + " SET " + aValue + " WHERE " + aConditon;
+    std::string statement = "UPDATE " + aTableName + " SET " + aValue + " WHERE " + aConditon;
     //std::cout << ss << std::endl;
     if (sqlite3_prepare_v2(
         mBase,              /* Database handle */
-        ss.c_str(),             /* SQL statement, UTF-8 encoded */
+        statement.c_str(),             /* SQL statement, UTF-8 encoded */
         -1,                 /* Maximum length of zSql in bytes. */
         &mStatement,             /* OUT: Statement handle */
         NULL                /* OUT: Pointer to unused portion of zSql */
-    ) != SQLITE_OK)
-    {
-#ifdef  _DBG_
-        std::cout << "!!!!!! ERROR: prepare statement " + ss << std::endl;;
-#endif //  _DBG_
-    }
+    ) != SQLITE_OK) WD_ERROR(database.2, "Can't prepare statement " + statement);
 }
 
 const unsigned char* Database::getTextFromRow(int aColumNumber)
@@ -78,29 +75,12 @@ void Database::closeStatment()
 {
     sqlite3_finalize(mStatement);
 }
-//
-//int Database::takeProblemId(sqlite3* ppDb)
-//{
-//    sqlite3_stmt* ppStmt = NULL;
-//    sqlite3_prepare_v2(
-//        ppDb,              /* Database handle */
-//        "SELECT * FROM core_solutions;",             /* SQL statement, UTF-8 encoded */
-//        -1,                 /* Maximum length of zSql in bytes. */
-//        &ppStmt,             /* OUT: Statement handle */
-//        NULL                /* OUT: Pointer to unused portion of zSql */
-//    );
-//
-//    sqlite3_step(ppStmt);
-//    int result = sqlite3_column_int64(ppStmt, 4);
-//    sqlite3_finalize(ppStmt);
-//    return result;
-//}
 
 int Database::step()
 {
     return sqlite3_step(mStatement);
 }
-#include <stdlib.h>
+
 char* Database::toAscii(const unsigned char* s)
 {
     int cnt = 0;

@@ -11,13 +11,34 @@
 
 #define _(aName) #aName
 
-#define WERROR(aNumber, aName, aMessege)                                    \
-    {                                                                       \
-        std::cout << "ERROR#" #aNumber "."                                  \
-            " | " #aName ": can't" aMessege                                 \
-            ", error code is " << GetLastError() << std::endl;              \
-        exit(0);                                                            \
+#define WLOG(aMessege)                                  \
+    {                                                   \
+        std::cout <<aMessege << "\n";                   \
     }
+
+#define W_END_LOG                                       \
+    {                                                   \
+        std::cout << "\n";                              \
+    }
+
+#define WERROR(aNumber, aMessege)                       \
+    {                                                   \
+        std::cout << "\n\n\x1b[31m!!!!!!!!! "           \
+            "ERROR HAS OCCURRED !!!!!!!!!\n\n"          \
+            << "ERROR# " #aNumber "\n"                  \
+            << aMessege << "\x1b[0m\n\n";               \
+        exit(0);                                        \
+    }
+
+#ifdef _DBG_
+    #define WD_LOG(aMessege) WLOG(aMessege) 
+    #define WD_END_LOG W_END_LOG 
+    #define WD_ERROR(aNumber, aMessege) WERROR(aNumber, aMessege) 
+#else
+    #define WDLOG(aMessege)
+    #define WD_END_LOG
+    #define WDERROR(aNumber, aMessege)
+#endif // DEBUG
 
 #define print(aMessage)         \
 {                               \

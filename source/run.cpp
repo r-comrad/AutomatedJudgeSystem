@@ -38,9 +38,8 @@ Process::Process() :
 
 void Process::IORedirection(std::wstring aInputPath, std::wstring aOutputPath)
 {
-#ifdef _DBG_
-    std::cout << "Rederecting input to: " << makeGoodString(aInputPath) << " and output to: " << makeGoodString(aOutputPath) << std::endl;
-#endif
+    WD_LOG("Rederecting input to: " << makeGoodString(aInputPath));
+    WD_LOG("Rederecting output to: " << makeGoodString(aOutputPath));
 
     SECURITY_ATTRIBUTES sa;
     sa.nLength = sizeof(sa);
@@ -78,6 +77,8 @@ void Process::IORedirection(std::wstring aInputPath, std::wstring aOutputPath)
     if (aInputPath != L"")  mStartupInfo.hStdInput = mInputHandle;
     if (aOutputPath != L"") mStartupInfo.hStdError = mOutputHandle;
     if (aOutputPath != L"") mStartupInfo.hStdOutput = mOutputHandle;
+
+    WD_END_LOG;
 }
 
 void Process::create
@@ -86,9 +87,8 @@ void Process::create
     std::wstring aParameters
 )
 {
-#ifdef _DBG_
-    std::cout << "Creating process name: " << makeGoodString(aName) << " parameters: " << makeGoodString(aParameters) << std::endl;
-#endif
+    WD_LOG("Creating process name: " << makeGoodString(aName));
+    WD_LOG("Parameters: " << makeGoodString(aParameters));
 
     wchar_t* name = const_cast<wchar_t*>(aName.c_str());
     if (aName == L"") name = NULL;
@@ -96,7 +96,9 @@ void Process::create
     wchar_t* cmd = const_cast<wchar_t*>(aParameters.c_str());
     if (aParameters == L"") cmd = NULL;
 
-    mFuture = std::async(std::launch::async, &Process::getMaxMemoryUsage, this, std::ref(mProcessInfo), 1000000);
+    mFuture = std::async(std::launch::async, &Process::getMaxMemoryUsage, 
+        this, std::ref(mProcessInfo), 1000000);
+    //TODO: Memory limit
 
     if (CreateProcess(
         name,
@@ -109,31 +111,26 @@ void Process::create
         NULL,
         &mStartupInfo,
         &mProcessInfo
-    ) == FALSE)
-    {
-#ifdef _DBG_
-        std::cout << "!!!!!! ERROR #2: can't start process" << std::endl;
-#endif // DEBUG      
-    }
+    ) == FALSE) WD_ERROR(process.0, "Can't start process " + makeGoodString(aName));
+
+    WD_END_LOG;
 }
 
 void Process::run()
 {
-#ifdef _DBG_
-    std::cout << "Runing simple process" << std::endl;
-#endif
+    WD_LOG("Runing simple process");
 
     ResumeThread(mProcessInfo.hThread);
     WaitForSingleObject(mProcessInfo.hProcess, INFINITE);
     CloseHandle(mInputHandle);
     CloseHandle(mOutputHandle);
+
+    WD_END_LOG;
 }
 
 std::pair<uint_64, uint_64> Process::run(uint_64 aTimeLimit, uint_64 aMemoryLimit)
 {
-#ifdef _DBG_
-    std::cout << "Runing process with time and memory evaluation" << std::endl;
-#endif
+    WD_LOG("Runing process with time and memory evaluation");
 
     int  reservedTime = 200;
     ResumeThread(mProcessInfo.hThread);
@@ -151,13 +148,13 @@ std::pair<uint_64, uint_64> Process::run(uint_64 aTimeLimit, uint_64 aMemoryLimi
     uint_64 memoryUsage = 0;
     memoryUsage = mFuture.get();
 
-#ifdef _DBG_
-    std::cout << "time usage: " << endTime - startTime << std::endl;
-    std::cout << "memory usage: " << memoryUsage << std::endl;
-#endif // DEBUG  
+    WD_LOG("time usage: " << endTime - startTime);
+    WD_LOG("memory usage: " << memoryUsage);
 
     CloseHandle(mInputHandle);
     CloseHandle(mOutputHandle);
+
+    WD_END_LOG;
 
     return { endTime - startTime , memoryUsage };
 }
@@ -216,9 +213,7 @@ DWORD Process::getExitCode(HANDLE& hProcess) {
 }
 
 bool Process::killProcess(PROCESS_INFORMATION& processInfo) {
-#ifdef _DBG_
-    std::cout << "Killing process" << std::endl;
-#endif
+    WD_LOG("Killing process");
 
     DWORD           processId = processInfo.dwProcessId;
     PROCESSENTRY32 processEntry = { 0 };
@@ -249,6 +244,10 @@ bool Process::killProcess(PROCESS_INFORMATION& processInfo) {
     if (getExitCode(processInfo.hProcess) == STILL_ACTIVE) {
         return false;
     }
+
+    WD_LOG("Process killed?");
+    WD_END_LOG;
+
     return true;
 }
 

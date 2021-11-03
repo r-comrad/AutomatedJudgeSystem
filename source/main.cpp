@@ -136,7 +136,7 @@ void check(std::wstring aSolutionName, MDatabaseQuery& aDBQ)
 int main()
 {
     makeChecker(L"task2");
-    return 0;
+    //return 0;
     std::wstring aTaskName = L"task2";
     std::wstring basePath = getMainPath() + RESOURCES + L"data_base.sqlite3";
     std::wstring taskPath = getMainPath() + RESOURCES + aTaskName + L"\\";
