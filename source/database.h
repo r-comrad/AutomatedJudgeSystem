@@ -31,6 +31,8 @@ public:
 private:
 	Base* mBase;
 	Statement* mStatement;
+
+	void prepare(std::string& aStatment);
 };
 
 #endif

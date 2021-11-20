@@ -2,6 +2,8 @@
 #include "run.h"
 #include "database_query.h"
 
+#include <map>
+
 void makeChecker(std::wstring aTaskName)
 {
     std::wstring TEST = getMainPath() + RESOURCES + L"MikeMirzayanov.cpp";
@@ -35,7 +37,8 @@ void makeChecker(std::wstring aTaskName)
     //run.runProcess(L"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Common7\\Tools\\VsDevCmd.bat & cl /EHsc " + sss, L"", L"", L"");
     
     
-    
+    // cd /d U:
+    // cd -Path U:
     //std::string ssss = "\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Common7\\Tools\\VsDevCmd.bat\" & cl /EHsc \""
     std::string ssss = "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Common7\\Tools\\VsDevCmd.bat cl /EHsc "
         + makeGoodString(sss)
@@ -67,6 +70,19 @@ void makeChecker(std::wstring aTaskName)
 
 C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\Tools\VsDevCmd.bat cl /EHsc U:\_Private\ChineseTester\ChineseTester\ChineseTester\resources\task2\checker\checker.cpp
 */
+
+std::wstring makeComand(char aFileEnding)
+{
+    std::wstring curPath = getMainPath() + RESOURCES + L"task1\\";
+    std::map<char, std::wstring> m =
+    {
+        { 'y', L"python " + curPath + L"solution\\plus.py" },
+        { 'p', curPath + L"solution\\plus.exe" },
+        { 'e',  curPath + L"solution\\plus.exe" }
+    };
+    std::wstring comand = m[aFileEnding];
+    return comand;
+}
 
 void check(std::wstring aSolutionName, MDatabaseQuery& aDBQ)
 {
@@ -120,28 +136,31 @@ void check(std::wstring aSolutionName, MDatabaseQuery& aDBQ)
         resultFile >> resultSS;
         if (resultSS != "ok")
         {
+            //WD_ERROR(mainCheck.0, "Can't open file " + makeGoodString(aTaskPath) + "init");
+            WD_LOG("Result not okay");
             break;
-#ifdef _DBG_
-            std::cout << "error";
-#endif
         }
     }
     aDBQ.writeResult(resultSS, results.first, results.second);
 
-    std::cout << "Final result : " << resultSS << std::endl;
-    std::cout << "Final time : " << results.first << std::endl;
-    std::cout << "Final memory : " << results.second << std::endl;
+    WD_LOG("Final result : " + resultSS);
+    WD_LOG("Final time : " + results.first);
+    WD_LOG("Final memory : " + results.second);
 }
 #include "database_query.h"
+
 int main()
 {
     makeChecker(L"task2");
-    //return 0;
+    return 0;
     std::wstring aTaskName = L"task2";
     std::wstring basePath = getMainPath() + RESOURCES + L"data_base.sqlite3";
     std::wstring taskPath = getMainPath() + RESOURCES + aTaskName + L"\\";
+    int id;
+    std::cin >> id;
+
     MDatabaseQuery DBQ(basePath, taskPath);
-    DBQ.makeTestCatalog(10);
+    DBQ.makeTestCatalog(id);
     check(L"plus.py", DBQ);
     return 0;
 
@@ -213,4 +232,71 @@ L"D:\\projects\\VS_2019\\ChineseTester\\resources\\canswer.txt";
 ////    run.runProcess(programPath, inputPath, outputPath, parameters);
 //    }
 }
-
+//
+//#include <stdlib.h>
+//#include <stdio.h>
+//#include <string.h>
+//
+//#include <unistd.h>
+//#include <spawn.h>
+//#include <sys/wait.h>
+//
+//extern char** environ;
+//
+//void test_fork_exec(void);
+//void test_posix_spawn(void);
+//
+//int main(void) {
+//    test_fork_exec();
+//    test_posix_spawn();
+//    return EXIT_SUCCESS;
+//}
+//
+//void test_fork_exec(void) {
+//    pid_t pid;
+//    int status;
+//    puts("Testing fork/exec");
+//    fflush(NULL);
+//    pid = fork();
+//    switch (pid) {
+//    case -1:
+//        perror("fork");
+//        break;
+//    case 0:
+//        execl("/bin/ls", "ls", (char*)0);
+//        perror("exec");
+//        break;
+//    default:
+//        printf("Child id: %i\n", pid);
+//        fflush(NULL);
+//        if (waitpid(pid, &status, 0) != -1) {
+//            printf("Child exited with status %i\n", status);
+//        }
+//        else {
+//            perror("waitpid");
+//        }
+//        break;
+//    }
+//}
+//
+//void test_posix_spawn(void) {
+//    pid_t pid;
+//    char* argv[] = { "ls", (char*)0 };
+//    int status;
+//    puts("Testing posix_spawn");
+//    fflush(NULL);
+//    status = posix_spawn(&pid, "/bin/ls", NULL, NULL, argv, environ);
+//    if (status == 0) {
+//        printf("Child id: %i\n", pid);
+//        fflush(NULL);
+//        if (waitpid(pid, &status, 0) != -1) {
+//            printf("Child exited with status %i\n", status);
+//        }
+//        else {
+//            perror("waitpid");
+//        }
+//    }
+//    else {
+//        printf("posix_spawn: %s\n", strerror(status));
+//    }
+//}
