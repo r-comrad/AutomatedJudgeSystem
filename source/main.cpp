@@ -63,12 +63,15 @@ void makeChecker(std::wstring aTaskName)
 
 
     std::string sas2 =
-        "C:\lol3.bat & cl D:\projects\VS_2019\ChineseTester\resources\task2\checker\checker.cpp /FoD:\projects\VS_2019\ChineseTester\resources\task2\checker\checker.exe
-;
+        "C:\\Windows\\system32\\cmd.exe /C C:\lol4.bat \"D:\\hello2.cpp\" \"D:\\hello.exe\"";
     
+
+    std::string sas3 =
+        "C:\\lol4.cmd D:\\hello.cpp D:\\hello.exe";
+
     std::cout << std::endl << ssss << std::endl;
-    //process.create(makeBadString(sas), L"");
-    process.create(makeBadString("C:\\lol2.bat"), makeBadString(ssss2));
+    process.create(makeBadString(""), makeBadString(sas3));
+    //process.create(makeBadString("C:\\lol2.bat"), makeBadString(ssss2));
     //process.create(makeBadString(compilerPath), makeBadString(ssss1));
     //process.create(makeBadString(pathexe), makeBadString(command));
      //process.create(makeBadString(pathexe1), makeBadString(command1));
