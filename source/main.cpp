@@ -18,10 +18,10 @@ void makeChecker(std::wstring aTaskName)
     //while (fromFile >> c) toFile << c;
     //while (fscanf(fromFile, "%c", &c)) toFile << c;
     while (std::getline(fromFile, s)) toFile << s << '\n';
-
+    Process process;
+    process.IORedirection(L"", L"");
     //C:\Windows\SysWOW64\WindowsPowerShell\v1.0\\powershell.exe
 
-    Process process;
     //std::wstring answerAddress = curPath + L"answer\\" + std::to_wstring(testNum);
     //std::wstring resultAddress = curPath + L"result\\" + std::to_wstring(testNum);
     //std::wstring parameters = L"sas input " + outAddress + L" " + answerAddress;
@@ -40,12 +40,39 @@ void makeChecker(std::wstring aTaskName)
     // cd /d U:
     // cd -Path U:
     //std::string ssss = "\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Common7\\Tools\\VsDevCmd.bat\" & cl /EHsc \""
-    std::string ssss = "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Common7\\Tools\\VsDevCmd.bat cl /EHsc "
-        + makeGoodString(sss)
-        //+  " /LINK /OUT:\"" + getString(checkerEXE) + "\""
-        ;
+
+    std::string compilerPath = "\"C:\\Program Files(x86)\\Microsoft\ Visual\ Studio\\2019\Community\\Common7\Tools\\VsDevCmd.bat\"";
+    std::string compilerComand = " cl /EHsc ";
+    //std::string compilerComand = "\"cl /EHsc\" ";
+    std::string checkerPath = "\"D:\\projects\\VS_2019\\ChineseTester\\resources\\task2\\checker\\checker.cpp\"";
+    std::string outPath = "/FoD:\\projects\\VS_2019\\ChineseTester\\resources\\task2\\checker\\checker.exe";
+
+
+    std::string ssss = compilerPath + compilerComand + checkerPath + " " + outPath;
+    std::string ssss1 = compilerComand + checkerPath + " " + outPath;
+    std::string ssss2 = "VsDevCmd" + compilerComand + checkerPath + " " + outPath;
+
+    std::string pathexe = "C:\\Windows\\system32\\cmd.exe";
+    std::string command = "cmd /c notepad.exe";
+
+    std::string pathexe1 = "C:\\lol2.bat";
+    std::string command1 = "cmd /c notepad.exe";
+
+    std::string sas = 
+        "\"C:\\Program Files(x86)\\Microsoft\ Visual\ Studio\\2019\Community\\Common7\Tools\\VsDevCmd.bat\" & cl /EHsc \"D:\\hello.cpp\"";
+
+
+    std::string sas2 =
+        "C:\lol3.bat & cl D:\projects\VS_2019\ChineseTester\resources\task2\checker\checker.cpp /FoD:\projects\VS_2019\ChineseTester\resources\task2\checker\checker.exe
+;
+    
     std::cout << std::endl << ssss << std::endl;
-    process.create(makeBadString(ssss), L"");
+    //process.create(makeBadString(sas), L"");
+    process.create(makeBadString("C:\\lol2.bat"), makeBadString(ssss2));
+    //process.create(makeBadString(compilerPath), makeBadString(ssss1));
+    //process.create(makeBadString(pathexe), makeBadString(command));
+     //process.create(makeBadString(pathexe1), makeBadString(command1));
+    //process.create(makeBadString("C:\Windows\\system32\\cmd.exe"), makeBadString("cmd"));
     process.run();
     //WinExec(ssss.c_str(), SW_SHOWNORMAL);
     //SW_HIDE
@@ -70,6 +97,64 @@ void makeChecker(std::wstring aTaskName)
 
 C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\Tools\VsDevCmd.bat cl /EHsc U:\_Private\ChineseTester\ChineseTester\ChineseTester\resources\task2\checker\checker.cpp
 */
+
+
+/*
+
+#include <cstring>
+#include <string>
+#include <iostream>
+
+#define WINDOWS_LEAN_AND_MEAN
+#include <Windows.h>
+
+std::wstring GetEnvString()
+{
+    wchar_t* env = GetEnvironmentStrings();
+    if (!env)
+        abort();
+    const wchar_t* var = env;
+    size_t totallen = 0;
+    size_t len;
+    while ((len = wcslen(var)) > 0)
+    {
+        totallen += len + 1;
+        var += len + 1;
+    }
+    std::wstring result(env, totallen);
+    FreeEnvironmentStrings(env);
+    return result;
+}
+
+int main()
+{
+    std::wstring env = GetEnvString();
+    env += L"myvar=boo";
+    env.push_back('\0'); // somewhat awkward way to embed a null-terminator
+
+    STARTUPINFO si = { sizeof(STARTUPINFO) };
+    PROCESS_INFORMATION pi;
+
+   // wchar_t cmdline[] = L"cmd.exe /C C:\\Desktop\\MyBatFile.bat";
+    //wchar_t cmdline[] =
+    //    L"\"C:\\Program Files(x86)\\Microsoft Visual Studio\\2019\\Community\\Common7\\Tools\\VsDevCmd.bat\"";
+
+    wchar_t cmdline[] = L"C:\\lol2.bat";
+    if (!CreateProcess(NULL, cmdline, NULL, NULL, false, CREATE_UNICODE_ENVIRONMENT,
+        (LPVOID)env.c_str(), NULL, &si, &pi))
+    {
+        std::cout << GetLastError();
+        abort();
+    }
+
+    CloseHandle(pi.hProcess);
+    CloseHandle(pi.hThread);
+}
+
+
+*/
+
+
 
 std::wstring makeComand(char aFileEnding)
 {

@@ -23,3 +23,67 @@ std::wstring makeBadString(std::string aGoodString)
     return badString;
 }
 
+std::wstring GetLastErrorAsString()
+{
+    setlocale(LC_ALL, "Russian");
+
+    //Get the error message ID, if any.
+    DWORD errorMessageID = ::GetLastError();
+    if (errorMessageID == 0) {
+        return std::wstring(); //No error message has been recorded
+    }
+
+    LPWSTR messageBuffer = nullptr;
+
+    //Ask Win32 to give us the string version of that message ID.
+    //The parameters we pass in, tell Win32 to create the buffer that holds the message for us (because we don't yet know how long the message string will be).
+    size_t size = FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+        NULL, errorMessageID, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPWSTR)&messageBuffer, 0, NULL);
+
+    //Copy the error message into a std::string.
+    //std::wstring message(messageBuffer, size);
+    std::wstring message;
+    for (int i = 0; i < size; ++i)
+    {
+        message.push_back(messageBuffer[i]);
+    }
+
+    //Free the Win32's string's buffer.
+    LocalFree(messageBuffer);
+
+    return message;
+}
+
+//std::string GetLastErrorAsString()
+//{
+//    LPTSTR errorText = NULL;
+//
+//    FormatMessage(
+//        // use system message tables to retrieve error text
+//        FORMAT_MESSAGE_FROM_SYSTEM
+//        // allocate buffer on local heap for error text
+//        | FORMAT_MESSAGE_ALLOCATE_BUFFER
+//        // Important! will fail otherwise, since we're not 
+//        // (and CANNOT) pass insertion parameters
+//        | FORMAT_MESSAGE_IGNORE_INSERTS,
+//        NULL,    // unused with FORMAT_MESSAGE_FROM_SYSTEM
+//        GetLastError(),
+//        MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+//        (LPTSTR)&errorText,  // output 
+//        0, // minimum size for output buffer
+//        NULL);   // arguments - see note 
+//
+//    if (NULL != errorText)
+//    {
+//        // ... do something with the string `errorText` - log it, display it to the user, etc.
+//
+//        // release memory allocated by FormatMessage()
+//        LocalFree(errorText);
+//        errorText = NULL;
+//    }
+//
+//    int i = 0;
+//    while (errorText[i])  std::cout << errorText[i++];
+//
+//    return "";
+//}

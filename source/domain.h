@@ -27,6 +27,9 @@
             "ERROR HAS OCCURRED !!!!!!!!!\n\n"          \
             << "ERROR# " #aNumber "\n"                  \
             << aMessege << "\x1b[0m\n\n";               \
+        std::wcout << "\n\n\x1b[31m" <<                 \
+            GetLastErrorAsString() <<                   \
+            "\x1b[0m\n\n";                              \
         exit(0);                                        \
     }
 
@@ -67,5 +70,6 @@ std::wstring getMainPath();
 std::string makeGoodString(std::wstring aBadString);
 std::wstring makeBadString(std::string aGoodString);
 //std::string makeGoodString(std::wstring aSS);
+std::wstring GetLastErrorAsString();
 
 #endif //DOMAIN_H
