@@ -54,6 +54,15 @@ std::wstring GetLastErrorAsString()
     return message;
 }
 
+void 
+copyFile(std::string aFromFileName, std::string aToFileName)
+{
+    std::ifstream fromFile(aFromFileName);
+    std::ofstream toFile(aToFileName);
+    std::string s;
+    while (std::getline(fromFile, s)) toFile << s << '\n';
+}
+
 //std::string GetLastErrorAsString()
 //{
 //    LPTSTR errorText = NULL;

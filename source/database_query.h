@@ -4,6 +4,7 @@
 #include <string>
 
 #include "database.h"
+#include "submission_information.h"
 
 class MDatabaseQuery
 {
@@ -16,13 +17,13 @@ public:
 	//coutRows(sqlite3* ppDb, int problemNum);
 	//takeProblemId(sqlite3* ppDb, int problemNum);
 
-	void makeTestCatalog(int aID);
+	void makeTestCatalog(SubmissionInformation& aSudmissionInformation);
 	void writeResult(std::string aResult, int aTime, int aMemory);
 
 private:
 	Database mDatabase;
 
-	void getIDInformation(int aID);
+	void getIDInformation(SubmissionInformation& aSudmissionInformation);
 	void getLimitsInformation();
 	void getTests();
 

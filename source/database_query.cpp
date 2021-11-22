@@ -18,10 +18,10 @@ MDatabaseQuery::~MDatabaseQuery()
     mTaskFile.close();
 }
 
-void MDatabaseQuery::makeTestCatalog(int aID)
+void MDatabaseQuery::makeTestCatalog(SubmissionInformation& aSudmissionInformation)
 {
-    getIDInformation(aID);
-    getLimitsInformation();
+    getIDInformation(aSudmissionInformation);
+    getLimitsInformation(aSudmissionInformation);
     getTests();
 }
 
@@ -39,10 +39,9 @@ void MDatabaseQuery::writeResult(std::string aResult, int aTime, int aMemory)
     WD_END_LOG;
 }
 
-void MDatabaseQuery::getIDInformation(int aID)
+void MDatabaseQuery::getIDInformation(SubmissionInformation& aSudmissionInformation)
 {
     WD_LOG("Geting ID and name from database");
-
     mGlobalId = aID;
 
     //SELECT * FROM core_solutions WHERE id = 10

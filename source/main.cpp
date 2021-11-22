@@ -4,20 +4,19 @@
 
 #include <map>
 
+#include "core.h"
+
 void makeChecker(std::wstring aTaskName)
 {
     std::wstring TEST = getMainPath() + RESOURCES + L"MikeMirzayanov.cpp";
     std::wstring checkerkath = getMainPath() + RESOURCES + aTaskName + L"\\checker\\";
 
-    std::ifstream fromFile(TEST);
     std::wstring sss = checkerkath + L"checker.cpp";
     std::wstring checkerEXE = checkerkath + L"checker.exe";
-    std::ofstream toFile(sss);
     
     std::string s;
     //while (fromFile >> c) toFile << c;
     //while (fscanf(fromFile, "%c", &c)) toFile << c;
-    while (std::getline(fromFile, s)) toFile << s << '\n';
     Process process;
     process.IORedirection(L"", L"");
     //C:\Windows\SysWOW64\WindowsPowerShell\v1.0\\powershell.exe
@@ -239,14 +238,12 @@ void check(std::wstring aSolutionName, MDatabaseQuery& aDBQ)
 
 int main()
 {
-    makeChecker(L"task2");
-    return 0;
     std::wstring aTaskName = L"task2";
     std::wstring basePath = getMainPath() + RESOURCES + L"data_base.sqlite3";
     std::wstring taskPath = getMainPath() + RESOURCES + aTaskName + L"\\";
-    int id;
-    std::cin >> id;
-
+    int id = 10;
+    //std::cin >> id;
+    makeChecker(L"task2");
     MDatabaseQuery DBQ(basePath, taskPath);
     DBQ.makeTestCatalog(id);
     check(L"plus.py", DBQ);

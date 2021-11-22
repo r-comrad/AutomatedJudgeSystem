@@ -5,7 +5,15 @@
 #define _DBG_
 #endif
 
-#define RESOURCES L"resources\\"
+#//define RESOURCES L"resources\\"
+
+#define MAIN_PATH getMainPath()
+#define RESOURCES MAIN_PATH + L"resources\\"
+#define COMPILERS RESOURCES + L"compilers\\"
+#define EXAMPLES RESOURCES + L"examples\\"
+#define WORK_DIR RESOURCES + L"working_directory\\"
+
+#define CHECKER_PATH WORK_DIR + L"checker\\checker.exe"
 
 #define WINDOWS_OSS
 
@@ -71,5 +79,6 @@ std::string makeGoodString(std::wstring aBadString);
 std::wstring makeBadString(std::string aGoodString);
 //std::string makeGoodString(std::wstring aSS);
 std::wstring GetLastErrorAsString();
+void copyFile(std::string aFromFileName, std::string aToFileName);
 
 #endif //DOMAIN_H
