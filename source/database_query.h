@@ -10,7 +10,7 @@ class MDatabaseQuery
 {
 public:
 	//MDatabaseQuery() {};
-	MDatabaseQuery(std::wstring aDatabasePath, std::wstring aTaskPath);
+	MDatabaseQuery(std::wstring aDatabasePath);
 	~MDatabaseQuery();
 	
 	//takeProblemId(sqlite3* ppDb);
@@ -18,25 +18,14 @@ public:
 	//takeProblemId(sqlite3* ppDb, int problemNum);
 
 	void makeTestCatalog(SubmissionInformation& aSudmissionInformation);
-	void writeResult(std::string aResult, int aTime, int aMemory);
+	void writeResult(int aID, std::string aResult, int aTime, int aMemory);
 
 private:
 	Database mDatabase;
 
 	void getIDInformation(SubmissionInformation& aSudmissionInformation);
-	void getLimitsInformation();
-	void getTests();
-
-	std::ofstream mTaskFile;
-
-	std::wstring mTaskPath;
-
-	int mGlobalId;
-	int mContestID;
-	const unsigned char* mFileName;
-
-	int mTimeLimit;
-	int mMemoryLimit;
+	void getLimitsInformation(SubmissionInformation& aSudmissionInformation);
+	void getTests(int aContestID, SubmissionInformation& aSudmissionInformation);
 };
 
 #endif

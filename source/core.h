@@ -1,24 +1,28 @@
 #ifndef CORE_H
 #define CORE_H
 
+#include <map>
+
 #include "database_query.h"
+#include "process.h"
 
 class Core
 {
 public:
-	Core(int aId);
-
+	Core(std::wstring aDatabasePath);
+	void run(int aID);
 
 private:
 	enum Language { NUN = 0, MagicCPP, Snake};
 
-	Base* mBase;
-	Statement* mStatement;
+	MDatabaseQuery mDBQ;
+	SubmissionInformation mSubInfo;
 
-	
-	void compile(std::wstring aCheckerName, std::wstring aOutName, Language aLanguage);
-	void makeChecker(std::wstring aCheckerNam);
+	std::wstring makeExecutable(std::wstring aFileName, std::wstring aOutputName);
 	Core::Language getLanguage(std::wstring aFileName);
+	std::wstring compile(std::wstring aFileName, std::wstring aOutName, Language aLanguage);
+
+	void check(std::wstring aSolutionName, std::wstring aCheckerName);
 
 };
 

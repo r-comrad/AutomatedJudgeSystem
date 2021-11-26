@@ -1,1 +1,0 @@
-#include "submission_struct.h"

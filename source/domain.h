@@ -13,7 +13,14 @@
 #define EXAMPLES RESOURCES + L"examples\\"
 #define WORK_DIR RESOURCES + L"working_directory\\"
 
-#define CHECKER_PATH WORK_DIR + L"checker\\checker.exe"
+#define DATABASE_PATH RESOURCES + L"database\\data_base.sqlite3"
+
+#define CHECKER_PATH WORK_DIR + L"checker\\checker"
+#define SOLUTION_PATH WORK_DIR + L"solution\\solution"
+#define TEST_PATH WORK_DIR + L"tests\\"
+#define ANSWERS_PATH WORK_DIR + L"answers\\"
+#define OUTPUT_PATH WORK_DIR + L"outputs\\"
+#define RESULT_PATH WORK_DIR + L"results\\"
 
 #define WINDOWS_OSS
 
@@ -80,5 +87,6 @@ std::wstring makeBadString(std::string aGoodString);
 //std::string makeGoodString(std::wstring aSS);
 std::wstring GetLastErrorAsString();
 void copyFile(std::string aFromFileName, std::string aToFileName);
-
+void copyFile(std::wstring aFromFileName, std::wstring aToFileName);
+std::wstring getString(const unsigned char* aString);
 #endif //DOMAIN_H

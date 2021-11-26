@@ -5,9 +5,12 @@ class SubmissionInformation
 {
 public:
 	int id;
-	int timeLimit;
-	int memoryLimit;
-
+	uint_64 mTimeLimit;
+	uint_64 mMemoryLimit;
+	std::wstring mSolutionFileName;
+	std::wstring mCheckerFileName;
+	int mContestID;
+	int mTestsCount;
 };
 
 #endif //SUBMISSION_STRUCT_H

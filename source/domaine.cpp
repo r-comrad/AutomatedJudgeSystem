@@ -63,6 +63,19 @@ copyFile(std::string aFromFileName, std::string aToFileName)
     while (std::getline(fromFile, s)) toFile << s << '\n';
 }
 
+void
+copyFile(std::wstring aFromFileName, std::wstring aToFileName)
+{
+    copyFile(makeGoodString(aFromFileName), makeGoodString(aToFileName));
+}
+
+std::wstring getString(const unsigned char* aString)
+{
+    std::wstring result;
+    for (int i = 0; aString[i]; ++i) result.push_back(aString[i]);
+    return result;
+}
+
 //std::string GetLastErrorAsString()
 //{
 //    LPTSTR errorText = NULL;

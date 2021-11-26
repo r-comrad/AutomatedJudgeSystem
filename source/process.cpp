@@ -1,7 +1,7 @@
 #pragma GCC diagnostic ignored "-Wwrite-strings"
 #define INT_MAX 2147483647
 
-#include "Run.h"
+#include "process.h"
 
 
 #include <cstdint> 
@@ -111,7 +111,7 @@ void Process::create
         NULL,
         &mStartupInfo,
         &mProcessInfo
-    ) == FALSE) WD_ERROR(process.0, "Can't start process " + makeGoodString(aName));
+    ) == FALSE) WD_ERROR(process.0, "Can't start process " + makeGoodString(aName) + "\narguments are: " + makeGoodString(aParameters));
 
     WD_END_LOG;
 }
