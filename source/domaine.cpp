@@ -76,6 +76,13 @@ std::wstring getString(const unsigned char* aString)
     return result;
 }
 
+std::wstring getString(const char* aString)
+{
+    std::wstring result;
+    for (int i = 0; aString[i]; ++i) result.push_back(aString[i]);
+    return result;
+}
+
 //std::string GetLastErrorAsString()
 //{
 //    LPTSTR errorText = NULL;

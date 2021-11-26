@@ -53,9 +53,9 @@
     #define WD_END_LOG W_END_LOG 
     #define WD_ERROR(aNumber, aMessege) WERROR(aNumber, aMessege) 
 #else
-    #define WDLOG(aMessege)
+    #define WD_LOG(aMessege) 
     #define WD_END_LOG
-    #define WDERROR(aNumber, aMessege)
+    #define WD_ERROR(aNumber, aMessege)
 #endif // DEBUG
 
 #define print(aMessage)         \
@@ -89,4 +89,5 @@ std::wstring GetLastErrorAsString();
 void copyFile(std::string aFromFileName, std::string aToFileName);
 void copyFile(std::wstring aFromFileName, std::wstring aToFileName);
 std::wstring getString(const unsigned char* aString);
+std::wstring getString(const char* aString);
 #endif //DOMAIN_H

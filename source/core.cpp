@@ -115,4 +115,5 @@ Core::check(std::wstring aSolutionName, std::wstring aCheckerName)
     WD_LOG("Final result : " + resultSS);
     WD_LOG("Final time : " << results.first);
     WD_LOG("Final memory : " << results.second);
+    WD_END_LOG;
 }
