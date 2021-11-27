@@ -57,10 +57,13 @@ std::wstring GetLastErrorAsString()
 void 
 copyFile(std::string aFromFileName, std::string aToFileName)
 {
+    WD_LOG("Copy file\nFrom : " << aFromFileName);
+    WD_LOG("To   : " << aToFileName);
     std::ifstream fromFile(aFromFileName);
     std::ofstream toFile(aToFileName);
     std::string s;
     while (std::getline(fromFile, s)) toFile << s << '\n';
+    WD_END_LOG;
 }
 
 void
@@ -81,6 +84,22 @@ std::wstring getString(const char* aString)
     std::wstring result;
     for (int i = 0; aString[i]; ++i) result.push_back(aString[i]);
     return result;
+}
+
+std::wstring makeWindowString(std::wstring aString)
+{
+    //for (int i = 0; i < aString.size(); ++i)
+    //{
+    //    aString.erase(aString.begin() + i);
+    //    aString.insert(aString.begin() + i, '\\');
+    //    aString.insert(aString.begin() + i, '\\');
+    //}
+    for (auto& i : aString)
+    {
+        if (i == '/') i = '\\';
+    }
+    return aString;
+
 }
 
 //std::string GetLastErrorAsString()

@@ -5,7 +5,7 @@
 
 int main(int argc, char* argv[])
 {
-    int num = 10;
+    int num = 3;
     if (argc > 1)
     {
         num = std::stoi(getString(argv[1]));

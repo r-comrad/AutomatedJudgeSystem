@@ -12,8 +12,10 @@
 #define COMPILERS RESOURCES + L"compilers\\"
 #define EXAMPLES RESOURCES + L"examples\\"
 #define WORK_DIR RESOURCES + L"working_directory\\"
+#define MAEDIA MAIN_PATH + L"media\\"
 
-#define DATABASE_PATH RESOURCES + L"database\\data_base.sqlite3"
+//#define DATABASE_PATH RESOURCES + L"database\\data_base.sqlite3"
+#define DATABASE_PATH MAIN_PATH + L"db.sqlite3"
 
 #define CHECKER_PATH WORK_DIR + L"checker\\checker"
 #define SOLUTION_PATH WORK_DIR + L"solution\\solution"
@@ -90,4 +92,5 @@ void copyFile(std::string aFromFileName, std::string aToFileName);
 void copyFile(std::wstring aFromFileName, std::wstring aToFileName);
 std::wstring getString(const unsigned char* aString);
 std::wstring getString(const char* aString);
+std::wstring makeWindowString(std::wstring aString);
 #endif //DOMAIN_H

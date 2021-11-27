@@ -14,8 +14,8 @@ Core::run(int aID)
 {
     mSubInfo.id = aID;
     mDBQ.makeTestCatalog(mSubInfo);
-    std::wstring solutionName = makeExecutable(mSubInfo.mSolutionFileName, SOLUTION_PATH);
-    std::wstring checkerName = makeExecutable(mSubInfo.mCheckerFileName, CHECKER_PATH);
+    std::wstring solutionName = makeExecutable(MAIN_PATH + makeWindowString(mSubInfo.mSolutionFileName), SOLUTION_PATH);
+    std::wstring checkerName = makeExecutable(MAEDIA + makeWindowString(mSubInfo.mCheckerFileName), CHECKER_PATH);
     check(solutionName, checkerName);
 }
 
@@ -56,6 +56,7 @@ Core::compile(std::wstring aFileName, std::wstring aOutName, Language aLanguage)
     {
         result += L".py";
         copyFile(aFileName, result);
+        result = L"python " + result;
     }
     for (int i = 0; i < 1e7; ++i);
     return result;
@@ -80,17 +81,17 @@ Core::check(std::wstring aSolutionName, std::wstring aCheckerName)
     std::string resultSS;
 
     std::pair<uint_64, uint_64> results = { 0,0 };
-    for (int testNum = 1; testNum < mSubInfo.mTestsCount; ++testNum)
+    for (int testNum = 0; testNum < mSubInfo.mTestsCount; ++testNum)
     {
         Process code;
         std::wstring testAddress = TEST_PATH + std::to_wstring(testNum);
         std::wstring outAddress = OUTPUT_PATH + std::to_wstring(testNum);
-        
+
         code.IORedirection(testAddress, outAddress);
         code.create(L"", aSolutionName);
         std::pair<uint_64, uint_64> cur = code.run(0, 0);
 
-        results.first = std::max(results.first, cur.first);
+        results.first = std::max(results.first, cur.first) / 1e6;
         results.second = std::max(results.second, cur.second);
 
         Process checker;
@@ -107,6 +108,18 @@ Core::check(std::wstring aSolutionName, std::wstring aCheckerName)
         {
             //WD_ERROR(mainCheck.0, "Can't open file " + makeGoodString(aTaskPath) + "init");
             WD_LOG("Result not okay");
+            break;
+        }
+        else if (mSubInfo.mTimeLimit < results.first)
+        {
+            resultSS = "tle";
+            WD_LOG("Result is TLE");
+            break;
+        }
+        else if (mSubInfo.mTimeLimit < results.second)
+        {
+            resultSS = "mle";
+            WD_LOG("Result is MLE");
             break;
         }
     }

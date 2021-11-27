@@ -38,12 +38,11 @@ void MDatabaseQuery::getIDInformation(SubmissionInformation& aSudmissionInformat
 {
     WD_LOG("Geting ID and name from database");
 
-    mDatabase.select("core_solutions", "file_name, contest_id, lang", "id = " + std::to_string(aSudmissionInformation.id));
+    mDatabase.select("core_solutions", "file_name, contest_id", "id = " + std::to_string(aSudmissionInformation.id));
     mDatabase.step();
 
     aSudmissionInformation.mSolutionFileName = getString(mDatabase.getTextFromRow(0));
     aSudmissionInformation.mContestID = mDatabase.getInt64FromRow(1);
-    aSudmissionInformation.mCheckerFileName = getString(mDatabase.getTextFromRow(2));
     mDatabase.closeStatment();
 
     WD_LOG("File name: " << makeGoodString(aSudmissionInformation.mSolutionFileName));
@@ -55,10 +54,11 @@ void MDatabaseQuery::getLimitsInformation(SubmissionInformation& aSudmissionInfo
 {
     WD_LOG("Geting limits from database");
 
-    mDatabase.select("core_contests", "time_limit, memory_limit", "id = " + std::to_string(aSudmissionInformation.mContestID));
+    mDatabase.select("core_contests", "time_limit, memory_limit, checker", "id = " + std::to_string(aSudmissionInformation.mContestID));
     mDatabase.step();
     aSudmissionInformation.mTimeLimit = mDatabase.getInt64FromRow(0);
     aSudmissionInformation.mMemoryLimit = mDatabase.getInt64FromRow(1);
+    aSudmissionInformation.mCheckerFileName = getString(mDatabase.getTextFromRow(2));
     mDatabase.closeStatment();
 
     WD_LOG("Time limit: " << aSudmissionInformation.mTimeLimit);
