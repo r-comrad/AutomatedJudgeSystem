@@ -148,7 +148,7 @@ std::pair<uint_64, uint_64> Process::run(uint_64 aTimeLimit, uint_64 aMemoryLimi
     uint_64 memoryUsage = 0;
     memoryUsage = mFuture.get();
 
-    WD_LOG("time usage: " << endTime - startTime);
+    WD_LOG("time usage: " << timeUsage);
     WD_LOG("memory usage: " << memoryUsage);
 
     CloseHandle(mInputHandle);
@@ -156,7 +156,7 @@ std::pair<uint_64, uint_64> Process::run(uint_64 aTimeLimit, uint_64 aMemoryLimi
 
     WD_END_LOG;
 
-    return { endTime - startTime , memoryUsage };
+    return { timeUsage , memoryUsage };
 }
 
 long long Process::getMillisecondsNow() {

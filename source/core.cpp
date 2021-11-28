@@ -14,7 +14,7 @@ Core::run(int aID)
 {
     mSubInfo.id = aID;
     mDBQ.makeTestCatalog(mSubInfo);
-    std::wstring solutionName = makeExecutable(MAIN_PATH + makeWindowString(mSubInfo.mSolutionFileName), SOLUTION_PATH);
+    std::wstring solutionName = makeExecutable(MAEDIA + makeWindowString(mSubInfo.mSolutionFileName), SOLUTION_PATH);
     std::wstring checkerName = makeExecutable(MAEDIA + makeWindowString(mSubInfo.mCheckerFileName), CHECKER_PATH);
     check(solutionName, checkerName);
 }
@@ -75,11 +75,18 @@ std::wstring makeComand(char aFileEnding)
     return comand;
 }
 
-void 
+void
 Core::check(std::wstring aSolutionName, std::wstring aCheckerName)
 {
     std::string resultSS;
 
+    std::map<std::string, std::string> decoder = { {"ok", "OK"}, {"wa", "WA"}, {"tle", "TL"}, {"mle", "ML"}, {"pe", "PE"} };
+
+#ifdef _DBG_
+    std::vector<std::pair<uint_64, uint_64>> allTimes;
+#endif // _DBG_
+
+    uint_64 mtm = 1e9;
     std::pair<uint_64, uint_64> results = { 0,0 };
     for (int testNum = 0; testNum < mSubInfo.mTestsCount; ++testNum)
     {
@@ -91,8 +98,13 @@ Core::check(std::wstring aSolutionName, std::wstring aCheckerName)
         code.create(L"", aSolutionName);
         std::pair<uint_64, uint_64> cur = code.run(0, 0);
 
-        results.first = std::max(results.first, cur.first) / 1e6;
+#ifdef _DBG_
+        allTimes.push_back(cur);
+#endif // _DBG_
+
+        results.first = std::max(results.first, cur.first);
         results.second = std::max(results.second, cur.second);
+        mtm = std::min(mtm, cur.first);
 
         Process checker;
         std::wstring answerAddress = ANSWERS_PATH + std::to_wstring(testNum);
@@ -113,20 +125,31 @@ Core::check(std::wstring aSolutionName, std::wstring aCheckerName)
         else if (mSubInfo.mTimeLimit < results.first)
         {
             resultSS = "tle";
-            WD_LOG("Result is TLE");
+            WD_LOG("Result is TLE" << mSubInfo.mTimeLimit << " vs " << results.first);
             break;
         }
-        else if (mSubInfo.mTimeLimit < results.second)
+        else if (mSubInfo.mMemoryLimit < results.second)
         {
             resultSS = "mle";
-            WD_LOG("Result is MLE");
+            WD_LOG("Result is MLE" << mSubInfo.mMemoryLimit << " vs " << results.second);
             break;
         }
     }
+    resultSS = decoder[resultSS];
     mDBQ.writeResult(mSubInfo.id, resultSS, results.first, results.second);
 
     WD_LOG("Final result : " + resultSS);
     WD_LOG("Final time : " << results.first);
     WD_LOG("Final memory : " << results.second);
     WD_END_LOG;
+
+    WD_LOG("Times : ");
+#ifdef _DBG_
+    for (auto& i : allTimes) WD_LOG(i.first << " " << i.second);
+    WD_END_LOG;
+    WD_LOG("Min time : " << (*std::max_element(allTimes.begin(), allTimes.end())).first);
+    WD_LOG("Max time : " << (*std::min_element(allTimes.begin(), allTimes.end())).first);
+#endif // _DBG_
+
+    std::cout << results.first << " " << mtm;
 }

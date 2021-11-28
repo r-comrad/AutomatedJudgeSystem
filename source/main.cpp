@@ -5,6 +5,11 @@
 
 int main(int argc, char* argv[])
 {
+    //std::wcout << std::endl;
+    //std::wcout << MAIN_PATH;
+    //std::wcout << std::endl;
+    //std::wcout << RESOURCES;
+    //return 0;
     int num = 3;
     if (argc > 1)
     {

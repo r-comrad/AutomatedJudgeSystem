@@ -8,6 +8,7 @@
 #//define RESOURCES L"resources\\"
 
 #define MAIN_PATH getMainPath()
+#define DB_PATH getMainPath()
 #define RESOURCES MAIN_PATH + L"resources\\"
 #define COMPILERS RESOURCES + L"compilers\\"
 #define EXAMPLES RESOURCES + L"examples\\"
@@ -15,7 +16,7 @@
 #define MAEDIA MAIN_PATH + L"media\\"
 
 //#define DATABASE_PATH RESOURCES + L"database\\data_base.sqlite3"
-#define DATABASE_PATH MAIN_PATH + L"db.sqlite3"
+#define DATABASE_PATH DB_PATH + L"db.sqlite3"
 
 #define CHECKER_PATH WORK_DIR + L"checker\\checker"
 #define SOLUTION_PATH WORK_DIR + L"solution\\solution"
@@ -83,6 +84,7 @@ typedef unsigned long long	uint_64;
 #include <windows.h>
 
 std::wstring getMainPath();
+std::wstring getDBPath();
 
 std::string makeGoodString(std::wstring aBadString);
 std::wstring makeBadString(std::string aGoodString);

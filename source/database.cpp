@@ -6,9 +6,11 @@ Database::Database
 ) :
     mBase(NULL)
 {
+    WD_LOG("Opening database : " << makeGoodString(aPath));
     if (sqlite3_open(makeGoodString(aPath).c_str(), &mBase) != SQLITE_OK) 
         WD_ERROR(database.0, "Can't open database " + makeGoodString(aPath));
     //TODO: check don't work
+    WD_END_LOG;
 }
 
 void 
