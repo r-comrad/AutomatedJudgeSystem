@@ -1,29 +1,43 @@
 #ifndef DOMAIN_H
 #define DOMAIN_H
 
-#if defined(_DEBUG) || defined(CHINESE_DEBUG)
+//#if defined(_DEBUG) || defined(CHINESE_DEBUG)
+#ifdef _DEBUG
 #define _DBG_
 #endif
 
-#//define RESOURCES L"resources\\"
+#ifdef CHINESE_DEBUG
+#define TRUE_ONLY_WAY
+#endif
 
-#define MAIN_PATH getMainPath()
-#define DB_PATH getMainPath()
-#define RESOURCES MAIN_PATH + L"resources\\"
-#define COMPILERS RESOURCES + L"compilers\\"
-#define EXAMPLES RESOURCES + L"examples\\"
-#define WORK_DIR RESOURCES + L"working_directory\\"
-#define MAEDIA MAIN_PATH + L"media\\"
+#//define RESOURCES L"resources\\"
+#define MAIN_PATH       getMainPath()
+#ifdef TRUE_ONLY_WAY
+#define DB_PATH         RESOURCES   + L"database\\"
+#else
+#define DB_PATH         getMainPath()
+#endif
+
+#define RESOURCES       MAIN_PATH   + L"resources\\"
+#define COMPILERS       RESOURCES   + L"compilers\\"
+#define EXAMPLES        RESOURCES   + L"examples\\"
+#define WORK_DIR        RESOURCES   + L"working_directory\\"
+#ifdef TRUE_ONLY_WAY
+#define MAEDIA          RESOURCES   + L"media\\"
+#else
+#define MAEDIA          MAIN_PATH   + L"media\\"
+#endif
+
 
 //#define DATABASE_PATH RESOURCES + L"database\\data_base.sqlite3"
 #define DATABASE_PATH DB_PATH + L"db.sqlite3"
 
-#define CHECKER_PATH WORK_DIR + L"checker\\checker"
-#define SOLUTION_PATH WORK_DIR + L"solution\\solution"
-#define TEST_PATH WORK_DIR + L"tests\\"
-#define ANSWERS_PATH WORK_DIR + L"answers\\"
-#define OUTPUT_PATH WORK_DIR + L"outputs\\"
-#define RESULT_PATH WORK_DIR + L"results\\"
+#define CHECKER_PATH    WORK_DIR    + L"checker\\checker"
+#define SOLUTION_PATH   WORK_DIR    + L"solution\\solution"
+#define TEST_PATH       WORK_DIR    + L"tests\\"
+#define ANSWERS_PATH    WORK_DIR    + L"answers\\"
+#define OUTPUT_PATH     WORK_DIR    + L"outputs\\"
+#define RESULT_PATH     WORK_DIR    + L"results\\"
 
 #define WINDOWS_OSS
 

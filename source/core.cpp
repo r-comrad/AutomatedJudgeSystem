@@ -5,12 +5,18 @@
 
 #include <math.h>
 
-Core::Core(std::wstring aDatabasePath) :
+Core::Core
+(
+    std::wstring aDatabasePath
+) :
     mDBQ    (aDatabasePath)
 {}
 
 void
-Core::run(int aID)
+Core::run
+(
+    int aID
+)
 {
     mSubInfo.id = aID;
     mDBQ.makeTestCatalog(mSubInfo);
@@ -20,14 +26,21 @@ Core::run(int aID)
 }
 
 std::wstring
-Core::makeExecutable(std::wstring aFileName, std::wstring aOutputName)
+Core::makeExecutable
+(
+    std::wstring aFileName, 
+    std::wstring aOutputName
+)
 {
     Core::Language language = getLanguage(aFileName);
     return compile(aFileName, aOutputName, language);
 }
 
 Core::Language
-Core::getLanguage(std::wstring aFileName)
+Core::getLanguage
+(
+    std::wstring aFileName
+)
 {
     int num = aFileName.find('.');
     if (num == -1) return Core::Language::NUN;
@@ -40,7 +53,12 @@ Core::getLanguage(std::wstring aFileName)
 }
 
 std::wstring
-Core::compile(std::wstring aFileName, std::wstring aOutName, Language aLanguage)
+Core::compile
+(
+    std::wstring aFileName,
+    std::wstring aOutName, 
+    Language aLanguage
+)
 {
     std::wstring result = aOutName;
     if (aLanguage == Language::MagicCPP)
@@ -62,7 +80,11 @@ Core::compile(std::wstring aFileName, std::wstring aOutName, Language aLanguage)
     return result;
 }
 
-std::wstring makeComand(char aFileEnding)
+std::wstring 
+makeComand
+(
+    char aFileEnding
+)
 {
     std::wstring curPath = getMainPath() + RESOURCES + L"task1\\";
     std::map<char, std::wstring> m =
@@ -76,7 +98,11 @@ std::wstring makeComand(char aFileEnding)
 }
 
 void
-Core::check(std::wstring aSolutionName, std::wstring aCheckerName)
+Core::check
+(
+    std::wstring aSolutionName, 
+    std::wstring aCheckerName
+)
 {
     std::string resultSS;
 

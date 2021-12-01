@@ -1,38 +1,44 @@
 #include "domain.h"
 
-std::wstring getMainPath() {
+std::wstring 
+getMainPath() {
 #ifdef WINDOWS_OSS
     TCHAR buffer[MAX_PATH] = { 0 };
     uint_8 size = GetModuleFileName(NULL, buffer, MAX_PATH);
+#ifdef TRUE_ONLY_WAY
+    for (int i = 0; i < 2; ++i) while (buffer[--size] != L'\\');
+#else
     for (int i = 0; i < 1; ++i) while (buffer[--size] != L'\\');
+#endif
     return std::wstring(buffer).substr(0, size + 1);
+#else
 #endif
 }
 
-//std::wstring getDBPath() {
-//#ifdef WINDOWS_OSS
-//    TCHAR buffer[MAX_PATH] = { 0 };
-//    uint_8 size = GetModuleFileName(NULL, buffer, MAX_PATH);
-//    for (int i = 0; i < 1; ++i) while (buffer[--size] != L'\\');
-//    return std::wstring(buffer).substr(0, size + 1);
-//#endif
-//}
-
-std::string makeGoodString(std::wstring aBadString)
+std::string 
+makeGoodString
+(
+    std::wstring aBadString
+)
 {
     std::string goodString;
     for (auto& i : aBadString) goodString.push_back(char(i));
     return goodString;
 }
 
-std::wstring makeBadString(std::string aGoodString)
+std::wstring 
+makeBadString
+(
+    std::string aGoodString
+)
 {
     std::wstring badString;
     for (auto& i : aGoodString) badString.push_back(char(i));
     return badString;
 }
 
-std::wstring GetLastErrorAsString()
+std::wstring 
+GetLastErrorAsString()
 {
     setlocale(LC_ALL, "Russian");
 
@@ -64,19 +70,25 @@ std::wstring GetLastErrorAsString()
 }
 
 void 
-copyFile(std::string aFromFileName, std::string aToFileName)
+copyFile(
+    std::string aFromFileName, 
+    std::string aToFileName
+)
 {
-    WD_LOG("Copy file\nFrom : " << aFromFileName);
+    WD_LOG("Copying file\nFrom : " << aFromFileName);
     WD_LOG("To   : " << aToFileName);
     std::ifstream fromFile(aFromFileName);
     std::ofstream toFile(aToFileName);
     std::string s;
-    while (std::getline(fromFile, s)) toFile << s << '\n';
+    while (std::getline(fromFile, s, '\0')) toFile << s << '\n';
     WD_END_LOG;
 }
 
 void
-copyFile(std::wstring aFromFileName, std::wstring aToFileName)
+copyFile(
+    std::wstring aFromFileName, 
+    std::wstring aToFileName
+)
 {
     copyFile(makeGoodString(aFromFileName), makeGoodString(aToFileName));
 }
@@ -88,14 +100,22 @@ std::wstring getString(const unsigned char* aString)
     return result;
 }
 
-std::wstring getString(const char* aString)
+std::wstring
+getString
+(
+    const char* aString
+)
 {
     std::wstring result;
     for (int i = 0; aString[i]; ++i) result.push_back(aString[i]);
     return result;
 }
 
-std::wstring makeWindowString(std::wstring aString)
+std::wstring 
+makeWindowString
+(
+    std::wstring aString
+)
 {
     //for (int i = 0; i < aString.size(); ++i)
     //{

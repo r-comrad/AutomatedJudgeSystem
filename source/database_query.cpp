@@ -3,24 +3,39 @@
 //UPDATE core_solutions SET result = hh WHERE id = 10
 //SELECT * FROM core_solutions WHERE id = 10
 //UPDATE core_solutions SET lang = "C:\task1\checker\checker.cpp" WHERE id = 10
+//UPDATE core_solutions SET file_name = "2/1.py" WHERE id = 3
+//UPDATE core_contests SET time_limit = 1000 WHERE id = 20
+//UPDATE core_contests SET memory_limit = 262144 WHERE id = 21
 
-MDatabaseQuery::MDatabaseQuery(std::wstring aDatabasePath) :
+MDatabaseQuery::MDatabaseQuery
+(
+    std::wstring aDatabasePath
+) :
     mDatabase(aDatabasePath)
-{
-}
+{}
 
 MDatabaseQuery::~MDatabaseQuery()
-{
-}
+{}
 
-void MDatabaseQuery::makeTestCatalog(SubmissionInformation& aSudmissionInformation)
+void 
+MDatabaseQuery::makeTestCatalog
+(
+    SubmissionInformation& aSudmissionInformation
+)
 {
     getIDInformation(aSudmissionInformation);
     getLimitsInformation(aSudmissionInformation);
     getTests(aSudmissionInformation.mContestID, aSudmissionInformation);
 }
 
-void MDatabaseQuery::writeResult(int aID, std::string aResult, int aTime, int aMemory)
+void 
+MDatabaseQuery::writeResult
+(
+    int         aID, 
+    std::string aResult, 
+    int         aTime, 
+    int         aMemory
+)
 {
     WD_LOG("Updating database");
 
@@ -34,7 +49,11 @@ void MDatabaseQuery::writeResult(int aID, std::string aResult, int aTime, int aM
     WD_END_LOG;
 }
 
-void MDatabaseQuery::getIDInformation(SubmissionInformation& aSudmissionInformation)
+void 
+MDatabaseQuery::getIDInformation
+(
+    SubmissionInformation& aSudmissionInformation
+)
 {
     WD_LOG("Geting ID and name from database");
 
@@ -50,7 +69,11 @@ void MDatabaseQuery::getIDInformation(SubmissionInformation& aSudmissionInformat
     WD_END_LOG;
 }
 
-void MDatabaseQuery::getLimitsInformation(SubmissionInformation& aSudmissionInformation)
+void 
+MDatabaseQuery::getLimitsInformation
+(
+    SubmissionInformation& aSudmissionInformation
+)
 {
     WD_LOG("Geting limits from database");
 
@@ -66,7 +89,12 @@ void MDatabaseQuery::getLimitsInformation(SubmissionInformation& aSudmissionInfo
     WD_END_LOG;
 }
 
-void MDatabaseQuery::getTests(int aContestID, SubmissionInformation& aSudmissionInformation)
+void 
+MDatabaseQuery::getTests
+(
+    int aContestID, 
+    SubmissionInformation& aSudmissionInformation
+)
 {
     WD_LOG("Geting test from database");
 

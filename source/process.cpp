@@ -36,7 +36,12 @@ Process::Process() :
     ZeroMemory(&mProcessInfo, sizeof(PROCESS_INFORMATION));
 }
 
-void Process::IORedirection(std::wstring aInputPath, std::wstring aOutputPath)
+void 
+Process::IORedirection
+(
+    std::wstring aInputPath, 
+    std::wstring aOutputPath
+)
 {
     WD_LOG("Rederecting input to: " << makeGoodString(aInputPath));
     WD_LOG("Rederecting output to: " << makeGoodString(aOutputPath));
@@ -81,7 +86,8 @@ void Process::IORedirection(std::wstring aInputPath, std::wstring aOutputPath)
     WD_END_LOG;
 }
 
-void Process::create
+void 
+Process::create
 (
     std::wstring aName,
     std::wstring aParameters
@@ -116,7 +122,8 @@ void Process::create
     WD_END_LOG;
 }
 
-void Process::run()
+void 
+Process::run()
 {
     WD_LOG("Runing simple process");
 
@@ -128,7 +135,12 @@ void Process::run()
     WD_END_LOG;
 }
 
-std::pair<uint_64, uint_64> Process::run(uint_64 aTimeLimit, uint_64 aMemoryLimit)
+std::pair<uint_64, uint_64> 
+Process::run
+(
+    uint_64 aTimeLimit, 
+    uint_64 aMemoryLimit
+)
 {
     WD_LOG("Runing process with time and memory evaluation");
 
@@ -159,7 +171,9 @@ std::pair<uint_64, uint_64> Process::run(uint_64 aTimeLimit, uint_64 aMemoryLimi
     return { timeUsage , memoryUsage };
 }
 
-long long Process::getMillisecondsNow() {
+long long 
+Process::getMillisecondsNow() 
+{
     static LARGE_INTEGER frequency;
     static BOOL useQpf = QueryPerformanceFrequency(&frequency);
     if (useQpf) {
@@ -173,7 +187,12 @@ long long Process::getMillisecondsNow() {
     return 0;
 }
 
-long long Process::getCurrentMemoryUsage(HANDLE& hProcess) {
+long long 
+Process::getCurrentMemoryUsage
+(
+    HANDLE& hProcess
+) 
+{
     PROCESS_MEMORY_COUNTERS pmc;
     long long  currentMemoryUsage = 0;
 
@@ -188,7 +207,13 @@ long long Process::getCurrentMemoryUsage(HANDLE& hProcess) {
     return currentMemoryUsage;
 }
 
-long long Process::getMaxMemoryUsage(PROCESS_INFORMATION& processInfo, long long memoryLimit) {
+long long 
+Process::getMaxMemoryUsage
+(
+    PROCESS_INFORMATION& processInfo, 
+    long long memoryLimit
+) 
+{
     long long maxMemoryUsage = 0,
         currentMemoryUsage = 0;
     do {
@@ -205,14 +230,24 @@ long long Process::getMaxMemoryUsage(PROCESS_INFORMATION& processInfo, long long
     return maxMemoryUsage;
 }
 
-DWORD Process::getExitCode(HANDLE& hProcess) {
+DWORD 
+Process::getExitCode
+(
+    HANDLE& hProcess
+) 
+{
     DWORD exitCode = 0;
     GetExitCodeProcess(hProcess, &exitCode);
 
     return exitCode;
 }
 
-bool Process::killProcess(PROCESS_INFORMATION& processInfo) {
+bool 
+Process::killProcess
+(
+    PROCESS_INFORMATION& processInfo
+) 
+{
     WD_LOG("Killing process");
 
     DWORD           processId = processInfo.dwProcessId;
