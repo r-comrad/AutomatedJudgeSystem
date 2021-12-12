@@ -122,7 +122,7 @@ Core::check
 
         code.IORedirection(testAddress, outAddress);
         code.create(L"", aSolutionName);
-        std::pair<uint_64, uint_64> cur = code.run(0, 0);
+        std::pair<uint_64, uint_64> cur = code.runWithLimits(mSubInfo.mTimeLimit, mSubInfo.mMemoryLimit);
 
 #ifdef _DBG_
         allTimes.push_back(cur);

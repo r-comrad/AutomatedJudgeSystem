@@ -136,7 +136,7 @@ Process::run()
 }
 
 std::pair<uint_64, uint_64> 
-Process::run
+Process::runWithLimits
 (
     uint_64 aTimeLimit, 
     uint_64 aMemoryLimit
@@ -154,6 +154,9 @@ Process::run
         killProcess(mProcessInfo); //TODO: kill
     }
 
+    CloseHandle(mInputHandle);
+    CloseHandle(mOutputHandle);
+
     long long endTime = getMillisecondsNow();
     uint_64 timeUsage = endTime - startTime;
 
@@ -162,10 +165,6 @@ Process::run
 
     WD_LOG("time usage: " << timeUsage);
     WD_LOG("memory usage: " << memoryUsage);
-
-    CloseHandle(mInputHandle);
-    CloseHandle(mOutputHandle);
-
     WD_END_LOG;
 
     return { timeUsage , memoryUsage };
