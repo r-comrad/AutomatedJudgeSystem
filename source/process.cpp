@@ -39,7 +39,7 @@ Process::Process() :
 void 
 Process::IORedirection
 (
-    std::wstring aInputPath, 
+    std::wstring aInputPath,
     std::wstring aOutputPath
 )
 {
@@ -61,6 +61,15 @@ Process::IORedirection
             FILE_ATTRIBUTE_NORMAL,
             NULL);
     }
+    else
+    {
+        if (!CreatePipe(&newstdin, &write_stdin, &sa, 0))
+        {
+            ErrorMessage("CreatePipe");
+            _getch();
+            return;
+        }
+    }
 
     if (aOutputPath != L"")
     {
@@ -71,6 +80,17 @@ Process::IORedirection
             CREATE_ALWAYS,
             FILE_ATTRIBUTE_NORMAL,
             NULL);
+    }
+    else
+    {
+        if (!CreatePipe(&read_stdout, &newstdout, &sa, 0))
+        {
+            ErrorMessage("CreatePipe");
+            _getch();
+            CloseHandle(newstdin);
+            CloseHandle(write_stdin);
+            return;
+        }
     }
 
     //BOOL ret = FALSE;
@@ -84,6 +104,78 @@ Process::IORedirection
     if (aOutputPath != L"") mStartupInfo.hStdOutput = mOutputHandle;
 
     WD_END_LOG;
+}
+
+std::string
+Process::readPipe()
+{
+    if (exit != STILL_ACTIVE)
+        break;
+
+    PeekNamedPipe(read_stdout, buf, 1023, &bread, &avail, NULL);
+
+    //Проверяем, есть ли данные для чтения в stdout
+
+    if (bread != 0)
+    {
+        bzero(buf);
+        if (avail > 1023)
+        {
+            while (bread >= 1023)
+            {
+                ReadFile(read_stdout, buf, 1023, &bread, NULL);  //читаем из
+                                                             // пайпа stdout
+                printf("%s", buf);
+                bzero(buf);
+            }
+        }
+    }
+}
+
+void
+Process::writePipe()
+{
+    if (exit != STILL_ACTIVE)
+        break;
+
+    PeekNamedPipe(read_stdout, buf, 1023, &bread, &avail, NULL);
+
+    //Проверяем, есть ли данные для чтения в stdout
+
+    if (bread != 0)
+    {
+        bzero(buf);
+        if (avail > 1023)
+        {
+            while (bread >= 1023)
+            {
+                ReadFile(read_stdout, buf, 1023, &bread, NULL);  //читаем из
+                                                                // пайпа stdout
+                printf("%s", buf);
+                bzero(buf);
+            }
+        }
+    }
+}
+
+void
+Process::writePipe()
+{
+    bzero(buf);
+    *buf = (char)_getch();
+
+    //printf("%c",*buf);
+
+    WriteFile(write_stdin, buf, 1, &bread, NULL); //отправляем это
+                                              // в stdin
+
+    if (*buf == '\r') {
+        *buf = '\n';
+        printf("%c", *buf);
+        WriteFile(write_stdin, buf, 1, &bread, NULL); //формирум конец
+                                                  //строки, если нужно
+
+    }
 }
 
 void 

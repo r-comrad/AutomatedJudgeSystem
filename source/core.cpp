@@ -20,8 +20,8 @@ Core::run
 {
     mSubInfo.id = aID;
     mDBQ.makeTestCatalog(mSubInfo);
-    std::wstring solutionName = makeExecutable(MAEDIA + makeWindowString(mSubInfo.mSolutionFileName), SOLUTION_PATH);
-    std::wstring checkerName = makeExecutable(MAEDIA + makeWindowString(mSubInfo.mCheckerFileName), CHECKER_PATH);
+    std::wstring solutionName = makeExecutable(MAEDIA + makeWindowString(mSubInfo.mSolutionFileName), SOLUTION_PATH + L"-" + std::to_wstring(mSubInfo.id));
+    std::wstring checkerName = makeExecutable(MAEDIA + makeWindowString(mSubInfo.mCheckerFileName), CHECKER_PATH + L"-" + std::to_wstring(mSubInfo.id));
     check(solutionName, checkerName);
 }
 
@@ -66,7 +66,7 @@ Core::compile
         result += L".exe";
         Process process;
         //process.IORedirection(L"", L"");
-        std::wstring comand = COMPILERS + L"\\magicCPPCompiler.cmd" + L" " + aFileName + L" " + result;
+        std::wstring comand = COMPILERS + L"magicCPPCompiler.cmd" + L" " + aFileName + L" " + result;
         process.create(L"", comand);
         process.run();
     }
@@ -80,22 +80,22 @@ Core::compile
     return result;
 }
 
-std::wstring 
-makeComand
-(
-    char aFileEnding
-)
-{
-    std::wstring curPath = getMainPath() + RESOURCES + L"task1\\";
-    std::map<char, std::wstring> m =
-    {
-        { 'y', L"python " + curPath + L"solution\\plus.py" },
-        { 'p', curPath + L"solution\\plus.exe" },
-        { 'e',  curPath + L"solution\\plus.exe" }
-    };
-    std::wstring comand = m[aFileEnding];
-    return comand;
-}
+//std::wstring 
+//makeComand
+//(
+//    char aFileEnding
+//)
+//{
+//    std::wstring curPath = getMainPath() + RESOURCES + L"task1\\";
+//    std::map<char, std::wstring> m =
+//    {
+//        { 'y', L"python " + curPath + L"solution\\plus.py" },
+//        { 'p', curPath + L"solution\\" plus.exe" },
+//        { 'e',  curPath + L"solution\\plus.exe" }
+//    };
+//    std::wstring comand = m[aFileEnding];
+//    return comand;
+//}
 
 void
 Core::check
@@ -106,19 +106,22 @@ Core::check
 {
     std::string resultSS;
 
-    std::map<std::string, std::string> decoder = { {"ok", "OK"}, {"wa", "WA"}, {"tle", "TL"}, {"mle", "ML"}, {"pe", "PE"} };
+    std::map<std::string, std::string> decoder = { {"ok", "OK"}, {"wa", "WA"}, {"wrong", "WA"},{"tle", "TL"}, {"mle", "ML"}, {"pe", "PE"} };
 
 #ifdef _DBG_
     std::vector<std::pair<uint_64, uint_64>> allTimes;
+    mSubInfo.mTimeLimit += 1000;
 #endif // _DBG_
 
     uint_64 mtm = 1e9;
     std::pair<uint_64, uint_64> results = { 0,0 };
     for (int testNum = 0; testNum < mSubInfo.mTestsCount; ++testNum)
     {
+        WD_LOG("Checking test #" << testNum);
+        WD_LOG("Runing test #" << testNum);
         Process code;
-        std::wstring testAddress = TEST_PATH + std::to_wstring(testNum);
-        std::wstring outAddress = OUTPUT_PATH + std::to_wstring(testNum);
+        std::wstring testAddress = TEST_PATH + std::to_wstring(mSubInfo.id) + L"-" + std::to_wstring(testNum);
+        std::wstring outAddress = OUTPUT_PATH + std::to_wstring(mSubInfo.id) + L"-" + std::to_wstring(testNum);
 
         code.IORedirection(testAddress, outAddress);
         code.create(L"", aSolutionName);
@@ -132,9 +135,10 @@ Core::check
         results.second = std::max(results.second, cur.second);
         mtm = std::min(mtm, cur.first);
 
+        WD_LOG("Runing checker #" << testNum);
         Process checker;
-        std::wstring answerAddress = ANSWERS_PATH + std::to_wstring(testNum);
-        std::wstring resultAddress = RESULT_PATH + std::to_wstring(testNum);
+        std::wstring answerAddress = ANSWERS_PATH + std::to_wstring(mSubInfo.id) + L"-"+ std::to_wstring(testNum);
+        std::wstring resultAddress = RESULT_PATH + std::to_wstring(mSubInfo.id) + L"-" + std::to_wstring(testNum);
         std::wstring parameters = L"sas input " + outAddress + L" " + answerAddress;
         checker.IORedirection(L"", resultAddress);
         checker.create(aCheckerName, parameters);
@@ -146,20 +150,23 @@ Core::check
         {
             //WD_ERROR(mainCheck.0, "Can't open file " + makeGoodString(aTaskPath) + "init");
             WD_LOG("Result not okay");
+            WD_LOG("Today result is " << resultSS);
             break;
         }
         else if (mSubInfo.mTimeLimit < results.first)
         {
             resultSS = "tle";
-            WD_LOG("Result is TLE" << mSubInfo.mTimeLimit << " vs " << results.first);
+            WD_LOG("Result is TLE " << mSubInfo.mTimeLimit << " vs " << results.first);
             break;
         }
         else if (mSubInfo.mMemoryLimit < results.second)
         {
             resultSS = "mle";
-            WD_LOG("Result is MLE" << mSubInfo.mMemoryLimit << " vs " << results.second);
+            WD_LOG("Result is MLE " << mSubInfo.mMemoryLimit << " vs " << results.second);
             break;
         }
+
+        WD_END_LOG;
     }
     resultSS = decoder[resultSS];
     mDBQ.writeResult(mSubInfo.id, resultSS, results.first, results.second);

@@ -108,8 +108,8 @@ MDatabaseQuery::getTests
         const unsigned char* output = mDatabase.getTextFromRow(1);
         if (input == NULL) break;
 
-        std::ofstream taskFile(TEST_PATH + std::to_wstring(cnt));
-        std::ofstream ansFile(ANSWERS_PATH + std::to_wstring(cnt));
+        std::ofstream taskFile(TEST_PATH + std::to_wstring(aSudmissionInformation.id) + L"-" + std::to_wstring(cnt));
+        std::ofstream ansFile(ANSWERS_PATH + std::to_wstring(aSudmissionInformation.id) + L"-" + std::to_wstring(cnt));
 
         if (!taskFile.is_open())
         {

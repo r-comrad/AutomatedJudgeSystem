@@ -44,10 +44,19 @@ public:
 	std::pair<uint_64, uint_64> runWithLimits(uint_64 aTimeLimit, uint_64 aMemoryLimit);
 	void create(std::wstring aName, std::wstring aInputFilePath);
 	void IORedirection(std::wstring aInputPath, std::wstring aOutputPath);
+	void IORedirectionToPipes();
 
-public:
-	HANDLE mInputHandle;
-	HANDLE mOutputHandle;
+	std::string readPipe();
+	void writePipe();
+
+private:
+	//HANDLE mInputHandle;
+	//HANDLE mOutputHandle;
+
+	HANDLE newstdin;
+	HANDLE newstdout;
+	HANDLE read_stdout;
+	HANDLE write_stdin;
 
 	PROCESS_INFORMATION mProcessInfo;
 	STARTUPINFOW mStartupInfo;

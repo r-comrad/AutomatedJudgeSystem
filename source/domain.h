@@ -8,6 +8,7 @@
 
 #ifdef CHINESE_DEBUG
 #define TRUE_ONLY_WAY
+#define GOOD_DEBUG_ERRORS
 #endif
 
 #//define RESOURCES L"resources\\"
@@ -53,6 +54,8 @@
         std::cout << "\n";                              \
     }
 
+
+#ifdef GOOD_DEBUG_ERRORS
 #define WERROR(aNumber, aMessege)                       \
     {                                                   \
         std::cout << "\n\n\x1b[31m!!!!!!!!! "           \
@@ -64,6 +67,19 @@
             "\x1b[0m\n\n";                              \
         exit(0);                                        \
     }
+#else
+#define WERROR(aNumber, aMessege)                       \
+    {                                                   \
+        std::cout << "\n\n\!!!!!!!!! "                  \
+            "ERROR HAS OCCURRED !!!!!!!!!\n"            \
+            << "ERROR# " #aNumber "\n"                  \
+            << aMessege << "";                          \
+        std::wcout << "\n\n" <<                         \
+            GetLastErrorAsString() <<                   \
+            "\x1b[0m\n\n";                              \
+        exit(0);                                        \
+    }
+#endif
 
 #ifdef _DBG_
     #define WD_LOG(aMessege) WLOG(aMessege) 
