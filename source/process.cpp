@@ -39,41 +39,31 @@ Process::Process() :
 void 
 Process::IORedirection
 (
-    std::wstring aInputPath,
-    std::wstring aOutputPath
+    IOType          aType,
+    std::wstring    aInputPath,
+    std::wstring    aOutputPath
 )
 {
-    WD_LOG("Rederecting input to: " << makeGoodString(aInputPath));
-    WD_LOG("Rederecting output to: " << makeGoodString(aOutputPath));
-
     SECURITY_ATTRIBUTES sa;
     sa.nLength = sizeof(sa);
     sa.lpSecurityDescriptor = NULL;
     sa.bInheritHandle = TRUE;
 
-    if (aInputPath != L"")
+    if (aType == Process::IOType::NONE) {}
+    else if (aType == Process::IOType::FILES) 
     {
-        mInputHandle = CreateFile(aInputPath.c_str(),
+        WD_LOG("Rederecting input to: " << makeGoodString(aInputPath));
+        WD_LOG("Rederecting output to: " << makeGoodString(aOutputPath));
+
+        if (aInputPath != L"") mChildSTDIN = CreateFile(aInputPath.c_str(),
             GENERIC_READ,
             FILE_SHARE_READ,
             &sa,
             OPEN_EXISTING,
             FILE_ATTRIBUTE_NORMAL,
             NULL);
-    }
-    else
-    {
-        if (!CreatePipe(&newstdin, &write_stdin, &sa, 0))
-        {
-            ErrorMessage("CreatePipe");
-            _getch();
-            return;
-        }
-    }
 
-    if (aOutputPath != L"")
-    {
-        mOutputHandle = CreateFile(aOutputPath.c_str(),
+        if (aInputPath != L"") mChildSTDOUT = CreateFile(aOutputPath.c_str(),
             FILE_WRITE_DATA,
             FILE_SHARE_WRITE,
             &sa,
@@ -81,27 +71,28 @@ Process::IORedirection
             FILE_ATTRIBUTE_NORMAL,
             NULL);
     }
-    else
+    else if (aType == Process::IOType::PIPES) 
     {
-        if (!CreatePipe(&read_stdout, &newstdout, &sa, 0))
+        WD_LOG("Rederecting input & output to pipe");
+        if (!CreatePipe(&mChildSTDIN, &mThisSTDIN, &sa, 0))
         {
-            ErrorMessage("CreatePipe");
-            _getch();
-            CloseHandle(newstdin);
-            CloseHandle(write_stdin);
-            return;
+            WD_ERROR(process.pipe.0, "Can't create pipe ");
+        }
+
+        if (!CreatePipe(&mThisSTDIN, &mChildSTDOUT, &sa, 0))
+        {
+            WD_ERROR(process.pipe.1, "Can't create pipe ");
         }
     }
 
-    //BOOL ret = FALSE;
-    //DWORD flags = 0;// CREATE_NO_WINDOW;
+    //else if (aType == Process::IOType::MIXED) {}
 
     ZeroMemory(&mStartupInfo, sizeof(STARTUPINFO));
     mStartupInfo.cb = sizeof(STARTUPINFO);
     mStartupInfo.dwFlags |= STARTF_USESTDHANDLES;
-    if (aInputPath != L"")  mStartupInfo.hStdInput = mInputHandle;
-    if (aOutputPath != L"") mStartupInfo.hStdError = mOutputHandle;
-    if (aOutputPath != L"") mStartupInfo.hStdOutput = mOutputHandle;
+    if (aInputPath != L"")  mStartupInfo.hStdInput = mChildSTDIN;
+    if (aOutputPath != L"") mStartupInfo.hStdError = mChildSTDOUT;
+    if (aOutputPath != L"") mStartupInfo.hStdOutput = mChildSTDOUT;
 
     WD_END_LOG;
 }
@@ -109,73 +100,37 @@ Process::IORedirection
 std::string
 Process::readPipe()
 {
-    if (exit != STILL_ACTIVE)
-        break;
+    WD_LOG("Reading from pipe");
+    std::string result;
+    char buf[1024];
+    memset(buf, 0, sizeof(buf));
 
-    PeekNamedPipe(read_stdout, buf, 1023, &bread, &avail, NULL);
+    unsigned long bread;   //кол-во прочитанных байт
+    unsigned long avail;   //кол-во доступных байт
 
-    //Проверяем, есть ли данные для чтения в stdout
-
-    if (bread != 0)
+    for (;;)
     {
-        bzero(buf);
-        if (avail > 1023)
+        PeekNamedPipe(mThisSTDIN, buf, 1023, &bread, &avail, NULL);
+
+        memset(buf, 0, sizeof(buf));
+        while (bread >= 1023)
         {
-            while (bread >= 1023)
-            {
-                ReadFile(read_stdout, buf, 1023, &bread, NULL);  //читаем из
-                                                             // пайпа stdout
-                printf("%s", buf);
-                bzero(buf);
-            }
+            memset(buf, 0, sizeof(buf));
+            ReadFile(mThisSTDIN, buf, 1023, &bread, NULL);
+            result += std::string(buf);
         }
     }
+    WD_END_LOG;
+    return result;
 }
 
 void
-Process::writePipe()
+Process::writePipe(std::string aMessage)
 {
-    if (exit != STILL_ACTIVE)
-        break;
-
-    PeekNamedPipe(read_stdout, buf, 1023, &bread, &avail, NULL);
-
-    //Проверяем, есть ли данные для чтения в stdout
-
-    if (bread != 0)
-    {
-        bzero(buf);
-        if (avail > 1023)
-        {
-            while (bread >= 1023)
-            {
-                ReadFile(read_stdout, buf, 1023, &bread, NULL);  //читаем из
-                                                                // пайпа stdout
-                printf("%s", buf);
-                bzero(buf);
-            }
-        }
-    }
-}
-
-void
-Process::writePipe()
-{
-    bzero(buf);
-    *buf = (char)_getch();
-
-    //printf("%c",*buf);
-
-    WriteFile(write_stdin, buf, 1, &bread, NULL); //отправляем это
-                                              // в stdin
-
-    if (*buf == '\r') {
-        *buf = '\n';
-        printf("%c", *buf);
-        WriteFile(write_stdin, buf, 1, &bread, NULL); //формирум конец
-                                                  //строки, если нужно
-
-    }
+    WD_LOG("Writing from pipe");
+    unsigned long bread;
+    WriteFile(mThisSTDOUT, aMessage.c_str(), 1, &bread, NULL);
+    WD_END_LOG;
 }
 
 void 
@@ -221,8 +176,8 @@ Process::run()
 
     ResumeThread(mProcessInfo.hThread);
     WaitForSingleObject(mProcessInfo.hProcess, INFINITE);
-    CloseHandle(mInputHandle);
-    CloseHandle(mOutputHandle);
+    CloseHandle(mChildSTDIN);
+    CloseHandle(mChildSTDOUT);
 
     WD_END_LOG;
 }
@@ -241,13 +196,20 @@ Process::runWithLimits
     long long startTime = getMillisecondsNow();
     WaitForSingleObject(mProcessInfo.hProcess, INFINITE);
 
+    /*
+    GetExitCodeProcess(pi.hProcess,&exit); //пока дочерний процесс
+                                           // не закрыт
+    if (exit != STILL_ACTIVE)
+      break;
+    */
+
     if (getExitCode(mProcessInfo.hProcess) == STILL_ACTIVE) //TODO: get 
     {
         killProcess(mProcessInfo); //TODO: kill
     }
 
-    CloseHandle(mInputHandle);
-    CloseHandle(mOutputHandle);
+    CloseHandle(mChildSTDIN);
+    CloseHandle(mChildSTDOUT);
 
     long long endTime = getMillisecondsNow();
     uint_64 timeUsage = endTime - startTime;

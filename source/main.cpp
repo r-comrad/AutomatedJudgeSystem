@@ -2,7 +2,6 @@
 #include <iostream>
 
 #include "core.h"
-
 int main(int argc, char* argv[])
 {
     //std::wcout << std::endl;

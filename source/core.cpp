@@ -18,6 +18,15 @@ Core::run
     int aID
 )
 {
+    std::wstring sss = makeExecutable(MAIN_PATH + L"plusTwo.cpp", WORK_DIR + L"plusTwo.exe");
+    Process p;
+    p.create(sss, L"");
+    p.IORedirection(Process::IOType::PIPES);
+    p.writePipe("33");
+    std::cout << p.readPipe();
+    return;
+
+
     mSubInfo.id = aID;
     mDBQ.makeTestCatalog(mSubInfo);
     std::wstring solutionName = makeExecutable(MAEDIA + makeWindowString(mSubInfo.mSolutionFileName), SOLUTION_PATH + L"-" + std::to_wstring(mSubInfo.id));
@@ -110,7 +119,8 @@ Core::check
 
 #ifdef _DBG_
     std::vector<std::pair<uint_64, uint_64>> allTimes;
-    mSubInfo.mTimeLimit += 1000;
+    mSubInfo.mTimeLimit += 100000;
+    mSubInfo.mMemoryLimit += 1000000;
 #endif // _DBG_
 
     uint_64 mtm = 1e9;
@@ -123,7 +133,7 @@ Core::check
         std::wstring testAddress = TEST_PATH + std::to_wstring(mSubInfo.id) + L"-" + std::to_wstring(testNum);
         std::wstring outAddress = OUTPUT_PATH + std::to_wstring(mSubInfo.id) + L"-" + std::to_wstring(testNum);
 
-        code.IORedirection(testAddress, outAddress);
+        code.IORedirection(Process::IOType::FILES, testAddress, outAddress);
         code.create(L"", aSolutionName);
         std::pair<uint_64, uint_64> cur = code.runWithLimits(mSubInfo.mTimeLimit, mSubInfo.mMemoryLimit);
 
@@ -140,7 +150,7 @@ Core::check
         std::wstring answerAddress = ANSWERS_PATH + std::to_wstring(mSubInfo.id) + L"-"+ std::to_wstring(testNum);
         std::wstring resultAddress = RESULT_PATH + std::to_wstring(mSubInfo.id) + L"-" + std::to_wstring(testNum);
         std::wstring parameters = L"sas input " + outAddress + L" " + answerAddress;
-        checker.IORedirection(L"", resultAddress);
+        checker.IORedirection(Process::IOType::FILES, L"", resultAddress);
         checker.create(aCheckerName, parameters);
         checker.run();
 

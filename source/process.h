@@ -39,24 +39,29 @@
 class Process
 {
 public:
+	enum IOType { NONE = 0, FILES = 1, PIPES = 2/*, MIXED = 3 */};
+
 	Process();
 	void run();
 	std::pair<uint_64, uint_64> runWithLimits(uint_64 aTimeLimit, uint_64 aMemoryLimit);
-	void create(std::wstring aName, std::wstring aInputFilePath);
-	void IORedirection(std::wstring aInputPath, std::wstring aOutputPath);
-	void IORedirectionToPipes();
+	
+	void create(std::wstring aName, std::wstring aParameters);
+
+	void IORedirection(IOType aType, std::wstring aInputPath = L"", std::wstring aOutputPath = L"");
 
 	std::string readPipe();
-	void writePipe();
+	void writePipe(std::string aMessage);
 
 private:
 	//HANDLE mInputHandle;
 	//HANDLE mOutputHandle;
+	void IORedirectionToPipes();
+	void redirectToFile(HANDLE aFileHandle, std::wstring aFilePath);
 
-	HANDLE newstdin;
-	HANDLE newstdout;
-	HANDLE read_stdout;
-	HANDLE write_stdin;
+	HANDLE mThisSTDIN;
+	HANDLE mThisSTDOUT;
+	HANDLE mChildSTDIN;
+	HANDLE mChildSTDOUT;
 
 	PROCESS_INFORMATION mProcessInfo;
 	STARTUPINFOW mStartupInfo;
