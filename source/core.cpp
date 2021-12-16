@@ -18,11 +18,14 @@ Core::run
     int aID
 )
 {
-    std::wstring sss = makeExecutable(MAIN_PATH + L"plusTwo.cpp", WORK_DIR + L"plusTwo.exe");
+    std::wstring sss = makeExecutable(MAIN_PATH + L"plusTwo.cpp", WORK_DIR + L"plusTwo1");
+
     Process p;
-    p.create(sss, L"");
     p.IORedirection(Process::IOType::PIPES);
-    p.writePipe("33");
+    p.writePipe("44\n");
+    p.create(sss, L"");
+    p.run();
+    p.writePipe("44\n");
     std::cout << p.readPipe();
     return;
 

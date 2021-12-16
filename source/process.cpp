@@ -30,9 +30,12 @@
 #include "domain.h"
 
 Process::Process() :
-    mStartupInfo({ 0 })
+    mStartupInfo    ({ 0 }),
+    mThisSTDIN      (0),
+    mThisSTDOUT     (0),
+    mChildSTDIN     (0),
+    mChildSTDOUT    (0)
 {
-    //mProcessInfo = 0;
     ZeroMemory(&mProcessInfo, sizeof(PROCESS_INFORMATION));
 }
 
@@ -44,10 +47,10 @@ Process::IORedirection
     std::wstring    aOutputPath
 )
 {
-    SECURITY_ATTRIBUTES sa;
-    sa.nLength = sizeof(sa);
-    sa.lpSecurityDescriptor = NULL;
-    sa.bInheritHandle = TRUE;
+    SECURITY_ATTRIBUTES securatyAttributes;
+    securatyAttributes.nLength = sizeof(SECURITY_ATTRIBUTES);
+    securatyAttributes.lpSecurityDescriptor = NULL;
+    securatyAttributes.bInheritHandle = true;
 
     if (aType == Process::IOType::NONE) {}
     else if (aType == Process::IOType::FILES) 
@@ -58,7 +61,7 @@ Process::IORedirection
         if (aInputPath != L"") mChildSTDIN = CreateFile(aInputPath.c_str(),
             GENERIC_READ,
             FILE_SHARE_READ,
-            &sa,
+            &securatyAttributes,
             OPEN_EXISTING,
             FILE_ATTRIBUTE_NORMAL,
             NULL);
@@ -66,7 +69,7 @@ Process::IORedirection
         if (aInputPath != L"") mChildSTDOUT = CreateFile(aOutputPath.c_str(),
             FILE_WRITE_DATA,
             FILE_SHARE_WRITE,
-            &sa,
+            &securatyAttributes,
             CREATE_ALWAYS,
             FILE_ATTRIBUTE_NORMAL,
             NULL);
@@ -74,25 +77,26 @@ Process::IORedirection
     else if (aType == Process::IOType::PIPES) 
     {
         WD_LOG("Rederecting input & output to pipe");
-        if (!CreatePipe(&mChildSTDIN, &mThisSTDIN, &sa, 0))
+        if (!CreatePipe(&mChildSTDIN, &mThisSTDOUT, &securatyAttributes, 0))
         {
             WD_ERROR(process.pipe.0, "Can't create pipe ");
         }
 
-        if (!CreatePipe(&mThisSTDIN, &mChildSTDOUT, &sa, 0))
+        if (!CreatePipe(&mThisSTDIN, &mChildSTDOUT, &securatyAttributes, 0))
         {
             WD_ERROR(process.pipe.1, "Can't create pipe ");
         }
     }
-
     //else if (aType == Process::IOType::MIXED) {}
 
+    //GetStartupInfo(&mStartupInfo);
     ZeroMemory(&mStartupInfo, sizeof(STARTUPINFO));
     mStartupInfo.cb = sizeof(STARTUPINFO);
     mStartupInfo.dwFlags |= STARTF_USESTDHANDLES;
-    if (aInputPath != L"")  mStartupInfo.hStdInput = mChildSTDIN;
-    if (aOutputPath != L"") mStartupInfo.hStdError = mChildSTDOUT;
-    if (aOutputPath != L"") mStartupInfo.hStdOutput = mChildSTDOUT;
+
+    mStartupInfo.hStdInput = mChildSTDIN;
+    mStartupInfo.hStdError = mChildSTDOUT;
+    mStartupInfo.hStdOutput = mChildSTDOUT;
 
     WD_END_LOG;
 }
@@ -100,26 +104,32 @@ Process::IORedirection
 std::string
 Process::readPipe()
 {
+ //   unsigned long exit;
+  //  GetExitCodeProcess(mProcessInfo.hProcess, &exit); //пока дочерний процесс                                      // не закрыт
+   // if (exit != STILL_ACTIVE) return "";
+
     WD_LOG("Reading from pipe");
     std::string result;
     char buf[1024];
     memset(buf, 0, sizeof(buf));
 
-    unsigned long bread;   //кол-во прочитанных байт
-    unsigned long avail;   //кол-во доступных байт
+    unsigned long bread = 0;   //кол-во прочитанных байт
+    unsigned long avail = 0;   //кол-во доступных байт
 
-    for (;;)
+    while (bread == 0 && avail == 0)
     {
         PeekNamedPipe(mThisSTDIN, buf, 1023, &bread, &avail, NULL);
-
-        memset(buf, 0, sizeof(buf));
-        while (bread >= 1023)
-        {
-            memset(buf, 0, sizeof(buf));
-            ReadFile(mThisSTDIN, buf, 1023, &bread, NULL);
-            result += std::string(buf);
-        }
     }
+
+    memset(buf, 0, sizeof(buf));
+    bread = 1024;
+    while (bread >= 1023)
+    {
+        memset(buf, 0, sizeof(buf));
+        ReadFile(mThisSTDIN, buf, 1023, &bread, NULL);
+        result += std::string(buf);
+    }
+
     WD_END_LOG;
     return result;
 }
@@ -129,7 +139,8 @@ Process::writePipe(std::string aMessage)
 {
     WD_LOG("Writing from pipe");
     unsigned long bread;
-    WriteFile(mThisSTDOUT, aMessage.c_str(), 1, &bread, NULL);
+    WriteFile(mThisSTDOUT, aMessage.c_str(), aMessage.size(), &bread, NULL);
+    WD_LOG("write " + std::to_string(bread) + " bites\n");
     WD_END_LOG;
 }
 
@@ -149,7 +160,7 @@ Process::create
     wchar_t* cmd = const_cast<wchar_t*>(aParameters.c_str());
     if (aParameters == L"") cmd = NULL;
 
-    mFuture = std::async(std::launch::async, &Process::getMaxMemoryUsage, 
+    mFuture = std::async(std::launch::async, &Process::getMaxMemoryUsage,
         this, std::ref(mProcessInfo), 1000000);
     //TODO: Memory limit
 
@@ -165,6 +176,7 @@ Process::create
         &mStartupInfo,
         &mProcessInfo
     ) == FALSE) WD_ERROR(process.0, "Can't start process " + makeGoodString(aName) + "\narguments are: " + makeGoodString(aParameters));
+
 
     WD_END_LOG;
 }
