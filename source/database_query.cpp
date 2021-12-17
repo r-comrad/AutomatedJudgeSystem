@@ -29,7 +29,7 @@ MDatabaseQuery::prepareForTesting
     if (aDataType == MDatabaseQuery::DataStructure::FILES)
         getTests(aSudmissionInformation);
     else
-        prepareTestsStatement(aSudmissionInformation.mContestID);
+        prepareTestsStatement(aSudmissionInformation);
 }
 
 void 
@@ -53,16 +53,38 @@ MDatabaseQuery::writeResult
     WD_END_LOG;
 }
 
-void getNextTest();
+std::pair<std::string, std::string>
+MDatabaseQuery::getNextTest(SubmissionInformation& aSudmissionInformation)
+{
+    WD_LOG("Taking next test");
+        mDatabase.step(mReservedStatementNumber);
+        //if (mDatabase.step() != SQLITE_OK) break; TODO: fixing that shit
+        const unsigned char* input = mDatabase.getTextFromRow(0, mReservedStatementNumber);
+        const unsigned char* output = mDatabase.getTextFromRow(1, mReservedStatementNumber);
+        if (input == NULL)
+        {
+            aSudmissionInformation.mTestsOver = true;
+            return std::make_pair("", "");
+        }
+
+    aSudmissionInformation.mTestsCount++;
+
+    return std::make_pair(std::string(reinterpret_cast<const char*>(input)), 
+        std::string(reinterpret_cast<const char*>(output)));
+}
 
 void
 MDatabaseQuery::prepareTestsStatement
 (
-    int aContestID
+    SubmissionInformation& aSudmissionInformation
 )
 {
+    aSudmissionInformation.mTestsOver = false;
+    aSudmissionInformation.mTestsCount = 0;
+
     WD_LOG("Prepare geting test from database");
-    mDatabase.select("core_test", "input, output", "contest_id = " + std::to_string(aContestID), mReservedStatementNumber);
+    mDatabase.select("core_test", "input, output", "contest_id = " +
+        std::to_string(aSudmissionInformation.mContestID), mReservedStatementNumber);
     WD_LOG("I'm ready");
     WD_END_LOG;
 }
@@ -131,7 +153,7 @@ MDatabaseQuery::getTests
         if (!taskFile.is_open())
         {
             WD_ERROR(database.0, "Can't open file " + makeGoodString(TEST_PATH + std::to_wstring(cnt)));
-            continue;
+            continue;//TODO
         }
         if (!ansFile.is_open())
         {

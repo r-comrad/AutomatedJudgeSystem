@@ -11,6 +11,7 @@ public:
 	std::wstring mCheckerFileName;
 	int mContestID;
 	int mTestsCount;
+	bool mTestsOver;
 };
 
 #endif //SUBMISSION_STRUCT_H

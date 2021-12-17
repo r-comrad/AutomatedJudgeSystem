@@ -22,12 +22,12 @@ public:
 		DataStructure aDataType = DataStructure::FILES);
 	void writeResult(int aID, std::string aResult, int aTime, int aMemory);
 
-	void getNextTest();
+	std::pair<std::string, std::string> getNextTest(SubmissionInformation& aSudmissionInformation);
 private:
 	Database mDatabase;
 	int mReservedStatementNumber;
 
-	void prepareTestsStatement(int aContestID);
+	void prepareTestsStatement(SubmissionInformation& aSudmissionInformation);
 
 	void getIDInformation(SubmissionInformation& aSudmissionInformation);
 	void getLimitsInformation(SubmissionInformation& aSudmissionInformation);
