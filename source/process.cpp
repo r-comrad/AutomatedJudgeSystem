@@ -66,7 +66,7 @@ Process::IORedirection
             FILE_ATTRIBUTE_NORMAL,
             NULL);
 
-        if (aInputPath != L"") mChildSTDOUT = CreateFile(aOutputPath.c_str(),
+        if (aOutputPath != L"") mChildSTDOUT = CreateFile(aOutputPath.c_str(),
             FILE_WRITE_DATA,
             FILE_SHARE_WRITE,
             &securatyAttributes,

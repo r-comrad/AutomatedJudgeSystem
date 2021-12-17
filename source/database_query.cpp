@@ -18,14 +18,18 @@ MDatabaseQuery::~MDatabaseQuery()
 {}
 
 void 
-MDatabaseQuery::makeTestCatalog
+MDatabaseQuery::prepareForTesting
 (
-    SubmissionInformation& aSudmissionInformation
+    SubmissionInformation& aSudmissionInformation,
+    DataStructure aDataType
 )
 {
     getIDInformation(aSudmissionInformation);
     getLimitsInformation(aSudmissionInformation);
-    getTests(aSudmissionInformation.mContestID, aSudmissionInformation);
+    if (aDataType == MDatabaseQuery::DataStructure::FILES)
+        getTests(aSudmissionInformation);
+    else
+        prepareTestsStatement(aSudmissionInformation.mContestID);
 }
 
 void 
@@ -46,6 +50,20 @@ MDatabaseQuery::writeResult
     mDatabase.closeStatment();
 
     WD_LOG("Database updated?");
+    WD_END_LOG;
+}
+
+void getNextTest();
+
+void
+MDatabaseQuery::prepareTestsStatement
+(
+    int aContestID
+)
+{
+    WD_LOG("Prepare geting test from database");
+    mDatabase.select("core_test", "input, output", "contest_id = " + std::to_string(aContestID), mReservedStatementNumber);
+    WD_LOG("I'm ready");
     WD_END_LOG;
 }
 
@@ -92,13 +110,12 @@ MDatabaseQuery::getLimitsInformation
 void 
 MDatabaseQuery::getTests
 (
-    int aContestID, 
     SubmissionInformation& aSudmissionInformation
 )
 {
     WD_LOG("Geting test from database");
 
-    mDatabase.select("core_test", "input, output", "contest_id = " + std::to_string(aContestID));
+    mDatabase.select("core_test", "input, output", "contest_id = " + std::to_string(aSudmissionInformation.mContestID));
     int cnt = 0;
     for (;; ++cnt)
     {

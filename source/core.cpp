@@ -18,20 +18,18 @@ Core::run
     int aID
 )
 {
-    std::wstring sss = makeExecutable(MAIN_PATH + L"plusTwo.cpp", WORK_DIR + L"plusTwo1");
-
-    Process p;
-    p.IORedirection(Process::IOType::PIPES);
-    p.writePipe("44\n");
-    p.create(sss, L"");
-    p.run();
-    p.writePipe("44\n");
-    std::cout << p.readPipe();
-    return;
-
+    //std::wstring sss = makeExecutable(MAIN_PATH + L"plusTwo.cpp", WORK_DIR + L"plusTwo1");
+    //Process p;
+    //p.IORedirection(Process::IOType::PIPES);
+    //p.writePipe("44\n");
+    //p.create(sss, L"");
+    //p.run();
+    //p.writePipe("44\n");
+    //std::cout << p.readPipe();
+    //return;
 
     mSubInfo.id = aID;
-    mDBQ.makeTestCatalog(mSubInfo);
+    mDBQ.prepareForTesting(mSubInfo);
     std::wstring solutionName = makeExecutable(MAEDIA + makeWindowString(mSubInfo.mSolutionFileName), SOLUTION_PATH + L"-" + std::to_wstring(mSubInfo.id));
     std::wstring checkerName = makeExecutable(MAEDIA + makeWindowString(mSubInfo.mCheckerFileName), CHECKER_PATH + L"-" + std::to_wstring(mSubInfo.id));
     check(solutionName, checkerName);

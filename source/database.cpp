@@ -18,14 +18,14 @@ Database::select
 (
     std::string aTableName,
     std::string aColum, 
-    std::string aConditon
+    std::string aConditon,
+    int aStatementID
 )
 {
-    mStatement = NULL;
     if (aColum == "") aColum = "*";
     if (aConditon != "") aConditon = " WHERE " + aConditon;
     std::string statement = "SELECT " + aColum + " FROM " + aTableName + aConditon;
-    prepare(statement);
+    prepare(statement, aStatementID);
 }
 
 void 
@@ -33,52 +33,56 @@ Database::update
 (
     std::string aTableName,
     std::string aValue,
-    std::string aConditon
+    std::string aConditon,
+    int aStatementID
 )
 {
     std::string statement = "UPDATE " + aTableName + " SET " + aValue + " WHERE " + aConditon;
-    prepare(statement);
+    prepare(statement, aStatementID);
 }
 
 const unsigned char* 
-Database::getTextFromRow(int aColumNumber)
+Database::getTextFromRow(int aColumNumber, int aStatementID)
 {
-    return sqlite3_column_text(mStatement, aColumNumber);
+    return sqlite3_column_text(mStatement[aStatementID], aColumNumber);
 }
 
 
 const void* 
-Database::getText16FromRow(int aColumNumber)
+Database::getText16FromRow(int aColumNumber, int aStatementID)
 {
-    return sqlite3_column_text16(mStatement, aColumNumber);
+    return sqlite3_column_text16(mStatement[aStatementID], aColumNumber);
 }
 
 int 
-Database::getIntFromRow(int aColumNumber)
+Database::getIntFromRow(int aColumNumber, int aStatementID)
 {
-    return sqlite3_column_int(mStatement, aColumNumber);
+    return sqlite3_column_int(mStatement[aStatementID], aColumNumber);
 }
 
 sint_64 
-Database::getInt64FromRow(int aColumNumber)
+Database::getInt64FromRow(int aColumNumber, int aStatementID)
 {
-    return sqlite3_column_int64(mStatement, aColumNumber);
+    return sqlite3_column_int64(mStatement[aStatementID], aColumNumber);
 }
 
 void 
-Database::closeStatment()
+Database::closeStatment(int aStatementID)
 {
-    sqlite3_finalize(mStatement);
+    sqlite3_finalize(mStatement[aStatementID]);
+    mStatement[aStatementID] = NULL;
+    while (mStatement.size() > 1 && 
+        mStatement[aStatementID] == NULL) mStatement.pop_back();
 }
 
 int 
-Database::step()
+Database::step(int aStatementID)
 {
-    return sqlite3_step(mStatement);
+    return sqlite3_step(mStatement[aStatementID]);
 }
 
 char* 
-Database::toAscii(const unsigned char* s)
+Database::toAscii(const unsigned char* s, int aStatementID)
 {
     int cnt = 0;
     while (s[cnt++]);
@@ -89,13 +93,19 @@ Database::toAscii(const unsigned char* s)
 }
 
 void 
-Database::prepare(std::string& aStatment)
+Database::prepare(std::string& aStatment, int aStatementID)
 {
+    if (mStatement.size() < aStatementID + 1)
+    {
+        mStatement.resize(aStatementID + 1);
+    }
+    mStatement[aStatementID] = NULL;
+
     if (sqlite3_prepare_v2(
         mBase,              /* Database handle */
         aStatment.c_str(),             /* SQL statement, UTF-8 encoded */
         -1,                 /* Maximum length of zSql in bytes. */
-        &mStatement,             /* OUT: Statement handle */
+        &(mStatement[aStatementID]),             /* OUT: Statement handle */
         NULL                /* OUT: Pointer to unused portion of zSql */
     ) != SQLITE_OK) WD_ERROR(database.2, "Can't prepare statement " + aStatment);
 }
