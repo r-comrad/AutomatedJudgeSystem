@@ -40,6 +40,7 @@ class Process
 {
 public:
 	enum IOType { NONE = 0, FILES = 1, PIPES = 2/*, MIXED = 3 */};
+	enum PypeType { ZERO = 0, NO_ZERO = 1};
 
 	Process();
 	void run();
@@ -50,7 +51,7 @@ public:
 	void IORedirection(IOType aType, std::wstring aInputPath = L"", std::wstring aOutputPath = L"");
 
 	void readPipe(std::string& result);
-	void writePipe(std::string aMessage);
+	void writePipe(std::string aMessage, PypeType aType = ZERO);
 
 	void closeIO();
 

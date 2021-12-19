@@ -63,7 +63,6 @@
             << "ERROR# " #aNumber "\n"                  \
             << aMessege << "\x1b[0m\n\n";               \
         std::wcout << "\n\n\x1b[31m" <<                 \
-            GetLastErrorAsString() <<                   \
             "\x1b[0m\n\n";                              \
         exit(0);                                        \
     }
@@ -75,7 +74,6 @@
             << "ERROR# " #aNumber "\n"                  \
             << aMessege << "";                          \
         std::wcout << "\n\n" <<                         \
-            GetLastErrorAsString() <<                   \
             "\x1b[0m\n\n";                              \
         exit(0);                                        \
     }

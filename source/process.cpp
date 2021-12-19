@@ -122,6 +122,7 @@ Process::readPipe(std::string& result)
 
     memset(buf, 0, sizeof(buf));
     bread = 1024;
+    result.clear();
     while (bread >= 1023)
     {
         memset(buf, 0, sizeof(buf));
@@ -133,12 +134,12 @@ Process::readPipe(std::string& result)
 }
 
 void
-Process::writePipe(std::string aMessage)
+Process::writePipe(std::string aMessage, PypeType aType)
 {
-    WD_LOG("Writing from pipe");
+    //WD_LOG("Writing from pipe");
     unsigned long bread;
-    WriteFile(mThisSTDOUT, aMessage.c_str(), aMessage.size() + 1, &bread, NULL);
-    WD_LOG("write " + std::to_string(bread) + " bites\n");
+    WriteFile(mThisSTDOUT, aMessage.c_str(), aMessage.size() + ((aType == ZERO) ? 1 : 0), &bread, NULL);
+    //WD_LOG("write " + std::to_string(bread) + " bites\n");
     WD_END_LOG;
 }
 
@@ -186,8 +187,8 @@ Process::run()
 
     ResumeThread(mProcessInfo.hThread);
     WaitForSingleObject(mProcessInfo.hProcess, INFINITE);
-    CloseHandle(mChildSTDIN);
-    CloseHandle(mChildSTDOUT);
+    //CloseHandle(mChildSTDIN);
+    //CloseHandle(mChildSTDOUT);
 
     WD_END_LOG;
 }

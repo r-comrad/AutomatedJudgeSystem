@@ -14,7 +14,7 @@ SubmissionInformation::SubmissionInformation() :
 
 	mUsedTime			(0),
 	mUsedMemory			(0),
-	mResult				("ERROR")
+	mResult				("")
 {}
 
 void
@@ -25,4 +25,5 @@ SubmissionInformation::remakeResultForPasha()
 	else if (mResult == "tle") mResult = "TL";
 	else if (mResult == "mle") mResult = "ML";
 	else if (mResult == "pe") mResult = "PE";
+	else if (mResult == "") mResult = "ERROR";
 }

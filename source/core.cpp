@@ -41,7 +41,7 @@ Core::run
     std::wstring solutionName = makeExecutable(MAEDIA + makeWindowString(mSubInfo.mSolutionFileName), 
         SOLUTION_PATH + L"-" + std::to_wstring(mSubInfo.id ));
     std::wstring checkerName = makeExecutable(MAEDIA + makeWindowString(mSubInfo.mCheckerFileName), 
-        CHECKER_PATH + L"-" + std::to_wstring(mSubInfo.id));
+        CHECKER_PATH + L"-" + std::to_wstring(mSubInfo.id + 15));
     check(solutionName, checkerName);
 }
 
@@ -125,11 +125,11 @@ Core::check
     std::wstring aCheckerName
 )
 {
-//#ifdef _DBG_
-//    std::vector<std::pair<uint_64, uint_64>> allTimes;
-//    mSubInfo.mTimeLimit += 100000;
-//    mSubInfo.mMemoryLimit += 1000000;
-//#endif // _DBG_
+#ifdef _DBG_
+    //std::vector<std::pair<uint_64, uint_64>> allTimes;
+    mSubInfo.mTimeLimit += 100000;
+    mSubInfo.mMemoryLimit += 1000000;
+#endif // _DBG_
 
     //for (int testNum = 0; testNum < mSubInfo.mTestsCount; ++testNum)
     for (;!mSubInfo.mTestsAreOver;)
@@ -232,27 +232,45 @@ Core::pipesTesting
     code.create(L"", aSolutionName);
     std::pair<uint_64, uint_64> cur = code.runWithLimits(mSubInfo.mTimeLimit, mSubInfo.mMemoryLimit);   
     code.readPipe(TLM.mOutput);
-    code.closeIO();
+    //code.closeIO();
 
-    int aTestNum = mSubInfo.mTestsCount - 1;
-    std::wstring testAddress = TEST_PATH + std::to_wstring(mSubInfo.id) + L"-" + std::to_wstring(aTestNum);
-    std::wstring outAddress = OUTPUT_PATH + std::to_wstring(mSubInfo.id) + L"-" + std::to_wstring(aTestNum);
-    std::ofstream ffo(outAddress);
-    ffo << TLM.mOutput +'\n';
-    ffo.close();
+    //int aTestNum = mSubInfo.mTestsCount - 1;
+    //std::wstring testAddress = TEST_PATH + std::to_wstring(mSubInfo.id) + L"-" + std::to_wstring(aTestNum);
+    //std::wstring outAddress = OUTPUT_PATH + std::to_wstring(mSubInfo.id) + L"-" + std::to_wstring(aTestNum);
+    //std::ofstream ffo(outAddress);
+    //ffo << TLM.mOutput +'\n';
+    //ffo.close();
 
     mSubInfo.mUsedTime = std::max(mSubInfo.mUsedTime, cur.first);
     mSubInfo.mUsedMemory = std::max(mSubInfo.mUsedMemory, cur.second);
 
-    WD_LOG("Runing checker #" << aTestNum);
+    //WD_LOG("Runing checker #" << aTestNum);
     Process checker;
-    std::wstring answerAddress = ANSWERS_PATH + std::to_wstring(mSubInfo.id) + L"-" + std::to_wstring(aTestNum);
-    std::wstring resultAddress = RESULT_PATH + std::to_wstring(mSubInfo.id) + L"-" + std::to_wstring(aTestNum);
-    std::wstring parameters = L"sas input " + outAddress + L" " + answerAddress;
-    checker.IORedirection(Process::IOType::FILES, L"", resultAddress);
-    checker.create(aCheckerName, parameters);
+    //std::wstring answerAddress = ANSWERS_PATH + std::to_wstring(mSubInfo.id) + L"-" + std::to_wstring(aTestNum);
+    //std::wstring resultAddress = RESULT_PATH + std::to_wstring(mSubInfo.id) + L"-" + std::to_wstring(aTestNum);
+    //std::wstring parameters = L"sas input " + outAddress + L" " + answerAddress;
+    //checker.IORedirection(Process::IOType::FILES, L"", resultAddress);
+    checker.IORedirection(Process::IOType::PIPES);
+    //checker.create(aCheckerName, parameters);
+    TLM.makeOutputSizes();
+    TLM.makeAnswerSizes();
+
+    checker.writePipe(TLM.mTestSize, Process::PypeType::NO_ZERO);
+    checker.writePipe(TLM.mTest, Process::PypeType::NO_ZERO);
+    checker.writePipe(TLM.mOutputSize, Process::PypeType::NO_ZERO);
+    checker.writePipe(TLM.mOutput, Process::PypeType::NO_ZERO);
+    checker.writePipe(TLM.mAnswerSize, Process::PypeType::NO_ZERO);
+    checker.writePipe(TLM.mAnswer, Process::PypeType::NO_ZERO);
+
+#ifdef _DBG_
+    WD_LOG(TLM.mTest << TLM.mOutput << TLM.mAnswer);
+#endif
+
+    //checker.writePipe("\000\000\000\000\000\000\000\000\001\000\000\000\000\000\000\0001\001\000\000\000\000\000\000\0001", Process::PypeType::NO_ZERO);
+    checker.create(aCheckerName, L"");
     checker.run();
 
-    std::ifstream resultFile(resultAddress);
-    resultFile >> mSubInfo.mResult;
+    checker.readPipe(mSubInfo.mResult);
+    //std::ifstream resultFile(resultAddress);
+    //resultFile >> mSubInfo.mResult;
 }

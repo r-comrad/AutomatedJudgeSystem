@@ -3,7 +3,7 @@
 void
 TestLibMessage::makeTestSizes()
 {
-	makeSize(mTest, mAnswer);
+	makeSize(mTest, mTestSize);
 }
 
 void
