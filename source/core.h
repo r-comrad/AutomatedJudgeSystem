@@ -5,6 +5,7 @@
 
 #include "database_query.h"
 #include "process.h"
+#include "testlib_message.h"
 
 class Core
 {
@@ -23,7 +24,8 @@ private:
 	std::wstring compile(std::wstring aFileName, std::wstring aOutName, Language aLanguage);
 
 	void check(std::wstring aSolutionName, std::wstring aCheckerName);
-
+	void fileTesting(uint_32 aTestNum, std::wstring aSolutionName, std::wstring aCheckerName);
+	void pipesTesting(std::wstring aSolutionName, std::wstring aCheckerName);
 };
 
 #endif //CORE_H

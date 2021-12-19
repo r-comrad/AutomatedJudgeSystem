@@ -29,9 +29,19 @@ Core::run
     //return;
 
     mSubInfo.id = aID;
-    mDBQ.prepareForTesting(mSubInfo);
-    std::wstring solutionName = makeExecutable(MAEDIA + makeWindowString(mSubInfo.mSolutionFileName), SOLUTION_PATH + L"-" + std::to_wstring(mSubInfo.id));
-    std::wstring checkerName = makeExecutable(MAEDIA + makeWindowString(mSubInfo.mCheckerFileName), CHECKER_PATH + L"-" + std::to_wstring(mSubInfo.id));
+
+    mDBQ.prepareForTesting(mSubInfo, MDatabaseQuery::DataStructure::MAGIC_IVAN);
+
+    mSubInfo.mSolutionFileName.pop_back();
+    mSubInfo.mSolutionFileName.pop_back();
+    mSubInfo.mSolutionFileName.pop_back();
+    mSubInfo.mSolutionFileName.pop_back();
+    mSubInfo.mSolutionFileName += L"plus.cpp";
+
+    std::wstring solutionName = makeExecutable(MAEDIA + makeWindowString(mSubInfo.mSolutionFileName), 
+        SOLUTION_PATH + L"-" + std::to_wstring(mSubInfo.id ));
+    std::wstring checkerName = makeExecutable(MAEDIA + makeWindowString(mSubInfo.mCheckerFileName), 
+        CHECKER_PATH + L"-" + std::to_wstring(mSubInfo.id));
     check(solutionName, checkerName);
 }
 
@@ -76,7 +86,8 @@ Core::compile
         result += L".exe";
         Process process;
         //process.IORedirection(L"", L"");
-        std::wstring comand = COMPILERS + L"magicCPPCompiler.cmd" + L" " + aFileName + L" " + result;
+        std::wstring comand = COMPILERS + L"magicCPPCompiler.cmd" + L" " + 
+            aFileName + L" " + result;
         process.create(L"", comand);
         process.run();
     }
@@ -114,86 +125,134 @@ Core::check
     std::wstring aCheckerName
 )
 {
-    std::string resultSS;
+//#ifdef _DBG_
+//    std::vector<std::pair<uint_64, uint_64>> allTimes;
+//    mSubInfo.mTimeLimit += 100000;
+//    mSubInfo.mMemoryLimit += 1000000;
+//#endif // _DBG_
 
-    std::map<std::string, std::string> decoder = { {"ok", "OK"}, {"wa", "WA"}, {"wrong", "WA"},{"tle", "TL"}, {"mle", "ML"}, {"pe", "PE"} };
-
-#ifdef _DBG_
-    std::vector<std::pair<uint_64, uint_64>> allTimes;
-    mSubInfo.mTimeLimit += 100000;
-    mSubInfo.mMemoryLimit += 1000000;
-#endif // _DBG_
-
-    uint_64 mtm = 1e9;
-    std::pair<uint_64, uint_64> results = { 0,0 };
-    for (int testNum = 0; testNum < mSubInfo.mTestsCount; ++testNum)
+    //for (int testNum = 0; testNum < mSubInfo.mTestsCount; ++testNum)
+    for (;!mSubInfo.mTestsAreOver;)
     {
-        WD_LOG("Checking test #" << testNum);
-        WD_LOG("Runing test #" << testNum);
-        Process code;
-        std::wstring testAddress = TEST_PATH + std::to_wstring(mSubInfo.id) + L"-" + std::to_wstring(testNum);
-        std::wstring outAddress = OUTPUT_PATH + std::to_wstring(mSubInfo.id) + L"-" + std::to_wstring(testNum);
+        //fileTesting(testNum, aSolutionName, aCheckerName);
+        pipesTesting(aSolutionName, aCheckerName);
 
-        code.IORedirection(Process::IOType::FILES, testAddress, outAddress);
-        code.create(L"", aSolutionName);
-        std::pair<uint_64, uint_64> cur = code.runWithLimits(mSubInfo.mTimeLimit, mSubInfo.mMemoryLimit);
-
-#ifdef _DBG_
-        allTimes.push_back(cur);
-#endif // _DBG_
-
-        results.first = std::max(results.first, cur.first);
-        results.second = std::max(results.second, cur.second);
-        mtm = std::min(mtm, cur.first);
-
-        WD_LOG("Runing checker #" << testNum);
-        Process checker;
-        std::wstring answerAddress = ANSWERS_PATH + std::to_wstring(mSubInfo.id) + L"-"+ std::to_wstring(testNum);
-        std::wstring resultAddress = RESULT_PATH + std::to_wstring(mSubInfo.id) + L"-" + std::to_wstring(testNum);
-        std::wstring parameters = L"sas input " + outAddress + L" " + answerAddress;
-        checker.IORedirection(Process::IOType::FILES, L"", resultAddress);
-        checker.create(aCheckerName, parameters);
-        checker.run();
-
-        std::ifstream resultFile(resultAddress);
-        resultFile >> resultSS;
-        if (resultSS != "ok")
+        if (mSubInfo.mResult != "ok")
         {
             //WD_ERROR(mainCheck.0, "Can't open file " + makeGoodString(aTaskPath) + "init");
             WD_LOG("Result not okay");
-            WD_LOG("Today result is " << resultSS);
+            WD_LOG("Today result is " << mSubInfo.mResult);
             break;
         }
-        else if (mSubInfo.mTimeLimit < results.first)
+        else if (mSubInfo.mTimeLimit < mSubInfo.mUsedTime)
         {
-            resultSS = "tle";
-            WD_LOG("Result is TLE " << mSubInfo.mTimeLimit << " vs " << results.first);
+            mSubInfo.mResult = "tle";
+            WD_LOG("Result is TLE: wanted " << mSubInfo.mTimeLimit << 
+                " vs received " << mSubInfo.mUsedTime);
             break;
         }
-        else if (mSubInfo.mMemoryLimit < results.second)
+        else if (mSubInfo.mMemoryLimit < mSubInfo.mUsedMemory)
         {
-            resultSS = "mle";
-            WD_LOG("Result is MLE " << mSubInfo.mMemoryLimit << " vs " << results.second);
+            mSubInfo.mResult = "mle";
+            WD_LOG("Result is MLE: wanted " << mSubInfo.mMemoryLimit << 
+                " vs received " << mSubInfo.mUsedMemory);
             break;
         }
 
         WD_END_LOG;
     }
-    resultSS = decoder[resultSS];
-    mDBQ.writeResult(mSubInfo.id, resultSS, results.first, results.second);
+    mSubInfo.remakeResultForPasha();
+    mDBQ.writeResult(mSubInfo.id, mSubInfo.mResult, mSubInfo.mUsedTime, mSubInfo.mUsedMemory);
 
-    WD_LOG("Final result : " + resultSS);
-    WD_LOG("Final time : " << results.first);
-    WD_LOG("Final memory : " << results.second);
+    WD_LOG("Final result : " + mSubInfo.mResult);
+    WD_LOG("Final time : " << mSubInfo.mUsedTime);
+    WD_LOG("Final memory : " << mSubInfo.mUsedMemory);
     WD_END_LOG;
 
-    WD_LOG("Times : ");
-#ifdef _DBG_
-    for (auto& i : allTimes) WD_LOG(i.first << " " << i.second);
-    WD_END_LOG;
-    WD_LOG("Min time : " << (*std::max_element(allTimes.begin(), allTimes.end())).first);
-    WD_LOG("Max time : " << (*std::min_element(allTimes.begin(), allTimes.end())).first);
-#endif // _DBG_
+//    WD_LOG("Times : ");
+//#ifdef _DBG_
+//    for (auto& i : allTimes) WD_LOG(i.first << " " << i.second);
+//    WD_END_LOG;
+//    WD_LOG("Min time : " << (*std::max_element(allTimes.begin(), allTimes.end())).first);
+//    WD_LOG("Max time : " << (*std::min_element(allTimes.begin(), allTimes.end())).first);
+//#endif // _DBG_
+}
 
-    std::cout << results.first << " " << mtm;
+void
+Core::fileTesting
+(
+    uint_32 aTestNum,
+    std::wstring aSolutionName,
+    std::wstring aCheckerName
+)
+{
+    WD_LOG("Checking test #" << aTestNum);
+    WD_LOG("Runing test #" << aTestNum);
+    Process code;
+    std::wstring testAddress = TEST_PATH + std::to_wstring(mSubInfo.id) + L"-" + std::to_wstring(aTestNum);
+    std::wstring outAddress = OUTPUT_PATH + std::to_wstring(mSubInfo.id) + L"-" + std::to_wstring(aTestNum);
+
+    code.IORedirection(Process::IOType::FILES, testAddress, outAddress);
+    code.create(L"", aSolutionName);
+    std::pair<uint_64, uint_64> cur = code.runWithLimits(mSubInfo.mTimeLimit, mSubInfo.mMemoryLimit);
+
+    mSubInfo.mUsedTime = std::max(mSubInfo.mUsedTime, cur.first);
+    mSubInfo.mUsedMemory = std::max(mSubInfo.mUsedMemory, cur.second);
+
+    WD_LOG("Runing checker #" << aTestNum);
+    Process checker;
+    std::wstring answerAddress = ANSWERS_PATH + std::to_wstring(mSubInfo.id) + L"-" + std::to_wstring(aTestNum);
+    std::wstring resultAddress = RESULT_PATH + std::to_wstring(mSubInfo.id) + L"-" + std::to_wstring(aTestNum);
+    std::wstring parameters = L"sas input " + outAddress + L" " + answerAddress;
+    checker.IORedirection(Process::IOType::FILES, L"", resultAddress);
+    checker.create(aCheckerName, parameters);
+    checker.run();
+
+    std::ifstream resultFile(resultAddress);
+    resultFile >> mSubInfo.mResult;
+}
+
+void
+Core::pipesTesting
+(
+    std::wstring aSolutionName,
+    std::wstring aCheckerName
+)
+{
+    WD_LOG("Checking test #" << mSubInfo.mTestsCount);
+    WD_LOG("Runing test #" << mSubInfo.mTestsCount);
+    Process code;
+    code.IORedirection(Process::IOType::PIPES);
+
+    TestLibMessage TLM;
+    mDBQ.getNextTest(mSubInfo, TLM);
+    TLM.makeTestSizes();   
+    code.writePipe(TLM.mTest);
+
+    code.create(L"", aSolutionName);
+    std::pair<uint_64, uint_64> cur = code.runWithLimits(mSubInfo.mTimeLimit, mSubInfo.mMemoryLimit);   
+    code.readPipe(TLM.mOutput);
+    code.closeIO();
+
+    int aTestNum = mSubInfo.mTestsCount - 1;
+    std::wstring testAddress = TEST_PATH + std::to_wstring(mSubInfo.id) + L"-" + std::to_wstring(aTestNum);
+    std::wstring outAddress = OUTPUT_PATH + std::to_wstring(mSubInfo.id) + L"-" + std::to_wstring(aTestNum);
+    std::ofstream ffo(outAddress);
+    ffo << TLM.mOutput +'\n';
+    ffo.close();
+
+    mSubInfo.mUsedTime = std::max(mSubInfo.mUsedTime, cur.first);
+    mSubInfo.mUsedMemory = std::max(mSubInfo.mUsedMemory, cur.second);
+
+    WD_LOG("Runing checker #" << aTestNum);
+    Process checker;
+    std::wstring answerAddress = ANSWERS_PATH + std::to_wstring(mSubInfo.id) + L"-" + std::to_wstring(aTestNum);
+    std::wstring resultAddress = RESULT_PATH + std::to_wstring(mSubInfo.id) + L"-" + std::to_wstring(aTestNum);
+    std::wstring parameters = L"sas input " + outAddress + L" " + answerAddress;
+    checker.IORedirection(Process::IOType::FILES, L"", resultAddress);
+    checker.create(aCheckerName, parameters);
+    checker.run();
+
+    std::ifstream resultFile(resultAddress);
+    resultFile >> mSubInfo.mResult;
 }

@@ -53,8 +53,8 @@ MDatabaseQuery::writeResult
     WD_END_LOG;
 }
 
-std::pair<std::string, std::string>
-MDatabaseQuery::getNextTest(SubmissionInformation& aSudmissionInformation)
+void
+MDatabaseQuery::getNextTest(SubmissionInformation& aSudmissionInformation, TestLibMessage& aTLM)
 {
     WD_LOG("Taking next test");
         mDatabase.step(mReservedStatementNumber);
@@ -63,14 +63,16 @@ MDatabaseQuery::getNextTest(SubmissionInformation& aSudmissionInformation)
         const unsigned char* output = mDatabase.getTextFromRow(1, mReservedStatementNumber);
         if (input == NULL)
         {
-            aSudmissionInformation.mTestsOver = true;
-            return std::make_pair("", "");
+            aSudmissionInformation.mTestsAreOver = true;
+            aTLM.mTest = "";
+            aTLM.mAnswer = "";
+            return;
         }
 
     aSudmissionInformation.mTestsCount++;
-
-    return std::make_pair(std::string(reinterpret_cast<const char*>(input)), 
-        std::string(reinterpret_cast<const char*>(output)));
+    aTLM.mTest      = std::string(reinterpret_cast<const char*>( input));
+    //aTLM.mTest += "\n";
+    aTLM.mAnswer    = std::string(reinterpret_cast<const char*>(output));
 }
 
 void
@@ -79,7 +81,7 @@ MDatabaseQuery::prepareTestsStatement
     SubmissionInformation& aSudmissionInformation
 )
 {
-    aSudmissionInformation.mTestsOver = false;
+    aSudmissionInformation.mTestsAreOver = false;
     aSudmissionInformation.mTestsCount = 0;
 
     WD_LOG("Prepare geting test from database");

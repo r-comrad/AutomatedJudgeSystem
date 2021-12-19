@@ -1,17 +1,28 @@
 #ifndef SUBMISSION_STRUCT_H
 #define SUBMISSION_STRUCT_H
 
-class SubmissionInformation
+#include "domain.h"
+
+struct SubmissionInformation
 {
 public:
 	int id;
+	int mContestID;
+
 	uint_64 mTimeLimit;
 	uint_64 mMemoryLimit;
 	std::wstring mSolutionFileName;
 	std::wstring mCheckerFileName;
-	int mContestID;
+
 	int mTestsCount;
-	bool mTestsOver;
+	bool mTestsAreOver;
+
+	uint_64 mUsedTime;
+	uint_64 mUsedMemory;
+	std::string mResult;
+
+	SubmissionInformation();
+	void remakeResultForPasha();
 };
 
 #endif //SUBMISSION_STRUCT_H

@@ -5,6 +5,7 @@
 
 #include "database.h"
 #include "submission_information.h"
+#include "testlib_message.h"
 
 class MDatabaseQuery
 {
@@ -22,7 +23,7 @@ public:
 		DataStructure aDataType = DataStructure::FILES);
 	void writeResult(int aID, std::string aResult, int aTime, int aMemory);
 
-	std::pair<std::string, std::string> getNextTest(SubmissionInformation& aSudmissionInformation);
+	void getNextTest(SubmissionInformation& aSudmissionInformation, TestLibMessage& aTLM);
 private:
 	Database mDatabase;
 	int mReservedStatementNumber;

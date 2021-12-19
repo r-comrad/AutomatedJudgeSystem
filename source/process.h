@@ -49,8 +49,10 @@ public:
 
 	void IORedirection(IOType aType, std::wstring aInputPath = L"", std::wstring aOutputPath = L"");
 
-	std::string readPipe();
+	void readPipe(std::string& result);
 	void writePipe(std::string aMessage);
+
+	void closeIO();
 
 private:
 	//HANDLE mInputHandle;

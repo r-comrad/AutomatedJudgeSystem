@@ -101,15 +101,14 @@ Process::IORedirection
     WD_END_LOG;
 }
 
-std::string
-Process::readPipe()
+void
+Process::readPipe(std::string& result)
 {
  //   unsigned long exit;
   //  GetExitCodeProcess(mProcessInfo.hProcess, &exit); //пока дочерний процесс                                      // не закрыт
    // if (exit != STILL_ACTIVE) return "";
 
     WD_LOG("Reading from pipe");
-    std::string result;
     char buf[1024];
     memset(buf, 0, sizeof(buf));
 
@@ -131,7 +130,6 @@ Process::readPipe()
     }
 
     WD_END_LOG;
-    return result;
 }
 
 void
@@ -139,7 +137,7 @@ Process::writePipe(std::string aMessage)
 {
     WD_LOG("Writing from pipe");
     unsigned long bread;
-    WriteFile(mThisSTDOUT, aMessage.c_str(), aMessage.size(), &bread, NULL);
+    WriteFile(mThisSTDOUT, aMessage.c_str(), aMessage.size() + 1, &bread, NULL);
     WD_LOG("write " + std::to_string(bread) + " bites\n");
     WD_END_LOG;
 }
@@ -234,6 +232,15 @@ Process::runWithLimits
     WD_END_LOG;
 
     return { timeUsage , memoryUsage };
+}
+
+void
+Process::closeIO()
+{
+    CloseHandle(mThisSTDIN);
+    CloseHandle(mThisSTDOUT);
+    CloseHandle(mChildSTDIN);
+    CloseHandle(mChildSTDOUT);
 }
 
 long long 
