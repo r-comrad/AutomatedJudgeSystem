@@ -47,13 +47,14 @@ Process::IORedirection
     std::wstring    aOutputPath
 )
 {
+#ifdef MICROSOFT
     SECURITY_ATTRIBUTES securatyAttributes;
     securatyAttributes.nLength = sizeof(SECURITY_ATTRIBUTES);
     securatyAttributes.lpSecurityDescriptor = NULL;
     securatyAttributes.bInheritHandle = true;
 
     if (aType == Process::IOType::NONE) {}
-    else if (aType == Process::IOType::FILES) 
+    else if (aType == Process::IOType::FILES)
     {
         WD_LOG("Rederecting input to: " << makeGoodString(aInputPath));
         WD_LOG("Rederecting output to: " << makeGoodString(aOutputPath));
@@ -73,8 +74,8 @@ Process::IORedirection
             CREATE_ALWAYS,
             FILE_ATTRIBUTE_NORMAL,
             NULL);
-    }
-    else if (aType == Process::IOType::PIPES) 
+}
+    else if (aType == Process::IOType::PIPES)
     {
         WD_LOG("Rederecting input & output to pipe");
         if (!CreatePipe(&mChildSTDIN, &mThisSTDOUT, &securatyAttributes, 0))
@@ -89,7 +90,7 @@ Process::IORedirection
     }
     //else if (aType == Process::IOType::MIXED) {}
 
-    //GetStartupInfo(&mStartupInfo);
+//GetStartupInfo(&mStartupInfo);
     ZeroMemory(&mStartupInfo, sizeof(STARTUPINFO));
     mStartupInfo.cb = sizeof(STARTUPINFO);
     mStartupInfo.dwFlags |= STARTF_USESTDHANDLES;
@@ -97,6 +98,24 @@ Process::IORedirection
     mStartupInfo.hStdInput = mChildSTDIN;
     mStartupInfo.hStdError = mChildSTDOUT;
     mStartupInfo.hStdOutput = mChildSTDOUT;
+#endif
+#ifdef PINGVIN
+    pid_t t = fork();
+    if (t == -1) {
+        printf("Îøèáêà\n");
+        return 1;
+    }
+    if (t) {
+        execl
+    }
+
+#endif
+
+
+
+
+  
+
 
     WD_END_LOG;
 }
@@ -136,10 +155,10 @@ Process::readPipe(std::string& result)
 void
 Process::writePipe(std::string aMessage, PypeType aType)
 {
-    //WD_LOG("Writing from pipe");
+    WD_LOG("Writing from pipe");
     unsigned long bread;
     WriteFile(mThisSTDOUT, aMessage.c_str(), aMessage.size() + ((aType == ZERO) ? 1 : 0), &bread, NULL);
-    //WD_LOG("write " + std::to_string(bread) + " bites\n");
+    WD_LOG("write " + std::to_string(bread) + " bites\n");
     WD_END_LOG;
 }
 
@@ -159,6 +178,7 @@ Process::create
     wchar_t* cmd = const_cast<wchar_t*>(aParameters.c_str());
     if (aParameters == L"") cmd = NULL;
 
+#ifdef MICROSOFT
     mFuture = std::async(std::launch::async, &Process::getMaxMemoryUsage,
         this, std::ref(mProcessInfo), 1000000);
     //TODO: Memory limit
@@ -174,9 +194,18 @@ Process::create
         NULL,
         &mStartupInfo,
         &mProcessInfo
-    ) == FALSE) WD_ERROR(process.0, "Can't start process " + makeGoodString(aName) + "\narguments are: " + makeGoodString(aParameters));
+    ) == FALSE) WD_ERROR(process.0W, "Can't start process " + makeGoodString(aName) + "\narguments are: " + makeGoodString(aParameters));
+#endif
+#ifdef PINGVIN
+    pid_t t = fork();
+    if (t == -1) {
+        WD_ERROR(process.0L, "Can't start process ")
+    }
+    else if (!t) {
+        execl()
+    }
 
-
+#endif
     WD_END_LOG;
 }
 

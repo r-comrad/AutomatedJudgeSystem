@@ -263,7 +263,7 @@ Core::pipesTesting
     checker.writePipe(TLM.mAnswer, Process::PypeType::NO_ZERO);
 
 #ifdef _DBG_
-    WD_LOG(TLM.mTest << TLM.mOutput << TLM.mAnswer);
+    WD_LOG("Test: " + TLM.mTest + "\n Output: " + TLM.mOutput + "\n Answer: " + TLM.mAnswer);
 #endif
 
     //checker.writePipe("\000\000\000\000\000\000\000\000\001\000\000\000\000\000\000\0001\001\000\000\000\000\000\000\0001", Process::PypeType::NO_ZERO);
