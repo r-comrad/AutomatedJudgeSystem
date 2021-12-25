@@ -15,7 +15,7 @@ typedef sqlite3_stmt Statement;
 class Database
 {
 public:
-	Database(std::wstring aPath);
+	Database(std::string aPath);
 	void select(std::string aTableName, std::string aColum = "", std::string aConditon = "", int aStatementID = 0);
 	void update(std::string aTableName, std::string aValue, std::string aConditon, int aStatementID = 0);
 	void closeStatment(int aStatementID = 0);

@@ -6,8 +6,8 @@ SubmissionInformation::SubmissionInformation() :
 
 	mTimeLimit			(0),
 	mMemoryLimit		(0),
-	mSolutionFileName	(L"NUN NAME"),
-	mCheckerFileName	(L"NUN NAME"),
+	mSolutionFileName	("NUN NAME"),
+	mCheckerFileName	("NUN NAME"),
 
 	mTestsCount			(0),
 	mTestsAreOver		(false),

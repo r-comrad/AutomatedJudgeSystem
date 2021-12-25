@@ -1,43 +1,43 @@
 #include "domain.h"
 
-std::wstring 
+std::string 
 getMainPath() {
 #ifdef WINDOWS_OSS
-    TCHAR buffer[MAX_PATH] = { 0 };
-    uint_8 size = GetModuleFileName(NULL, buffer, MAX_PATH);
+    CHAR buffer[MAX_PATH] = { 0 };
+    uint_8 size = GetModuleFileNameA(NULL, buffer, MAX_PATH);
 #ifdef TRUE_ONLY_WAY
     for (int i = 0; i < 2; ++i) while (buffer[--size] != L'\\');
 #else
     for (int i = 0; i < 1; ++i) while (buffer[--size] != L'\\');
 #endif
-    return std::wstring(buffer).substr(0, size + 1);
+    return std::string(buffer).substr(0, size + 1);
 #else
 #endif
 }
 
+//std::string 
+//makeGoodString
+//(
+//    std::wstring aBadString
+//)
+//{
+//    std::string goodString;
+//    for (auto& i : aBadString) goodString.push_back(char(i));
+//    return goodString;
+//}
+//
+//std::wstring 
+//makeBadString
+//(
+//    std::string aGoodString
+//)
+//{
+//    std::wstring badString;
+//    for (auto& i : aGoodString) badString.push_back(char(i));
+//    return badString;
+//}
+
 std::string 
-makeGoodString
-(
-    std::wstring aBadString
-)
-{
-    std::string goodString;
-    for (auto& i : aBadString) goodString.push_back(char(i));
-    return goodString;
-}
-
-std::wstring 
-makeBadString
-(
-    std::string aGoodString
-)
-{
-    std::wstring badString;
-    for (auto& i : aGoodString) badString.push_back(char(i));
-    return badString;
-}
-
-std::wstring 
 GetLastErrorAsString()
 {
     setlocale(LC_ALL, "Russian");
@@ -45,7 +45,7 @@ GetLastErrorAsString()
     //Get the error message ID, if any.
     DWORD errorMessageID = ::GetLastError();
     if (errorMessageID == 0) {
-        return std::wstring(); //No error message has been recorded
+        return std::string(); //No error message has been recorded
     }
 
     LPWSTR messageBuffer = nullptr;
@@ -57,7 +57,7 @@ GetLastErrorAsString()
 
     //Copy the error message into a std::string.
     //std::wstring message(messageBuffer, size);
-    std::wstring message;
+    std::string message;
     for (int i = 0; i < size; ++i)
     {
         message.push_back(messageBuffer[i]);
@@ -84,37 +84,37 @@ copyFile(
     WD_END_LOG;
 }
 
-void
-copyFile(
-    std::wstring aFromFileName, 
-    std::wstring aToFileName
-)
-{
-    copyFile(makeGoodString(aFromFileName), makeGoodString(aToFileName));
-}
+//void
+//copyFile(
+//    std::wstring aFromFileName, 
+//    std::wstring aToFileName
+//)
+//{
+//    copyFile(makeGoodString(aFromFileName), makeGoodString(aToFileName));
+//}
 
-std::wstring getString(const unsigned char* aString)
+std::string getString(const unsigned char* aString)
 {
-    std::wstring result;
+    std::string result;
     for (int i = 0; aString[i]; ++i) result.push_back(aString[i]);
     return result;
 }
 
-std::wstring
+std::string
 getString
 (
     const char* aString
 )
 {
-    std::wstring result;
+    std::string result;
     for (int i = 0; aString[i]; ++i) result.push_back(aString[i]);
     return result;
 }
 
-std::wstring 
+std::string 
 makeWindowString
 (
-    std::wstring aString
+    std::string aString
 )
 {
     //for (int i = 0; i < aString.size(); ++i)

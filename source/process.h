@@ -46,9 +46,9 @@ public:
 	void run();
 	std::pair<uint_64, uint_64> runWithLimits(uint_64 aTimeLimit, uint_64 aMemoryLimit);
 	
-	void create(std::wstring aName, std::wstring aParameters);
+	void create(std::string aName, std::string aParameters);
 
-	void IORedirection(IOType aType, std::wstring aInputPath = L"", std::wstring aOutputPath = L"");
+	void IORedirection(IOType aType, std::string aInputPath = "", std::string aOutputPath = "");
 
 	void readPipe(std::string& result);
 	void writePipe(std::string aMessage, PypeType aType = ZERO);
@@ -67,7 +67,7 @@ private:
 	HANDLE mChildSTDOUT;
 
 	PROCESS_INFORMATION mProcessInfo;
-	STARTUPINFOW mStartupInfo;
+	STARTUPINFOA mStartupInfo;
 	std::future<long long> mFuture;
 
 	long long getMaxMemoryUsage(PROCESS_INFORMATION&, long long);

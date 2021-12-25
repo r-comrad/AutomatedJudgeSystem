@@ -12,7 +12,7 @@ class MDatabaseQuery
 public:
 	//MDatabaseQuery() {};
 	enum DataStructure {FILES = 0, MAGIC_IVAN = 1};
-	MDatabaseQuery(std::wstring aDatabasePath);
+	MDatabaseQuery(std::string aDatabasePath);
 	~MDatabaseQuery();
 	
 	//takeProblemId(sqlite3* ppDb);

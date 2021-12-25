@@ -43,23 +43,22 @@ void
 Process::IORedirection
 (
     IOType          aType,
-    std::wstring    aInputPath,
-    std::wstring    aOutputPath
+    std::string    aInputPath,
+    std::string    aOutputPath
 )
 {
-#ifdef MICROSOFT
     SECURITY_ATTRIBUTES securatyAttributes;
     securatyAttributes.nLength = sizeof(SECURITY_ATTRIBUTES);
     securatyAttributes.lpSecurityDescriptor = NULL;
     securatyAttributes.bInheritHandle = true;
 
     if (aType == Process::IOType::NONE) {}
-    else if (aType == Process::IOType::FILES)
+    else if (aType == Process::IOType::FILES) 
     {
-        WD_LOG("Rederecting input to: " << makeGoodString(aInputPath));
-        WD_LOG("Rederecting output to: " << makeGoodString(aOutputPath));
+        WD_LOG("Rederecting input to: " <<aInputPath);
+        WD_LOG("Rederecting output to: " << aOutputPath);
 
-        if (aInputPath != L"") mChildSTDIN = CreateFile(aInputPath.c_str(),
+        if (aInputPath != "") mChildSTDIN = CreateFileA(aInputPath.c_str(),
             GENERIC_READ,
             FILE_SHARE_READ,
             &securatyAttributes,
@@ -67,15 +66,15 @@ Process::IORedirection
             FILE_ATTRIBUTE_NORMAL,
             NULL);
 
-        if (aOutputPath != L"") mChildSTDOUT = CreateFile(aOutputPath.c_str(),
+        if (aOutputPath != "") mChildSTDOUT = CreateFileA(aOutputPath.c_str(),
             FILE_WRITE_DATA,
             FILE_SHARE_WRITE,
             &securatyAttributes,
             CREATE_ALWAYS,
             FILE_ATTRIBUTE_NORMAL,
             NULL);
-}
-    else if (aType == Process::IOType::PIPES)
+    }
+    else if (aType == Process::IOType::PIPES) 
     {
         WD_LOG("Rederecting input & output to pipe");
         if (!CreatePipe(&mChildSTDIN, &mThisSTDOUT, &securatyAttributes, 0))
@@ -90,7 +89,7 @@ Process::IORedirection
     }
     //else if (aType == Process::IOType::MIXED) {}
 
-//GetStartupInfo(&mStartupInfo);
+    //GetStartupInfo(&mStartupInfo);
     ZeroMemory(&mStartupInfo, sizeof(STARTUPINFO));
     mStartupInfo.cb = sizeof(STARTUPINFO);
     mStartupInfo.dwFlags |= STARTF_USESTDHANDLES;
@@ -98,24 +97,6 @@ Process::IORedirection
     mStartupInfo.hStdInput = mChildSTDIN;
     mStartupInfo.hStdError = mChildSTDOUT;
     mStartupInfo.hStdOutput = mChildSTDOUT;
-#endif
-#ifdef PINGVIN
-    pid_t t = fork();
-    if (t == -1) {
-        printf("Îøèáêà\n");
-        return 1;
-    }
-    if (t) {
-        execl
-    }
-
-#endif
-
-
-
-
-  
-
 
     WD_END_LOG;
 }
@@ -165,25 +146,24 @@ Process::writePipe(std::string aMessage, PypeType aType)
 void 
 Process::create
 (
-    std::wstring aName,
-    std::wstring aParameters
+    std::string aName,
+    std::string aParameters
 )
 {
-    WD_LOG("Creating process name: " << makeGoodString(aName));
-    WD_LOG("Parameters: " << makeGoodString(aParameters));
+    WD_LOG("Creating process name: " << aName);
+    WD_LOG("Parameters: " << aParameters);
 
-    wchar_t* name = const_cast<wchar_t*>(aName.c_str());
-    if (aName == L"") name = NULL;
+    char* name = (char*) aName.c_str();
+    if (aName == "") name = NULL;
 
-    wchar_t* cmd = const_cast<wchar_t*>(aParameters.c_str());
-    if (aParameters == L"") cmd = NULL;
+    char* cmd = (char*) (aParameters).c_str();
+    if (aParameters == "") cmd = NULL;
 
-#ifdef MICROSOFT
     mFuture = std::async(std::launch::async, &Process::getMaxMemoryUsage,
         this, std::ref(mProcessInfo), 1000000);
     //TODO: Memory limit
 
-    if (CreateProcess(
+    if (CreateProcessA(
         name,
         cmd,
         NULL,
@@ -194,18 +174,9 @@ Process::create
         NULL,
         &mStartupInfo,
         &mProcessInfo
-    ) == FALSE) WD_ERROR(process.0W, "Can't start process " + makeGoodString(aName) + "\narguments are: " + makeGoodString(aParameters));
-#endif
-#ifdef PINGVIN
-    pid_t t = fork();
-    if (t == -1) {
-        WD_ERROR(process.0L, "Can't start process ")
-    }
-    else if (!t) {
-        execl()
-    }
+    ) == FALSE) WD_ERROR(process.0, "Can't start process " + aName + "\narguments are: " + aParameters);
 
-#endif
+
     WD_END_LOG;
 }
 

@@ -9,7 +9,7 @@
 
 MDatabaseQuery::MDatabaseQuery
 (
-    std::wstring aDatabasePath
+    std::string aDatabasePath
 ) :
     mDatabase(aDatabasePath)
 {}
@@ -106,7 +106,7 @@ MDatabaseQuery::getIDInformation
     aSudmissionInformation.mContestID = mDatabase.getInt64FromRow(1);
     mDatabase.closeStatment();
 
-    WD_LOG("File name: " << makeGoodString(aSudmissionInformation.mSolutionFileName));
+    WD_LOG("File name: " << aSudmissionInformation.mSolutionFileName);
     WD_LOG("Contest ID: " << aSudmissionInformation.mContestID);
     WD_END_LOG;
 }
@@ -149,17 +149,17 @@ MDatabaseQuery::getTests
         const unsigned char* output = mDatabase.getTextFromRow(1);
         if (input == NULL) break;
 
-        std::ofstream taskFile(TEST_PATH + std::to_wstring(aSudmissionInformation.id) + L"-" + std::to_wstring(cnt));
-        std::ofstream ansFile(ANSWERS_PATH + std::to_wstring(aSudmissionInformation.id) + L"-" + std::to_wstring(cnt));
+        std::ofstream taskFile(TEST_PATH + std::to_string(aSudmissionInformation.id) + "-" + std::to_string(cnt));
+        std::ofstream ansFile(ANSWERS_PATH + std::to_string(aSudmissionInformation.id) + "-" + std::to_string(cnt));
 
         if (!taskFile.is_open())
         {
-            WD_ERROR(database.0, "Can't open file " + makeGoodString(TEST_PATH + std::to_wstring(cnt)));
+            WD_ERROR(database.0, "Can't open file " + TEST_PATH + std::to_string(cnt));
             continue;//TODO
         }
         if (!ansFile.is_open())
         {
-            WD_ERROR(database.0, "Can't open file " + makeGoodString(ANSWERS_PATH + std::to_wstring(cnt)));
+            WD_ERROR(database.0, "Can't open file " + ANSWERS_PATH + std::to_string(cnt));
             continue;
         }
 

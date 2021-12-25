@@ -11,8 +11,8 @@ public:
 
 	uint_64 mTimeLimit;
 	uint_64 mMemoryLimit;
-	std::wstring mSolutionFileName;
-	std::wstring mCheckerFileName;
+	std::string mSolutionFileName;
+	std::string mCheckerFileName;
 
 	int mTestsCount;
 	bool mTestsAreOver;

@@ -7,7 +7,7 @@
 
 Core::Core
 (
-    std::wstring aDatabasePath
+    std::string aDatabasePath
 ) :
     mDBQ    (aDatabasePath)
 {}
@@ -36,20 +36,20 @@ Core::run
     mSubInfo.mSolutionFileName.pop_back();
     mSubInfo.mSolutionFileName.pop_back();
     mSubInfo.mSolutionFileName.pop_back();
-    mSubInfo.mSolutionFileName += L"plus.cpp";
+    mSubInfo.mSolutionFileName += "plus.cpp";
 
-    std::wstring solutionName = makeExecutable(MAEDIA + makeWindowString(mSubInfo.mSolutionFileName), 
-        SOLUTION_PATH + L"-" + std::to_wstring(mSubInfo.id ));
-    std::wstring checkerName = makeExecutable(MAEDIA + makeWindowString(mSubInfo.mCheckerFileName), 
-        CHECKER_PATH + L"-" + std::to_wstring(mSubInfo.id + 15));
+    std::string solutionName = makeExecutable(MAEDIA + makeWindowString(mSubInfo.mSolutionFileName), 
+        SOLUTION_PATH + "-" + std::to_string(mSubInfo.id ));
+    std::string checkerName = makeExecutable(MAEDIA + makeWindowString(mSubInfo.mCheckerFileName), 
+        CHECKER_PATH + "-" + std::to_string(mSubInfo.id + 15));
     check(solutionName, checkerName);
 }
 
-std::wstring
+std::string
 Core::makeExecutable
 (
-    std::wstring aFileName, 
-    std::wstring aOutputName
+    std::string aFileName, 
+    std::string aOutputName
 )
 {
     Core::Language language = getLanguage(aFileName);
@@ -59,43 +59,43 @@ Core::makeExecutable
 Core::Language
 Core::getLanguage
 (
-    std::wstring aFileName
+    std::string aFileName
 )
 {
     int num = aFileName.find('.');
     if (num == -1) return Core::Language::NUN;
 
     Core::Language result = Core::Language::NUN;
-    std::wstring fileExtension = aFileName.substr(num + 1);
-    if (fileExtension == L"cpp") result = Core::Language::MagicCPP;
-    if (fileExtension == L"py") result = Core::Language::Snake;
+    std::string fileExtension = aFileName.substr(num + 1);
+    if (fileExtension == "cpp") result = Core::Language::MagicCPP;
+    if (fileExtension == "py") result = Core::Language::Snake;
     return result;
 }
 
-std::wstring
+std::string
 Core::compile
 (
-    std::wstring aFileName,
-    std::wstring aOutName, 
+    std::string aFileName,
+    std::string aOutName, 
     Language aLanguage
 )
 {
-    std::wstring result = aOutName;
+    std::string result = aOutName;
     if (aLanguage == Language::MagicCPP)
     {
-        result += L".exe";
+        result += ".exe";
         Process process;
         //process.IORedirection(L"", L"");
-        std::wstring comand = COMPILERS + L"magicCPPCompiler.cmd" + L" " + 
-            aFileName + L" " + result;
-        process.create(L"", comand);
+        std::string comand = COMPILERS + "magicCPPCompiler.cmd" + " " + 
+            aFileName + " " + result;
+        process.create("", comand);
         process.run();
     }
     else if (aLanguage == Language::Snake)
     {
-        result += L".py";
+        result += ".py";
         copyFile(aFileName, result);
-        result = L"python " + result;
+        result = "python " + result;
     }
     for (int i = 0; i < 1e7; ++i);
     return result;
@@ -121,8 +121,8 @@ Core::compile
 void
 Core::check
 (
-    std::wstring aSolutionName, 
-    std::wstring aCheckerName
+    std::string aSolutionName, 
+    std::string aCheckerName
 )
 {
 #ifdef _DBG_
@@ -182,18 +182,18 @@ void
 Core::fileTesting
 (
     uint_32 aTestNum,
-    std::wstring aSolutionName,
-    std::wstring aCheckerName
+    std::string aSolutionName,
+    std::string aCheckerName
 )
 {
     WD_LOG("Checking test #" << aTestNum);
     WD_LOG("Runing test #" << aTestNum);
     Process code;
-    std::wstring testAddress = TEST_PATH + std::to_wstring(mSubInfo.id) + L"-" + std::to_wstring(aTestNum);
-    std::wstring outAddress = OUTPUT_PATH + std::to_wstring(mSubInfo.id) + L"-" + std::to_wstring(aTestNum);
+    std::string testAddress = TEST_PATH + std::to_string(mSubInfo.id) + "-" + std::to_string(aTestNum);
+    std::string outAddress = OUTPUT_PATH + std::to_string(mSubInfo.id) + "-" + std::to_string(aTestNum);
 
     code.IORedirection(Process::IOType::FILES, testAddress, outAddress);
-    code.create(L"", aSolutionName);
+    code.create("", aSolutionName);
     std::pair<uint_64, uint_64> cur = code.runWithLimits(mSubInfo.mTimeLimit, mSubInfo.mMemoryLimit);
 
     mSubInfo.mUsedTime = std::max(mSubInfo.mUsedTime, cur.first);
@@ -201,10 +201,10 @@ Core::fileTesting
 
     WD_LOG("Runing checker #" << aTestNum);
     Process checker;
-    std::wstring answerAddress = ANSWERS_PATH + std::to_wstring(mSubInfo.id) + L"-" + std::to_wstring(aTestNum);
-    std::wstring resultAddress = RESULT_PATH + std::to_wstring(mSubInfo.id) + L"-" + std::to_wstring(aTestNum);
-    std::wstring parameters = L"sas input " + outAddress + L" " + answerAddress;
-    checker.IORedirection(Process::IOType::FILES, L"", resultAddress);
+    std::string answerAddress = ANSWERS_PATH + std::to_string(mSubInfo.id) + "-" + std::to_string(aTestNum);
+    std::string resultAddress = RESULT_PATH + std::to_string(mSubInfo.id) + "-" + std::to_string(aTestNum);
+    std::string parameters = "sas input " + outAddress + " " + answerAddress;
+    checker.IORedirection(Process::IOType::FILES, "", resultAddress);
     checker.create(aCheckerName, parameters);
     checker.run();
 
@@ -215,8 +215,8 @@ Core::fileTesting
 void
 Core::pipesTesting
 (
-    std::wstring aSolutionName,
-    std::wstring aCheckerName
+    std::string aSolutionName,
+    std::string aCheckerName
 )
 {
     WD_LOG("Checking test #" << mSubInfo.mTestsCount);
@@ -229,7 +229,7 @@ Core::pipesTesting
     TLM.makeTestSizes();   
     code.writePipe(TLM.mTest);
 
-    code.create(L"", aSolutionName);
+    code.create("", aSolutionName);
     std::pair<uint_64, uint_64> cur = code.runWithLimits(mSubInfo.mTimeLimit, mSubInfo.mMemoryLimit);   
     code.readPipe(TLM.mOutput);
     //code.closeIO();
@@ -267,7 +267,7 @@ Core::pipesTesting
 #endif
 
     //checker.writePipe("\000\000\000\000\000\000\000\000\001\000\000\000\000\000\000\0001\001\000\000\000\000\000\000\0001", Process::PypeType::NO_ZERO);
-    checker.create(aCheckerName, L"");
+    checker.create(aCheckerName, "");
     checker.run();
 
     checker.readPipe(mSubInfo.mResult);

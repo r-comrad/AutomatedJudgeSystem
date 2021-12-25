@@ -10,7 +10,7 @@
 class Core
 {
 public:
-	Core(std::wstring aDatabasePath);
+	Core(std::string aDatabasePath);
 	void run(int aID);
 
 private:
@@ -19,13 +19,13 @@ private:
 	MDatabaseQuery mDBQ;
 	SubmissionInformation mSubInfo;
 
-	std::wstring makeExecutable(std::wstring aFileName, std::wstring aOutputName);
-	Core::Language getLanguage(std::wstring aFileName);
-	std::wstring compile(std::wstring aFileName, std::wstring aOutName, Language aLanguage);
+	std::string makeExecutable(std::string aFileName, std::string aOutputName);
+	Core::Language getLanguage(std::string aFileName);
+	std::string compile(std::string aFileName, std::string aOutName, Language aLanguage);
 
-	void check(std::wstring aSolutionName, std::wstring aCheckerName);
-	void fileTesting(uint_32 aTestNum, std::wstring aSolutionName, std::wstring aCheckerName);
-	void pipesTesting(std::wstring aSolutionName, std::wstring aCheckerName);
+	void check(std::string aSolutionName, std::string aCheckerName);
+	void fileTesting(uint_32 aTestNum, std::string aSolutionName, std::string aCheckerName);
+	void pipesTesting(std::string aSolutionName, std::string aCheckerName);
 };
 
 #endif //CORE_H
