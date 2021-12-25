@@ -3,6 +3,7 @@
 
 #include <string>
 
+#ifdef BILL_WINDOWS
 #include <windows.h>
 #include <userenv.h>
 #include <psapi.h>
@@ -30,6 +31,7 @@
 #include <psapi.h>
 #include <tlhelp32.h>
 #include <atlconv.h>
+#endif
 
 #include <fstream>
 

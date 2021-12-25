@@ -12,6 +12,11 @@
 #include <string>
 #include <thread>
 
+#ifdef YY
+int yy;
+#endif
+
+#ifdef BILL_WINDOWS
 #include <windows.h>
 #include <stdio.h>
 #include <atlbase.h>
@@ -23,6 +28,7 @@
 #include <psapi.h>
 #include <tlhelp32.h>
 #include <atlconv.h>
+#endif
 
 #include <fstream>
 
@@ -105,15 +111,15 @@ void
 Process::readPipe(std::string& result)
 {
  //   unsigned long exit;
-  //  GetExitCodeProcess(mProcessInfo.hProcess, &exit); //пока дочерний процесс                                      // не закрыт
+  //  GetExitCodeProcess(mProcessInfo.hProcess, &exit); //пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ                                      // пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
    // if (exit != STILL_ACTIVE) return "";
 
     WD_LOG("Reading from pipe");
     char buf[1024];
     memset(buf, 0, sizeof(buf));
 
-    unsigned long bread = 0;   //кол-во прочитанных байт
-    unsigned long avail = 0;   //кол-во доступных байт
+    unsigned long bread = 0;   //пїЅпїЅпїЅ-пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
+    unsigned long avail = 0;   //пїЅпїЅпїЅ-пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
 
     while (bread == 0 && avail == 0)
     {
@@ -208,8 +214,8 @@ Process::runWithLimits
     WaitForSingleObject(mProcessInfo.hProcess, INFINITE);
 
     /*
-    GetExitCodeProcess(pi.hProcess,&exit); //пока дочерний процесс
-                                           // не закрыт
+    GetExitCodeProcess(pi.hProcess,&exit); //пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+                                           // пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
     if (exit != STILL_ACTIVE)
       break;
     */

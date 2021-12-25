@@ -35,7 +35,7 @@
 #define MAEDIA          RESOURCES   + "media\\"
 #else
 #define MAEDIA          MAIN_PATH   + "media\\"
-//#define MAEDIA          MAIN_PATH   + L"маедия\\"
+//#define MAEDIA          MAIN_PATH   + L"пїЅпїЅпїЅпїЅпїЅпїЅ\\"
 #endif
 
 
@@ -118,8 +118,9 @@ typedef unsigned long long	uint_64;
 #include <iostream>
 #include <fstream>
 //#include <libloaderapi.h>
+#ifdef BILL_WINDOWS
 #include <windows.h>
-
+#endif
 std::string getMainPath();
 std::string getDBPath();
 
