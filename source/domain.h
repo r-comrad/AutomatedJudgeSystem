@@ -10,7 +10,7 @@
 #define BILL_WINDOWS
 #endif
 
-#ifdef WIN32
+#ifndef WIN32
 #define LINUS_LINUX
 #endif
 
@@ -97,6 +97,7 @@
     #define WD_END_LOG
     #define WD_ERROR(aNumber, aMessege)
 #endif // DEBUG
+// /*>*/
 
 #define print(aMessage)         \
 {                               \
@@ -127,10 +128,13 @@ std::string getDBPath();
 //std::string makeGoodString(std::string aBadString);
 //std::wstring makeBadString(std::string aGoodString);
 //std::string makeGoodString(std::wstring aSS);
-std::string GetLastErrorAsString();
+
 void copyFile(std::string aFromFileName, std::string aToFileName);
 //void copyFile(std::string aFromFileName, std::string aToFileName);
 std::string getString(const unsigned char* aString);
 std::string getString(const char* aString);
+#ifdef BILL_WINDOWS
 std::string makeWindowString(std::string aString);
+std::string GetLastErrorAsString();
+#endif
 #endif //DOMAIN_H

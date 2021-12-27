@@ -31,18 +31,23 @@ int yy;
 #endif
 
 #include <fstream>
+#include <unistd.h>
 
 
 #include "domain.h"
 
 Process::Process() :
+#ifdef BILL_WINDOWS
     mStartupInfo    ({ 0 }),
+#endif
     mThisSTDIN      (0),
     mThisSTDOUT     (0),
     mChildSTDIN     (0),
     mChildSTDOUT    (0)
 {
+#ifdef BILL_WINDOWS
     ZeroMemory(&mProcessInfo, sizeof(PROCESS_INFORMATION));
+#endif
 }
 
 void 
@@ -158,7 +163,7 @@ Process::create
 {
     WD_LOG("Creating process name: " << aName);
     WD_LOG("Parameters: " << aParameters);
-
+#ifdef BILL_WINDOWS
     char* name = (char*) aName.c_str();
     if (aName == "") name = NULL;
 
@@ -181,8 +186,29 @@ Process::create
         &mStartupInfo,
         &mProcessInfo
     ) == FALSE) WD_ERROR(process.0, "Can't start process " + aName + "\narguments are: " + aParameters);
-
-
+#endif
+#ifdef LINUS_LINUX
+int id = fork();
+if (id == 0)
+{
+    int i = 0;
+    int j = 0;
+    //std::vector<const char*> param;
+    char* param[10];
+    while (true)
+    {
+        std::string s;
+        for(;aParameters[i] != ' '; ++i) s.push_back(aParameters[i]);
+        ++i;
+        param[j] = (char*) s.c_str();
+        ++j;
+    }
+    //char** param2 =
+    //param.push_back(NULL);
+    param[j] = NULL;
+    execv((char*) aName.c_str(), param);
+}
+#endif
     WD_END_LOG;
 }
 

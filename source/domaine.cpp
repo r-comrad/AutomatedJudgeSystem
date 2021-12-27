@@ -1,5 +1,6 @@
 #include "domain.h"
-
+#include <limits.h>
+#include <unistd.h>
 std::string 
 getMainPath() {
 #ifdef BILL_WINDOWS
@@ -11,9 +12,14 @@ getMainPath() {
     for (int i = 0; i < 1; ++i) while (buffer[--size] != L'\\');
 #endif
     return std::string(buffer).substr(0, size + 1);
-#else
 #endif
-return  
+#ifdef LINUS_LINUX
+    char buf[PATH_MAX + 1];
+    if (readlink("/proc/self/exe", buf, sizeof(buf) - 1) == -1)
+        throw std::string("readlink() failed");
+    std::string str(buf);
+    return str.substr(0, str.rfind('/'));
+#endif
 }
 
 //std::string 
@@ -38,6 +44,7 @@ return
 //    return badString;
 //}
 
+#ifdef BILL_WINDOWS
 std::string 
 GetLastErrorAsString()
 {
@@ -69,6 +76,7 @@ GetLastErrorAsString()
 
     return message;
 }
+#endif
 
 void 
 copyFile(
