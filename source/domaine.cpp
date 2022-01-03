@@ -1,6 +1,10 @@
 #include "domain.h"
 #include <limits.h>
+
+#ifdef LINUS_LINUX
 #include <unistd.h>
+#endif
+
 std::string 
 getMainPath() {
 #ifdef BILL_WINDOWS

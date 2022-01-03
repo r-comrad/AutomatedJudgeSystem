@@ -30,7 +30,7 @@ Core::run
 
     mSubInfo.id = aID;
 
-    mDBQ.prepareForTesting(mSubInfo, MDatabaseQuery::DataStructure::MAGIC_IVAN);
+    mDBQ.prepareForTesting(mSubInfo, MDatabaseQuery::DataStructure::FILES);
 
     mSubInfo.mSolutionFileName.pop_back();
     mSubInfo.mSolutionFileName.pop_back();
@@ -39,9 +39,9 @@ Core::run
     mSubInfo.mSolutionFileName += "plus.cpp";
 
     std::string solutionName = makeExecutable(MAEDIA + makeWindowString(mSubInfo.mSolutionFileName), 
-        SOLUTION_PATH + "-" + std::to_string(mSubInfo.id ));
+        SOLUTION_PATH + "-" + std::to_string(mSubInfo.id + 105 ));
     std::string checkerName = makeExecutable(MAEDIA + makeWindowString(mSubInfo.mCheckerFileName), 
-        CHECKER_PATH + "-" + std::to_string(mSubInfo.id + 15));
+        CHECKER_PATH + "-" + std::to_string(mSubInfo.id + 105));
     check(solutionName, checkerName);
 }
 
@@ -131,11 +131,11 @@ Core::check
     mSubInfo.mMemoryLimit += 1000000;
 #endif // _DBG_
 
-    //for (int testNum = 0; testNum < mSubInfo.mTestsCount; ++testNum)
-    for (;!mSubInfo.mTestsAreOver;)
+    for (int testNum = 0; testNum < mSubInfo.mTestsCount; ++testNum)
+    //for (;!mSubInfo.mTestsAreOver;)
     {
-        //fileTesting(testNum, aSolutionName, aCheckerName);
-        pipesTesting(aSolutionName, aCheckerName);
+        fileTesting(testNum, aSolutionName, aCheckerName);
+        //pipesTesting(aSolutionName, aCheckerName);
 
         if (mSubInfo.mResult != "ok")
         {
@@ -255,6 +255,8 @@ Core::pipesTesting
     TLM.makeOutputSizes();
     TLM.makeAnswerSizes();
 
+    //TLM.mAnswer.pop_back();
+    //TLM.mAnswer.pop_back();
     checker.writePipe(TLM.mTestSize, Process::PypeType::NO_ZERO);
     checker.writePipe(TLM.mTest, Process::PypeType::NO_ZERO);
     checker.writePipe(TLM.mOutputSize, Process::PypeType::NO_ZERO);

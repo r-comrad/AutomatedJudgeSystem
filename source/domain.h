@@ -19,14 +19,6 @@
 #define GOOD_DEBUG_ERRORS
 #endif
 
-#//define RESOURCES L"resources\\"
-#define MAIN_PATH       getMainPath()
-#ifdef TRUE_ONLY_WAY
-#define DB_PATH         RESOURCES   + L"database\\"
-#else
-#define DB_PATH         getMainPath()
-#endif
-
 #define RESOURCES       MAIN_PATH   + "resources\\"
 #define COMPILERS       RESOURCES   + "compilers\\"
 #define EXAMPLES        RESOURCES   + "examples\\"
@@ -35,11 +27,14 @@
 #define MAEDIA          RESOURCES   + "media\\"
 #else
 #define MAEDIA          MAIN_PATH   + "media\\"
-//#define MAEDIA          MAIN_PATH   + L"������\\"
 #endif
 
-
-//#define DATABASE_PATH RESOURCES + L"database\\data_base.sqlite3"
+#define MAIN_PATH       getMainPath()
+#ifdef TRUE_ONLY_WAY
+#define DB_PATH         RESOURCES   + "database\\"
+#else
+#define DB_PATH         getMainPath()
+#endif
 #define DATABASE_PATH DB_PATH + "db.sqlite3"
 
 #define CHECKER_PATH    WORK_DIR    + "checker\\checker"
@@ -63,7 +58,6 @@
         std::cout << "\n";                              \
     }
 
-
 #ifdef GOOD_DEBUG_ERRORS
 #define WERROR(aNumber, aMessege)                       \
     {                                                   \
@@ -83,7 +77,7 @@
             << "ERROR# " #aNumber "\n"                  \
             << aMessege << "";                          \
         std::wcout << "\n\n" <<                         \
-            "\x1b[0m\n\n";                              \
+            "\n\n";                                     \
         exit(0);                                        \
     }
 #endif

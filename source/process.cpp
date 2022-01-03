@@ -31,8 +31,10 @@ int yy;
 #endif
 
 #include <fstream>
-#include <unistd.h>
 
+#ifdef LINUS_LINUX
+#include <unistd.h>
+#endif
 
 #include "domain.h"
 
@@ -219,8 +221,10 @@ Process::run()
 
     ResumeThread(mProcessInfo.hThread);
     WaitForSingleObject(mProcessInfo.hProcess, INFINITE);
-    //CloseHandle(mChildSTDIN);
-    //CloseHandle(mChildSTDOUT);
+
+    //TODO: Dont close when pipes, mayby
+    CloseHandle(mChildSTDIN);
+    CloseHandle(mChildSTDOUT);
 
     WD_END_LOG;
 }

@@ -3,6 +3,8 @@
 
 #include <string>
 
+#include "domain.h"
+
 #ifdef BILL_WINDOWS
 #include <windows.h>
 #include <userenv.h>
@@ -34,9 +36,6 @@
 #endif
 
 #include <fstream>
-
-
-#include "domain.h"
 
 class Process
 {
