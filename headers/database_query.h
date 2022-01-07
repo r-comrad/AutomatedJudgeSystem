@@ -10,29 +10,22 @@
 class MDatabaseQuery
 {
 public:
-	//MDatabaseQuery() {};
-	enum DataStructure {FILES = 0, MAGIC_IVAN = 1};
 	MDatabaseQuery(std::string aDatabasePath);
 	~MDatabaseQuery();
-	
-	//takeProblemId(sqlite3* ppDb);
-	//coutRows(sqlite3* ppDb, int problemNum);
-	//takeProblemId(sqlite3* ppDb, int problemNum);
 
-	void prepareForTesting(SubmissionInformation& aSudmissionInformation, 
-		DataStructure aDataType = DataStructure::FILES);
+	void prepareForTesting(SubmissionInformation& aSudmissionInformation);
 	void writeResult(int aID, std::string aResult, int aTime, int aMemory);
 
 	void getNextTest(SubmissionInformation& aSudmissionInformation, TestLibMessage& aTLM);
+	void getAllTests(SubmissionInformation& aSudmissionInformation);
 private:
 	Database mDatabase;
 	int mReservedStatementNumber;
-
+public:
 	void prepareTestsStatement(SubmissionInformation& aSudmissionInformation);
-
+private:
 	void getIDInformation(SubmissionInformation& aSudmissionInformation);
 	void getLimitsInformation(SubmissionInformation& aSudmissionInformation);
-	void getTests(SubmissionInformation& aSudmissionInformation);
 };
 
 #endif

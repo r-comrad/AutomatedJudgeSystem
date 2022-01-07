@@ -30,7 +30,8 @@ Core::run
 
     mSubInfo.id = aID;
 
-    mDBQ.prepareForTesting(mSubInfo, MDatabaseQuery::DataStructure::FILES);
+    mDBQ.prepareForTesting(mSubInfo);
+    //mDBQ.getAllTests(mSubInfo);
 
     mSubInfo.mSolutionFileName.pop_back();
     mSubInfo.mSolutionFileName.pop_back();
@@ -45,17 +46,6 @@ Core::run
     check(solutionName, checkerName);
 }
 
-std::string
-Core::makeExecutable
-(
-    std::string aFileName, 
-    std::string aOutputName
-)
-{
-    Core::Language language = getLanguage(aFileName);
-    return compile(aFileName, aOutputName, language);
-}
-
 Core::Language
 Core::getLanguage
 (
@@ -67,8 +57,8 @@ Core::getLanguage
 
     Core::Language result = Core::Language::NUN;
     std::string fileExtension = aFileName.substr(num + 1);
-    if (fileExtension == "cpp") result = Core::Language::MagicCPP;
-    if (fileExtension == "py") result = Core::Language::Snake;
+    if (fileExtension == "cpp") result = Core::Language::MAGIC_CPP;
+    if (fileExtension == "py") result = Core::Language::SNAKE;
     return result;
 }
 
@@ -81,7 +71,7 @@ Core::compile
 )
 {
     std::string result = aOutName;
-    if (aLanguage == Language::MagicCPP)
+    if (aLanguage == Language::MAGIC_CPP)
     {
         result += ".exe";
         //process.IORedirection(L"", L"");
@@ -91,7 +81,7 @@ Core::compile
         PipeProcess compiler(ss, comand);
         compiler.run();
     }
-    else if (aLanguage == Language::Snake)
+    else if (aLanguage == Language::SNAKE)
     {
         result += ".py";
         copyFile(aFileName, result);
@@ -100,6 +90,18 @@ Core::compile
     for (int i = 0; i < 1e7; ++i);
     return result;
 }
+
+std::string
+Core::makeExecutable
+(
+    std::string aFileName,
+    std::string aOutputName
+)
+{
+    Core::Language language = getLanguage(aFileName);
+    return compile(aFileName, aOutputName, language);
+}
+
 
 //std::wstring 
 //makeComand
@@ -129,12 +131,12 @@ Core::check
     //std::vector<std::pair<uint_64, uint_64>> allTimes;
     mSubInfo.mMemoryLimit += 1000000;
 #endif // _DBG_
-
-    for (int testNum = 0; testNum < mSubInfo.mTestsCount; ++testNum)
-    //for (;!mSubInfo.mTestsAreOver;)
+    mDBQ.prepareTestsStatement(mSubInfo);
+   // for (int testNum = 0; testNum < mSubInfo.mTestsCount; ++testNum)
+   for (;!mSubInfo.mTestsAreOver;)
     {
-        fileTesting(testNum, aSolutionName, aCheckerName);
-        //pipesTesting(aSolutionName, aCheckerName);
+        //fileTesting(testNum, aSolutionName, aCheckerName);
+        pipesTesting(aSolutionName, aCheckerName);
 
         if (mSubInfo.mResult != "ok")
         {
@@ -214,67 +216,67 @@ Core::fileTesting
     resultFile >> mSubInfo.mResult;
 }
 
-//void
-//Core::pipesTesting
-//(
-//    std::string aSolutionName,
-//    std::string aCheckerName
-//)
-//{
-//    WD_LOG("Checking test #" << mSubInfo.mTestsCount);
-//    WD_LOG("Runing test #" << mSubInfo.mTestsCount);
-//    Process code;
-//    code.IORedirection(Process::IOType::PIPES);
-//
-//    TestLibMessage TLM;
-//    mDBQ.getNextTest(mSubInfo, TLM);
-//    TLM.makeTestSizes();   
-//    code.writePipe(TLM.mTest);
-//
-//    code.create("", aSolutionName);
-//    std::pair<uint_64, uint_64> cur = code.runWithLimits(mSubInfo.mTimeLimit, mSubInfo.mMemoryLimit);   
-//    code.readPipe(TLM.mOutput);
-//    //code.closeIO();
-//
-//    //int aTestNum = mSubInfo.mTestsCount - 1;
-//    //std::wstring testAddress = TEST_PATH + std::to_wstring(mSubInfo.id) + L"-" + std::to_wstring(aTestNum);
-//    //std::wstring outAddress = OUTPUT_PATH + std::to_wstring(mSubInfo.id) + L"-" + std::to_wstring(aTestNum);
-//    //std::ofstream ffo(outAddress);
-//    //ffo << TLM.mOutput +'\n';
-//    //ffo.close();
-//
-//    mSubInfo.mUsedTime = std::max(mSubInfo.mUsedTime, cur.first);
-//    mSubInfo.mUsedMemory = std::max(mSubInfo.mUsedMemory, cur.second);
-//
-//    //WD_LOG("Runing checker #" << aTestNum);
-//    Process checker;
-//    //std::wstring answerAddress = ANSWERS_PATH + std::to_wstring(mSubInfo.id) + L"-" + std::to_wstring(aTestNum);
-//    //std::wstring resultAddress = RESULT_PATH + std::to_wstring(mSubInfo.id) + L"-" + std::to_wstring(aTestNum);
-//    //std::wstring parameters = L"sas input " + outAddress + L" " + answerAddress;
-//    //checker.IORedirection(Process::IOType::FILES, L"", resultAddress);
-//    checker.IORedirection(Process::IOType::PIPES);
-//    //checker.create(aCheckerName, parameters);
-//    TLM.makeOutputSizes();
-//    TLM.makeAnswerSizes();
-//
-//    //TLM.mAnswer.pop_back();
-//    //TLM.mAnswer.pop_back();
-//    checker.writePipe(TLM.mTestSize, Process::PypeType::NO_ZERO);
-//    checker.writePipe(TLM.mTest, Process::PypeType::NO_ZERO);
-//    checker.writePipe(TLM.mOutputSize, Process::PypeType::NO_ZERO);
-//    checker.writePipe(TLM.mOutput, Process::PypeType::NO_ZERO);
-//    checker.writePipe(TLM.mAnswerSize, Process::PypeType::NO_ZERO);
-//    checker.writePipe(TLM.mAnswer, Process::PypeType::NO_ZERO);
-//
-//#ifdef _DBG_
-//    WD_LOG("Test: " + TLM.mTest + "\n Output: " + TLM.mOutput + "\n Answer: " + TLM.mAnswer);
-//#endif
-//
-//    //checker.writePipe("\000\000\000\000\000\000\000\000\001\000\000\000\000\000\000\0001\001\000\000\000\000\000\000\0001", Process::PypeType::NO_ZERO);
-//    checker.create(aCheckerName, "");
-//    checker.run();
-//
-//    checker.readPipe(mSubInfo.mResult);
-//    //std::ifstream resultFile(resultAddress);
-//    //resultFile >> mSubInfo.mResult;
-//}
+void
+Core::pipesTesting
+(
+    std::string aSolutionName,
+    std::string aCheckerName
+)
+{
+    WD_LOG("Checking test #" << mSubInfo.mTestsCount);
+    WD_LOG("Runing test #" << mSubInfo.mTestsCount);
+    std::string ss = "";
+    PipeProcess code(ss, aSolutionName);
+    //code.IORedirection(Process::IOType::PIPES);
+
+    TestLibMessage TLM;
+    mDBQ.getNextTest(mSubInfo, TLM);
+    TLM.makeTestSizes();   
+    code.writePipe(TLM.mTest);
+
+    std::pair<uint_64, uint_64> cur = code.runWithLimits(mSubInfo.mTimeLimit, mSubInfo.mMemoryLimit);   
+    code.readPipe(TLM.mOutput);
+    //code.closeIO();
+
+    //int aTestNum = mSubInfo.mTestsCount - 1;
+    //std::wstring testAddress = TEST_PATH + std::to_wstring(mSubInfo.id) + L"-" + std::to_wstring(aTestNum);
+    //std::wstring outAddress = OUTPUT_PATH + std::to_wstring(mSubInfo.id) + L"-" + std::to_wstring(aTestNum);
+    //std::ofstream ffo(outAddress);
+    //ffo << TLM.mOutput +'\n';
+    //ffo.close();
+
+    mSubInfo.mUsedTime = std::max(mSubInfo.mUsedTime, cur.first);
+    mSubInfo.mUsedMemory = std::max(mSubInfo.mUsedMemory, cur.second);
+
+    //WD_LOG("Runing checker #" << aTestNum);
+    PipeProcess checker(aCheckerName, ss);
+    //std::wstring answerAddress = ANSWERS_PATH + std::to_wstring(mSubInfo.id) + L"-" + std::to_wstring(aTestNum);
+    //std::wstring resultAddress = RESULT_PATH + std::to_wstring(mSubInfo.id) + L"-" + std::to_wstring(aTestNum);
+    //std::wstring parameters = L"sas input " + outAddress + L" " + answerAddress;
+    //checker.IORedirection(Process::IOType::FILES, L"", resultAddress);
+    //checker.IORedirection(Process::IOType::PIPES);
+    //checker.create(aCheckerName, parameters);
+    TLM.makeOutputSizes();
+    TLM.makeAnswerSizes();
+
+    //TLM.mAnswer.pop_back();
+    //TLM.mAnswer.pop_back();
+    checker.writePipe(TLM.mTestSize, PipeProcess::PypeType::NO_ZERO);
+    checker.writePipe(TLM.mTest, PipeProcess::PypeType::NO_ZERO);
+    checker.writePipe(TLM.mOutputSize, PipeProcess::PypeType::NO_ZERO);
+    checker.writePipe(TLM.mOutput, PipeProcess::PypeType::NO_ZERO);
+    checker.writePipe(TLM.mAnswerSize, PipeProcess::PypeType::NO_ZERO);
+    checker.writePipe(TLM.mAnswer, PipeProcess::PypeType::NO_ZERO);
+
+#ifdef _DBG_
+    WD_LOG("Test: " + TLM.mTest + "\n Output: " + TLM.mOutput + "\n Answer: " + TLM.mAnswer);
+#endif
+
+    //checker.writePipe("\000\000\000\000\000\000\000\000\001\000\000\000\000\000\000\0001\001\000\000\000\000\000\000\0001", Process::PypeType::NO_ZERO);
+    //checker.create(aCheckerName, "");
+    checker.run();
+
+    checker.readPipe(mSubInfo.mResult);
+    //std::ifstream resultFile(resultAddress);
+    //resultFile >> mSubInfo.mResult;
+}

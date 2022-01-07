@@ -20,18 +20,13 @@ MDatabaseQuery::~MDatabaseQuery()
 void 
 MDatabaseQuery::prepareForTesting
 (
-    SubmissionInformation& aSudmissionInformation,
-    DataStructure aDataType
+    SubmissionInformation& aSudmissionInformation
 )
 {
     getIDInformation(aSudmissionInformation);
     getLimitsInformation(aSudmissionInformation);
     //aSudmissionInformation.id += 200;
     //aSudmissionInformation.mTimeLimit *= 1000;
-    if (aDataType == MDatabaseQuery::DataStructure::FILES)
-        getTests(aSudmissionInformation);
-    else
-        prepareTestsStatement(aSudmissionInformation);
 }
 
 void 
@@ -59,22 +54,65 @@ void
 MDatabaseQuery::getNextTest(SubmissionInformation& aSudmissionInformation, TestLibMessage& aTLM)
 {
     WD_LOG("Taking next test");
-        mDatabase.step(mReservedStatementNumber);
-        //if (mDatabase.step() != SQLITE_OK) break; TODO: fixing that shit
-        const unsigned char* input = mDatabase.getTextFromRow(0, mReservedStatementNumber);
-        const unsigned char* output = mDatabase.getTextFromRow(1, mReservedStatementNumber);
-        if (input == NULL)
-        {
-            aSudmissionInformation.mTestsAreOver = true;
-            aTLM.mTest = "";
-            aTLM.mAnswer = "";
-            return;
-        }
+    mDatabase.step(mReservedStatementNumber);
+    //if (mDatabase.step() != SQLITE_OK) break; TODO: fixing that shit
+    const unsigned char* input = mDatabase.getTextFromRow(0, mReservedStatementNumber);
+    const unsigned char* output = mDatabase.getTextFromRow(1, mReservedStatementNumber);
+    if (input == NULL)
+    {
+        aSudmissionInformation.mTestsAreOver = true;
+        aTLM.mTest = "";
+        aTLM.mAnswer = "";
+        return;
+    }
 
     aSudmissionInformation.mTestsCount++;
-    aTLM.mTest      = std::string(reinterpret_cast<const char*>( input));
+    aTLM.mTest = std::string(reinterpret_cast<const char*>(input));
     //aTLM.mTest += "\n";
-    aTLM.mAnswer    = std::string(reinterpret_cast<const char*>(output));
+    aTLM.mAnswer = std::string(reinterpret_cast<const char*>(output));
+}
+
+void
+MDatabaseQuery::getAllTests
+(
+    SubmissionInformation& aSudmissionInformation
+)
+{
+    WD_LOG("Geting test from database");
+
+    mDatabase.select("core_test", "input, output", "contest_id = " + std::to_string(aSudmissionInformation.mContestID));
+    int cnt = 0;
+    for (;; ++cnt)
+    {
+        mDatabase.step();
+        //if (mDatabase.step() != SQLITE_OK) break; TODO: fixing that shit
+        const unsigned char* input = mDatabase.getTextFromRow(0);
+        const unsigned char* output = mDatabase.getTextFromRow(1);
+        if (input == NULL) break;
+
+        std::ofstream taskFile(TEST_PATH + std::to_string(aSudmissionInformation.id) + "-" + std::to_string(cnt));
+        std::ofstream ansFile(ANSWERS_PATH + std::to_string(aSudmissionInformation.id) + "-" + std::to_string(cnt));
+
+        if (!taskFile.is_open())
+        {
+            WD_ERROR(database.0, "Can't open file " + TEST_PATH + std::to_string(cnt));
+            continue;//TODO
+        }
+        if (!ansFile.is_open())
+        {
+            WD_ERROR(database.0, "Can't open file " + ANSWERS_PATH + std::to_string(cnt));
+            continue;
+        }
+
+        for (int i = 0; input[i];) taskFile << input[i++];
+        for (int i = 0; output[i];) ansFile << output[i++];
+    }
+    aSudmissionInformation.mTestsCount = cnt;
+
+    mDatabase.closeStatment();
+
+    WD_LOG("Tests taken from pashae");
+    WD_END_LOG;
 }
 
 void
@@ -130,48 +168,5 @@ MDatabaseQuery::getLimitsInformation
 
     WD_LOG("Time limit: " << aSudmissionInformation.mTimeLimit);
     WD_LOG("Memory limit: " << aSudmissionInformation.mMemoryLimit);
-    WD_END_LOG;
-}
-
-void 
-MDatabaseQuery::getTests
-(
-    SubmissionInformation& aSudmissionInformation
-)
-{
-    WD_LOG("Geting test from database");
-
-    mDatabase.select("core_test", "input, output", "contest_id = " + std::to_string(aSudmissionInformation.mContestID));
-    int cnt = 0;
-    for (;; ++cnt)
-    {
-        mDatabase.step();
-        //if (mDatabase.step() != SQLITE_OK) break; TODO: fixing that shit
-        const unsigned char* input = mDatabase.getTextFromRow(0);
-        const unsigned char* output = mDatabase.getTextFromRow(1);
-        if (input == NULL) break;
-
-        std::ofstream taskFile(TEST_PATH + std::to_string(aSudmissionInformation.id) + "-" + std::to_string(cnt));
-        std::ofstream ansFile(ANSWERS_PATH + std::to_string(aSudmissionInformation.id) + "-" + std::to_string(cnt));
-
-        if (!taskFile.is_open())
-        {
-            WD_ERROR(database.0, "Can't open file " + TEST_PATH + std::to_string(cnt));
-            continue;//TODO
-        }
-        if (!ansFile.is_open())
-        {
-            WD_ERROR(database.0, "Can't open file " + ANSWERS_PATH + std::to_string(cnt));
-            continue;
-        }
-
-        for (int i = 0; input[i];) taskFile << input[i++];
-        for (int i = 0; output[i];) ansFile << output[i++];
-    }
-    aSudmissionInformation.mTestsCount = cnt;
-
-    mDatabase.closeStatment();
-
-    WD_LOG("Tests taken from pashae");
     WD_END_LOG;
 }

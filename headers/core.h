@@ -14,15 +14,22 @@ public:
 	Core(std::string aDatabasePath);
 	void run(int aID);
 
+	//	enum DataStructure {FILES = 0, MAGIC_IVAN = 1};
+
 private:
-	enum Language { NUN = 0, MagicCPP, Snake};
+	enum Language 
+	{ 
+		NUN			=	0, 
+		MAGIC_CPP	=	1, 
+		SNAKE		=	2
+	};
 
 	MDatabaseQuery mDBQ;
 	SubmissionInformation mSubInfo;
 
-	std::string makeExecutable(std::string aFileName, std::string aOutputName);
 	Core::Language getLanguage(std::string aFileName);
 	std::string compile(std::string aFileName, std::string aOutName, Language aLanguage);
+	std::string makeExecutable(std::string aFileName, std::string aOutputName);
 
 	void check(std::string aSolutionName, std::string aCheckerName);
 	void fileTesting(uint_32 aTestNum, std::string aSolutionName, std::string aCheckerName);
