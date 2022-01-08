@@ -33,7 +33,9 @@ public:
 		uint_64 aMemoryLimit);
 
 protected:
+#ifdef BILL_WINDOWS
 	STARTUPINFOA mStartupInfo;
+#endif // BILL_WINDOWS
 
 	void create(std::string& aName, std::string& aParameters);
 
@@ -41,7 +43,9 @@ protected:
 	virtual void closeHandles() = 0;
 
 private:
+#ifdef BILL_WINDOWS
 	PROCESS_INFORMATION mProcessInfo;
+#endif // BILL_WINDOWS
 	std::future<long long> mFuture;
 
 	long long getMillisecondsNow();
