@@ -31,7 +31,7 @@ Core::run
     mSubInfo.id = aID;
 
     mDBQ.prepareForTesting(mSubInfo);
-    mDBQ.getAllTests(mSubInfo);
+    //mDBQ.getAllTests(mSubInfo);
 
     std::string solutionName = makeExecutable(MAEDIA + makeWindowString(mSubInfo.mSolutionFileName), 
         SOLUTION_PATH + "-" + std::to_string(mSubInfo.id ));
@@ -75,6 +75,11 @@ Core::compile
         PipeProcess compiler(ss, comand);
         compiler.create(ss, comand);
         compiler.run();
+#ifdef _DBG_
+        std::string sss;
+        compiler.readPipe(sss);
+        std::cout << sss << std::endl
+#endif;
     }
     else if (aLanguage == Language::SNAKE)
     {
@@ -126,14 +131,14 @@ Core::check
     //std::vector<std::pair<uint_64, uint_64>> allTimes;
     mSubInfo.mMemoryLimit += 1000000;
 #endif // _DBG_
-    //mDBQ.prepareTestsStatement(mSubInfo);
-    for (int testNum = 0; testNum < mSubInfo.mTestsCount; ++testNum)
-   //for (;!mSubInfo.mTestsAreOver;)
+    mDBQ.prepareTestsStatement(mSubInfo);
+    //for (int testNum = 0; testNum < mSubInfo.mTestsCount; ++testNum)
+   for (;!mSubInfo.mTestsAreOver;)
     {
-        fileTesting(testNum, aSolutionName, aCheckerName);
-        //pipesTesting(aSolutionName, aCheckerName);
+        //fileTesting(testNum, aSolutionName, aCheckerName);
+        pipesTesting(aSolutionName, aCheckerName);
 
-        if (mSubInfo.mResult != "ok")
+        if (mSubInfo.mResult.substr(0, 2) != "ok")
         {
             //WD_ERROR(mainCheck.0, "Can't open file " + makeGoodString(aTaskPath) + "init");
             WD_LOG("Result not okay");
@@ -157,6 +162,7 @@ Core::check
 
         WD_END_LOG;
     }
+   mSubInfo.mResult = mSubInfo.mResult.substr(0, 2);
     mSubInfo.remakeResultForPasha();
     mDBQ.writeResult(mSubInfo.id, mSubInfo.mResult, mSubInfo.mUsedTime, mSubInfo.mUsedMemory);
 
@@ -233,6 +239,7 @@ Core::pipesTesting
 
     TestLibMessage TLM;
     mDBQ.getNextTest(mSubInfo, TLM);
+    if (mSubInfo.mTestsAreOver) return;
 
     //TLM.mTest.push_back('\r');
     //TLM.mTest.push_back('\0');

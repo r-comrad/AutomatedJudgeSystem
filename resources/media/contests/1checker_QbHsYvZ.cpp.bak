@@ -1,4 +1,4 @@
-﻿#include "../inOneFile/TestLibrary.h"
+﻿#include "TestLibrary.h"
 
 int main()
 {
@@ -6,7 +6,7 @@ int main()
     std::string firstNums;
 
     while (!tl::StandardReaders::ans.isEndOfFile()
-           && !tl::StandardReaders::output.isEndOfFile())
+        && !tl::StandardReaders::output.isEndOfFile())
     {
         n++;
         std::int64_t jNum;
@@ -16,20 +16,20 @@ int main()
         if (jNum != pNum)
         {
             std::printf(
-                    "%s numbers differ - expected: '%ld', found: '%ld'",
-                    tl::StringTools::withEnglishEnding(n),
-                    jNum,
-                    pNum);
+                "%s numbers differ - expected: '%ld', found: '%ld'",
+                tl::StringTools::withEnglishEnding(n),
+                jNum,
+                pNum);
 
             return 0;
         }
         else if (n <= 5)
         {
-            if (!firstNums.empty())
+            if (firstNums.length() > 0)
             {
                 firstNums.push_back(' ');
             }
-            firstNums += std::to_string(pNum);
+            firstNums += std::to_string(n);
         }
     }
 
@@ -54,24 +54,24 @@ int main()
     if (extraInAnsCount > 0)
     {
         std::printf(
-                "Answer contains longer sequence [length = %d],"
-                " but output contains %d elements",
-                n + extraInAnsCount, n);
+            "Answer contains longer sequence [length = %d],"
+            " but output contains %d elements",
+            n + extraInAnsCount, n);
     }
 
     else if (extraInOufCount > 0)
     {
         std::printf(
-                "Output contains longer sequence [length = %d],"
-                " but answer contains %d elements",
-                n + extraInOufCount, n);
+            "Output contains longer sequence [length = %d],"
+            " but answer contains %d elements",
+            n + extraInOufCount, n);
     }
 
     else if (n <= 5)
     {
         std::printf("%d number(s): '%s'",
-                    n,
-                    tl::StringTools::partOfStr(firstNums).c_str());
+            n,
+            tl::StringTools::partOfStr(firstNums).c_str());
     }
 
     else

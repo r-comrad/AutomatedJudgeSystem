@@ -1,8 +1,7 @@
-﻿#include "../inOneFile/TestLibrary.h"
+#include "../inOneFile/TestLibrary.h"
 
 int main()
-{
-    int n = 0;
+{int n = 0;
     std::string firstNums;
 
     while (!tl::StandardReaders::ans.isEndOfFile()
@@ -16,7 +15,7 @@ int main()
         if (jNum != pNum)
         {
             std::printf(
-                    "%s numbers differ - expected: '%ld', found: '%ld'",
+                    "wa %s numbers differ - expected: '%ld', found: '%ld'",
                     tl::StringTools::withEnglishEnding(n),
                     jNum,
                     pNum);
@@ -54,7 +53,7 @@ int main()
     if (extraInAnsCount > 0)
     {
         std::printf(
-                "Answer contains longer sequence [length = %d],"
+                "wa Answer contains longer sequence [length = %d],"
                 " but output contains %d elements",
                 n + extraInAnsCount, n);
     }
@@ -62,20 +61,20 @@ int main()
     else if (extraInOufCount > 0)
     {
         std::printf(
-                "Output contains longer sequence [length = %d],"
+                "wa Output contains longer sequence [length = %d],"
                 " but answer contains %d elements",
                 n + extraInOufCount, n);
     }
 
     else if (n <= 5)
     {
-        std::printf("%d number(s): '%s'",
+        std::printf("ok %d number(s): '%s'",
                     n,
                     tl::StringTools::partOfStr(firstNums).c_str());
     }
 
     else
     {
-        std::printf("%d numbers", n);
+        std::printf("ok %d numbers", n);
     }
 }
