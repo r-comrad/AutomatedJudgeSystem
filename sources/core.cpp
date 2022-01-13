@@ -31,13 +31,7 @@ Core::run
     mSubInfo.id = aID;
 
     mDBQ.prepareForTesting(mSubInfo);
-    //mDBQ.getAllTests(mSubInfo);
-
-    mSubInfo.mSolutionFileName.pop_back();
-    mSubInfo.mSolutionFileName.pop_back();
-    mSubInfo.mSolutionFileName.pop_back();
-    mSubInfo.mSolutionFileName.pop_back();
-    mSubInfo.mSolutionFileName += "plus.cpp";
+    mDBQ.getAllTests(mSubInfo);
 
     std::string solutionName = makeExecutable(MAEDIA + makeWindowString(mSubInfo.mSolutionFileName), 
         SOLUTION_PATH + "-" + std::to_string(mSubInfo.id ));
@@ -79,6 +73,7 @@ Core::compile
             aFileName + " " + result;
         std::string ss = "";
         PipeProcess compiler(ss, comand);
+        compiler.create(ss, comand);
         compiler.run();
     }
     else if (aLanguage == Language::SNAKE)
@@ -131,12 +126,12 @@ Core::check
     //std::vector<std::pair<uint_64, uint_64>> allTimes;
     mSubInfo.mMemoryLimit += 1000000;
 #endif // _DBG_
-    mDBQ.prepareTestsStatement(mSubInfo);
-   // for (int testNum = 0; testNum < mSubInfo.mTestsCount; ++testNum)
-   for (;!mSubInfo.mTestsAreOver;)
+    //mDBQ.prepareTestsStatement(mSubInfo);
+    for (int testNum = 0; testNum < mSubInfo.mTestsCount; ++testNum)
+   //for (;!mSubInfo.mTestsAreOver;)
     {
-        //fileTesting(testNum, aSolutionName, aCheckerName);
-        pipesTesting(aSolutionName, aCheckerName);
+        fileTesting(testNum, aSolutionName, aCheckerName);
+        //pipesTesting(aSolutionName, aCheckerName);
 
         if (mSubInfo.mResult != "ok")
         {
@@ -178,6 +173,13 @@ Core::check
 //    WD_LOG("Max time : " << (*std::min_element(allTimes.begin(), allTimes.end())).first);
 //#endif // _DBG_
 }
+
+//prepareTest
+//
+//void check()
+//{
+//
+//}
 
 void
 Core::fileTesting
@@ -231,9 +233,13 @@ Core::pipesTesting
 
     TestLibMessage TLM;
     mDBQ.getNextTest(mSubInfo, TLM);
+
+    //TLM.mTest.push_back('\r');
+    //TLM.mTest.push_back('\0');
+
     TLM.makeTestSizes();   
     code.writePipe(TLM.mTest);
-
+    code.create(ss, aSolutionName);
     std::pair<uint_64, uint_64> cur = code.runWithLimits(mSubInfo.mTimeLimit, mSubInfo.mMemoryLimit);   
     code.readPipe(TLM.mOutput);
     //code.closeIO();
@@ -256,6 +262,9 @@ Core::pipesTesting
     //checker.IORedirection(Process::IOType::FILES, L"", resultAddress);
     //checker.IORedirection(Process::IOType::PIPES);
     //checker.create(aCheckerName, parameters);
+    TLM.mAnswer.pop_back();
+    TLM.mAnswer.pop_back();
+    //TLM.mAnswer.push_back(0);
     TLM.makeOutputSizes();
     TLM.makeAnswerSizes();
 
@@ -267,7 +276,7 @@ Core::pipesTesting
     checker.writePipe(TLM.mOutput, PipeProcess::PypeType::NO_ZERO);
     checker.writePipe(TLM.mAnswerSize, PipeProcess::PypeType::NO_ZERO);
     checker.writePipe(TLM.mAnswer, PipeProcess::PypeType::NO_ZERO);
-
+    checker.create(aCheckerName, ss);
 #ifdef _DBG_
     WD_LOG("Test: " + TLM.mTest + "\n Output: " + TLM.mOutput + "\n Answer: " + TLM.mAnswer);
 #endif

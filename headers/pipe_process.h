@@ -16,7 +16,7 @@ public:
 	virtual ~PipeProcess();
 
 	void readPipe(std::string& result);
-	void writePipe(std::string aMessage, PypeType aType = ZERO);
+	void writePipe(std::string& aMessage, PypeType aType = ZERO);
 
 private:
 	virtual void IORedirection();

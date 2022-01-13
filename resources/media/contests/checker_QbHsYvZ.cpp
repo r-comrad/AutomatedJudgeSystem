@@ -1,81 +1,54 @@
-#include "TestLibrary.h"
+#include "testlib.h"
+#include <iostream>
+using namespace std;
 
-int main()
+int main(int argc, char* argv[])
 {
-    int n = 0;
-    std::string firstNums;
+   /// std::fprintf(stderr, "%s", "\n\n---sas---\n\n");
 
-    while (!tl::StandardReaders::ans.isEndOfFile()
-        && !tl::StandardReaders::output.isEndOfFile())
-    {
-        n++;
-        std::int64_t jNum;
-        tl::StandardReaders::ans.readInt64(jNum);
-        std::int64_t pNum;
-        tl::StandardReaders::output.readInt64(pNum);
-        if (jNum != pNum)
-        {
-            std::printf(
-                "%s numbers differ - expected: '%ld', found: '%ld'",
-                tl::StringTools::withEnglishEnding(n),
-                jNum,
-                pNum);
+    ///char c1[] = "C:\\Users\\fedorovas\\source\\repos\\ConsoleApplication7\\ConsoleApplication7\\resources\\ans.txt";
+    ///char c2[] = "C:\\Users\\fedorovas\\source\\repos\\ConsoleApplication7\\ConsoleApplication7\\resources\\output.txt";
+    ///char c3[] = "C:\\Users\\fedorovas\\source\\repos\\ConsoleApplication7\\ConsoleApplication7\\resources\\answer.txt";
+    ///char c4[] = "C:\\Users\\fedorovas\\source\\repos\\ConsoleApplication7\\ConsoleApplication7\\resources\\rr.txt";
 
-            return 0;
-        }
-        else if (n <= 5)
-        {
-            if (firstNums.length() > 0)
-            {
-                firstNums.push_back(' ');
-            }
-            firstNums += std::to_string(n);
-        }
-    }
+    ///char* ss[] = { 0, c1,c2,c3 };
 
-    int extraInAnsCount = 0;
+    setName("compares two signed integers");
+   // registerTestlibCmd(4, ss);
+    registerTestlibCmd(argc, argv);
+    int ja = ans.readInt();
+    int pa = ouf.readInt();
+   
+    if (ja != pa)
+        quitf(_wa, "expected %d, found %d", ja, pa);
+    quitf(_ok, "answer is %d", ja);
+}
 
-    while (!tl::StandardReaders::ans.isEndOfFile())
-    {
-        std::int64_t temp;
-        tl::StandardReaders::ans.readInt64(temp);
-        extraInAnsCount++;
-    }
 
-    int extraInOufCount = 0;
+/*
 
-    while (!tl::StandardReaders::output.isEndOfFile())
-    {
-        std::int64_t temp;
-        tl::StandardReaders::output.readInt64(temp);
-        extraInOufCount++;
-    }
+registerTestlibCmd(int argc, char *argv[]) {
 
-    if (extraInAnsCount > 0)
-    {
-        std::printf(
-            "Answer contains longer sequence [length = %d],"
-            " but output contains %d elements",
-            n + extraInAnsCount, n);
-    }
+    inf.init(argv[1], _input);
+    ouf.init(argv[2], _output);
+    ans.init(argv[3], _answer);
 
-    else if (extraInOufCount > 0)
-    {
-        std::printf(
-            "Output contains longer sequence [length = %d],"
-            " but answer contains %d elements",
-            n + extraInOufCount, n);
-    }
 
-    else if (n <= 5)
-    {
-        std::printf("%d number(s): '%s'",
-            n,
-            tl::StringTools::partOfStr(firstNums).c_str());
-    }
 
-    else
-    {
-        std::printf("%d numbers", n);
+void InStream::quitscr(WORD color, const char *msg) {
+    if (resultName == "") {
+        textColor(color);
+        std::fprintf(stderr, "%s", msg);
+        textColor(LightGray);
     }
 }
+
+
+
+NORETURN void quit(TResult result, const std::string &msg) {
+    ouf.quit(result, msg.c_str());
+}
+
+
+    InStream ouf;
+*/

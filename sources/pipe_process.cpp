@@ -6,7 +6,7 @@ PipeProcess::PipeProcess(std::string& aName, std::string& aParameters) :
     MyProcess     (aName, aParameters)
 {
     IORedirection();
-    create(aName, aParameters);
+    //create(aName, aParameters);
 }
 
 PipeProcess::~PipeProcess() {}
@@ -40,12 +40,17 @@ PipeProcess::readPipe(std::string& result)
 }
 
 void
-PipeProcess::writePipe(std::string aMessage, PypeType aType)
+PipeProcess::writePipe(std::string& aMessage, PypeType aType)
 {
     WD_LOG("Writing from pipe");
     unsigned long bread;
-    WriteFile(mThisSTDOUT, aMessage.c_str(), aMessage.size() 
-        + ((aType == ZERO) ? 1 : 0), &bread, NULL);
+    //WriteFile(mThisSTDOUT, aMessage.c_str(), aMessage.size() 
+    //    + ((aType == ZERO) ? 1 : 0), &bread, NULL);
+    WriteFile(mThisSTDOUT, aMessage.c_str(), aMessage.size(), &bread, NULL);
+    if (aType == ZERO)
+    {
+        WriteFile(mThisSTDOUT, "\n", 1, &bread, NULL);
+    }
     WD_LOG("write " + std::to_string(bread) + " bites\n");
     WD_END_LOG;
 }
