@@ -6,7 +6,7 @@ PipeProcess::PipeProcess(std::string& aName, std::string& aParameters) :
     MyProcess     (aName, aParameters)
 {
     IORedirection();
-    //create(aName, aParameters);
+    create(aName, aParameters);
 }
 
 PipeProcess::~PipeProcess() {}

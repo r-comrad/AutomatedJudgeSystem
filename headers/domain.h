@@ -48,7 +48,7 @@
 
 #define _(aName) #aName
 
-#define WLOG(aMessege)                                  \
+#define W_LOG(aMessege)                                 \
     {                                                   \
         std::cout <<aMessege << "\n";                   \
     }
@@ -59,7 +59,7 @@
     }
 
 #ifdef GOOD_DEBUG_ERRORS
-#define WERROR(aNumber, aMessege)                       \
+#define W_ERROR(aNumber, aMessege)                      \
     {                                                   \
         std::cout << "\n\n\x1b[31m!!!!!!!!! "           \
             "ERROR HAS OCCURRED !!!!!!!!!\n\n"          \
@@ -80,9 +80,9 @@
 #endif
 
 #ifdef _DBG_
-    #define WD_LOG(aMessege) WLOG(aMessege) 
+    #define WD_LOG(aMessege) W_LOG(aMessege) 
     #define WD_END_LOG W_END_LOG 
-    #define WD_ERROR(aNumber, aMessege) WERROR(aNumber, aMessege) 
+    #define WD_ERROR(aNumber, aMessege) W_ERROR(aNumber, aMessege) 
 #else
     #define WD_LOG(aMessege) 
     #define WD_END_LOG

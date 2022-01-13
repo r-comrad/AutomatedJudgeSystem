@@ -20,6 +20,7 @@ SubmissionInformation::SubmissionInformation() :
 void
 SubmissionInformation::remakeResultForPasha()
 {
+	mResult.resize(2);
 	if (mResult == "wa") mResult = "WA";
 	else if (mResult == "ok") mResult = "OK";
 	else if (mResult == "tle") mResult = "TL";

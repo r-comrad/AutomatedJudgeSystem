@@ -33,7 +33,6 @@ public:
 		uint_64 aMemoryLimit);
 
 protected:
-public:
 #ifdef BILL_WINDOWS
 	STARTUPINFOA mStartupInfo;
 #endif // BILL_WINDOWS
