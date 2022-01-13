@@ -15,9 +15,9 @@ void
 PipeProcess::readPipe(std::string& result)
 {
     WD_LOG("Reading from pipe");
+#ifdef BILL_WINDOWS
     char buf[1024];
     memset(buf, 0, sizeof(buf));
-
     unsigned long bread = 0;
     unsigned long avail = 0;
 
@@ -35,6 +35,12 @@ PipeProcess::readPipe(std::string& result)
         ReadFile(mThisSTDIN, buf, 1023, &bread, NULL);
         result += std::string(buf);
     }
+#else
+    char buf[1024];
+    while (read(mPipefd[0], &buf, 1) > 0)
+        write(STDOUT_FILENO, &buf, 1);
+    close(mPipefd[0]);
+#endif
 
     WD_END_LOG;
 }
@@ -43,6 +49,7 @@ void
 PipeProcess::writePipe(std::string& aMessage, PypeType aType)
 {
     WD_LOG("Writing from pipe");
+#ifdef BILL_WINDOWS
     unsigned long bread;
     //WriteFile(mThisSTDOUT, aMessage.c_str(), aMessage.size() 
     //    + ((aType == ZERO) ? 1 : 0), &bread, NULL);
@@ -51,6 +58,14 @@ PipeProcess::writePipe(std::string& aMessage, PypeType aType)
     {
         WriteFile(mThisSTDOUT, "\n", 1, &bread, NULL);
     }
+#else
+    write(mPipefd[1], aMessage.c_str(), aMessage.size());
+    if (aType == ZERO)
+    {
+        write(mPipefd[1], "\n", 1);
+    }
+    close(mPipefd[1]);
+#endif // BILL_WINDOWS
     WD_LOG("write " + std::to_string(bread) + " bites\n");
     WD_END_LOG;
 }
@@ -60,6 +75,7 @@ PipeProcess::IORedirection()
 {
     WD_LOG("Rederecting input and output to pipe");
 
+#ifdef BILL_WINDOWS
     SECURITY_ATTRIBUTES securatyAttributes;
     securatyAttributes.nLength = sizeof(SECURITY_ATTRIBUTES);
     securatyAttributes.lpSecurityDescriptor = NULL;
@@ -84,6 +100,9 @@ PipeProcess::IORedirection()
     mStartupInfo.hStdInput = mChildSTDIN;
     mStartupInfo.hStdError = mChildSTDOUT;
     mStartupInfo.hStdOutput = mChildSTDOUT;
+#else
+
+#endif // BILL_WINDOWS
 
     WD_END_LOG;
 }
@@ -91,8 +110,10 @@ PipeProcess::IORedirection()
 void 
 PipeProcess::closeHandles()
 {
+#ifdef BILL_WINDOWS
     CloseHandle(mChildSTDIN);
     CloseHandle(mChildSTDOUT);
+#endif // BILL_WINDOWS
 }
 
 //--------------------------------------------------------------------------------

@@ -22,6 +22,7 @@ void MyProcess::IORedirection() {}
 void
 FileProcess::IORedirection()
 {
+#ifdef BILL_WINDOWS
     SECURITY_ATTRIBUTES securatyAttributes;
     securatyAttributes.nLength = sizeof(SECURITY_ATTRIBUTES);
     securatyAttributes.lpSecurityDescriptor = NULL;
@@ -62,13 +63,17 @@ FileProcess::IORedirection()
     mStartupInfo.hStdOutput = mOutputFileHandle;
 
     WD_END_LOG;
+
+#endif // BILL_WINDOWS
 }
 
 void
 FileProcess::closeHandles()
 {
+#ifdef BILL_WINDOWS
     CloseHandle(mInputFileHandle);
     CloseHandle(mOutputFileHandle);
+#endif // BILL_WINDOWS
 }
 
 //--------------------------------------------------------------------------------

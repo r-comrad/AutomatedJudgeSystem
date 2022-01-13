@@ -22,10 +22,14 @@ private:
 	virtual void IORedirection();
 	virtual void closeHandles();
 
+#ifdef BILL_WINDOWS
 	HANDLE mThisSTDIN;
 	HANDLE mThisSTDOUT;
 	HANDLE mChildSTDIN;
 	HANDLE mChildSTDOUT;
+#else
+int mPipefd[2];
+#endif // BILL_WINDOWS
 };
 
 //--------------------------------------------------------------------------------

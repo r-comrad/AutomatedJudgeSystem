@@ -22,9 +22,14 @@ Core::run
     mSubInfo.id = aID;
     mDBQ.prepareForTesting(mSubInfo);
 
-    std::string solutionName = makeExecutable(MAEDIA + makeWindowString(mSubInfo.mSolutionFileName), 
+#ifdef BILL_WINDOWS
+    mSubInfo.mSolutionFileName =  makeWindowString( mSolutionFileName);
+    mSubInfo.mCheckerFileName = makeWindowString(mSubInfo.mCheckerFileName);
+#endif // BILL_WINDOWS
+
+    std::string solutionName = makeExecutable(MAEDIA + mSubInfo.mSolutionFileName,
         SOLUTION_PATH + "-" + std::to_string(mSubInfo.id ));
-    std::string checkerName = makeExecutable(MAEDIA + makeWindowString(mSubInfo.mCheckerFileName), 
+    std::string checkerName = makeExecutable(MAEDIA + mSubInfo.mCheckerFileName,
         CHECKER_PATH + "-" + std::to_string(mSubInfo.id));
     
     check(solutionName, checkerName);

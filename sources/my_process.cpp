@@ -1,6 +1,7 @@
 //--------------------------------------------------------------------------------
 
 #include "my_process.h"
+#include "getCPUTime.h"
 
 #ifdef LINUS_LINUX
 #include <unistd.h>
@@ -10,8 +11,9 @@ MyProcess::MyProcess
 (
     std::string& aName,
     std::string& aParameters
-) :
+)
 #ifdef BILL_WINDOWS
+:
     mStartupInfo    ({ 0 })
 #endif
 {
@@ -26,7 +28,7 @@ void
 MyProcess::run(uint_16 aTimeLimit)
 {
     WD_LOG("Runing simple process");
-
+#ifdef BILL_WINDOWS
     ResumeThread(mProcessInfo.hThread);
     WaitForSingleObject(mProcessInfo.hProcess, aTimeLimit);
 
@@ -36,7 +38,12 @@ MyProcess::run(uint_16 aTimeLimit)
     }
 
     closeHandles();
-
+#else
+    //sint_32 status;
+    //int status;
+    //wait(&status);
+    wait(NULL);
+#endif
     WD_END_LOG;
 }
 
@@ -50,15 +57,19 @@ MyProcess::runWithLimits
     WD_LOG("Runing process with time and memory evaluation");
 
     int reservedTime = 200;
-    long long startTime = getMillisecondsNow();
+    //long long startTime = getMillisecondsNow();
+    long long startTime = getCPUTime();
 
     run(aTimeLimit);
 
-    long long endTime = getMillisecondsNow();
+    //long long endTime = getMillisecondsNow();
+    long long endTime = getCPUTime();
     uint_64 timeUsage = endTime - startTime;
 
     uint_64 memoryUsage = 0;
+#ifdef BILL_WINDOWS
     memoryUsage = mFuture.get();
+#endif // BILL_WINDOWS
 
     WD_LOG("time usage: " << timeUsage);
     WD_LOG("memory usage: " << memoryUsage);
@@ -107,6 +118,23 @@ MyProcess::create
     }
 #endif
 #ifdef LINUS_LINUX
+    uint_32 t=fork();
+    if(t == -1)
+    {
+        WD_ERROR("", process.linux.0);
+    }
+    else if(!t)
+    {
+
+        execl(aName.c_str(), "sas", NULL);
+    }
+    else
+    {
+
+    }
+
+
+/*
 int id = fork();
 if (id == 0)
 {
@@ -121,16 +149,16 @@ if (id == 0)
         ++i;
         param[j] = (char*) s.c_str();
         ++j;
-    }
+    }*/
     //char** param2 =
     //param.push_back(NULL);
-    param[j] = NULL;
+   /* param[j] = NULL;
     execv((char*) aName.c_str(), param);
-}
+}*/
 #endif
     WD_END_LOG;
 }
-
+#ifdef BILL_WINDOWS
 long long 
 MyProcess::getMillisecondsNow()
 {
@@ -246,5 +274,6 @@ MyProcess::killProcess
 
     return true;
 }
+#endif // BILL_WINDOWS
 
 //--------------------------------------------------------------------------------

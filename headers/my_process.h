@@ -6,12 +6,13 @@
 #define MAX_TIME_LIMIT 5000
 
 #include <string>
-#include <future>
 #include <iostream>
 
 #include "domain.h"
 
 #ifdef BILL_WINDOWS
+#include <future>
+
 #include <windows.h>
 #include <userenv.h>
 #include <psapi.h>
@@ -19,7 +20,10 @@
 #include <atlconv.h>
 #include <atlalloc.h>
 #include <shlwapi.h>
-#include <cstdint> 
+#include <cstdint>
+#else
+#include <wait.h>
+#include <unistd.h>
 #endif
 
 class MyProcess
@@ -45,7 +49,7 @@ protected:
 private:
 #ifdef BILL_WINDOWS
 	PROCESS_INFORMATION mProcessInfo;
-#endif // BILL_WINDOWS
+
 	std::future<long long> mFuture;
 
 	long long getMillisecondsNow();
@@ -55,6 +59,7 @@ private:
 
 	DWORD getExitCode(HANDLE&);
 	bool killProcess(PROCESS_INFORMATION&);
+#endif // BILL_WINDOWS
 };
 
 //--------------------------------------------------------------------------------

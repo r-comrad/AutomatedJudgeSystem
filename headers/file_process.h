@@ -20,9 +20,10 @@ private:
 
 	std::string& mInputPath;
 	std::string& mOutputPath;
-
+#ifdef BILL_WINDOWS
 	HANDLE mInputFileHandle;
 	HANDLE mOutputFileHandle;
+#endif // BILL_WINDOWS
 };
 
 //--------------------------------------------------------------------------------
