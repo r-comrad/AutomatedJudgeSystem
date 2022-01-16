@@ -32,7 +32,7 @@ public:
 	MyProcess(std::string& aName, std::string& aParameters);
 	virtual ~MyProcess();
 
-	void run(uint_16 aTimeLimit = MAX_TIME_LIMIT);
+	bool run(uint_16 aTimeLimit = MAX_TIME_LIMIT);
 	std::pair<uint_64, uint_64> runWithLimits(uint_64 aTimeLimit, 
 		uint_64 aMemoryLimit);
 

@@ -9,8 +9,12 @@
 #ifdef WIN32
 #define BILL_WINDOWS
 #endif
+#ifdef WIN_BY_ME
+#define BILL_WINDOWS
+#endif
 
-#ifndef WIN32
+
+#ifndef BILL_WINDOWS
 #define LINUS_LINUX
 #endif
 
@@ -55,7 +59,7 @@
 
 #define W_END_LOG                                       \
     {                                                   \
-        std::cout << "\n";                              \
+        std::cout << std::endl;                         \
     }
 
 #ifdef GOOD_DEBUG_ERRORS
@@ -64,17 +68,17 @@
         std::cout << "\n\n\x1b[31m!!!!!!!!! "           \
             "ERROR HAS OCCURRED !!!!!!!!!\n\n"          \
             << "ERROR# " #aNumber "\n"                  \
-            << aMessege << "\x1b[0m\n\n";               \
+            << aMessege << "\x1b[0m\n\n" << std::endl;  \
         exit(0);                                        \
     }
 #else
-#define WERROR(aNumber, aMessege)                       \
+#define W_ERROR(aNumber, aMessege)                      \
     {                                                   \
         std::cout << "\n\n\!!!!!!!!! "                  \
             "ERROR HAS OCCURRED !!!!!!!!!\n"            \
             << "ERROR# " #aNumber "\n"                  \
             << aMessege << "" << "\n\n" <<              \
-            "\n\n";                                     \
+            "\n\n" << std::endl;                        \
         exit(0);                                        \
     }
 #endif

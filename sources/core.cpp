@@ -23,7 +23,7 @@ Core::run
     mDBQ.prepareForTesting(mSubInfo);
 
 #ifdef BILL_WINDOWS
-    mSubInfo.mSolutionFileName =  makeWindowString( mSolutionFileName);
+    mSubInfo.mSolutionFileName =  makeWindowString(mSubInfo.mSolutionFileName);
     mSubInfo.mCheckerFileName = makeWindowString(mSubInfo.mCheckerFileName);
 #endif // BILL_WINDOWS
 
@@ -72,9 +72,9 @@ Core::compile
         
 #ifdef _DBG_
         std::string compilerOutput;
-        compiler.readPipe(compilerOutput);
+        //compiler.readPipe(compilerOutput);
 #endif
-        WD_LOG(compilerOutput);
+       // WD_LOG(compilerOutput);
     }
     else if (aLanguage == Language::SNAKE)
     {
@@ -156,16 +156,28 @@ Core::pipesTesting
 {
     WD_LOG("Checking test #" << mSubInfo.mTestsCount);
     WD_LOG("Runing test #" << mSubInfo.mTestsCount);
-    std::string ss = "";
-    PipeProcess code(ss, aSolutionName);
+
+    if (mSubInfo.mTestsCount == 100)
+    {
+        int yy = 0;
+        std::cout << yy;
+    }
 
     TestLibMessage TLM;
     mDBQ.getNextTest(mSubInfo, TLM);
     if (mSubInfo.mTestsAreOver) return;
 
+    std::string ss = "";
+    PipeProcess code(ss, aSolutionName);
+
     TLM.makeTestSizes();   
     code.writePipe(TLM.mTest);
     std::pair<uint_64, uint_64> cur = code.runWithLimits(mSubInfo.mTimeLimit, mSubInfo.mMemoryLimit);   
+    if (cur.first == -1)
+    {
+        mSubInfo.mResult = "wa";
+        return;
+    }
     code.readPipe(TLM.mOutput);
 
     mSubInfo.mUsedTime = std::max(mSubInfo.mUsedTime, cur.first);

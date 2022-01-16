@@ -1,9 +1,16 @@
+
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <string>
+
+
 #include <iostream>
 
 #include "core.h"
+
 int main(int argc, char* argv[])
 {
+    freopen((WORK_DIR + "a.out").c_str(), "w", stdout);
     //std::wcout << std::endl;
     //std::wcout << MAIN_PATH;
     //std::wcout << std::endl;

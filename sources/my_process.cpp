@@ -24,7 +24,7 @@ MyProcess::MyProcess
 
 MyProcess::~MyProcess() {}
 
-void
+bool
 MyProcess::run(uint_16 aTimeLimit)
 {
     WD_LOG("Runing simple process");
@@ -35,6 +35,7 @@ MyProcess::run(uint_16 aTimeLimit)
     if (getExitCode(mProcessInfo.hProcess) == STILL_ACTIVE)
     {
         killProcess(mProcessInfo);
+        return false;
     }
 
     closeHandles();
@@ -45,6 +46,8 @@ MyProcess::run(uint_16 aTimeLimit)
     wait(NULL);
 #endif
     WD_END_LOG;
+
+    return true;
 }
 
 std::pair<uint_64, uint_64>
@@ -60,7 +63,7 @@ MyProcess::runWithLimits
     //long long startTime = getMillisecondsNow();
     long long startTime = getCPUTime();
 
-    run(aTimeLimit);
+    if (!run(aTimeLimit)) return { -1, -1 };
 
     //long long endTime = getMillisecondsNow();
     long long endTime = getCPUTime();
