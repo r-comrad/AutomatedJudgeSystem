@@ -2,6 +2,9 @@
 #define CORE_H
 
 #include <map>
+#include <queue>
+#include <thread>
+#include <mutex>
 
 #include "database_query.h"
 #include "file_process.h"
@@ -24,6 +27,12 @@ private:
 		SNAKE		=	2
 	};
 
+	std::queue<std::thread*> mChecks;
+
+	std::mutex mGetTestLock;
+	std::mutex mResultLock;
+	std::mutex mMesuareLock;
+
 	MDatabaseQuery mDBQ;
 	SubmissionInformation mSubInfo;
 
@@ -31,9 +40,9 @@ private:
 	std::string compile(std::string aFileName, std::string aOutName, Language aLanguage);
 	std::string makeExecutable(std::string aFileName, std::string aOutputName);
 
-	void check(std::string aSolutionName, std::string aCheckerName);
-	void fileTesting(uint_32 aTestNum, std::string aSolutionName, std::string aCheckerName);
-	void pipesTesting(std::string aSolutionName, std::string aCheckerName);
+	void check(std::string& aSolutionName, std::string& aCheckerName);
+	void fileTesting(uint_32 aTestNum, std::string& aSolutionName, std::string& aCheckerName);
+	void pipesTesting(std::string& aSolutionName, std::string& aCheckerName);
 };
 
 #endif //CORE_H

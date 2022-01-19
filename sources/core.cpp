@@ -5,6 +5,8 @@
 
 #include <math.h>
 
+#define THREAD_COUNTS 10
+
 Core::Core
 (
     std::string aDatabasePath
@@ -101,8 +103,8 @@ Core::makeExecutable
 void
 Core::check
 (
-    std::string aSolutionName,
-    std::string aCheckerName
+    std::string& aSolutionName,
+    std::string& aCheckerName
 )
 {
 #ifdef _DBG_
@@ -112,7 +114,46 @@ Core::check
     mDBQ.prepareTestsStatement(mSubInfo);
     for (; !mSubInfo.mTestsAreOver;)
     {
-        pipesTesting(aSolutionName, aCheckerName);
+        while (mChecks.size() > THREAD_COUNTS)
+        {
+            mChecks.front()->join();
+            delete mChecks.front();
+            mChecks.pop();
+
+            if (mSubInfo.mResult.substr(0, 2) != "ok")
+            {
+                WD_LOG("Result not okay");
+                WD_LOG("Today result is: " << mSubInfo.mResult);
+                break;
+            }
+            else if (mSubInfo.mTimeLimit < mSubInfo.mUsedTime)
+            {
+                mSubInfo.mResult = "tle";
+                WD_LOG("Result is TLE: wanted " << mSubInfo.mTimeLimit <<
+                    " vs received " << mSubInfo.mUsedTime);
+                break;
+            }
+            else if (mSubInfo.mMemoryLimit < mSubInfo.mUsedMemory)
+            {
+                mSubInfo.mResult = "mle";
+                WD_LOG("Result is MLE: wanted " << mSubInfo.mMemoryLimit <<
+                    " vs received " << mSubInfo.mUsedMemory);
+                break;
+            }
+
+            WD_END_LOG;
+        }
+
+        mChecks.push(new std::thread(&Core::pipesTesting, this,
+            aSolutionName, aCheckerName
+        ));
+        //pipesTesting(aSolutionName, aCheckerName);
+    }
+    while (mChecks.size() > 0)
+    {
+        mChecks.front()->join();
+        delete mChecks.front();
+        mChecks.pop();
 
         if (mSubInfo.mResult.substr(0, 2) != "ok")
         {
@@ -150,8 +191,8 @@ Core::check
 void
 Core::pipesTesting
 (
-    std::string aSolutionName,
-    std::string aCheckerName
+    std::string& aSolutionName,
+    std::string& aCheckerName
 )
 {
     WD_LOG("Checking test #" << mSubInfo.mTestsCount);
@@ -164,8 +205,10 @@ Core::pipesTesting
     }
 
     TestLibMessage TLM;
+    mGetTestLock.lock();
     mDBQ.getNextTest(mSubInfo, TLM);
     if (mSubInfo.mTestsAreOver) return;
+    mGetTestLock.unlock();
 
     std::string ss = "";
     PipeProcess code(ss, aSolutionName);
@@ -175,13 +218,17 @@ Core::pipesTesting
     std::pair<uint_64, uint_64> cur = code.runWithLimits(mSubInfo.mTimeLimit, mSubInfo.mMemoryLimit);   
     if (cur.first == -1)
     {
+        mResultLock.lock();
         mSubInfo.mResult = "wa";
+        mResultLock.unlock();
         return;
     }
     code.readPipe(TLM.mOutput);
 
+    mMesuareLock.lock();
     mSubInfo.mUsedTime = std::max(mSubInfo.mUsedTime, cur.first);
     mSubInfo.mUsedMemory = std::max(mSubInfo.mUsedMemory, cur.second);
+    mMesuareLock.unlock();
 
     PipeProcess checker(aCheckerName, ss);
 
@@ -198,7 +245,7 @@ Core::pipesTesting
     checker.writePipe(TLM.mAnswer, PipeProcess::PypeType::NO_ZERO);
 
 #ifdef _DBG_
-    WD_LOG("Test: " + TLM.mTest + "\n Output: " + TLM.mOutput + "\n Answer: " + TLM.mAnswer);
+    WD_LOG("Test: " + TLM.mTest + "\nOutput: " + TLM.mOutput + "\nAnswer: " + TLM.mAnswer);
 #endif
 
     checker.run();
