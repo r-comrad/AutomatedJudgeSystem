@@ -10,7 +10,6 @@
 
 int main(int argc, char* argv[])
 {
-    freopen((WORK_DIR + "a.out").c_str(), "w", stdout);
     //std::wcout << std::endl;
     //std::wcout << MAIN_PATH;
     //std::wcout << std::endl;
@@ -21,6 +20,11 @@ int main(int argc, char* argv[])
     {
         num = std::stoi(getString(argv[1]));
     }
+
+#ifdef LOG_TO_FILE_OUTPUT
+    freopen((LOGS_PATH + std::to_string(num)).c_str(), "w", stdout);
+#endif
+
     WD_LOG("ID: " << num);
     WD_END_LOG;
     Core core(DATABASE_PATH);

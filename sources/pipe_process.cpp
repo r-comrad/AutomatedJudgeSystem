@@ -14,7 +14,10 @@ PipeProcess::~PipeProcess() {}
 void
 PipeProcess::readPipe(std::string& result)
 {
+#ifdef PIPE_LOG_OUTPUT
     WD_LOG("Reading from pipe");
+#endif PIPE_LOG_OUTPUT
+
 #ifdef BILL_WINDOWS
     char buf[1024];
     memset(buf, 0, sizeof(buf));
@@ -42,13 +45,18 @@ PipeProcess::readPipe(std::string& result)
     close(mPipefd[0]);
 #endif
 
+#ifdef PIPE_LOG_OUTPUT
     WD_END_LOG;
+#endif PIPE_LOG_OUTPUT
 }
 
 void
 PipeProcess::writePipe(std::string& aMessage, PypeType aType)
 {
+#ifdef PIPE_LOG_OUTPUT
     WD_LOG("Writing from pipe");
+#endif
+
 #ifdef BILL_WINDOWS
     unsigned long bread;
     //WriteFile(mThisSTDOUT, aMessage.c_str(), aMessage.size() 
@@ -66,8 +74,12 @@ PipeProcess::writePipe(std::string& aMessage, PypeType aType)
     }
     close(mPipefd[1]);
 #endif // BILL_WINDOWS
+
+#ifdef PIPE_LOG_OUTPUT
     WD_LOG("write " + std::to_string(bread) + " bites\n");
     WD_END_LOG;
+#endif PIPE_LOG_OUTPUT
+
 }
 
 void

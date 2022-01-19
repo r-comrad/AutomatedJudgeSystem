@@ -1,10 +1,16 @@
 #ifndef DOMAIN_H
 #define DOMAIN_H
 
+// ChineseTester_D_NewVegas_0.7
+// ChineseTester_R_NewVegas_0.7
+
 //#if defined(_DEBUG) || defined(CHINESE_DEBUG)
 #ifdef _DEBUG
 #define _DBG_
 #endif
+
+//#define LOG_TO_FILE_OUTPUT
+//#define PIPE_LOG_OUTPUT
 
 #ifdef WIN32
 #define BILL_WINDOWS
@@ -13,13 +19,12 @@
 #define BILL_WINDOWS
 #endif
 
-
 #ifndef BILL_WINDOWS
 #define LINUS_LINUX
 #endif
 
 #ifdef CHINESE_DEBUG
-#define TRUE_ONLY_WAY
+//#define TRUE_ONLY_WAY
 #define GOOD_DEBUG_ERRORS
 #endif
 
@@ -47,6 +52,7 @@
 #define ANSWERS_PATH    WORK_DIR    + "answers\\"
 #define OUTPUT_PATH     WORK_DIR    + "outputs\\"
 #define RESULT_PATH     WORK_DIR    + "results\\"
+#define LOGS_PATH       WORK_DIR    + "logs\\"
 
 #define WINDOWS_OSS
 
