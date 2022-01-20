@@ -4,7 +4,7 @@
 #include <string>
 
 #include "database.h"
-#include "submission_information.h"
+#include "problem_information.h"
 #include "testlib_message.h"
 
 class MDatabaseQuery
@@ -13,19 +13,19 @@ public:
 	MDatabaseQuery(std::string aDatabasePath);
 	~MDatabaseQuery();
 
-	void prepareForTesting(SubmissionInformation& aSudmissionInformation);
+	void prepareForTesting(ProblemInformation& aSudmissionInformation);
 	void writeResult(int aID, std::string aResult, int aTime, int aMemory);
 
-	void getNextTest(SubmissionInformation& aSudmissionInformation, TestLibMessage& aTLM);
-	void getAllTests(SubmissionInformation& aSudmissionInformation);
+	void getNextTest(ProblemInformation& aSudmissionInformation, TestLibMessage& aTLM);
+	void getAllTests(ProblemInformation& aSudmissionInformation);
 private:
 	Database mDatabase;
 	int mReservedStatementNumber;
 public:
-	void prepareTestsStatement(SubmissionInformation& aSudmissionInformation);
+	void prepareTestsStatement(ProblemInformation& aSudmissionInformation);
 private:
-	void getIDInformation(SubmissionInformation& aSudmissionInformation);
-	void getLimitsInformation(SubmissionInformation& aSudmissionInformation);
+	void getIDInformation(ProblemInformation& aSudmissionInformation);
+	void getLimitsInformation(ProblemInformation& aSudmissionInformation);
 };
 
 #endif

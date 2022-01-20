@@ -3,6 +3,7 @@
 
 #include <map>
 #include <queue>
+#include <vector>
 #include <thread>
 #include <mutex>
 
@@ -10,11 +11,14 @@
 #include "file_process.h"
 #include "pipe_process.h"
 #include "testlib_message.h"
+#include "problem_information.h"
+#include "submission_information.h"
 
 class Core
 {
 public:
 	Core(std::string aDatabasePath);
+	~Core();
 	void run(int aID);
 
 	//	enum DataStructure {FILES = 0, MAGIC_IVAN = 1};
@@ -27,22 +31,24 @@ private:
 		SNAKE		=	2
 	};
 
-	std::queue<std::thread*> mChecks;
+	std::vector<std::thread*> mChecks;
+	std::vector<std::mutex> mChecksMutexs;
+	std::vector<SubmissionInformation> mChecksInfo;
 
 	std::mutex mGetTestLock;
-	std::mutex mResultLock;
-	std::mutex mMesuareLock;
+
+	uint_32 mFinishedTest;
 
 	MDatabaseQuery mDBQ;
-	SubmissionInformation mSubInfo;
+	ProblemInformation mProblemInfo;
 
 	Core::Language getLanguage(std::string aFileName);
 	std::string compile(std::string aFileName, std::string aOutName, Language aLanguage);
 	std::string makeExecutable(std::string aFileName, std::string aOutputName);
 
 	void check(std::string& aSolutionName, std::string& aCheckerName);
-	void fileTesting(uint_32 aTestNum, std::string& aSolutionName, std::string& aCheckerName);
-	void pipesTesting(std::string& aSolutionName, std::string& aCheckerName);
+	//void fileTesting(uint_32 aTestNum, std::string& aSolutionName, std::string& aCheckerName);
+	void pipesTesting(int aThreadNum, std::string& aSolutionName, std::string& aCheckerName);
 };
 
 #endif //CORE_H

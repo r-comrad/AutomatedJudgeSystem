@@ -20,7 +20,7 @@ MDatabaseQuery::~MDatabaseQuery()
 void 
 MDatabaseQuery::prepareForTesting
 (
-    SubmissionInformation& aSudmissionInformation
+    ProblemInformation& aSudmissionInformation
 )
 {
     getIDInformation(aSudmissionInformation);
@@ -51,7 +51,7 @@ MDatabaseQuery::writeResult
 }
 
 void
-MDatabaseQuery::getNextTest(SubmissionInformation& aSudmissionInformation, TestLibMessage& aTLM)
+MDatabaseQuery::getNextTest(ProblemInformation& aSudmissionInformation, TestLibMessage& aTLM)
 {
     WD_LOG("Taking next test");
     mDatabase.step(mReservedStatementNumber);
@@ -75,7 +75,7 @@ MDatabaseQuery::getNextTest(SubmissionInformation& aSudmissionInformation, TestL
 void
 MDatabaseQuery::getAllTests
 (
-    SubmissionInformation& aSudmissionInformation
+    ProblemInformation& aSudmissionInformation
 )
 {
     WD_LOG("Geting test from database");
@@ -90,8 +90,8 @@ MDatabaseQuery::getAllTests
         const unsigned char* output = mDatabase.getTextFromRow(1);
         if (input == NULL) break;
 
-        std::ofstream taskFile(TEST_PATH + std::to_string(aSudmissionInformation.id) + "-" + std::to_string(cnt));
-        std::ofstream ansFile(ANSWERS_PATH + std::to_string(aSudmissionInformation.id) + "-" + std::to_string(cnt));
+        std::ofstream taskFile(TEST_PATH + std::to_string(aSudmissionInformation.mID) + "-" + std::to_string(cnt));
+        std::ofstream ansFile(ANSWERS_PATH + std::to_string(aSudmissionInformation.mID) + "-" + std::to_string(cnt));
 
         if (!taskFile.is_open())
         {
@@ -118,7 +118,7 @@ MDatabaseQuery::getAllTests
 void
 MDatabaseQuery::prepareTestsStatement
 (
-    SubmissionInformation& aSudmissionInformation
+    ProblemInformation& aSudmissionInformation
 )
 {
     aSudmissionInformation.mTestsAreOver = false;
@@ -134,12 +134,12 @@ MDatabaseQuery::prepareTestsStatement
 void 
 MDatabaseQuery::getIDInformation
 (
-    SubmissionInformation& aSudmissionInformation
+    ProblemInformation& aSudmissionInformation
 )
 {
     WD_LOG("Geting ID and name from database");
 
-    mDatabase.select("core_solutions", "file_name, contest_id", "id = " + std::to_string(aSudmissionInformation.id));
+    mDatabase.select("core_solutions", "file_name, contest_id", "id = " + std::to_string(aSudmissionInformation.mID));
     mDatabase.step();
 
     aSudmissionInformation.mSolutionFileName = getString(mDatabase.getTextFromRow(0));
@@ -154,7 +154,7 @@ MDatabaseQuery::getIDInformation
 void 
 MDatabaseQuery::getLimitsInformation
 (
-    SubmissionInformation& aSudmissionInformation
+    ProblemInformation& aSudmissionInformation
 )
 {
     WD_LOG("Geting limits from database");

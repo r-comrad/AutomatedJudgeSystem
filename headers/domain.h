@@ -1,21 +1,22 @@
 #ifndef DOMAIN_H
 #define DOMAIN_H
 
-// ChineseTester_D_NewVegas_0.7
-// ChineseTester_R_NewVegas_0.7
+// ChineseTester_D_NewVegasEdition_V0.7
+// ChineseTester_R_NewVegasEdition_V0.7
 
-//#if defined(_DEBUG) || defined(CHINESE_DEBUG)
-#ifdef _DEBUG
-#define _DBG_
+#if 0
+#define LOG_TO_FILE_OUTPUT
 #endif
 
-//#define LOG_TO_FILE_OUTPUT
-//#define PIPE_LOG_OUTPUT
-
-#ifdef WIN32
-#define BILL_WINDOWS
+#if 0
+#define PIPE_LOG_OUTPUT
 #endif
-#ifdef WIN_BY_ME
+
+#if 0
+#define COMPILER_LOG_OUTPUT
+#endif
+
+#if defined(WIN32) || defined(WIN_BY_ME)
 #define BILL_WINDOWS
 #endif
 
@@ -23,8 +24,17 @@
 #define LINUS_LINUX
 #endif
 
+#ifdef _DEBUG
+#define _DBG_
+#endif
+
 #ifdef CHINESE_DEBUG
-//#define TRUE_ONLY_WAY
+
+#if 0
+#define TRUE_ONLY_WAY
+#endif
+
+#define _DBG_
 #define GOOD_DEBUG_ERRORS
 #endif
 
@@ -32,19 +42,19 @@
 #define COMPILERS       RESOURCES   + "compilers\\"
 #define EXAMPLES        RESOURCES   + "examples\\"
 #define WORK_DIR        RESOURCES   + "working_directory\\"
-#ifdef TRUE_ONLY_WAY
+#ifdef  TRUE_ONLY_WAY
 #define MAEDIA          RESOURCES   + "media\\"
 #else
 #define MAEDIA          MAIN_PATH   + "media\\"
 #endif
 
 #define MAIN_PATH       getMainPath()
-#ifdef TRUE_ONLY_WAY
+#ifdef  TRUE_ONLY_WAY
 #define DB_PATH         RESOURCES   + "database\\"
 #else
-#define DB_PATH         getMainPath()
+#define DB_PATH         MAIN_PATH   
 #endif
-#define DATABASE_PATH DB_PATH + "db.sqlite3"
+#define DATABASE_PATH   DB_PATH     + "db.sqlite3"
 
 #define CHECKER_PATH    WORK_DIR    + "checker\\checker"
 #define SOLUTION_PATH   WORK_DIR    + "solution\\solution"
@@ -68,7 +78,7 @@
         std::cout << std::endl;                         \
     }
 
-#ifdef GOOD_DEBUG_ERRORS
+#ifdef  GOOD_DEBUG_ERRORS
 #define W_ERROR(aNumber, aMessege)                      \
     {                                                   \
         std::cout << "\n\n\x1b[31m!!!!!!!!! "           \
@@ -98,7 +108,6 @@
     #define WD_END_LOG
     #define WD_ERROR(aNumber, aMessege)
 #endif // DEBUG
-// /*>*/
 
 #define print(aMessage)         \
 {                               \
@@ -119,7 +128,6 @@ typedef unsigned long long	uint_64;
 #include <string>
 #include <iostream>
 #include <fstream>
-//#include <libloaderapi.h>
 #ifdef BILL_WINDOWS
 #include <windows.h>
 #endif

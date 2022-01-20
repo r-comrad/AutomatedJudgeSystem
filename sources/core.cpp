@@ -5,14 +5,35 @@
 
 #include <math.h>
 
-#define THREAD_COUNTS 10
+#define THREAD_COUNTS 30
 
 Core::Core
 (
     std::string aDatabasePath
 ) :
-    mDBQ    (aDatabasePath)
-{}
+    mDBQ            (aDatabasePath),
+    mChecksMutexs   (THREAD_COUNTS),
+    mChecksInfo     (THREAD_COUNTS),
+    mFinishedTest   (0)
+{
+    for (uint_32 i = 0; i < THREAD_COUNTS; ++i)
+    {
+        mChecks.push_back(new std::thread([](){}));
+    }
+}
+
+Core::~Core()
+{
+    for (uint_32 i = 0; i < mChecks.size(); ++i)
+    {
+        mChecksMutexs[i].lock();
+        if (mChecks[i] != NULL)
+        {
+            mChecks[i]->join();
+            delete mChecks[i];
+        }
+    }
+}
 
 void
 Core::run
@@ -21,18 +42,18 @@ Core::run
 )
 
 {
-    mSubInfo.id = aID;
-    mDBQ.prepareForTesting(mSubInfo);
+    mProblemInfo.mID = aID;
+    mDBQ.prepareForTesting(mProblemInfo);
 
 #ifdef BILL_WINDOWS
-    mSubInfo.mSolutionFileName =  makeWindowString(mSubInfo.mSolutionFileName);
-    mSubInfo.mCheckerFileName = makeWindowString(mSubInfo.mCheckerFileName);
+    mProblemInfo.mSolutionFileName =  makeWindowString(mProblemInfo.mSolutionFileName);
+    mProblemInfo.mCheckerFileName = makeWindowString(mProblemInfo.mCheckerFileName);
 #endif // BILL_WINDOWS
 
-    std::string solutionName = makeExecutable(MAEDIA + mSubInfo.mSolutionFileName,
-        SOLUTION_PATH + "-" + std::to_string(mSubInfo.id ));
-    std::string checkerName = makeExecutable(MAEDIA + mSubInfo.mCheckerFileName,
-        CHECKER_PATH + "-" + std::to_string(mSubInfo.id));
+    std::string solutionName = makeExecutable(MAEDIA + mProblemInfo.mSolutionFileName,
+        SOLUTION_PATH + "-" + std::to_string(mProblemInfo.mID));
+    std::string checkerName = makeExecutable(MAEDIA + mProblemInfo.mCheckerFileName,
+        CHECKER_PATH + "-" + std::to_string(mProblemInfo.mID));
     
     check(solutionName, checkerName);
 }
@@ -72,11 +93,11 @@ Core::compile
         PipeProcess compiler(ss, comand);
         compiler.run();
         
-#ifdef _DBG_
+#if defined(_DBG_) && defined(COMPILER_LOG_OUTPUT)
         std::string compilerOutput;
-        //compiler.readPipe(compilerOutput);
+        compiler.readPipe(compilerOutput);
+        WD_LOG(compilerOutput);
 #endif
-       // WD_LOG(compilerOutput);
     }
     else if (aLanguage == Language::SNAKE)
     {
@@ -108,106 +129,114 @@ Core::check
 )
 {
 #ifdef _DBG_
-    //std::vector<std::pair<uint_64, uint_64>> allTimes;
-    mSubInfo.mMemoryLimit += 1000000;
+    std::vector<std::pair<uint_64, uint_64>> allTimes;
+    mProblemInfo.mMemoryLimit += 1000000;
 #endif // _DBG_
-    mDBQ.prepareTestsStatement(mSubInfo);
-    for (; !mSubInfo.mTestsAreOver;)
+
+    mDBQ.prepareTestsStatement(mProblemInfo);
+
+    for (bool isStillTesting = true; isStillTesting;)
     {
-        while (mChecks.size() > THREAD_COUNTS)
+        isStillTesting = false;
+        for (uint_32 i = 0; i < mChecks.size(); ++i)
         {
-            mChecks.front()->join();
-            delete mChecks.front();
-            mChecks.pop();
+            bool needEvaluateResult = false;
 
-            if (mSubInfo.mResult.substr(0, 2) != "ok")
+            mChecksMutexs[i].lock();
+            isStillTesting |= !mChecksInfo[i].mIsFinishedTesting;
+            if (mChecksInfo[i].mIsFinishedTesting)
             {
-                WD_LOG("Result not okay");
-                WD_LOG("Today result is: " << mSubInfo.mResult);
-                break;
-            }
-            else if (mSubInfo.mTimeLimit < mSubInfo.mUsedTime)
-            {
-                mSubInfo.mResult = "tle";
-                WD_LOG("Result is TLE: wanted " << mSubInfo.mTimeLimit <<
-                    " vs received " << mSubInfo.mUsedTime);
-                break;
-            }
-            else if (mSubInfo.mMemoryLimit < mSubInfo.mUsedMemory)
-            {
-                mSubInfo.mResult = "mle";
-                WD_LOG("Result is MLE: wanted " << mSubInfo.mMemoryLimit <<
-                    " vs received " << mSubInfo.mUsedMemory);
-                break;
+                mChecks[i]->join();
+                ++mFinishedTest;
+                isStillTesting = true;
+                delete mChecks[i];
+                if (!mProblemInfo.mTestsAreOver) {
+                    mChecksInfo[i].mIsFinishedTesting = false;
+                    mChecks[i] = new std::thread(&Core::pipesTesting, this,
+                        i, std::ref(aSolutionName), std::ref(aCheckerName)
+                    );
+                }
+                else
+                {
+                    mChecks[i] = NULL;
+                }
+
+                if (mProblemInfo.mUsedTime < mChecksInfo[i].mUsedTime)
+                    mProblemInfo.mUsedTime = mChecksInfo[i].mUsedTime;
+                if (mProblemInfo.mUsedMemory < mChecksInfo[i].mUsedMemory)
+                    mProblemInfo.mUsedMemory = mChecksInfo[i].mUsedMemory;
+                mProblemInfo.mResult = mChecksInfo[i].mResult;
+
+                needEvaluateResult = true;
             }
 
-            WD_END_LOG;
+            mChecksMutexs[i].unlock();
+
+            if (needEvaluateResult)
+            {
+                if (mProblemInfo.mResult.substr(0, 2) != "ok")
+                {
+                    WD_LOG("Result not okay");
+                    WD_LOG("Today result is: " << mProblemInfo.mResult);
+                    isStillTesting = true;
+                    break;
+                }
+                else if (mProblemInfo.mTimeLimit < mProblemInfo.mUsedTime)
+                {
+                    mProblemInfo.mResult = "tle";
+                    WD_LOG("Result is TLE: wanted " << mProblemInfo.mTimeLimit <<
+                        " vs received " << mProblemInfo.mUsedTime);
+                    isStillTesting = true;
+                    break;
+                }
+                else if (mProblemInfo.mMemoryLimit < mProblemInfo.mUsedMemory)
+                {
+                    mProblemInfo.mResult = "mle";
+                    WD_LOG("Result is MLE: wanted " << mProblemInfo.mMemoryLimit <<
+                        " vs received " << mProblemInfo.mUsedMemory);
+                    isStillTesting = true;
+                    break;
+                }
+
+                WD_END_LOG;
+            }
         }
-
-        mChecks.push(new std::thread(&Core::pipesTesting, this,
-            aSolutionName, aCheckerName
-        ));
-        //pipesTesting(aSolutionName, aCheckerName);
     }
-    while (mChecks.size() > 0)
-    {
-        mChecks.front()->join();
-        delete mChecks.front();
-        mChecks.pop();
 
-        if (mSubInfo.mResult.substr(0, 2) != "ok")
-        {
-            WD_LOG("Result not okay");
-            WD_LOG("Today result is: " << mSubInfo.mResult);
-            break;
-        }
-        else if (mSubInfo.mTimeLimit < mSubInfo.mUsedTime)
-        {
-            mSubInfo.mResult = "tle";
-            WD_LOG("Result is TLE: wanted " << mSubInfo.mTimeLimit <<
-                " vs received " << mSubInfo.mUsedTime);
-            break;
-        }
-        else if (mSubInfo.mMemoryLimit < mSubInfo.mUsedMemory)
-        {
-            mSubInfo.mResult = "mle";
-            WD_LOG("Result is MLE: wanted " << mSubInfo.mMemoryLimit <<
-                " vs received " << mSubInfo.mUsedMemory);
-            break;
-        }
+    mProblemInfo.remakeResultForPasha();
+    mDBQ.writeResult(mProblemInfo.mID, mProblemInfo.mResult, 
+        mProblemInfo.mUsedTime, mProblemInfo.mUsedMemory);
 
-        WD_END_LOG;
-    }
-
-    mSubInfo.remakeResultForPasha();
-    mDBQ.writeResult(mSubInfo.id, mSubInfo.mResult, mSubInfo.mUsedTime, mSubInfo.mUsedMemory);
-
-    WD_LOG("Final result : " + mSubInfo.mResult);
-    WD_LOG("Final time : " << mSubInfo.mUsedTime);
-    WD_LOG("Final memory : " << mSubInfo.mUsedMemory);
+    WD_LOG("Final result : " + mProblemInfo.mResult);
+    WD_LOG("Final time : " << mProblemInfo.mUsedTime);
+    WD_LOG("Final memory : " << mProblemInfo.mUsedMemory);
     WD_END_LOG;
 }
 
 void
 Core::pipesTesting
 (
-    std::string& aSolutionName,
-    std::string& aCheckerName
+    int             aThreadNum,
+    std::string&    aSolutionName,
+    std::string&    aCheckerName
 )
 {
-    WD_LOG("Checking test #" << mSubInfo.mTestsCount);
-    WD_LOG("Runing test #" << mSubInfo.mTestsCount);
-
-    if (mSubInfo.mTestsCount == 100)
-    {
-        int yy = 0;
-        std::cout << yy;
-    }
+    WD_LOG("Checking test #" << aThreadNum + mFinishedTest);
+    WD_LOG("Runing test #" << aThreadNum + mFinishedTest);
 
     TestLibMessage TLM;
     mGetTestLock.lock();
-    mDBQ.getNextTest(mSubInfo, TLM);
-    if (mSubInfo.mTestsAreOver) return;
+    if (!mProblemInfo.mTestsAreOver)
+    {
+        mDBQ.getNextTest(mProblemInfo, TLM);
+    }
+    if (mProblemInfo.mTestsAreOver)
+    {
+        mChecksMutexs[aThreadNum].lock();
+        mChecksInfo[aThreadNum].mIsFinishedTesting = true;
+        mChecksMutexs[aThreadNum].unlock();
+        return;
+    }
     mGetTestLock.unlock();
 
     std::string ss = "";
@@ -215,20 +244,19 @@ Core::pipesTesting
 
     TLM.makeTestSizes();   
     code.writePipe(TLM.mTest);
-    std::pair<uint_64, uint_64> cur = code.runWithLimits(mSubInfo.mTimeLimit, mSubInfo.mMemoryLimit);   
+    std::pair<uint_64, uint_64> cur = code.runWithLimits(mProblemInfo.mTimeLimit, mProblemInfo.mMemoryLimit);
     if (cur.first == -1)
     {
-        mResultLock.lock();
-        mSubInfo.mResult = "wa";
-        mResultLock.unlock();
+        mChecksInfo[aThreadNum].mResult = "tle";
+        mChecksMutexs[aThreadNum].lock();
+        mChecksInfo[aThreadNum].mIsFinishedTesting = true;
+        mChecksMutexs[aThreadNum].unlock();
         return;
     }
     code.readPipe(TLM.mOutput);
 
-    mMesuareLock.lock();
-    mSubInfo.mUsedTime = std::max(mSubInfo.mUsedTime, cur.first);
-    mSubInfo.mUsedMemory = std::max(mSubInfo.mUsedMemory, cur.second);
-    mMesuareLock.unlock();
+    mChecksInfo[aThreadNum].mUsedTime = cur.first;
+    mChecksInfo[aThreadNum].mUsedMemory = cur.second;
 
     PipeProcess checker(aCheckerName, ss);
 
@@ -237,17 +265,23 @@ Core::pipesTesting
     TLM.makeOutputSizes();
     TLM.makeAnswerSizes();
 
-    checker.writePipe(TLM.mTestSize, PipeProcess::PypeType::NO_ZERO);
-    checker.writePipe(TLM.mTest, PipeProcess::PypeType::NO_ZERO);
-    checker.writePipe(TLM.mOutputSize, PipeProcess::PypeType::NO_ZERO);
-    checker.writePipe(TLM.mOutput, PipeProcess::PypeType::NO_ZERO);
-    checker.writePipe(TLM.mAnswerSize, PipeProcess::PypeType::NO_ZERO);
-    checker.writePipe(TLM.mAnswer, PipeProcess::PypeType::NO_ZERO);
+    checker.writePipe(TLM.mTestSize,    PipeProcess::PypeType::NO_ZERO);
+    checker.writePipe(TLM.mTest,        PipeProcess::PypeType::NO_ZERO);
+
+    checker.writePipe(TLM.mOutputSize,  PipeProcess::PypeType::NO_ZERO);
+    checker.writePipe(TLM.mOutput,      PipeProcess::PypeType::NO_ZERO);
+
+    checker.writePipe(TLM.mAnswerSize,  PipeProcess::PypeType::NO_ZERO);
+    checker.writePipe(TLM.mAnswer,      PipeProcess::PypeType::NO_ZERO);
 
 #ifdef _DBG_
     WD_LOG("Test: " + TLM.mTest + "\nOutput: " + TLM.mOutput + "\nAnswer: " + TLM.mAnswer);
 #endif
 
     checker.run();
-    checker.readPipe(mSubInfo.mResult);
+    checker.readPipe(mChecksInfo[aThreadNum].mResult);
+
+    mChecksMutexs[aThreadNum].lock();
+    mChecksInfo[aThreadNum].mIsFinishedTesting = true;
+    mChecksMutexs[aThreadNum].unlock();
 }
