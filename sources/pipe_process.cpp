@@ -2,7 +2,11 @@
 
 #include "pipe_process.h"
 
-PipeProcess::PipeProcess(std::string& aName, std::string& aParameters) :
+PipeProcess::PipeProcess
+(
+    const std::string& aName,
+    const std::string& aParameters
+) :
     MyProcess     (aName, aParameters)
 {
     IORedirection();

@@ -4,7 +4,7 @@
 // ChineseTester_D_NewVegasEdition_V0.7
 // ChineseTester_R_NewVegasEdition_V0.7
 
-#if 0
+#if 1
 #define LOG_TO_FILE_OUTPUT
 #endif
 
@@ -12,7 +12,7 @@
 #define PIPE_LOG_OUTPUT
 #endif
 
-#if 0
+#if 1
 #define COMPILER_LOG_OUTPUT
 #endif
 
@@ -90,12 +90,12 @@
 #else
 #define W_ERROR(aNumber, aMessege)                      \
     {                                                   \
-        std::cout << "\n\n\!!!!!!!!! "                  \
+        std::cout << std::string("\n\n\!!!!!!!!! "                  \
             "ERROR HAS OCCURRED !!!!!!!!!\n"            \
-            << "ERROR# " #aNumber "\n"                  \
-            << aMessege << "" << "\n\n" <<              \
-            "\n\n" << std::endl;                        \
-        exit(0);                                        \
+             "ERROR# " #aNumber "\n") +                  \
+             std::string(aMessege) + std::string( ""  "\n\n"              \
+            "\n\n" ) +                        \
+       GetLastErrorAsString() << std::endl; exit(0);                                        \
     }
 #endif
 

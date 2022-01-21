@@ -9,8 +9,8 @@
 
 MyProcess::MyProcess
 (
-    std::string& aName,
-    std::string& aParameters
+    const std::string& aName,
+    const std::string& aParameters
 )
 #ifdef BILL_WINDOWS
 :
@@ -84,8 +84,8 @@ MyProcess::runWithLimits
 void 
 MyProcess::create
 (
-    std::string& aName,
-    std::string& aParameters
+    std::string aName,
+    std::string aParameters
 )
 {
     aParameters = aName + aParameters;
@@ -98,6 +98,22 @@ MyProcess::create
 
     char* cmd = (char*) (aParameters).c_str();
     if (aParameters == "") cmd = NULL;
+
+    //std::string ssss = aName + aParameters;
+    //char* cmd = (char*) (ssss).c_str();
+
+    //char* cmd = new char[aName.size() + aParameters.size()];
+    //strcpy(cmd, (aName + aParameters).c_str());
+
+    //memcpy(cmd, (aName + aParameters).c_str(),
+    //    aName.size() + aParameters.size());
+
+
+    //char* cmd = (char*)(aName + aParameters).c_str();
+
+
+    //char* cmd = const_cast<char*>((aName + aParameters).c_str());
+
 
     mFuture = std::async(std::launch::async, &MyProcess::getMaxMemoryUsage,
         this, std::ref(mProcessInfo), 1000000);

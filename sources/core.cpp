@@ -26,7 +26,6 @@ Core::~Core()
 {
     for (uint_32 i = 0; i < mChecks.size(); ++i)
     {
-        mChecksMutexs[i].lock();
         if (mChecks[i] != NULL)
         {
             mChecks[i]->join();
@@ -144,7 +143,7 @@ Core::check
 
             mChecksMutexs[i].lock();
             isStillTesting |= !mChecksInfo[i].mIsFinishedTesting;
-            if (mChecksInfo[i].mIsFinishedTesting)
+            if (mChecksInfo[i].mIsFinishedTesting && mChecks[i] != NULL)
             {
                 mChecks[i]->join();
                 ++mFinishedTest;
@@ -154,6 +153,7 @@ Core::check
                     mChecksInfo[i].mIsFinishedTesting = false;
                     mChecks[i] = new std::thread(&Core::pipesTesting, this,
                         i, std::ref(aSolutionName), std::ref(aCheckerName)
+                        //i, aSolutionName, aCheckerName
                     );
                 }
                 else
@@ -178,7 +178,7 @@ Core::check
                 {
                     WD_LOG("Result not okay");
                     WD_LOG("Today result is: " << mProblemInfo.mResult);
-                    isStillTesting = true;
+                    isStillTesting = false;
                     break;
                 }
                 else if (mProblemInfo.mTimeLimit < mProblemInfo.mUsedTime)
@@ -186,7 +186,7 @@ Core::check
                     mProblemInfo.mResult = "tle";
                     WD_LOG("Result is TLE: wanted " << mProblemInfo.mTimeLimit <<
                         " vs received " << mProblemInfo.mUsedTime);
-                    isStillTesting = true;
+                    isStillTesting = false;
                     break;
                 }
                 else if (mProblemInfo.mMemoryLimit < mProblemInfo.mUsedMemory)
@@ -194,7 +194,7 @@ Core::check
                     mProblemInfo.mResult = "mle";
                     WD_LOG("Result is MLE: wanted " << mProblemInfo.mMemoryLimit <<
                         " vs received " << mProblemInfo.mUsedMemory);
-                    isStillTesting = true;
+                    isStillTesting = false;
                     break;
                 }
 
@@ -219,6 +219,8 @@ Core::pipesTesting
     int             aThreadNum,
     std::string&    aSolutionName,
     std::string&    aCheckerName
+    //std::string aSolutionName,
+    //std::string aCheckerName
 )
 {
     WD_LOG("Checking test #" << aThreadNum + mFinishedTest);
@@ -235,6 +237,7 @@ Core::pipesTesting
         mChecksMutexs[aThreadNum].lock();
         mChecksInfo[aThreadNum].mIsFinishedTesting = true;
         mChecksMutexs[aThreadNum].unlock();
+        mGetTestLock.unlock();
         return;
     }
     mGetTestLock.unlock();

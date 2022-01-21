@@ -12,7 +12,7 @@ class PipeProcess : public MyProcess
 public:
 	enum PypeType { ZERO = 0, NO_ZERO = 1 };
 
-	PipeProcess(std::string& aName, std::string& aParameters);
+	PipeProcess(const std::string& aName, const std::string& aParameters);
 	virtual ~PipeProcess();
 
 	void readPipe(std::string& result);

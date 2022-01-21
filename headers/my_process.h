@@ -29,7 +29,7 @@
 class MyProcess
 {
 public:
-	MyProcess(std::string& aName, std::string& aParameters);
+	MyProcess(const std::string& aName, const std::string& aParameters);
 	virtual ~MyProcess();
 
 	bool run(uint_16 aTimeLimit = MAX_TIME_LIMIT);
@@ -41,7 +41,8 @@ protected:
 	STARTUPINFOA mStartupInfo;
 #endif // BILL_WINDOWS
 
-	void create(std::string& aName, std::string& aParameters);
+	//void create(const std::string& aName, const std::string& aParameters);
+	void create(std::string aName, std::string aParameters);
 
 	virtual void IORedirection() = 0;
 	virtual void closeHandles() = 0;

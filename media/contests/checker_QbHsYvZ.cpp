@@ -1,80 +1,57 @@
-#include "TestLibrary.h"
+#include "testlib.h"
+#include <sstream>
 
-int main()
-{int n = 0;
-    std::string firstNums;
+using namespace std;
 
-    while (!tl::StandardReaders::ans.isEndOfFile()
-           && !tl::StandardReaders::output.isEndOfFile())
+int main(int argc, char * argv[])
+{
+    setName("compare ordered sequences of signed int%d numbers", 8 * int(sizeof(long long)));
+
+    registerTestlibCmd(argc, argv);
+
+    int n = 0;
+    string firstElems;
+
+    while (!ans.seekEof() && !ouf.seekEof())
     {
         n++;
-        std::int64_t jNum;
-        tl::StandardReaders::ans.readInt64(jNum);
-        std::int64_t pNum;
-        tl::StandardReaders::output.readInt64(pNum);
-        if (jNum != pNum)
-        {
-            std::printf(
-                    "wa %s numbers differ - expected: '%ld', found: '%ld'",
-                    tl::StringTools::withEnglishEnding(n),
-                    jNum,
-                    pNum);
-
-            return 0;
-        }
-        else if (n <= 5)
-        {
-            if (!firstNums.empty())
+        long long j = ans.readLong();
+        long long p = ouf.readLong();
+        if (j != p)
+            quitf(_wa, "%d%s numbers differ - expected: '%s', found: '%s'", n, englishEnding(n).c_str(), vtos(j).c_str(), vtos(p).c_str());
+        else
+            if (n <= 5)
             {
-                firstNums.push_back(' ');
+                if (firstElems.length() > 0)
+                    firstElems += " ";
+                firstElems += vtos(j);
             }
-            firstNums += std::to_string(pNum);
-        }
     }
 
     int extraInAnsCount = 0;
 
-    while (!tl::StandardReaders::ans.isEndOfFile())
+    while (!ans.seekEof())
     {
-        std::int64_t temp;
-        tl::StandardReaders::ans.readInt64(temp);
+        ans.readLong();
         extraInAnsCount++;
     }
-
+    
     int extraInOufCount = 0;
 
-    while (!tl::StandardReaders::output.isEndOfFile())
+    while (!ouf.seekEof())
     {
-        std::int64_t temp;
-        tl::StandardReaders::output.readInt64(temp);
+        ouf.readLong();
         extraInOufCount++;
     }
 
     if (extraInAnsCount > 0)
-    {
-        std::printf(
-                "wa Answer contains longer sequence [length = %d],"
-                " but output contains %d elements",
-                n + extraInAnsCount, n);
-    }
-
-    else if (extraInOufCount > 0)
-    {
-        std::printf(
-                "wa Output contains longer sequence [length = %d],"
-                " but answer contains %d elements",
-                n + extraInOufCount, n);
-    }
-
-    else if (n <= 5)
-    {
-        std::printf("ok %d number(s): '%s'",
-                    n,
-                    tl::StringTools::partOfStr(firstNums).c_str());
-    }
-
+        quitf(_wa, "Answer contains longer sequence [length = %d], but output contains %d elements", n + extraInAnsCount, n);
+    
+    if (extraInOufCount > 0)
+        quitf(_wa, "Output contains longer sequence [length = %d], but answer contains %d elements", n + extraInOufCount, n);
+    
+    if (n <= 5)
+        quitf(_ok, "%d number(s): \"%s\"", n, compress(firstElems).c_str());
     else
-    {
-        std::printf("ok %d numbers", n);
-    }
+        quitf(_ok, "%d numbers", n);
 }

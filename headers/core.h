@@ -49,6 +49,7 @@ private:
 	void check(std::string& aSolutionName, std::string& aCheckerName);
 	//void fileTesting(uint_32 aTestNum, std::string& aSolutionName, std::string& aCheckerName);
 	void pipesTesting(int aThreadNum, std::string& aSolutionName, std::string& aCheckerName);
+	//void pipesTesting(int aThreadNum, std::string aSolutionName, std::string aCheckerName);
 };
 
 #endif //CORE_H
