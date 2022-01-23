@@ -1,11 +1,14 @@
 cmake_minimum_required(VERSION 3.21)
 project(ChineseTester)
+set(CMAKE_DEBUG_POSTFIX d)
+
+add_library(tutorial_compiler_flags INTERFACE)
 #add_subdirectory(sources)
 #add_subdirectory(headers)
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread -Wl,--no-as-needed -ldl")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread -Wl,--no-as-needed -ldl -D_DEBUG")
 
-set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ./)
 
 #file (GLOB ChineseTester  CONFIGURE_DEPENDS "*.h" "*.cpp")
 include_directories(ChineseTester headers)
@@ -16,6 +19,8 @@ include_directories(ChineseTesters sources)
 add_compile_options(-l sqlite3)
 
 OPTION(CHINESE_DEBUG ON)
+
+
 add_executable(ChineseTester
         sources/core.cpp
         sources/database.cpp

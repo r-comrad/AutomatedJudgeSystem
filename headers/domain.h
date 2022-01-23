@@ -28,6 +28,8 @@
 #define _DBG_
 #endif
 
+#undef  _DBG_
+
 #ifdef CHINESE_DEBUG
 
 #if 0

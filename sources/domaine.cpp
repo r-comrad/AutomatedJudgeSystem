@@ -22,7 +22,13 @@ getMainPath() {
     if (readlink("/proc/self/exe", buf, sizeof(buf) - 1) == -1)
         throw std::string("readlink() failed");
     std::string str(buf);
-    return str;//str.substr(0, str.rfind('/'));
+    int i = str.size() - 1;
+    for(int j = 0; j < 2; --i)
+    {
+        if (str[i] == '/') ++j;
+    }
+    return str.substr(0, i + 2);
+    //return str.substr(0, str.rfind('/'));
 #endif
 }
 

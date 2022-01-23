@@ -21,6 +21,7 @@ Database::select
     std::string aConditon,
     int aStatementID
 )
+
 {
     if (aColum == "") aColum = "*";
     if (aConditon != "") aConditon = " WHERE " + aConditon;
