@@ -140,7 +140,7 @@ MyProcess::create
     uint_32 t=fork();
     if(t == -1)
     {
-        WD_ERROR("", process.linux.0);
+        WD_ERROR(process.linux.0, "");
     }
     else if(!t)
     {

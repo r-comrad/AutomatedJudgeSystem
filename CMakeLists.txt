@@ -6,7 +6,7 @@ add_library(tutorial_compiler_flags INTERFACE)
 #add_subdirectory(sources)
 #add_subdirectory(headers)
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread -Wl,--no-as-needed -ldl -D_DEBUG")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -Wl,--no-as-needed -ldl -D_DEBUG")
 
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ./)
 
