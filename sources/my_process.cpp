@@ -7,11 +7,7 @@
 #include <unistd.h>
 #endif
 
-MyProcess::MyProcess
-(
-    const std::string& aName,
-    const std::string& aParameters
-)
+MyProcess::MyProcess()
 #ifdef BILL_WINDOWS
 :
     mStartupInfo    ({ 0 })
@@ -82,13 +78,13 @@ MyProcess::runWithLimits
 }
 
 void 
-MyProcess::create
-(
-    std::string aName,
-    std::string aParameters
-)
+MyProcess::create(const std::vector<char*>& aParameters)
+//(
+//    std::string aName,
+//    std::string aParameters
+//)
 {
-    aParameters = aName + aParameters;
+    //aParameters = aName + aParameters;
 
     WD_LOG("Creating process name: " << aName);
     WD_LOG("Parameters: " << aParameters);
@@ -144,8 +140,7 @@ MyProcess::create
     }
     else if(!t)
     {
-
-        execl(aName.c_str(), "sas", NULL);
+        execv(aParameters[0], &aParameters[0]);
     }
     else
     {

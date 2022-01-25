@@ -4,17 +4,16 @@
 
 FileProcess::FileProcess
 (
-    std::string& aName,
-    std::string& aParameters,
+    const std::vector<char*>& aParameters,
     std::string& aInputPath,
     std::string& aOutputPath
 ) :
-    MyProcess     (aName, aParameters),
+    MyProcess     (),
     mInputPath  (aInputPath),
     mOutputPath (aOutputPath)
 {
     IORedirection();
-    create(aName, aParameters);
+    create(aParameters);
 }
 
 FileProcess::~FileProcess() {}

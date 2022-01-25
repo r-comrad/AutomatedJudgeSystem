@@ -92,7 +92,7 @@
 #else
 #define W_ERROR(aNumber, aMessege)                      \
     {                                                   \
-        std::cout << std::string("\n\n\!!!!!!!!! "      \
+        std::cout << std::string("\n\n!!!!!!!!! "      \
             "ERROR HAS OCCURRED !!!!!!!!!\n"            \
             "ERROR# " #aNumber "\n") +                  \
             std::string(aMessege) +                     \

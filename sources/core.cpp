@@ -86,10 +86,13 @@ Core::compile
     {
         result += ".exe";
         //process.IORedirection(L"", L"");
-        std::string comand = COMPILERS + "magicCPPCompiler.cmd" + " " + 
-            aFileName + " " + result;
-        std::string ss = "";
-        PipeProcess compiler(ss, comand);
+        std::vector<char*> comand;
+        comand.push_back((char*) "");
+        comand.push_back((char*) (COMPILERS + "magicCPPCompiler.cmd").c_str());
+        comand.push_back((char*) aFileName.c_str());
+        comand.push_back((char*) result.c_str());
+        comand.push_back(NULL);
+        PipeProcess compiler(comand);
         compiler.run();
         
 #if defined(_DBG_) && defined(COMPILER_LOG_OUTPUT)

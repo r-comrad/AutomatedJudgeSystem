@@ -10,7 +10,7 @@
 class FileProcess : public MyProcess
 {
 public:
-	FileProcess(std::string& aName, std::string& aParameters, 
+	FileProcess(const std::vector<char*>& aParameters,
 		std::string& aInputPath, std::string& aOutputPath);
 	virtual ~FileProcess();
 

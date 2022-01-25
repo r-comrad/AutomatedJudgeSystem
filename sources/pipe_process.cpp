@@ -2,15 +2,11 @@
 
 #include "pipe_process.h"
 
-PipeProcess::PipeProcess
-(
-    const std::string& aName,
-    const std::string& aParameters
-) :
-    MyProcess     (aName, aParameters)
+PipeProcess::PipeProcess(const std::vector<char*>& aParameters) :
+    MyProcess     ()
 {
-    IORedirection();
-    create(aName, aParameters);
+    IORedirection   ();
+    create          (aParameters);
 }
 
 PipeProcess::~PipeProcess() {}

@@ -11,7 +11,8 @@ MDatabaseQuery::MDatabaseQuery
 (
     std::string aDatabasePath
 ) :
-    mDatabase(aDatabasePath)
+    mDatabase                   (aDatabasePath),
+    mReservedStatementNumber    (0)
 {}
 
 MDatabaseQuery::~MDatabaseQuery()
