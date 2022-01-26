@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------
-
+#define _CRT_SECURE_NO_WARNINGS
 #include "my_process.h"
 #include "getCPUTime.h"
 
@@ -86,29 +86,30 @@ MyProcess::create(const std::vector<char*>& aParameters)
 {
     //aParameters = aName + aParameters;
 
-    WD_LOG("Creating process name: " << aName);
-    WD_LOG("Parameters: " << aParameters);
+    WD_LOG("Creating process name: " << aParameters[0]);
+    //WD_LOG("Parameters: " << aParameters[1]);
 #ifdef BILL_WINDOWS
-    char* name = (char*) aName.c_str();
-    if (aName == "") name = NULL;
+    //std::string ss = aParameters[0];
+    char* name = newCharPtrCopy(aParameters[0]);
+    if (name[0] == 0) name = NULL;
 
-    char* cmd = (char*) (aParameters).c_str();
-    if (aParameters == "") cmd = NULL;
+    int size = aParameters.size() + 1;
+    for (int i = 0; i < aParameters.size() - 1; ++i)
+    {
+        size += strlen(aParameters[i]);
+    }
 
-    //std::string ssss = aName + aParameters;
-    //char* cmd = (char*) (ssss).c_str();
-
-    //char* cmd = new char[aName.size() + aParameters.size()];
-    //strcpy(cmd, (aName + aParameters).c_str());
-
-    //memcpy(cmd, (aName + aParameters).c_str(),
-    //    aName.size() + aParameters.size());
-
-
-    //char* cmd = (char*)(aName + aParameters).c_str();
-
-
-    //char* cmd = const_cast<char*>((aName + aParameters).c_str());
+    char* cmd = new char[size];
+    cmd[0] = 0;
+    for (int i = 0; i < aParameters.size() - 1; ++i)
+    {
+        //res += std::string(aParameters[i]).c_str();
+        //if (res.size() > 0) res += " ";
+        strCopy(cmd, aParameters[i]);
+        if (cmd[0] != 0) strCopy(cmd, " ");
+    }
+    //char* cmd = (char*) res.c_str();
+    if (cmd[0] == 0) cmd = NULL;
 
 
     mFuture = std::async(std::launch::async, &MyProcess::getMaxMemoryUsage,
@@ -128,9 +129,12 @@ MyProcess::create(const std::vector<char*>& aParameters)
         &mProcessInfo
     ) == FALSE)
     {
-        WD_ERROR(process.0, "Can't start process " + aName + 
-            "\narguments are: " + aParameters);
+        //WD_ERROR(process.0, (std::string("Can't start process ") + aParameters[0] +
+        //    "\narguments are: " + aParameters[1]));
+        WD_ERROR(process.0, (std::string("Can't start process ") + aParameters[0]));
     }
+    delete name;
+    delete cmd;
 #endif
 #ifdef LINUS_LINUX
     uint_32 t=fork();

@@ -32,6 +32,16 @@ Core::~Core()
             delete mChecks[i];
         }
     }
+
+    for (char* i : mSolutionParameters)
+    {
+        if (i != NULL) delete i;
+    }
+
+    for (char* i : mCheckerParameters)
+    {
+        if (i != NULL) delete i;
+    }
 }
 
 void
@@ -49,12 +59,20 @@ Core::run
     mProblemInfo.mCheckerFileName = makeWindowString(mProblemInfo.mCheckerFileName);
 #endif // BILL_WINDOWS
 
-    std::string solutionName = makeExecutable(MAEDIA + mProblemInfo.mSolutionFileName,
-        SOLUTION_PATH + "-" + std::to_string(mProblemInfo.mID));
-    std::string checkerName = makeExecutable(MAEDIA + mProblemInfo.mCheckerFileName,
-        CHECKER_PATH + "-" + std::to_string(mProblemInfo.mID));
+    makeExecutable
+    (
+        MAEDIA + mProblemInfo.mSolutionFileName,
+        SOLUTION_PATH + "-" + std::to_string(mProblemInfo.mID), 
+        mSolutionParameters
+    );
+    makeExecutable
+    (
+        MAEDIA + mProblemInfo.mCheckerFileName,
+        CHECKER_PATH + "-" + std::to_string(mProblemInfo.mID),
+        mCheckerParameters
+    );
     
-    check(solutionName, checkerName);
+    check();
 }
 
 Core::Language
@@ -73,27 +91,35 @@ Core::getLanguage
     return result;
 }
 
-std::string
+void
 Core::compile
 (
     std::string aFileName,
     std::string aOutName, 
-    Language aLanguage
+    Language aLanguage,
+    std::vector<char*>& aCpmandParameters
 )
 {
-    std::string result = aOutName;
+    //aCpmandParameters.push_back(new char);
     if (aLanguage == Language::MAGIC_CPP)
     {
-        result += ".exe";
-        //process.IORedirection(L"", L"");
+        aCpmandParameters.push_back(newStrCopy((aOutName + ".exe")));
+        //std::cout << aCpmandParameters.back() << std::endl;
+        //std::strcat(aCpmandParameters.back(), ".exe");
+        //for (const char* i = aOutName.c_str(); *i; ++i) std::cout << (*i);
+        //std::cout << std::endl;
+        //for (char* i = aCpmandParameters.back(); *i; ++i) std::cout << (*i);
+        //std::cout << std::endl;
         std::vector<char*> comand;
-        comand.push_back((char*) "");
-        comand.push_back((char*) (COMPILERS + "magicCPPCompiler.cmd").c_str());
-        comand.push_back((char*) aFileName.c_str());
-        comand.push_back((char*) result.c_str());
+        //comand.push_back((char*) "");
+        comand.push_back(newStrCopy((CPP_COMPILER_NAME)));
+        comand.push_back(newStrCopy(aFileName));
+        comand.push_back(aCpmandParameters.back());
         comand.push_back(NULL);
         PipeProcess compiler(comand);
         compiler.run();
+        delete comand[0];
+        delete comand[1];
         
 #if defined(_DBG_) && defined(COMPILER_LOG_OUTPUT)
         std::string compilerOutput;
@@ -103,39 +129,42 @@ Core::compile
     }
     else if (aLanguage == Language::SNAKE)
     {
-        //result += ".py";
-        //copyFile(aFileName, result);
-        //result = "python " + result;
-        result = "python " + aFileName;
+        aCpmandParameters.push_back(newCharPtrCopy(""));
+        aCpmandParameters.push_back(newCharPtrCopy("python"));
+        aCpmandParameters.push_back(newStrCopy(aFileName));
     }
-    for (int i = 0; i < 1e7; ++i);
-    return result;
+    aCpmandParameters.push_back(NULL);
+    //for (int i = 0; i < 1e7; ++i);
+    //return result;
 }
 
-std::string
+void
 Core::makeExecutable
 (
     std::string aFileName,
-    std::string aOutputName
+    std::string aOutputName,
+    std::vector<char*>& aCpmandParameters
 )
 {
     Core::Language language = getLanguage(aFileName);
-    return compile(aFileName, aOutputName, language);
+    return compile(aFileName, aOutputName, language, aCpmandParameters);
 }
 
 void
 Core::check
 (
-    std::string& aSolutionName,
-    std::string& aCheckerName
+    //std::string& aSolutionName,
+    //std::string& aCheckerName
+    //const std::vector<char*>& aSolutionParameters,
+    //const std::vector<char*>& aCheckerParameters
 )
 {
 #ifdef _DBG_
-    std::vector<std::pair<uint_64, uint_64>> allTimes;
     mProblemInfo.mMemoryLimit += 1000000;
 #endif // _DBG_
 
     mDBQ.prepareTestsStatement(mProblemInfo);
+   //pipesTesting(0);
 
     for (bool isStillTesting = true; isStillTesting;)
     {
@@ -155,7 +184,7 @@ Core::check
                 if (!mProblemInfo.mTestsAreOver) {
                     mChecksInfo[i].mIsFinishedTesting = false;
                     mChecks[i] = new std::thread(&Core::pipesTesting, this,
-                        i, std::ref(aSolutionName), std::ref(aCheckerName)
+                        i//, std::ref(aSolutionName), std::ref(aCheckerName)
                         //i, aSolutionName, aCheckerName
                     );
                 }
@@ -219,9 +248,11 @@ Core::check
 void
 Core::pipesTesting
 (
-    int             aThreadNum,
-    std::string&    aSolutionName,
-    std::string&    aCheckerName
+    int             aThreadNum
+    //const std::vector<char*>& aSolutionParameters,
+    //const std::vector<char*>& aCheckerParameters
+    //std::string&    aSolutionName,
+    //std::string&    aCheckerName
     //std::string aSolutionName,
     //std::string aCheckerName
 )
@@ -245,8 +276,7 @@ Core::pipesTesting
     }
     mGetTestLock.unlock();
 
-    std::string ss = "";
-    PipeProcess code(ss, aSolutionName);
+    PipeProcess code(mSolutionParameters);
 
     TLM.makeTestSizes();   
     code.writePipe(TLM.mTest);
@@ -264,7 +294,7 @@ Core::pipesTesting
     mChecksInfo[aThreadNum].mUsedTime = cur.first;
     mChecksInfo[aThreadNum].mUsedMemory = cur.second;
 
-    PipeProcess checker(aCheckerName, ss);
+    PipeProcess checker(mCheckerParameters);
 
     TLM.mAnswer.pop_back();
     TLM.mAnswer.pop_back();

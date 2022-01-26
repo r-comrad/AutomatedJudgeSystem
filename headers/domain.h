@@ -1,10 +1,12 @@
 #ifndef DOMAIN_H
 #define DOMAIN_H
 
+#define _CRT_SECURE_NO_WARNINGS
+
 // ChineseTester_D_NewVegasEdition_V0.7
 // ChineseTester_R_NewVegasEdition_V0.7
 
-#if 1
+#if 0
 #define LOG_TO_FILE_OUTPUT
 #endif
 
@@ -26,6 +28,7 @@
 
 #ifdef _DEBUG
 #define _DBG_
+#define CHINESE_DEBUG
 #endif
 
 #undef  _DBG_
@@ -65,6 +68,8 @@
 #define OUTPUT_PATH     WORK_DIR    + "outputs\\"
 #define RESULT_PATH     WORK_DIR    + "results\\"
 #define LOGS_PATH       WORK_DIR    + "logs\\"
+
+#define CPP_COMPILER_NAME   COMPILERS +   "magicCPPCompiler.cmd"
 
 #define WINDOWS_OSS
 
@@ -115,7 +120,7 @@
 {                               \
     std::cout << aMessage;      \
 }
-
+#define _CRT_SECURE_NO_WARNINGS
 typedef signed char		    sint_8;
 typedef unsigned char	    uint_8;
 typedef signed short	    sint_16;
@@ -148,4 +153,11 @@ std::string getString(const char* aString);
 std::string makeWindowString(std::string aString);
 std::string GetLastErrorAsString();
 #endif
+#define _CRT_SECURE_NO_WARNINGS
+#define newStrCopy(str) std::strcpy(new char[str.size() + 1], str.c_str()) 
+#define newCharPtrCopy(str) std::strcpy(new char[strlen(str) + 1], str) 
+#define newLargerStrCopy(str, offset) \
+std::strcpy(new char[str.size() + offset + 1], str.c_str()) 
+#define strCopy(strTo, strFrom) std::strcat(strTo, strFrom) 
+
 #endif //DOMAIN_H

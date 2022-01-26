@@ -1,6 +1,8 @@
 #ifndef CORE_H
 #define CORE_H
 
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <map>
 #include <queue>
 #include <vector>
@@ -35,6 +37,9 @@ private:
 	std::vector<std::mutex> mChecksMutexs;
 	std::vector<SubmissionInformation> mChecksInfo;
 
+	std::vector<char*> mSolutionParameters;
+	std::vector<char*> mCheckerParameters;
+
 	std::mutex mGetTestLock;
 
 	uint_32 mFinishedTest;
@@ -43,12 +48,21 @@ private:
 	ProblemInformation mProblemInfo;
 
 	Core::Language getLanguage(std::string aFileName);
-	std::string compile(std::string aFileName, std::string aOutName, Language aLanguage);
-	std::string makeExecutable(std::string aFileName, std::string aOutputName);
+	void compile
+	(
+		std::string aFileName, std::string aOutName, 
+		Language aLanguage,
+		std::vector<char*>& aCpmandParameters
+	);
+	void makeExecutable
+	(
+		std::string aFileName, std::string aOutputName,
+		std::vector<char*>& aCpmandParameters
+	);
 
-	void check(std::string& aSolutionName, std::string& aCheckerName);
+	void check();
 	//void fileTesting(uint_32 aTestNum, std::string& aSolutionName, std::string& aCheckerName);
-	void pipesTesting(int aThreadNum, std::string& aSolutionName, std::string& aCheckerName);
+	void pipesTesting(int aThreadNum);
 	//void pipesTesting(int aThreadNum, std::string aSolutionName, std::string aCheckerName);
 };
 
