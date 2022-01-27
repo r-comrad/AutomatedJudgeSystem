@@ -14,7 +14,7 @@
 #define PIPE_LOG_OUTPUT
 #endif
 
-#if 1
+#if 0
 #define COMPILER_LOG_OUTPUT
 #endif
 
@@ -43,6 +43,7 @@
 #define GOOD_DEBUG_ERRORS
 #endif
 
+#ifdef  BILL_WINDOWS
 #define RESOURCES       MAIN_PATH   + "resources\\"
 #define COMPILERS       RESOURCES   + "compilers\\"
 #define EXAMPLES        RESOURCES   + "examples\\"
@@ -68,6 +69,27 @@
 #define OUTPUT_PATH     WORK_DIR    + "outputs\\"
 #define RESULT_PATH     WORK_DIR    + "results\\"
 #define LOGS_PATH       WORK_DIR    + "logs\\"
+#elif defined(LINUS_LINUX)
+#define RESOURCES       MAIN_PATH   + "resources/"
+#define COMPILERS       RESOURCES   + "compilers/"
+#define EXAMPLES        RESOURCES   + "examples/"
+#define WORK_DIR        RESOURCES   + "working_directory/"
+
+#define MAEDIA          MAIN_PATH   + "media/"
+
+#define MAIN_PATH       getMainPath()
+#define DB_PATH         MAIN_PATH
+
+#define DATABASE_PATH   DB_PATH     + "db.sqlite3"
+
+#define CHECKER_PATH    WORK_DIR    + "checker/checker"
+#define SOLUTION_PATH   WORK_DIR    + "solution/solution"
+#define TEST_PATH       WORK_DIR    + "tests/"
+#define ANSWERS_PATH    WORK_DIR    + "answers/"
+#define OUTPUT_PATH     WORK_DIR    + "outputs/"
+#define RESULT_PATH     WORK_DIR    + "results/"
+#define LOGS_PATH       WORK_DIR    + "logs/"
+#endif
 
 #define CPP_COMPILER_NAME   COMPILERS +   "magicCPPCompiler.cmd"
 
@@ -130,6 +152,8 @@ typedef unsigned long	    uint_32;
 typedef signed long	long	sint_64;
 typedef unsigned long long	uint_64;
 
+#include <cstring>
+
 #include <vector>
 #include <fstream>
 #include <string>
@@ -154,10 +178,10 @@ std::string makeWindowString(std::string aString);
 std::string GetLastErrorAsString();
 #endif
 #define _CRT_SECURE_NO_WARNINGS
-#define newStrCopy(str) std::strcpy(new char[str.size() + 1], str.c_str()) 
-#define newCharPtrCopy(str) std::strcpy(new char[strlen(str) + 1], str) 
+#define newStrCopy(str) std::strcpy(new char[str.size() + 1], str.c_str())
+#define newCharPtrCopy(str) std::strcpy(new char[strlen(str) + 1], str)
 #define newLargerStrCopy(str, offset) \
-std::strcpy(new char[str.size() + offset + 1], str.c_str()) 
-#define strCopy(strTo, strFrom) std::strcat(strTo, strFrom) 
+std::strcpy(new char[str.size() + offset + 1], str.c_str())
+#define strCopy(strTo, strFrom) std::strcat(strTo, strFrom)
 
 #endif //DOMAIN_H

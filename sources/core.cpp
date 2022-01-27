@@ -112,14 +112,25 @@ Core::compile
         //std::cout << std::endl;
         std::vector<char*> comand;
         //comand.push_back((char*) "");
+#ifdef BILL_WINDOWS
         comand.push_back(newStrCopy((CPP_COMPILER_NAME)));
+#elif defined(LINUS_LINUX)
+        comand.push_back(newCharPtrCopy("g++"));
+#endif
+
         comand.push_back(newStrCopy(aFileName));
+
+#ifdef LINUS_LINUX
+        comand.push_back(newCharPtrCopy("-o"));
+#endif
+
         comand.push_back(aCpmandParameters.back());
         comand.push_back(NULL);
-        PipeProcess compiler(comand);
+        MyProcess compiler(comand);
         compiler.run();
         delete comand[0];
         delete comand[1];
+        //exit(0);
         
 #if defined(_DBG_) && defined(COMPILER_LOG_OUTPUT)
         std::string compilerOutput;
@@ -129,8 +140,10 @@ Core::compile
     }
     else if (aLanguage == Language::SNAKE)
     {
+#ifdef BILL_WINDOWS
         aCpmandParameters.push_back(newCharPtrCopy(""));
-        aCpmandParameters.push_back(newCharPtrCopy("python"));
+#endif
+        aCpmandParameters.push_back(newCharPtrCopy("python3"));
         aCpmandParameters.push_back(newStrCopy(aFileName));
     }
     aCpmandParameters.push_back(NULL);
@@ -276,7 +289,7 @@ Core::pipesTesting
     }
     mGetTestLock.unlock();
 
-    PipeProcess code(mSolutionParameters);
+    MyProcess code(mSolutionParameters);
 
     TLM.makeTestSizes();   
     code.writePipe(TLM.mTest);
@@ -294,21 +307,21 @@ Core::pipesTesting
     mChecksInfo[aThreadNum].mUsedTime = cur.first;
     mChecksInfo[aThreadNum].mUsedMemory = cur.second;
 
-    PipeProcess checker(mCheckerParameters);
+    MyProcess checker(mCheckerParameters);
 
     TLM.mAnswer.pop_back();
     TLM.mAnswer.pop_back();
     TLM.makeOutputSizes();
     TLM.makeAnswerSizes();
 
-    checker.writePipe(TLM.mTestSize,    PipeProcess::PypeType::NO_ZERO);
-    checker.writePipe(TLM.mTest,        PipeProcess::PypeType::NO_ZERO);
+    checker.writePipe(TLM.mTestSize,    MyProcess::PypeType::NO_ZERO);
+    checker.writePipe(TLM.mTest,        MyProcess::PypeType::NO_ZERO);
 
-    checker.writePipe(TLM.mOutputSize,  PipeProcess::PypeType::NO_ZERO);
-    checker.writePipe(TLM.mOutput,      PipeProcess::PypeType::NO_ZERO);
+    checker.writePipe(TLM.mOutputSize,  MyProcess::PypeType::NO_ZERO);
+    checker.writePipe(TLM.mOutput,      MyProcess::PypeType::NO_ZERO);
 
-    checker.writePipe(TLM.mAnswerSize,  PipeProcess::PypeType::NO_ZERO);
-    checker.writePipe(TLM.mAnswer,      PipeProcess::PypeType::NO_ZERO);
+    checker.writePipe(TLM.mAnswerSize,  MyProcess::PypeType::NO_ZERO);
+    checker.writePipe(TLM.mAnswer,      MyProcess::PypeType::NO_ZERO);
 
 #ifdef _DBG_
     WD_LOG("Test: " + TLM.mTest + "\nOutput: " + TLM.mOutput + "\nAnswer: " + TLM.mAnswer);

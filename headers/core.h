@@ -15,6 +15,7 @@
 #include "testlib_message.h"
 #include "problem_information.h"
 #include "submission_information.h"
+#include "my_process.h"
 
 class Core
 {

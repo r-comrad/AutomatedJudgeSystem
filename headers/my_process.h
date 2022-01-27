@@ -29,8 +29,8 @@
 class MyProcess
 {
 public:
-	MyProcess();
-	virtual ~MyProcess();
+	MyProcess(const std::vector<char*>& aParameters);
+	~MyProcess();
 
 	bool run(uint_16 aTimeLimit = MAX_TIME_LIMIT);
 	std::pair<uint_64, uint_64> runWithLimits(uint_64 aTimeLimit, 
@@ -45,8 +45,8 @@ protected:
 	//void create(std::string aName, std::string aParameters);
     void create(const std::vector<char*>& aParameters);
 
-	virtual void IORedirection() = 0;
-	virtual void closeHandles() = 0;
+	void IORedirection() ;
+	void closeHandles() ;
 
 private:
 #ifdef BILL_WINDOWS
@@ -61,6 +61,26 @@ private:
 
 	DWORD getExitCode(HANDLE&);
 	bool killProcess(PROCESS_INFORMATION&);
+#endif // BILL_WINDOWS
+
+public:
+    enum PypeType { ZERO = 0, NO_ZERO = 1 };
+
+    void readPipe(std::string& result);
+    void writePipe(std::string& aMessage, PypeType aType = ZERO);
+
+//private:
+//    void IORedirection();
+//    void closeHandles();
+
+#ifdef BILL_WINDOWS
+    HANDLE mThisSTDIN;
+	HANDLE mThisSTDOUT;
+	HANDLE mChildSTDIN;
+	HANDLE mChildSTDOUT;
+#else
+    int mPipeA[2];
+    int mPipeB[2];
 #endif // BILL_WINDOWS
 };
 

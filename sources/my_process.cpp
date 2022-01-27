@@ -7,7 +7,19 @@
 #include <unistd.h>
 #endif
 
-MyProcess::MyProcess()
+//MyProcess::MyProcess()
+//#ifdef BILL_WINDOWS
+//:
+//    mStartupInfo    ({ 0 })
+//#endif
+//{
+//#ifdef BILL_WINDOWS
+//    ZeroMemory(&mProcessInfo, sizeof(PROCESS_INFORMATION));
+//#endif
+//}
+
+
+MyProcess::MyProcess(const std::vector<char*>& aParameters)
 #ifdef BILL_WINDOWS
 :
     mStartupInfo    ({ 0 })
@@ -16,6 +28,9 @@ MyProcess::MyProcess()
 #ifdef BILL_WINDOWS
     ZeroMemory(&mProcessInfo, sizeof(PROCESS_INFORMATION));
 #endif
+    IORedirection   ();
+    create          (aParameters);
+
 }
 
 MyProcess::~MyProcess() {}
@@ -144,7 +159,12 @@ MyProcess::create(const std::vector<char*>& aParameters)
     }
     else if(!t)
     {
-        execv(aParameters[0], &aParameters[0]);
+        //write(mChildPipes[1], aMessage.c_str(),  aMessage.size());
+        dup2(mPipeA[0], STDIN_FILENO);
+        dup2(mPipeB[1], STDOUT_FILENO);
+//        dup2(mChildPipes[0], STDIN_FILENO);
+//        dup2(mParentPipes[1], STDOUT_FILENO);
+        execvp(aParameters[0], &aParameters[0]);
     }
     else
     {
@@ -293,5 +313,143 @@ MyProcess::killProcess
     return true;
 }
 #endif // BILL_WINDOWS
+
+//--------------------------------------------------------------------------------
+
+void
+MyProcess::readPipe(std::string& result)
+{
+#ifdef PIPE_LOG_OUTPUT
+    WD_LOG("Reading from pipe");
+#endif // !PIPE_LOG_OUTPUT
+
+#ifdef BILL_WINDOWS
+    char buf[1024];
+    memset(buf, 0, sizeof(buf));
+    unsigned long bread = 0;
+    unsigned long avail = 0;
+
+    while (bread == 0 && avail == 0)
+    {
+        PeekNamedPipe(mThisSTDIN, buf, 1023, &bread, &avail, NULL);
+    }
+
+    memset(buf, 0, sizeof(buf));
+    bread = 1024;
+    result.clear();
+    while (bread >= 1023)
+    {
+        memset(buf, 0, sizeof(buf));
+        ReadFile(mThisSTDIN, buf, 1023, &bread, NULL);
+        result += std::string(buf);
+    }
+#elif defined(LINUS_LINUX)
+    result.clear();
+    char buf[1024];
+    memset(buf, 0, sizeof(buf));
+    while(read(mPipeB[0], &buf, 1024) == 1024)
+    {
+        result += std::string(buf);
+        memset(buf, 0, sizeof(buf));
+    }
+    result += std::string(buf);
+
+//    char buf[1024];
+//    while (read(mPipefd[0], &buf, 1) > 0)
+//        write(STDOUT_FILENO, &buf, 1);
+//    close(mPipefd[0]);
+#endif
+
+#ifdef PIPE_LOG_OUTPUT
+    WD_END_LOG;
+#endif // !PIPE_LOG_OUTPUT
+}
+
+void
+MyProcess::writePipe(std::string& aMessage, PypeType aType)
+{
+#ifdef PIPE_LOG_OUTPUT
+    WD_LOG("Writing from pipe");
+#endif // !PIPE_LOG_OUTPUT
+
+#ifdef BILL_WINDOWS
+    unsigned long bread;
+    //WriteFile(mThisSTDOUT, aMessage.c_str(), aMessage.size()
+    //    + ((aType == ZERO) ? 1 : 0), &bread, NULL);
+    WriteFile(mThisSTDOUT, aMessage.c_str(), aMessage.size(), &bread, NULL);
+    if (aType == ZERO)
+    {
+        WriteFile(mThisSTDOUT, "\n", 1, &bread, NULL);
+    }
+#else
+    //aMessage.push_back('\n');
+    write(mPipeA[1], aMessage.c_str(),  aMessage.size());
+    if (aType == ZERO)
+    {
+        write(mPipeA[1], "\n\0",  2);
+    }
+//    write(mPipefd[1], aMessage.c_str(), aMessage.size());
+//    if (aType == ZERO)
+//    {
+//        write(mPipefd[1], "\n", 1);
+//    }
+//    close(mPipefd[1]);
+#endif // BILL_WINDOWS
+
+#ifdef PIPE_LOG_OUTPUT
+    WD_LOG("write " + std::to_string(bread) + " bites\n");
+    WD_END_LOG;
+#endif // !PIPE_LOG_OUTPUT
+
+}
+
+void
+MyProcess::IORedirection()
+{
+    WD_LOG("Rederecting input and output to pipe");
+
+#ifdef BILL_WINDOWS
+    SECURITY_ATTRIBUTES securatyAttributes;
+    securatyAttributes.nLength = sizeof(SECURITY_ATTRIBUTES);
+    securatyAttributes.lpSecurityDescriptor = NULL;
+    securatyAttributes.bInheritHandle = true;
+
+    if (!CreatePipe(&mChildSTDIN, &mThisSTDOUT, &securatyAttributes, 0))
+    {
+        WD_ERROR(process.pipe.0, "Can't create pipe ");
+    }
+
+    if (!CreatePipe(&mThisSTDIN, &mChildSTDOUT, &securatyAttributes, 0))
+    {
+        WD_ERROR(process.pipe.1, "Can't create pipe ");
+    }
+    //else if (aType == Process::IOType::MIXED) {}
+
+    //GetStartupInfo(&mStartupInfo);
+    ZeroMemory(&mStartupInfo, sizeof(STARTUPINFO));
+    mStartupInfo.cb = sizeof(STARTUPINFO);
+    mStartupInfo.dwFlags |= STARTF_USESTDHANDLES;
+
+    mStartupInfo.hStdInput = mChildSTDIN;
+    mStartupInfo.hStdError = mChildSTDOUT;
+    mStartupInfo.hStdOutput = mChildSTDOUT;
+#elif defined(LINUS_LINUX)
+    pipe(mPipeA);
+    pipe(mPipeB);
+#endif // BILL_WINDOWS
+
+    WD_END_LOG;
+}
+
+void
+MyProcess::closeHandles()
+{
+#ifdef BILL_WINDOWS
+    CloseHandle(mChildSTDIN);
+    CloseHandle(mChildSTDOUT);
+#endif // BILL_WINDOWS
+}
+
+//--------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------
