@@ -19,12 +19,16 @@
 //}
 
 
+
 MyProcess::MyProcess(const std::vector<char*>& aParameters)
 #ifdef BILL_WINDOWS
 :
     mStartupInfo    ({ 0 })
+#elif defined(LINUS_LINUX)
+   // mIsPaused       (true)
 #endif
 {
+    //bool MyProcess::mIsPaused = false;
 #ifdef BILL_WINDOWS
     ZeroMemory(&mProcessInfo, sizeof(PROCESS_INFORMATION));
 #endif
@@ -54,6 +58,7 @@ MyProcess::run(uint_16 aTimeLimit)
     //sint_32 status;
     //int status;
     //wait(&status);
+    //kill(mChildPID, SIGCONT);
     wait(NULL);
 #endif
     WD_END_LOG;
@@ -61,26 +66,48 @@ MyProcess::run(uint_16 aTimeLimit)
     return true;
 }
 
+void
+MyProcess::setLimits(uint_64 aTimeLimit, uint_64 aMemoryLimit)
+{
+    mTimeLimit = aTimeLimit;
+    mMemoryLimit = aMemoryLimit;
+}
+
+#ifdef LINUS_LINUX
+//void
+//MyProcess::handleContinueSignal(int sig)
+//{
+//    mIsPaused = false;
+//}
+//void handleContinueSignal2(int sig) {
+//    myGlobalStaticContinueVariable = 1; // Or some other handling code
+//}
+#endif // LINUS_LINUX
+
 std::pair<uint_64, uint_64>
-MyProcess::runWithLimits
-(
-    uint_64 aTimeLimit,
-    uint_64 aMemoryLimit
-)
+MyProcess::runWithLimits()
+//MyProcess::runWithLimits
+//(
+//    uint_64 aTimeLimit,
+//    uint_64 aMemoryLimit
+//)
 {
     WD_LOG("Runing process with time and memory evaluation");
-
+#if defined(BILL_WINDOWS)
     int reservedTime = 200;
     //long long startTime = getMillisecondsNow();
     long long startTime = getCPUTime();
+#endif
 
-    if (!run(aTimeLimit)) return { -1, -1 };
+    if (!run(mTimeLimit)) return { -1, -1 };
 
     //long long endTime = getMillisecondsNow();
+#if defined(BILL_WINDOWS)
     long long endTime = getCPUTime();
     uint_64 timeUsage = endTime - startTime;
-
     uint_64 memoryUsage = 0;
+#endif
+
 #ifdef BILL_WINDOWS
     memoryUsage = mFuture.get();
 #endif // BILL_WINDOWS
@@ -152,18 +179,34 @@ MyProcess::create(const std::vector<char*>& aParameters)
     delete cmd;
 #endif
 #ifdef LINUS_LINUX
-    uint_32 t=fork();
-    if(t == -1)
+    //signal(SIGCONT, MyProcess::handleContinueSignal);
+
+    mChildPID = fork();
+    if(mChildPID == -1)
     {
-        WD_ERROR(process.linux.0, "");
+        WD_ERROR(process.linux.0, "Can't create process");
     }
-    else if(!t)
+    else if(!mChildPID)
     {
         //write(mChildPipes[1], aMessage.c_str(),  aMessage.size());
         dup2(mPipeA[0], STDIN_FILENO);
         dup2(mPipeB[1], STDOUT_FILENO);
+
+        rlimit timeLimit;
+        timeLimit.rlim_cur = mTimeLimit;
+        timeLimit.rlim_max = mTimeLimit;
+        setrlimit(RLIMIT_CPU,&timeLimit);
+
+        rlimit memoryLimit;
+        timeLimit.rlim_cur = mMemoryLimit;
+        timeLimit.rlim_max = mMemoryLimit;
+        setrlimit(RLIMIT_CPU,&timeLimit);
+
 //        dup2(mChildPipes[0], STDIN_FILENO);
 //        dup2(mParentPipes[1], STDOUT_FILENO);
+//        signal(SIGCONT, handleContinueSignal2);
+        //if (mIsPaused) pause();
+
         execvp(aParameters[0], &aParameters[0]);
     }
     else

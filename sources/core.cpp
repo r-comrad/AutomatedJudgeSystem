@@ -289,9 +289,10 @@ Core::pipesTesting
     }
     mGetTestLock.unlock();
 
+    TLM.makeTestSizes();
+
     MyProcess code(mSolutionParameters);
 
-    TLM.makeTestSizes();   
     code.writePipe(TLM.mTest);
     std::pair<uint_64, uint_64> cur = code.runWithLimits(mProblemInfo.mTimeLimit, mProblemInfo.mMemoryLimit);
     if (cur.first == -1)
@@ -309,8 +310,8 @@ Core::pipesTesting
 
     MyProcess checker(mCheckerParameters);
 
-    TLM.mAnswer.pop_back();
-    TLM.mAnswer.pop_back();
+//    TLM.mAnswer.pop_back();
+//    TLM.mAnswer.pop_back();
     TLM.makeOutputSizes();
     TLM.makeAnswerSizes();
 

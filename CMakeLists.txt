@@ -6,9 +6,13 @@ add_library(tutorial_compiler_flags INTERFACE)
 #add_subdirectory(sources)
 #add_subdirectory(headers)
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -Wl,--no-as-needed -ldl -D_DEBUG")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -Wl,--no-as-needed -ldl -D_DEBUG")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -Wl,--no-as-needed -ldl")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_DEBUG")
+OPTION(CHINESE_DEBUG ON)
 
-set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ./)
+
+set(EXECUTABLE_OUTPUT_PATH "../")
 
 #file (GLOB ChineseTester  CONFIGURE_DEPENDS "*.h" "*.cpp")
 include_directories(ChineseTester headers)
@@ -18,7 +22,6 @@ include_directories(ChineseTesters sources)
 #target_link_libraries(ChineseTester LINK_PUBLIC sqlite3)
 add_compile_options(-l sqlite3)
 
-OPTION(CHINESE_DEBUG ON)
 
 
 add_executable(ChineseTester
@@ -46,3 +49,7 @@ add_executable(ChineseTester
         headers/submission_information.h
         headers/testlib_message.h
         )
+
+#set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "ChineseTester_R_NewVegasEdition_V0")
+set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "ChineseTester_D_NewVegasEdition_V0")
+set_target_properties(${PROJECT_NAME}  PROPERTIES SUFFIX ".81")

@@ -23,7 +23,7 @@ getMainPath() {
         throw std::string("readlink() failed");
     std::string str(buf);
     int i = str.size() - 1;
-    for(int j = 0; j < 2; --i)
+    for(int j = 0; j < 1; --i)
     {
         if (str[i] == '/') ++j;
     }

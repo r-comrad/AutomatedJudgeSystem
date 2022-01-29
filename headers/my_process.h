@@ -33,8 +33,8 @@ public:
 	~MyProcess();
 
 	bool run(uint_16 aTimeLimit = MAX_TIME_LIMIT);
-	std::pair<uint_64, uint_64> runWithLimits(uint_64 aTimeLimit, 
-		uint_64 aMemoryLimit);
+	std::pair<uint_64, uint_64> runWithLimits();
+    void setLimits(uint_64 aTimeLimit, uint_64 aMemoryLimit);
 
 protected:
 #ifdef BILL_WINDOWS
@@ -49,6 +49,8 @@ protected:
 	void closeHandles() ;
 
 private:
+    uint_64 mTimeLimit;
+    uint_64 mMemoryLimit
 #ifdef BILL_WINDOWS
 	PROCESS_INFORMATION mProcessInfo;
 
@@ -81,6 +83,10 @@ public:
 #else
     int mPipeA[2];
     int mPipeB[2];
+    int mChildPID;
+//public:
+    //static thread_local bool mIsPaused;
+   // static void handleContinueSignal(int sig);
 #endif // BILL_WINDOWS
 };
 
