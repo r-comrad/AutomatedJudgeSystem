@@ -29,7 +29,7 @@
 class MyProcess
 {
 public:
-	MyProcess(const std::vector<char*>& aParameters);
+	MyProcess(const std::vector<char*>& aParameters, uint_64 aTimeLimit=0, uint_64 aMemoryLimit=0);
 	~MyProcess();
 
 	bool run(uint_16 aTimeLimit = MAX_TIME_LIMIT);
@@ -50,7 +50,7 @@ protected:
 
 private:
     uint_64 mTimeLimit;
-    uint_64 mMemoryLimit
+    uint_64 mMemoryLimit;
 #ifdef BILL_WINDOWS
 	PROCESS_INFORMATION mProcessInfo;
 

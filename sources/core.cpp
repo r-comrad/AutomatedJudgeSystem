@@ -5,7 +5,7 @@
 
 #include <math.h>
 
-#define THREAD_COUNTS 30
+#define THREAD_COUNTS 1
 
 Core::Core
 (
@@ -173,11 +173,11 @@ Core::check
 )
 {
 #ifdef _DBG_
-    mProblemInfo.mMemoryLimit += 1000000;
+    //mProblemInfo.mMemoryLimit += 1000000;
 #endif // _DBG_
 
     mDBQ.prepareTestsStatement(mProblemInfo);
-   //pipesTesting(0);
+   pipesTesting(0);
 
     for (bool isStillTesting = true; isStillTesting;)
     {
@@ -291,10 +291,11 @@ Core::pipesTesting
 
     TLM.makeTestSizes();
 
-    MyProcess code(mSolutionParameters);
+    MyProcess code(mSolutionParameters, mProblemInfo.mTimeLimit, mProblemInfo.mMemoryLimit);
 
     code.writePipe(TLM.mTest);
-    std::pair<uint_64, uint_64> cur = code.runWithLimits(mProblemInfo.mTimeLimit, mProblemInfo.mMemoryLimit);
+    //std::pair<uint_64, uint_64> cur = code.runWithLimits(mProblemInfo.mTimeLimit, mProblemInfo.mMemoryLimit);
+    std::pair<uint_64, uint_64> cur = code.runWithLimits();
     if (cur.first == -1)
     {
         mChecksInfo[aThreadNum].mResult = "tle";

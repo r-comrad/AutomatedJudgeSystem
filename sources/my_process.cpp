@@ -20,7 +20,7 @@
 
 
 
-MyProcess::MyProcess(const std::vector<char*>& aParameters)
+MyProcess::MyProcess(const std::vector<char*>& aParameters, uint_64 aTimeLimit, uint_64 aMemoryLimit)
 #ifdef BILL_WINDOWS
 :
     mStartupInfo    ({ 0 })
@@ -33,6 +33,7 @@ MyProcess::MyProcess(const std::vector<char*>& aParameters)
     ZeroMemory(&mProcessInfo, sizeof(PROCESS_INFORMATION));
 #endif
     IORedirection   ();
+    setLimits(aTimeLimit, aMemoryLimit);
     create          (aParameters);
 
 }
@@ -105,12 +106,24 @@ MyProcess::runWithLimits()
 #if defined(BILL_WINDOWS)
     long long endTime = getCPUTime();
     uint_64 timeUsage = endTime - startTime;
-    uint_64 memoryUsage = 0;
+#else
+    uint_64 timeUsage = 0;
 #endif
 
 #ifdef BILL_WINDOWS
-    memoryUsage = mFuture.get();
+    uint_64 memoryUsage = mFuture.get();
+#else
+    uint_64 memoryUsage = 0;
 #endif // BILL_WINDOWS
+
+    rusage resourseUsage;
+    int status;
+    wait4(mChildPID,&status,0,&resourseUsage);
+
+    timeUsage += resourseUsage.ru_utime.tv_sec*1000000L;
+    timeUsage += resourseUsage.ru_utime.tv_usec;
+    timeUsage += resourseUsage.ru_stime.tv_sec*1000000L;
+    timeUsage += resourseUsage.ru_stime.tv_usec;
 
     WD_LOG("time usage: " << timeUsage);
     WD_LOG("memory usage: " << memoryUsage);
@@ -200,7 +213,7 @@ MyProcess::create(const std::vector<char*>& aParameters)
         rlimit memoryLimit;
         timeLimit.rlim_cur = mMemoryLimit;
         timeLimit.rlim_max = mMemoryLimit;
-        setrlimit(RLIMIT_CPU,&timeLimit);
+        setrlimit(RLIMIT_DATA,&timeLimit);
 
 //        dup2(mChildPipes[0], STDIN_FILENO);
 //        dup2(mParentPipes[1], STDOUT_FILENO);
