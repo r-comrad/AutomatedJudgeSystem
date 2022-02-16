@@ -47,6 +47,7 @@ private:
 
 	MDatabaseQuery mDBQ;
 	ProblemInformation mProblemInfo;
+    std::mutex mProblemInfoLock;
 
 	Core::Language getLanguage(std::string aFileName);
 	void compile
@@ -62,6 +63,7 @@ private:
 	);
 
 	void check();
+    bool resultEvoluation(int aCheckNum);
 	//void fileTesting(uint_32 aTestNum, std::string& aSolutionName, std::string& aCheckerName);
 	void pipesTesting(int aThreadNum);
 	//void pipesTesting(int aThreadNum, std::string aSolutionName, std::string aCheckerName);

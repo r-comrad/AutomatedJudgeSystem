@@ -52,4 +52,4 @@ add_executable(ChineseTester
 
 #set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "ChineseTester_R_NewVegasEdition_V0")
 set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "ChineseTester_D_NewVegasEdition_V0")
-set_target_properties(${PROJECT_NAME}  PROPERTIES SUFFIX ".81")
+set_target_properties(${PROJECT_NAME}  PROPERTIES SUFFIX ".87")

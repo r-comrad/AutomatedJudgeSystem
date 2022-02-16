@@ -27,7 +27,7 @@ MDatabaseQuery::prepareForTesting
     getIDInformation(aSudmissionInformation);
     getLimitsInformation(aSudmissionInformation);
     //aSudmissionInformation.id += 200;
-    aSudmissionInformation.mTimeLimit *= 1000;
+    aSudmissionInformation.mTimeLimit /= 1000;
 }
 
 void 

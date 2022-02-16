@@ -11,11 +11,15 @@
 #endif
 
 #if 0
-#define PIPE_LOG_OUTPUT
+#define PIPE_LOGS
 #endif
 
 #if 0
 #define COMPILER_LOG_OUTPUT
+#endif
+
+#if 1
+#define CODE_OUTPUT_LOG
 #endif
 
 #if defined(WIN32) || defined(WIN_BY_ME)

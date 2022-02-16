@@ -24,12 +24,18 @@
 #else
 #include <wait.h>
 #include <unistd.h>
+#include <fcntl.h>
 #endif
 
 class MyProcess
 {
 public:
-	MyProcess(const std::vector<char*>& aParameters, uint_64 aTimeLimit=0, uint_64 aMemoryLimit=0);
+	MyProcess
+    (
+            const std::vector<char*>& aParameters,
+            uint_64 aTimeLimit=1e1,
+            uint_64 aMemoryLimit=1e9
+    );
 	~MyProcess();
 
 	bool run(uint_16 aTimeLimit = MAX_TIME_LIMIT);

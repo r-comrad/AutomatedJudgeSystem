@@ -5,7 +5,7 @@
 
 #include <math.h>
 
-#define THREAD_COUNTS 1
+#define THREAD_COUNTS 30
 
 Core::Core
 (
@@ -16,6 +16,7 @@ Core::Core
     mChecksInfo     (THREAD_COUNTS),
     mFinishedTest   (0)
 {
+    mProblemInfo.mResult = "ok";
     for (uint_32 i = 0; i < THREAD_COUNTS; ++i)
     {
         mChecks.push_back(new std::thread([](){}));
@@ -58,7 +59,8 @@ Core::run
     mProblemInfo.mSolutionFileName =  makeWindowString(mProblemInfo.mSolutionFileName);
     mProblemInfo.mCheckerFileName = makeWindowString(mProblemInfo.mCheckerFileName);
 #endif // BILL_WINDOWS
-
+    mProblemInfo.mSolutionFileName.clear();
+    mProblemInfo.mSolutionFileName = "2/plus.cpp";
     makeExecutable
     (
         MAEDIA + mProblemInfo.mSolutionFileName,
@@ -163,6 +165,45 @@ Core::makeExecutable
     return compile(aFileName, aOutputName, language, aCpmandParameters);
 }
 
+bool
+Core::resultEvoluation(int aCheckNum)
+{
+    mProblemInfoLock.lock();
+    if (mChecksInfo[aCheckNum].mResult.substr(0, 2) != "ok")
+    {
+        mProblemInfo.mResult = mChecksInfo[aCheckNum].mResult;
+        WD_LOG("Result not okay");
+        WD_LOG("Today result is: " << mProblemInfo.mResult);
+        mProblemInfoLock.unlock();
+        return false;
+    }
+    else if (mChecksInfo[aCheckNum].mUsedTime > mProblemInfo.mTimeLimit * 1000000)
+    {
+        mProblemInfo.mResult = "tle";
+        WD_LOG("Result is TLE: wanted " << mProblemInfo.mTimeLimit <<
+                                        " vs received " << mChecksInfo[aCheckNum].mUsedTime);
+        mProblemInfoLock.unlock();
+        return false;
+    }
+    else if (mChecksInfo[aCheckNum].mUsedMemory > mProblemInfo.mMemoryLimit)
+    {
+        mProblemInfo.mResult = "mle";
+        WD_LOG("Result is MLE: wanted " << mProblemInfo.mMemoryLimit <<
+                                        " vs received " << mChecksInfo[aCheckNum].mUsedMemory);
+        mProblemInfoLock.unlock();
+        return false;
+    }
+
+    if (mProblemInfo.mUsedTime < mChecksInfo[aCheckNum].mUsedTime)
+        mProblemInfo.mUsedTime = mChecksInfo[aCheckNum].mUsedTime;
+    if (mProblemInfo.mUsedMemory < mChecksInfo[aCheckNum].mUsedMemory)
+        mProblemInfo.mUsedMemory = mChecksInfo[aCheckNum].mUsedMemory;
+    mProblemInfoLock.unlock();
+
+    return true;
+    WD_END_LOG;
+}
+
 void
 Core::check
 (
@@ -177,7 +218,7 @@ Core::check
 #endif // _DBG_
 
     mDBQ.prepareTestsStatement(mProblemInfo);
-   pipesTesting(0);
+   //pipesTesting(0);
 
     for (bool isStillTesting = true; isStillTesting;)
     {
@@ -194,7 +235,10 @@ Core::check
                 ++mFinishedTest;
                 isStillTesting = true;
                 delete mChecks[i];
-                if (!mProblemInfo.mTestsAreOver) {
+
+                isStillTesting = resultEvoluation(i);
+
+                if (!mProblemInfo.mTestsAreOver && isStillTesting) {
                     mChecksInfo[i].mIsFinishedTesting = false;
                     mChecks[i] = new std::thread(&Core::pipesTesting, this,
                         i//, std::ref(aSolutionName), std::ref(aCheckerName)
@@ -205,46 +249,10 @@ Core::check
                 {
                     mChecks[i] = NULL;
                 }
-
-                if (mProblemInfo.mUsedTime < mChecksInfo[i].mUsedTime)
-                    mProblemInfo.mUsedTime = mChecksInfo[i].mUsedTime;
-                if (mProblemInfo.mUsedMemory < mChecksInfo[i].mUsedMemory)
-                    mProblemInfo.mUsedMemory = mChecksInfo[i].mUsedMemory;
-                mProblemInfo.mResult = mChecksInfo[i].mResult;
-
-                needEvaluateResult = true;
             }
 
             mChecksMutexs[i].unlock();
 
-            if (needEvaluateResult)
-            {
-                if (mProblemInfo.mResult.substr(0, 2) != "ok")
-                {
-                    WD_LOG("Result not okay");
-                    WD_LOG("Today result is: " << mProblemInfo.mResult);
-                    isStillTesting = false;
-                    break;
-                }
-                else if (mProblemInfo.mTimeLimit < mProblemInfo.mUsedTime)
-                {
-                    mProblemInfo.mResult = "tle";
-                    WD_LOG("Result is TLE: wanted " << mProblemInfo.mTimeLimit <<
-                        " vs received " << mProblemInfo.mUsedTime);
-                    isStillTesting = false;
-                    break;
-                }
-                else if (mProblemInfo.mMemoryLimit < mProblemInfo.mUsedMemory)
-                {
-                    mProblemInfo.mResult = "mle";
-                    WD_LOG("Result is MLE: wanted " << mProblemInfo.mMemoryLimit <<
-                        " vs received " << mProblemInfo.mUsedMemory);
-                    isStillTesting = false;
-                    break;
-                }
-
-                WD_END_LOG;
-            }
         }
     }
 
@@ -272,7 +280,13 @@ Core::pipesTesting
 {
     WD_LOG("Checking test #" << aThreadNum + mFinishedTest);
     WD_LOG("Runing test #" << aThreadNum + mFinishedTest);
+if (aThreadNum == 100)
+{
+    int yy = 0;
+    ++yy;
+std::cout << yy;
 
+}
     TestLibMessage TLM;
     mGetTestLock.lock();
     if (!mProblemInfo.mTestsAreOver)
@@ -283,6 +297,8 @@ Core::pipesTesting
     {
         mChecksMutexs[aThreadNum].lock();
         mChecksInfo[aThreadNum].mIsFinishedTesting = true;
+        mChecksInfo[aThreadNum].mResult = "ok";
+        WD_LOG("Tests are over");
         mChecksMutexs[aThreadNum].unlock();
         mGetTestLock.unlock();
         return;
@@ -313,6 +329,7 @@ Core::pipesTesting
 
 //    TLM.mAnswer.pop_back();
 //    TLM.mAnswer.pop_back();
+
     TLM.makeOutputSizes();
     TLM.makeAnswerSizes();
 
@@ -325,7 +342,7 @@ Core::pipesTesting
     checker.writePipe(TLM.mAnswerSize,  MyProcess::PypeType::NO_ZERO);
     checker.writePipe(TLM.mAnswer,      MyProcess::PypeType::NO_ZERO);
 
-#ifdef _DBG_
+#if defined(_DBG_) && defined (CODE_OUTPUT_LOG)
     WD_LOG("Test: " + TLM.mTest + "\nOutput: " + TLM.mOutput + "\nAnswer: " + TLM.mAnswer);
 #endif
 

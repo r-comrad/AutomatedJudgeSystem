@@ -22,9 +22,10 @@
 
 MyProcess::MyProcess(const std::vector<char*>& aParameters, uint_64 aTimeLimit, uint_64 aMemoryLimit)
 #ifdef BILL_WINDOWS
-:
     mStartupInfo    ({ 0 })
 #elif defined(LINUS_LINUX)
+//        mTimeLimit(1e8),
+//        mMemoryLimit(1e8)
    // mIsPaused       (true)
 #endif
 {
@@ -61,6 +62,7 @@ MyProcess::run(uint_16 aTimeLimit)
     //wait(&status);
     //kill(mChildPID, SIGCONT);
     wait(NULL);
+    //wait4(mChildPID,NULL,0,NULL);
 #endif
     WD_END_LOG;
 
@@ -98,9 +100,10 @@ MyProcess::runWithLimits()
     int reservedTime = 200;
     //long long startTime = getMillisecondsNow();
     long long startTime = getCPUTime();
+    if (!run(mTimeLimit)) return { -1, -1 };
 #endif
 
-    if (!run(mTimeLimit)) return { -1, -1 };
+
 
     //long long endTime = getMillisecondsNow();
 #if defined(BILL_WINDOWS)
@@ -119,6 +122,9 @@ MyProcess::runWithLimits()
     rusage resourseUsage;
     int status;
     wait4(mChildPID,&status,0,&resourseUsage);
+    int gg = WIFEXITED(status);
+    if (!WIFEXITED(status)) return {-1, -1};
+    //wait(NULL);
 
     timeUsage += resourseUsage.ru_utime.tv_sec*1000000L;
     timeUsage += resourseUsage.ru_utime.tv_usec;
@@ -202,8 +208,19 @@ MyProcess::create(const std::vector<char*>& aParameters)
     else if(!mChildPID)
     {
         //write(mChildPipes[1], aMessage.c_str(),  aMessage.size());
+
+//        fcntl(mPipeA[0], F_SETPIPE_SZ, 65336 * 2);
+//        fcntl(mPipeA[1], F_SETPIPE_SZ, 65336 * 2);
+//        fcntl(mPipeB[0], F_SETPIPE_SZ, 65336 * 2);
+//        fcntl(mPipeB[1], F_SETPIPE_SZ, 65336 * 2);
+
         dup2(mPipeA[0], STDIN_FILENO);
         dup2(mPipeB[1], STDOUT_FILENO);
+
+//        fcntl(mPipeA[0], F_SETPIPE_SZ, 65336 * 2);
+//        fcntl(mPipeA[1], F_SETPIPE_SZ, 65336 * 2);
+//        fcntl(mPipeB[0], F_SETPIPE_SZ, 65336 * 2);
+//        fcntl(mPipeB[1], F_SETPIPE_SZ, 65336 * 2);
 
         rlimit timeLimit;
         timeLimit.rlim_cur = mTimeLimit;
@@ -211,9 +228,9 @@ MyProcess::create(const std::vector<char*>& aParameters)
         setrlimit(RLIMIT_CPU,&timeLimit);
 
         rlimit memoryLimit;
-        timeLimit.rlim_cur = mMemoryLimit;
-        timeLimit.rlim_max = mMemoryLimit;
-        setrlimit(RLIMIT_DATA,&timeLimit);
+        memoryLimit.rlim_cur = mMemoryLimit;
+        memoryLimit.rlim_max = mMemoryLimit;
+        setrlimit(RLIMIT_STACK ,&memoryLimit);
 
 //        dup2(mChildPipes[0], STDIN_FILENO);
 //        dup2(mParentPipes[1], STDOUT_FILENO);
@@ -221,10 +238,14 @@ MyProcess::create(const std::vector<char*>& aParameters)
         //if (mIsPaused) pause();
 
         execvp(aParameters[0], &aParameters[0]);
+        //WD_ERROR(linux.exec.0, "cant start process");
     }
     else
     {
-
+//        fcntl(mPipeA[0], F_SETPIPE_SZ, 65336 * 2);
+//        fcntl(mPipeA[1], F_SETPIPE_SZ, 65336 * 2);
+//        fcntl(mPipeB[0], F_SETPIPE_SZ, 65336 * 2);
+//        fcntl(mPipeB[1], F_SETPIPE_SZ, 65336 * 2);
     }
 
 
@@ -375,7 +396,7 @@ MyProcess::killProcess
 void
 MyProcess::readPipe(std::string& result)
 {
-#ifdef PIPE_LOG_OUTPUT
+#ifdef PIPE_LOGS
     WD_LOG("Reading from pipe");
 #endif // !PIPE_LOG_OUTPUT
 
@@ -416,7 +437,7 @@ MyProcess::readPipe(std::string& result)
 //    close(mPipefd[0]);
 #endif
 
-#ifdef PIPE_LOG_OUTPUT
+#ifdef PIPE_LOGS
     WD_END_LOG;
 #endif // !PIPE_LOG_OUTPUT
 }
@@ -424,7 +445,7 @@ MyProcess::readPipe(std::string& result)
 void
 MyProcess::writePipe(std::string& aMessage, PypeType aType)
 {
-#ifdef PIPE_LOG_OUTPUT
+#ifdef PIPE_LOGS
     WD_LOG("Writing from pipe");
 #endif // !PIPE_LOG_OUTPUT
 
@@ -452,12 +473,14 @@ MyProcess::writePipe(std::string& aMessage, PypeType aType)
 //    close(mPipefd[1]);
 #endif // BILL_WINDOWS
 
-#ifdef PIPE_LOG_OUTPUT
+#ifdef PIPE_LOGS
     WD_LOG("write " + std::to_string(bread) + " bites\n");
     WD_END_LOG;
 #endif // !PIPE_LOG_OUTPUT
 
 }
+
+#define BUFFER_SIZE 65336 * 10
 
 void
 MyProcess::IORedirection()
@@ -490,8 +513,16 @@ MyProcess::IORedirection()
     mStartupInfo.hStdError = mChildSTDOUT;
     mStartupInfo.hStdOutput = mChildSTDOUT;
 #elif defined(LINUS_LINUX)
+
     pipe(mPipeA);
     pipe(mPipeB);
+
+
+    fcntl(mPipeA[0], F_SETPIPE_SZ, BUFFER_SIZE);
+    fcntl(mPipeA[1], F_SETPIPE_SZ, BUFFER_SIZE);
+    fcntl(mPipeB[0], F_SETPIPE_SZ, BUFFER_SIZE);
+    fcntl(mPipeB[1], F_SETPIPE_SZ, BUFFER_SIZE);
+
 #endif // BILL_WINDOWS
 
     WD_END_LOG;
