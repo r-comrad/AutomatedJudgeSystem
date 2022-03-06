@@ -18,10 +18,14 @@
 //#endif
 //}
 
-
-
-MyProcess::MyProcess(const std::vector<char*>& aParameters, uint_64 aTimeLimit, uint_64 aMemoryLimit)
+MyProcess::MyProcess
+(
+    const std::vector<char*>& aParameters,
+    uint_64 aTimeLimit,
+    uint_64 aMemoryLimit
+) :
 #ifdef BILL_WINDOWS
+    
     mStartupInfo    ({ 0 })
 #elif defined(LINUS_LINUX)
 //        mTimeLimit(1e8),
@@ -29,12 +33,13 @@ MyProcess::MyProcess(const std::vector<char*>& aParameters, uint_64 aTimeLimit, 
    // mIsPaused       (true)
 #endif
 {
+    STARTUPINFOA ggStartupInfo({ 0 });
     //bool MyProcess::mIsPaused = false;
 #ifdef BILL_WINDOWS
     ZeroMemory(&mProcessInfo, sizeof(PROCESS_INFORMATION));
 #endif
     IORedirection   ();
-    setLimits(aTimeLimit, aMemoryLimit);
+    setLimits       (aTimeLimit, aMemoryLimit);
     create          (aParameters);
 
 }
@@ -96,40 +101,37 @@ MyProcess::runWithLimits()
 //)
 {
     WD_LOG("Runing process with time and memory evaluation");
-#if defined(BILL_WINDOWS)
-    int reservedTime = 200;
-    //long long startTime = getMillisecondsNow();
-    long long startTime = getCPUTime();
-    if (!run(mTimeLimit)) return { -1, -1 };
-#endif
 
-
-
-    //long long endTime = getMillisecondsNow();
-#if defined(BILL_WINDOWS)
-    long long endTime = getCPUTime();
-    uint_64 timeUsage = endTime - startTime;
-#else
     uint_64 timeUsage = 0;
-#endif
+    uint_64 memoryUsage = 0;
 
 #ifdef BILL_WINDOWS
-    uint_64 memoryUsage = mFuture.get();
-#else
-    uint_64 memoryUsage = 0;
-#endif // BILL_WINDOWS
+    // BILL_WINDOWS
+    int reservedTime = 200;
+    long long startTime = getCPUTime();
 
+    if (!run(mTimeLimit)) return { -1, -1 };
+
+    long long endTime = getCPUTime();
+    timeUsage = endTime - startTime;
+
+    memoryUsage = mFuture.get();
+    // !BILL_WINDOWS
+#elif defined(LINUS_LINUX)
+    // LINUS_LINUX
     rusage resourseUsage;
     int status;
-    wait4(mChildPID,&status,0,&resourseUsage);
+    wait4(mChildPID, &status, 0, &resourseUsage);
     int gg = WIFEXITED(status);
-    if (!WIFEXITED(status)) return {-1, -1};
+    if (!WIFEXITED(status)) return { -1, -1 };
     //wait(NULL);
 
-    timeUsage += resourseUsage.ru_utime.tv_sec*1000000L;
+    timeUsage += resourseUsage.ru_utime.tv_sec * 1000000L;
     timeUsage += resourseUsage.ru_utime.tv_usec;
-    timeUsage += resourseUsage.ru_stime.tv_sec*1000000L;
+    timeUsage += resourseUsage.ru_stime.tv_sec * 1000000L;
     timeUsage += resourseUsage.ru_stime.tv_usec;
+    // !LINUS_LINUX
+#endif 
 
     WD_LOG("time usage: " << timeUsage);
     WD_LOG("memory usage: " << memoryUsage);

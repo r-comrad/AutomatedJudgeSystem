@@ -5,7 +5,7 @@
 
 #include <math.h>
 
-#define THREAD_COUNTS 30
+#define THREAD_COUNTS 1
 
 Core::Core
 (

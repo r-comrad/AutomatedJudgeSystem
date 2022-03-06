@@ -48,6 +48,7 @@ void handleContinueSignal3(int sig) {
     flaGG = false;
 }
 
+#ifdef LINUS_LINUX
 void foo()
 {
     int pipeA[2];
@@ -112,6 +113,7 @@ void foo()
 
 
 }
+#endif
 #include <limits.h>
 
 int main(int argc, char* argv[])

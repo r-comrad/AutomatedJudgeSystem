@@ -6,13 +6,14 @@
 #define MAX_TIME_LIMIT 5000
 
 #include <string>
+#include <vector>
 #include <iostream>
 
 #include "domain.h"
 
 #ifdef BILL_WINDOWS
+	// BILL_WINDOWS
 #include <future>
-
 #include <windows.h>
 #include <userenv.h>
 #include <psapi.h>
@@ -21,47 +22,77 @@
 #include <atlalloc.h>
 #include <shlwapi.h>
 #include <cstdint>
-#else
+	// !BILL_WINDOWS
+#elif defined(LINUS_LINUX)
 #include <wait.h>
 #include <unistd.h>
 #include <fcntl.h>
-#endif
+	// !LINUS_LINUX
+#endif 
 
 class MyProcess
 {
 public:
+	enum PypeType { ZERO = 0, NO_ZERO = 1 };
+
 	MyProcess
-    (
-            const std::vector<char*>& aParameters,
-            uint_64 aTimeLimit=1e1,
-            uint_64 aMemoryLimit=1e9
-    );
+	(
+		const std::vector<char*>& aParameters,
+#ifdef BILL_WINDOWS
+		// BILL_WINDOWS
+		uint_64 aTimeLimit = 1e1,
+		// !BILL_WINDOWS
+#elif defined(LINUS_LINUX)
+		// LINUS_LINUX
+		uint_64 aTimeLimit = 1e3,
+		// !LINUS_LINUX
+#endif 
+		uint_64 aMemoryLimit = 1e9
+	);
 	~MyProcess();
 
 	bool run(uint_16 aTimeLimit = MAX_TIME_LIMIT);
 	std::pair<uint_64, uint_64> runWithLimits();
-    void setLimits(uint_64 aTimeLimit, uint_64 aMemoryLimit);
 
-protected:
-#ifdef BILL_WINDOWS
-	STARTUPINFOA mStartupInfo;
-#endif // BILL_WINDOWS
+	void setLimits(uint_64 aTimeLimit, uint_64 aMemoryLimit);
 
-	//void create(const std::string& aName, const std::string& aParameters);
-	//void create(std::string aName, std::string aParameters);
-    void create(const std::vector<char*>& aParameters);
 
-	void IORedirection() ;
-	void closeHandles() ;
+
+	void readPipe(std::string& result);
+	void writePipe(std::string& aMessage, PypeType aType = ZERO);
 
 private:
-    uint_64 mTimeLimit;
-    uint_64 mMemoryLimit;
+	uint_64 mTimeLimit;
+	uint_64 mMemoryLimit;
+
 #ifdef BILL_WINDOWS
+	// BILL_WINDOWS
+	STARTUPINFOA mStartupInfo;
 	PROCESS_INFORMATION mProcessInfo;
+
+	HANDLE mThisSTDIN;
+	HANDLE mThisSTDOUT;
+	HANDLE mChildSTDIN;
+	HANDLE mChildSTDOUT;
 
 	std::future<long long> mFuture;
 
+	// !BILL_WINDOWS
+#elif defined(LINUS_LINUX)
+	// LINUS_LINUX
+	int mPipeA[2];
+	int mPipeB[2];
+	int mChildPID;
+
+	// !LINUS_LINUX
+#endif 
+
+	void create(const std::vector<char*>& aParameters);
+
+	void IORedirection();
+	void closeHandles();
+
+#ifdef BILL_WINDOWS
 	long long getMillisecondsNow();
 
 	long long getCurrentMemoryUsage(HANDLE&);
@@ -69,31 +100,7 @@ private:
 
 	DWORD getExitCode(HANDLE&);
 	bool killProcess(PROCESS_INFORMATION&);
-#endif // BILL_WINDOWS
-
-public:
-    enum PypeType { ZERO = 0, NO_ZERO = 1 };
-
-    void readPipe(std::string& result);
-    void writePipe(std::string& aMessage, PypeType aType = ZERO);
-
-//private:
-//    void IORedirection();
-//    void closeHandles();
-
-#ifdef BILL_WINDOWS
-    HANDLE mThisSTDIN;
-	HANDLE mThisSTDOUT;
-	HANDLE mChildSTDIN;
-	HANDLE mChildSTDOUT;
-#else
-    int mPipeA[2];
-    int mPipeB[2];
-    int mChildPID;
-//public:
-    //static thread_local bool mIsPaused;
-   // static void handleContinueSignal(int sig);
-#endif // BILL_WINDOWS
+#endif // !BILL_WINDOWS
 };
 
 //--------------------------------------------------------------------------------

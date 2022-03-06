@@ -14,7 +14,7 @@
 #define PIPE_LOGS
 #endif
 
-#if 0
+#if 1
 #define COMPILER_LOG_OUTPUT
 #endif
 
