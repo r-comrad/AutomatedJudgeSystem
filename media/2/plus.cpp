@@ -7,6 +7,11 @@ using namespace std;
 
 int main()
 {
+		int aa, bb;
+	cin >> aa >> bb;
+	//cout << 0;
+	cout << max(aa, bb);
+	return 0;
 //int sz = 65336 + 201;
 //int sz = 65336 + 210;
 /*

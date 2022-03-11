@@ -27,7 +27,18 @@ MDatabaseQuery::prepareForTesting
     getIDInformation(aSudmissionInformation);
     getLimitsInformation(aSudmissionInformation);
     //aSudmissionInformation.id += 200;
+
+    // TODO: make good timelimits
+#ifdef BILL_WINDOWS
+    // BILL_WINDOWS
+    
+    //aSudmissionInformation.mTimeLimit *= 1000;
+    // !BILL_WINDOWS
+#elif defined(LINUS_LINUX)
+    // LINUS_LINUX
     aSudmissionInformation.mTimeLimit /= 1000;
+    // !LINUS_LINUX
+#endif 
 }
 
 void 

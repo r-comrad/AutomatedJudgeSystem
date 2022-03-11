@@ -17,6 +17,8 @@
 //    ZeroMemory(&mProcessInfo, sizeof(PROCESS_INFORMATION));
 //#endif
 //}
+class A;
+class PipeProcess;
 
 MyProcess::MyProcess
 (
@@ -25,23 +27,24 @@ MyProcess::MyProcess
     uint_64 aMemoryLimit
 ) :
 #ifdef BILL_WINDOWS
-    
     mStartupInfo    ({ 0 })
 #elif defined(LINUS_LINUX)
-//        mTimeLimit(1e8),
-//        mMemoryLimit(1e8)
-   // mIsPaused       (true)
 #endif
 {
-    STARTUPINFOA ggStartupInfo({ 0 });
-    //bool MyProcess::mIsPaused = false;
 #ifdef BILL_WINDOWS
     ZeroMemory(&mProcessInfo, sizeof(PROCESS_INFORMATION));
 #endif
-    IORedirection   ();
-    setLimits       (aTimeLimit, aMemoryLimit);
-    create          (aParameters);
 
+    //if (mType == ProcessType::PIPE)
+    //{
+    //    (dynamic_cast<PipeProcess*> (this))->IORedirection();
+    //    create(aParameters);
+    //}
+    //else
+    //{
+
+    //}
+    //setLimits       (aTimeLimit, aMemoryLimit);
 }
 
 MyProcess::~MyProcess() {}
@@ -110,7 +113,9 @@ MyProcess::runWithLimits()
     int reservedTime = 200;
     long long startTime = getCPUTime();
 
-    if (!run(mTimeLimit)) return { -1, -1 };
+    if (!run(mTimeLimit)) 
+        return { KILLING_PROCESS_TIME_VALUE, 
+        KILLING_PROCESS_MEMORY_VALUE };
 
     long long endTime = getCPUTime();
     timeUsage = endTime - startTime;
@@ -123,7 +128,9 @@ MyProcess::runWithLimits()
     int status;
     wait4(mChildPID, &status, 0, &resourseUsage);
     int gg = WIFEXITED(status);
-    if (!WIFEXITED(status)) return { -1, -1 };
+    if (!WIFEXITED(status)) 
+        return { KILLING_PROCESS_TIME_VALUE,
+        KILLING_PROCESS_MEMORY_VALUE };
     //wait(NULL);
 
     timeUsage += resourseUsage.ru_utime.tv_sec * 1000000L;
@@ -151,7 +158,7 @@ MyProcess::create(const std::vector<char*>& aParameters)
 
     WD_LOG("Creating process name: " << aParameters[0]);
     //WD_LOG("Parameters: " << aParameters[1]);
-#ifdef BILL_WINDOWS
+//#ifdef BILL_WINDOWS
     //std::string ss = aParameters[0];
     char* name = newCharPtrCopy(aParameters[0]);
     if (name[0] == 0) name = NULL;
@@ -198,83 +205,84 @@ MyProcess::create(const std::vector<char*>& aParameters)
     }
     delete name;
     delete cmd;
-#endif
-#ifdef LINUS_LINUX
-    //signal(SIGCONT, MyProcess::handleContinueSignal);
-
-    mChildPID = fork();
-    if(mChildPID == -1)
-    {
-        WD_ERROR(process.linux.0, "Can't create process");
-    }
-    else if(!mChildPID)
-    {
-        //write(mChildPipes[1], aMessage.c_str(),  aMessage.size());
-
-//        fcntl(mPipeA[0], F_SETPIPE_SZ, 65336 * 2);
-//        fcntl(mPipeA[1], F_SETPIPE_SZ, 65336 * 2);
-//        fcntl(mPipeB[0], F_SETPIPE_SZ, 65336 * 2);
-//        fcntl(mPipeB[1], F_SETPIPE_SZ, 65336 * 2);
-
-        dup2(mPipeA[0], STDIN_FILENO);
-        dup2(mPipeB[1], STDOUT_FILENO);
-
-//        fcntl(mPipeA[0], F_SETPIPE_SZ, 65336 * 2);
-//        fcntl(mPipeA[1], F_SETPIPE_SZ, 65336 * 2);
-//        fcntl(mPipeB[0], F_SETPIPE_SZ, 65336 * 2);
-//        fcntl(mPipeB[1], F_SETPIPE_SZ, 65336 * 2);
-
-        rlimit timeLimit;
-        timeLimit.rlim_cur = mTimeLimit;
-        timeLimit.rlim_max = mTimeLimit;
-        setrlimit(RLIMIT_CPU,&timeLimit);
-
-        rlimit memoryLimit;
-        memoryLimit.rlim_cur = mMemoryLimit;
-        memoryLimit.rlim_max = mMemoryLimit;
-        setrlimit(RLIMIT_STACK ,&memoryLimit);
-
-//        dup2(mChildPipes[0], STDIN_FILENO);
-//        dup2(mParentPipes[1], STDOUT_FILENO);
-//        signal(SIGCONT, handleContinueSignal2);
-        //if (mIsPaused) pause();
-
-        execvp(aParameters[0], &aParameters[0]);
-        //WD_ERROR(linux.exec.0, "cant start process");
-    }
-    else
-    {
-//        fcntl(mPipeA[0], F_SETPIPE_SZ, 65336 * 2);
-//        fcntl(mPipeA[1], F_SETPIPE_SZ, 65336 * 2);
-//        fcntl(mPipeB[0], F_SETPIPE_SZ, 65336 * 2);
-//        fcntl(mPipeB[1], F_SETPIPE_SZ, 65336 * 2);
-    }
-
-
-/*
-int id = fork();
-if (id == 0)
-{
-    int i = 0;
-    int j = 0;
-    //std::vector<const char*> param;
-    char* param[10];
-    while (true)
-    {
-        std::string s;
-        for(;aParameters[i] != ' '; ++i) s.push_back(aParameters[i]);
-        ++i;
-        param[j] = (char*) s.c_str();
-        ++j;
-    }*/
-    //char** param2 =
-    //param.push_back(NULL);
-   /* param[j] = NULL;
-    execv((char*) aName.c_str(), param);
-}*/
-#endif
-    WD_END_LOG;
+//#endif
+//#ifdef LINUS_LINUX
+//    //signal(SIGCONT, MyProcess::handleContinueSignal);
+//
+//    mChildPID = fork();
+//    if(mChildPID == -1)
+//    {
+//        WD_ERROR(process.linux.0, "Can't create process");
+//    }
+//    else if(!mChildPID)
+//    {
+//        //write(mChildPipes[1], aMessage.c_str(),  aMessage.size());
+//
+////        fcntl(mPipeA[0], F_SETPIPE_SZ, 65336 * 2);
+////        fcntl(mPipeA[1], F_SETPIPE_SZ, 65336 * 2);
+////        fcntl(mPipeB[0], F_SETPIPE_SZ, 65336 * 2);
+////        fcntl(mPipeB[1], F_SETPIPE_SZ, 65336 * 2);
+//
+//        dup2(mPipeA[0], STDIN_FILENO);
+//        dup2(mPipeB[1], STDOUT_FILENO);
+//
+////        fcntl(mPipeA[0], F_SETPIPE_SZ, 65336 * 2);
+////        fcntl(mPipeA[1], F_SETPIPE_SZ, 65336 * 2);
+////        fcntl(mPipeB[0], F_SETPIPE_SZ, 65336 * 2);
+////        fcntl(mPipeB[1], F_SETPIPE_SZ, 65336 * 2);
+//
+//        rlimit timeLimit;
+//        timeLimit.rlim_cur = mTimeLimit;
+//        timeLimit.rlim_max = mTimeLimit;
+//        setrlimit(RLIMIT_CPU,&timeLimit);
+//
+//        rlimit memoryLimit;
+//        memoryLimit.rlim_cur = mMemoryLimit;
+//        memoryLimit.rlim_max = mMemoryLimit;
+//        setrlimit(RLIMIT_STACK ,&memoryLimit);
+//
+////        dup2(mChildPipes[0], STDIN_FILENO);
+////        dup2(mParentPipes[1], STDOUT_FILENO);
+////        signal(SIGCONT, handleContinueSignal2);
+//        //if (mIsPaused) pause();
+//
+//        execvp(aParameters[0], &aParameters[0]);
+//        //WD_ERROR(linux.exec.0, "cant start process");
+//    }
+//    else
+//    {
+////        fcntl(mPipeA[0], F_SETPIPE_SZ, 65336 * 2);
+////        fcntl(mPipeA[1], F_SETPIPE_SZ, 65336 * 2);
+////        fcntl(mPipeB[0], F_SETPIPE_SZ, 65336 * 2);
+////        fcntl(mPipeB[1], F_SETPIPE_SZ, 65336 * 2);
+//    }
+//
+//
+///*
+//int id = fork();
+//if (id == 0)
+//{
+//    int i = 0;
+//    int j = 0;
+//    //std::vector<const char*> param;
+//    char* param[10];
+//    while (true)
+//    {
+//        std::string s;
+//        for(;aParameters[i] != ' '; ++i) s.push_back(aParameters[i]);
+//        ++i;
+//        param[j] = (char*) s.c_str();
+//        ++j;
+//    }*/
+//    //char** param2 =
+//    //param.push_back(NULL);
+//   /* param[j] = NULL;
+//    execv((char*) aName.c_str(), param);
+//}*/
+//#endif
+//    WD_END_LOG;
 }
+
 #ifdef BILL_WINDOWS
 long long 
 MyProcess::getMillisecondsNow()
@@ -395,149 +403,149 @@ MyProcess::killProcess
 
 //--------------------------------------------------------------------------------
 
-void
-MyProcess::readPipe(std::string& result)
-{
-#ifdef PIPE_LOGS
-    WD_LOG("Reading from pipe");
-#endif // !PIPE_LOG_OUTPUT
-
-#ifdef BILL_WINDOWS
-    char buf[1024];
-    memset(buf, 0, sizeof(buf));
-    unsigned long bread = 0;
-    unsigned long avail = 0;
-
-    while (bread == 0 && avail == 0)
-    {
-        PeekNamedPipe(mThisSTDIN, buf, 1023, &bread, &avail, NULL);
-    }
-
-    memset(buf, 0, sizeof(buf));
-    bread = 1024;
-    result.clear();
-    while (bread >= 1023)
-    {
-        memset(buf, 0, sizeof(buf));
-        ReadFile(mThisSTDIN, buf, 1023, &bread, NULL);
-        result += std::string(buf);
-    }
-#elif defined(LINUS_LINUX)
-    result.clear();
-    char buf[1024];
-    memset(buf, 0, sizeof(buf));
-    while(read(mPipeB[0], &buf, 1024) == 1024)
-    {
-        result += std::string(buf);
-        memset(buf, 0, sizeof(buf));
-    }
-    result += std::string(buf);
-
+//void
+//MyProcess::readPipe(std::string& result)
+//{
+//#ifdef PIPE_LOGS
+//    WD_LOG("Reading from pipe");
+//#endif // !PIPE_LOG_OUTPUT
+//
+//#ifdef BILL_WINDOWS
 //    char buf[1024];
-//    while (read(mPipefd[0], &buf, 1) > 0)
-//        write(STDOUT_FILENO, &buf, 1);
-//    close(mPipefd[0]);
-#endif
-
-#ifdef PIPE_LOGS
-    WD_END_LOG;
-#endif // !PIPE_LOG_OUTPUT
-}
-
-void
-MyProcess::writePipe(std::string& aMessage, PypeType aType)
-{
-#ifdef PIPE_LOGS
-    WD_LOG("Writing from pipe");
-#endif // !PIPE_LOG_OUTPUT
-
-#ifdef BILL_WINDOWS
-    unsigned long bread;
-    //WriteFile(mThisSTDOUT, aMessage.c_str(), aMessage.size()
-    //    + ((aType == ZERO) ? 1 : 0), &bread, NULL);
-    WriteFile(mThisSTDOUT, aMessage.c_str(), aMessage.size(), &bread, NULL);
-    if (aType == ZERO)
-    {
-        WriteFile(mThisSTDOUT, "\n", 1, &bread, NULL);
-    }
-#else
-    //aMessage.push_back('\n');
-    write(mPipeA[1], aMessage.c_str(),  aMessage.size());
-    if (aType == ZERO)
-    {
-        write(mPipeA[1], "\n\0",  2);
-    }
-//    write(mPipefd[1], aMessage.c_str(), aMessage.size());
+//    memset(buf, 0, sizeof(buf));
+//    unsigned long bread = 0;
+//    unsigned long avail = 0;
+//
+//    while (bread == 0 && avail == 0)
+//    {
+//        PeekNamedPipe(mThisSTDIN, buf, 1023, &bread, &avail, NULL);
+//    }
+//
+//    memset(buf, 0, sizeof(buf));
+//    bread = 1024;
+//    result.clear();
+//    while (bread >= 1023)
+//    {
+//        memset(buf, 0, sizeof(buf));
+//        ReadFile(mThisSTDIN, buf, 1023, &bread, NULL);
+//        result += std::string(buf);
+//    }
+//#elif defined(LINUS_LINUX)
+//    result.clear();
+//    char buf[1024];
+//    memset(buf, 0, sizeof(buf));
+//    while(read(mPipeB[0], &buf, 1024) == 1024)
+//    {
+//        result += std::string(buf);
+//        memset(buf, 0, sizeof(buf));
+//    }
+//    result += std::string(buf);
+//
+////    char buf[1024];
+////    while (read(mPipefd[0], &buf, 1) > 0)
+////        write(STDOUT_FILENO, &buf, 1);
+////    close(mPipefd[0]);
+//#endif
+//
+//#ifdef PIPE_LOGS
+//    WD_END_LOG;
+//#endif // !PIPE_LOG_OUTPUT
+//}
+//
+//void
+//MyProcess::writePipe(std::string& aMessage, PypeType aType)
+//{
+//#ifdef PIPE_LOGS
+//    WD_LOG("Writing from pipe");
+//#endif // !PIPE_LOG_OUTPUT
+//
+//#ifdef BILL_WINDOWS
+//    unsigned long bread;
+//    //WriteFile(mThisSTDOUT, aMessage.c_str(), aMessage.size()
+//    //    + ((aType == ZERO) ? 1 : 0), &bread, NULL);
+//    WriteFile(mThisSTDOUT, aMessage.c_str(), aMessage.size(), &bread, NULL);
 //    if (aType == ZERO)
 //    {
-//        write(mPipefd[1], "\n", 1);
+//        WriteFile(mThisSTDOUT, "\n", 1, &bread, NULL);
 //    }
-//    close(mPipefd[1]);
-#endif // BILL_WINDOWS
+//#else
+//    //aMessage.push_back('\n');
+//    write(mPipeA[1], aMessage.c_str(),  aMessage.size());
+//    if (aType == ZERO)
+//    {
+//        write(mPipeA[1], "\n\0",  2);
+//    }
+////    write(mPipefd[1], aMessage.c_str(), aMessage.size());
+////    if (aType == ZERO)
+////    {
+////        write(mPipefd[1], "\n", 1);
+////    }
+////    close(mPipefd[1]);
+//#endif // BILL_WINDOWS
+//
+//#ifdef PIPE_LOGS
+//    WD_LOG("write " + std::to_string(bread) + " bites\n");
+//    WD_END_LOG;
+//#endif // !PIPE_LOG_OUTPUT
+//
+//}
 
-#ifdef PIPE_LOGS
-    WD_LOG("write " + std::to_string(bread) + " bites\n");
-    WD_END_LOG;
-#endif // !PIPE_LOG_OUTPUT
+//#define BUFFER_SIZE 65336 * 10
 
-}
+//void
+//MyProcess::IORedirection()
+//{
+//    WD_LOG("Rederecting input and output to pipe");
+//
+//#ifdef BILL_WINDOWS
+//    SECURITY_ATTRIBUTES securatyAttributes;
+//    securatyAttributes.nLength = sizeof(SECURITY_ATTRIBUTES);
+//    securatyAttributes.lpSecurityDescriptor = NULL;
+//    securatyAttributes.bInheritHandle = true;
+//
+//    if (!CreatePipe(&mChildSTDIN, &mThisSTDOUT, &securatyAttributes, 0))
+//    {
+//        WD_ERROR(process.pipe.0, "Can't create pipe ");
+//    }
+//
+//    if (!CreatePipe(&mThisSTDIN, &mChildSTDOUT, &securatyAttributes, 0))
+//    {
+//        WD_ERROR(process.pipe.1, "Can't create pipe ");
+//    }
+//    //else if (aType == Process::IOType::MIXED) {}
+//
+//    //GetStartupInfo(&mStartupInfo);
+//    ZeroMemory(&mStartupInfo, sizeof(STARTUPINFO));
+//    mStartupInfo.cb = sizeof(STARTUPINFO);
+//    mStartupInfo.dwFlags |= STARTF_USESTDHANDLES;
+//
+//    mStartupInfo.hStdInput = mChildSTDIN;
+//    mStartupInfo.hStdError = mChildSTDOUT;
+//    mStartupInfo.hStdOutput = mChildSTDOUT;
+//#elif defined(LINUS_LINUX)
+//
+//    pipe(mPipeA);
+//    pipe(mPipeB);
+//
+//
+//    fcntl(mPipeA[0], F_SETPIPE_SZ, BUFFER_SIZE);
+//    fcntl(mPipeA[1], F_SETPIPE_SZ, BUFFER_SIZE);
+//    fcntl(mPipeB[0], F_SETPIPE_SZ, BUFFER_SIZE);
+//    fcntl(mPipeB[1], F_SETPIPE_SZ, BUFFER_SIZE);
+//
+//#endif // BILL_WINDOWS
+//
+//    WD_END_LOG;
+//}
 
-#define BUFFER_SIZE 65336 * 10
-
-void
-MyProcess::IORedirection()
-{
-    WD_LOG("Rederecting input and output to pipe");
-
-#ifdef BILL_WINDOWS
-    SECURITY_ATTRIBUTES securatyAttributes;
-    securatyAttributes.nLength = sizeof(SECURITY_ATTRIBUTES);
-    securatyAttributes.lpSecurityDescriptor = NULL;
-    securatyAttributes.bInheritHandle = true;
-
-    if (!CreatePipe(&mChildSTDIN, &mThisSTDOUT, &securatyAttributes, 0))
-    {
-        WD_ERROR(process.pipe.0, "Can't create pipe ");
-    }
-
-    if (!CreatePipe(&mThisSTDIN, &mChildSTDOUT, &securatyAttributes, 0))
-    {
-        WD_ERROR(process.pipe.1, "Can't create pipe ");
-    }
-    //else if (aType == Process::IOType::MIXED) {}
-
-    //GetStartupInfo(&mStartupInfo);
-    ZeroMemory(&mStartupInfo, sizeof(STARTUPINFO));
-    mStartupInfo.cb = sizeof(STARTUPINFO);
-    mStartupInfo.dwFlags |= STARTF_USESTDHANDLES;
-
-    mStartupInfo.hStdInput = mChildSTDIN;
-    mStartupInfo.hStdError = mChildSTDOUT;
-    mStartupInfo.hStdOutput = mChildSTDOUT;
-#elif defined(LINUS_LINUX)
-
-    pipe(mPipeA);
-    pipe(mPipeB);
-
-
-    fcntl(mPipeA[0], F_SETPIPE_SZ, BUFFER_SIZE);
-    fcntl(mPipeA[1], F_SETPIPE_SZ, BUFFER_SIZE);
-    fcntl(mPipeB[0], F_SETPIPE_SZ, BUFFER_SIZE);
-    fcntl(mPipeB[1], F_SETPIPE_SZ, BUFFER_SIZE);
-
-#endif // BILL_WINDOWS
-
-    WD_END_LOG;
-}
-
-void
-MyProcess::closeHandles()
-{
-#ifdef BILL_WINDOWS
-    CloseHandle(mChildSTDIN);
-    CloseHandle(mChildSTDOUT);
-#endif // BILL_WINDOWS
-}
+//void
+//MyProcess::closeHandles()
+//{
+//#ifdef BILL_WINDOWS
+//    CloseHandle(mChildSTDIN);
+//    CloseHandle(mChildSTDOUT);
+//#endif // BILL_WINDOWS
+//}
 
 //--------------------------------------------------------------------------------
 

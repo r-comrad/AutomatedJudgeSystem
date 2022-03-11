@@ -2,6 +2,7 @@
 #define PROBLEM_INFORMATION_H
 
 #include "domain.h"
+#include "my_strings.hpp"
 
 struct ProblemInformation
 {
@@ -11,15 +12,15 @@ public:
 
 	uint_64 mTimeLimit;
 	uint_64 mMemoryLimit;
-	std::string mSolutionFileName;
-	std::string mCheckerFileName;
+	std_string mSolutionFileName;
+	std_string mCheckerFileName;
 
 	int mTestsCount;
 	bool mTestsAreOver;
 
 	uint_64 mUsedTime;
 	uint_64 mUsedMemory;
-	std::string mResult;
+	std_string mResult;
 
 	ProblemInformation();
 	void remakeResultForPasha();

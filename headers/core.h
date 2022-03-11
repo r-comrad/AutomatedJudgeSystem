@@ -16,6 +16,7 @@
 #include "problem_information.h"
 #include "submission_information.h"
 #include "my_process.h"
+#include "pipe_process.h"
 
 class Core
 {

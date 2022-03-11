@@ -8,6 +8,9 @@
 #include "sqlite3.h"
 
 #include "domain.h"
+#include "my_strings.hpp"
+#include "errors.hpp"
+#include "paths.hpp"
 
 typedef sqlite3 Base;
 typedef sqlite3_stmt Statement;
@@ -15,9 +18,9 @@ typedef sqlite3_stmt Statement;
 class Database
 {
 public:
-	Database(std::string aPath);
-	void select(std::string aTableName, std::string aColum = "", std::string aConditon = "", int aStatementID = 0);
-	void update(std::string aTableName, std::string aValue, std::string aConditon, int aStatementID = 0);
+	Database(std_string aPath);
+	void select(std_string aTableName, std_string aColum = "", std_string aConditon = "", int aStatementID = 0);
+	void update(std_string aTableName, std_string aValue, std_string aConditon, int aStatementID = 0);
 	void closeStatment(int aStatementID = 0);
 	int	step(int aStatementID = 0);
 
@@ -31,7 +34,7 @@ private:
 	Base* mBase;
 	std::vector<Statement*> mStatement;
 
-	void prepare(std::string& aStatment, int aStatementID);
+	void prepare(std_string_ref aStatment, int aStatementID);
 };
 
 #endif

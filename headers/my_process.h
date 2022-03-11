@@ -5,11 +5,18 @@
 
 #define MAX_TIME_LIMIT 5000
 
+#define KILLING_PROCESS_TIME_VALUE (uint_64(1e18))
+#define KILLING_PROCESS_MEMORY_VALUE (uint_64(1e18))
+
 #include <string>
 #include <vector>
 #include <iostream>
 
 #include "domain.h"
+#include "my_strings.hpp"
+#include "errors.hpp"
+#include "paths.hpp"
+#include "pair.hpp"
 
 #ifdef BILL_WINDOWS
 	// BILL_WINDOWS
@@ -30,6 +37,8 @@
 	// !LINUS_LINUX
 #endif 
 
+#include "my_strings.hpp"
+
 class MyProcess
 {
 public:
@@ -38,14 +47,11 @@ public:
 	MyProcess
 	(
 		const std::vector<char*>& aParameters,
+
 #ifdef BILL_WINDOWS
-		// BILL_WINDOWS
-		uint_64 aTimeLimit = 1e1,
-		// !BILL_WINDOWS
-#elif defined(LINUS_LINUX)
-		// LINUS_LINUX
 		uint_64 aTimeLimit = 1e3,
-		// !LINUS_LINUX
+#elif defined(LINUS_LINUX)
+		uint_64 aTimeLimit = 1e1,
 #endif 
 		uint_64 aMemoryLimit = 1e9
 	);
@@ -54,43 +60,47 @@ public:
 	bool run(uint_16 aTimeLimit = MAX_TIME_LIMIT);
 	std::pair<uint_64, uint_64> runWithLimits();
 
-	void setLimits(uint_64 aTimeLimit, uint_64 aMemoryLimit);
+	//void setLimits(uint_64 aTimeLimit, uint_64 aMemoryLimit);
 
 
 
-	void readPipe(std::string& result);
-	void writePipe(std::string& aMessage, PypeType aType = ZERO);
+	//void readPipe(std::string& result);
+	//void writePipe(std::string& aMessage, PypeType aType = ZERO);
 
-private:
+protected:
 	uint_64 mTimeLimit;
 	uint_64 mMemoryLimit;
+
+	void setLimits(uint_64 aTimeLimit, uint_64 aMemoryLimit);
+
+	enum ProcessType { PIPE = 0, FILE = 1 };
 
 #ifdef BILL_WINDOWS
 	// BILL_WINDOWS
 	STARTUPINFOA mStartupInfo;
 	PROCESS_INFORMATION mProcessInfo;
 
-	HANDLE mThisSTDIN;
-	HANDLE mThisSTDOUT;
-	HANDLE mChildSTDIN;
-	HANDLE mChildSTDOUT;
+	//HANDLE mThisSTDIN;
+	//HANDLE mThisSTDOUT;
+	//HANDLE mChildSTDIN;
+	//HANDLE mChildSTDOUT;
 
 	std::future<long long> mFuture;
 
 	// !BILL_WINDOWS
 #elif defined(LINUS_LINUX)
 	// LINUS_LINUX
-	int mPipeA[2];
-	int mPipeB[2];
+	//int mPipeA[2];
+	//int mPipeB[2];
 	int mChildPID;
 
 	// !LINUS_LINUX
 #endif 
 
-	void create(const std::vector<char*>& aParameters);
+	virtual void create(const std::vector<char*>& aParameters);
 
-	void IORedirection();
-	void closeHandles();
+	virtual void IORedirection() = 0;
+	virtual void closeHandles() = 0;
 
 #ifdef BILL_WINDOWS
 	long long getMillisecondsNow();
@@ -101,6 +111,9 @@ private:
 	DWORD getExitCode(HANDLE&);
 	bool killProcess(PROCESS_INFORMATION&);
 #endif // !BILL_WINDOWS
+
+private:
+	ProcessType mType;
 };
 
 //--------------------------------------------------------------------------------

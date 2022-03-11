@@ -2,7 +2,7 @@
 
 Database::Database
 (
-    std::string aPath
+    std_string aPath
 ) :
     mBase(NULL)
 {
@@ -16,25 +16,25 @@ Database::Database
 void 
 Database::select
 (
-    std::string aTableName,
-    std::string aColum, 
-    std::string aConditon,
+    std_string aTableName,
+    std_string aColum, 
+    std_string aConditon,
     int aStatementID
 )
 
 {
     if (aColum == "") aColum = "*";
     if (aConditon != "") aConditon = " WHERE " + aConditon;
-    std::string statement = "SELECT " + aColum + " FROM " + aTableName + aConditon;
+    std_string statement = "SELECT " + aColum + " FROM " + aTableName + aConditon;
     prepare(statement, aStatementID);
 }
 
 void 
 Database::update
 (
-    std::string aTableName,
-    std::string aValue,
-    std::string aConditon,
+    std_string aTableName,
+    std_string aValue,
+    std_string aConditon,
     int aStatementID
 )
 {
@@ -94,7 +94,7 @@ Database::toAscii(const unsigned char* s, int aStatementID)
 }
 
 void 
-Database::prepare(std::string& aStatment, int aStatementID)
+Database::prepare(std_string_ref aStatment, int aStatementID)
 {
     if (mStatement.size() < aStatementID + 1)
     {

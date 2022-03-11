@@ -6,6 +6,11 @@
 #include <math.h>
 
 #define THREAD_COUNTS 1
+#define DEBUG_PLUS_SOLUTION_SUBMISSION 1
+
+#if DEBUG_PLUS_SOLUTION_SUBMISSION
+#define _DEBUG_SOL_SUB_
+#endif
 
 Core::Core
 (
@@ -50,17 +55,24 @@ Core::run
 (
     int aID
 )
-
 {
     mProblemInfo.mID = aID;
     mDBQ.prepareForTesting(mProblemInfo);
 
 #ifdef BILL_WINDOWS
-    mProblemInfo.mSolutionFileName =  makeWindowString(mProblemInfo.mSolutionFileName);
-    mProblemInfo.mCheckerFileName = makeWindowString(mProblemInfo.mCheckerFileName);
+    makeWindowString(mProblemInfo.mSolutionFileName);
+    makeWindowString(mProblemInfo.mCheckerFileName);
 #endif // BILL_WINDOWS
     mProblemInfo.mSolutionFileName.clear();
+
+#ifdef _DEBUG_SOL_SUB_
+#if  defined(BILL_WINDOWS)
+    mProblemInfo.mSolutionFileName = "2\\plus.cpp";
+#elif defined(LINUS_LINUX)
     mProblemInfo.mSolutionFileName = "2/plus.cpp";
+#endif 
+#endif
+
     makeExecutable
     (
         MAEDIA + mProblemInfo.mSolutionFileName,
@@ -128,7 +140,8 @@ Core::compile
 
         comand.push_back(aCpmandParameters.back());
         comand.push_back(NULL);
-        MyProcess compiler(comand);
+        //MyProcess compiler(comand);
+        PipeProcess compiler(comand);
         compiler.run();
         delete comand[0];
         delete comand[1];
@@ -280,13 +293,13 @@ Core::pipesTesting
 {
     WD_LOG("Checking test #" << aThreadNum + mFinishedTest);
     WD_LOG("Runing test #" << aThreadNum + mFinishedTest);
-if (aThreadNum == 100)
-{
-    int yy = 0;
-    ++yy;
-std::cout << yy;
-
-}
+//if (aThreadNum == 100)
+//{
+//    int yy = 0;
+//    ++yy;
+//std::cout << yy;
+//
+//}
     TestLibMessage TLM;
     mGetTestLock.lock();
     if (!mProblemInfo.mTestsAreOver)
@@ -307,12 +320,14 @@ std::cout << yy;
 
     TLM.makeTestSizes();
 
-    MyProcess code(mSolutionParameters, mProblemInfo.mTimeLimit, mProblemInfo.mMemoryLimit);
+    //MyProcess code(mSolutionParameters, mProblemInfo.mTimeLimit, mProblemInfo.mMemoryLimit);
+    PipeProcess code(mSolutionParameters, mProblemInfo.mTimeLimit, mProblemInfo.mMemoryLimit);
 
     code.writePipe(TLM.mTest);
     //std::pair<uint_64, uint_64> cur = code.runWithLimits(mProblemInfo.mTimeLimit, mProblemInfo.mMemoryLimit);
     std::pair<uint_64, uint_64> cur = code.runWithLimits();
-    if (cur.first == -1)
+    if (cur.first == KILLING_PROCESS_TIME_VALUE && 
+        cur.second == KILLING_PROCESS_MEMORY_VALUE)
     {
         mChecksInfo[aThreadNum].mResult = "tle";
         mChecksMutexs[aThreadNum].lock();
@@ -325,7 +340,8 @@ std::cout << yy;
     mChecksInfo[aThreadNum].mUsedTime = cur.first;
     mChecksInfo[aThreadNum].mUsedMemory = cur.second;
 
-    MyProcess checker(mCheckerParameters);
+    //MyProcess checker(mCheckerParameters);
+    PipeProcess checker(mCheckerParameters);
 
 //    TLM.mAnswer.pop_back();
 //    TLM.mAnswer.pop_back();
@@ -333,14 +349,14 @@ std::cout << yy;
     TLM.makeOutputSizes();
     TLM.makeAnswerSizes();
 
-    checker.writePipe(TLM.mTestSize,    MyProcess::PypeType::NO_ZERO);
-    checker.writePipe(TLM.mTest,        MyProcess::PypeType::NO_ZERO);
+    checker.writePipe(TLM.mTestSize,    PipeProcess::PypeType::NO_ZERO);
+    checker.writePipe(TLM.mTest,        PipeProcess::PypeType::NO_ZERO);
 
-    checker.writePipe(TLM.mOutputSize,  MyProcess::PypeType::NO_ZERO);
-    checker.writePipe(TLM.mOutput,      MyProcess::PypeType::NO_ZERO);
+    checker.writePipe(TLM.mOutputSize,  PipeProcess::PypeType::NO_ZERO);
+    checker.writePipe(TLM.mOutput,      PipeProcess::PypeType::NO_ZERO);
 
-    checker.writePipe(TLM.mAnswerSize,  MyProcess::PypeType::NO_ZERO);
-    checker.writePipe(TLM.mAnswer,      MyProcess::PypeType::NO_ZERO);
+    checker.writePipe(TLM.mAnswerSize,  PipeProcess::PypeType::NO_ZERO);
+    checker.writePipe(TLM.mAnswer,      PipeProcess::PypeType::NO_ZERO);
 
 #if defined(_DBG_) && defined (CODE_OUTPUT_LOG)
     WD_LOG("Test: " + TLM.mTest + "\nOutput: " + TLM.mOutput + "\nAnswer: " + TLM.mAnswer);

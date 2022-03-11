@@ -119,12 +119,6 @@ void foo()
 int main(int argc, char* argv[])
 {
 
-//    fcntl(mPipeA[0], F_SETPIPE_SZ, 1024 * 1024*1024);
-//    fcntl(mPipeA[1], F_SETPIPE_SZ, 1024 * 1024*1024);
-//    fcntl(mPipeB[0], F_SETPIPE_SZ, 1024 * 1024*1024);
-//    fcntl(mPipeB[1], F_SETPIPE_SZ, 1024 * 1024*1024);
-
-    //std::cout << PIPE_BUF;
     int num = 3;
     if (argc > 1)
     {

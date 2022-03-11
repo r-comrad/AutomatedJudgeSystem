@@ -1,57 +1,89 @@
 #include "testlib.h"
 #include <sstream>
 
-using namespace std;
-
-int main(int argc, char * argv[])
+int main()
 {
-    setName("compare ordered sequences of signed int%d numbers", 8 * int(sizeof(long long)));
-
-    registerTestlibCmd(argc, argv);
+//    tl::StandardReaders::input.open("../input/input");
+//    tl::StandardReaders::output.open(nullptr);
+//    tl::StandardReaders::ans.open(nullptr);
+//    tl::StandardReaders::input.open("/home/ivan/Рабочий стол/resources/working_directory/tests/3-0");
+//    tl::StandardReaders::output.open("/home/ivan/Рабочий стол/resources/working_directory/outputs/3-0");
+//    tl::StandardReaders::ans.open("/home/ivan/Рабочий стол/resources/working_directory/answers/3-0");
 
     int n = 0;
-    string firstElems;
+    std::string firstNums;
 
-    while (!ans.seekEof() && !ouf.seekEof())
+    while (!tl::StandardReaders::ans.isEndOfFile()
+           && !tl::StandardReaders::output.isEndOfFile())
     {
         n++;
-        long long j = ans.readLong();
-        long long p = ouf.readLong();
-        if (j != p)
-            quitf(_wa, "%d%s numbers differ - expected: '%s', found: '%s'", n, englishEnding(n).c_str(), vtos(j).c_str(), vtos(p).c_str());
-        else
-            if (n <= 5)
+        std::int64_t jNum;
+        tl::StandardReaders::ans.readInt64(jNum);
+        std::int64_t pNum;
+        tl::StandardReaders::output.readInt64(pNum);
+        if (jNum != pNum)
+        {
+            std::printf(
+                    "wa %s numbers differ - expected: '%ld', found: '%ld'",
+                    tl::StringTools::withEnglishEnding(n),
+                    jNum,
+                    pNum);
+
+            return 0;
+        }
+        else if (n <= 5)
+        {
+            if (!firstNums.empty())
             {
-                if (firstElems.length() > 0)
-                    firstElems += " ";
-                firstElems += vtos(j);
+                firstNums.push_back(' ');
             }
+            firstNums += std::to_string(pNum);
+        }
     }
 
     int extraInAnsCount = 0;
 
-    while (!ans.seekEof())
+    while (!tl::StandardReaders::ans.isEndOfFile())
     {
-        ans.readLong();
+        std::int64_t temp;
+        tl::StandardReaders::ans.readInt64(temp);
         extraInAnsCount++;
     }
-    
+
     int extraInOufCount = 0;
 
-    while (!ouf.seekEof())
+    while (!tl::StandardReaders::output.isEndOfFile())
     {
-        ouf.readLong();
+        std::int64_t temp;
+        tl::StandardReaders::output.readInt64(temp);
         extraInOufCount++;
     }
 
     if (extraInAnsCount > 0)
-        quitf(_wa, "Answer contains longer sequence [length = %d], but output contains %d elements", n + extraInAnsCount, n);
-    
-    if (extraInOufCount > 0)
-        quitf(_wa, "Output contains longer sequence [length = %d], but answer contains %d elements", n + extraInOufCount, n);
-    
-    if (n <= 5)
-        quitf(_ok, "%d number(s): \"%s\"", n, compress(firstElems).c_str());
+    {
+        std::printf(
+                "wa Answer contains longer sequence [length = %d],"
+                " but output contains %d elements",
+                n + extraInAnsCount, n);
+    }
+
+    else if (extraInOufCount > 0)
+    {
+        std::printf(
+                "wa Output contains longer sequence [length = %d],"
+                " but answer contains %d elements",
+                n + extraInOufCount, n);
+    }
+
+    else if (n <= 5)
+    {
+        std::printf("ok %d number(s): '%s'",
+                    n,
+                    tl::StringTools::partOfStr(firstNums).c_str());
+    }
+
     else
-        quitf(_ok, "%d numbers", n);
+    {
+        std::printf("ok %d numbers", n);
+    }
 }

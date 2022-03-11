@@ -604,7 +604,7 @@ namespace tl
 #define TESTLIBRARY_INSTREAM_H
 
 
-namespace tl::bc {
+namespace tl {
     class InStream {
     public:
         InStream(tl::AbstractReader &reader);
@@ -645,7 +645,7 @@ namespace tl::bc {
 #define TESTLIBRARY_TESTLIBGLOBALS_H
 
 
-namespace tl::bc
+namespace tl
 {
     InStream inf(tl::StandardReaders::input);
 
@@ -663,7 +663,7 @@ namespace tl::bc
 #include <string>
 
 
-namespace tl::bc
+namespace tl
 {
     void setTestCase(int testCase);
 
@@ -752,7 +752,7 @@ namespace tl::bc
 
 class pattern;
 
-namespace tl::bc
+namespace tl
 {
     class random_t {
     public:
@@ -768,7 +768,7 @@ namespace tl::bc
 #include <vector>
 
 
-namespace tl::bc
+namespace tl
 {
 class pattern
 {
@@ -2281,7 +2281,7 @@ namespace tl
 
 #ifndef WITHOUT_BACK_COMP
 
-namespace tl::bc
+namespace tl
 {
     InStream::InStream(tl::AbstractReader& reader) :
             mReader(reader)
@@ -2375,7 +2375,7 @@ namespace tl::bc
 }
 
 
-namespace tl::bc
+namespace tl
 {
     void setTestCase(int testCase)
     {
@@ -2516,7 +2516,7 @@ namespace tl::bc
 }
 
 
-namespace tl::bc
+namespace tl
 {
     pattern::pattern(std::string s)
     {
@@ -2543,10 +2543,10 @@ namespace tl::bc
 }
 
 
-namespace tl::bc
+namespace tl
 {
 
 }
 
 #endif
-using namespace tl::bc;
+using namespace tl;
