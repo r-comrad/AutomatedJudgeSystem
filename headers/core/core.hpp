@@ -50,6 +50,12 @@ private:
 	ProblemInformation mProblemInfo;
     std::mutex mProblemInfoLock;
 
+	/*
+	\brief Method of adding direction to a Point (Pair).
+	\param aFileName Reference point of direction.
+	\return The neighbor point is offset from the start
+	point in that direction.
+*/
 	Core::Language getLanguage(std::string aFileName);
 	void compile
 	(

@@ -3,7 +3,7 @@
 #undef max
 #undef min
 
-#include <math.h>
+#include <cmath>
 
 #define THREAD_COUNTS 1
 #define DEBUG_PLUS_SOLUTION_SUBMISSION 1
@@ -26,6 +26,7 @@ Core::Core
     {
         mChecks.push_back(new std::thread([](){}));
     }
+
 }
 
 Core::~Core()

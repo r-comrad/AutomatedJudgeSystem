@@ -1,22 +1,6 @@
 //--------------------------------------------------------------------------------
-#define _CRT_SECURE_NO_WARNINGS
+
 #include "process/my_process.hpp"
-#include "cputime/getCPUTime.h"
-
-#ifdef LINUS_LINUX
-#include <unistd.h>
-#endif
-
-//MyProcess::MyProcess()
-//#ifdef BILL_WINDOWS
-//:
-//    mStartupInfo    ({ 0 })
-//#endif
-//{
-//#ifdef BILL_WINDOWS
-//    ZeroMemory(&mProcessInfo, sizeof(PROCESS_INFORMATION));
-//#endif
-//}
 
 MyProcess::MyProcess
 (
@@ -24,7 +8,10 @@ MyProcess::MyProcess
     uint_64 aTimeLimit,
     uint_64 aMemoryLimit
 ) :
+    mTimeLimit      (aTimeLimit),
+    mMemoryLimit    (aMemoryLimit)
 #ifdef BILL_WINDOWS
+    , 
     mStartupInfo    ({ 0 })
 #elif defined(LINUS_LINUX)
 #endif
@@ -32,17 +19,6 @@ MyProcess::MyProcess
 #ifdef BILL_WINDOWS
     ZeroMemory(&mProcessInfo, sizeof(PROCESS_INFORMATION));
 #endif
-
-    //if (mType == ProcessType::PIPE)
-    //{
-    //    (dynamic_cast<PipeProcess*> (this))->IORedirection();
-    //    create(aParameters);
-    //}
-    //else
-    //{
-
-    //}
-    //setLimits       (aTimeLimit, aMemoryLimit);
 }
 
 MyProcess::~MyProcess() {}
@@ -83,23 +59,10 @@ MyProcess::setLimits(uint_64 aTimeLimit, uint_64 aMemoryLimit)
 }
 
 #ifdef LINUS_LINUX
-//void
-//MyProcess::handleContinueSignal(int sig)
-//{
-//    mIsPaused = false;
-//}
-//void handleContinueSignal2(int sig) {
-//    myGlobalStaticContinueVariable = 1; // Or some other handling code
-//}
 #endif // LINUS_LINUX
 
 std::pair<uint_64, uint_64>
 MyProcess::runWithLimits()
-//MyProcess::runWithLimits
-//(
-//    uint_64 aTimeLimit,
-//    uint_64 aMemoryLimit
-//)
 {
     WD_LOG("Runing process with time and memory evaluation");
 

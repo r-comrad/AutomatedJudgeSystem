@@ -1,3 +1,9 @@
+//------------------------------------------------------------
+
+// ChineseTester_D_NewVegasEdition_V0.9
+// ChineseTester_R_NewVegasEdition_V0.9
+
+//------------------------------------------------------------
 
 #define _CRT_SECURE_NO_WARNINGS
 

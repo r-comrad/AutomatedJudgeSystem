@@ -2,11 +2,18 @@
 #define MY_PROCESS_H
 
 //--------------------------------------------------------------------------------
+//				CHILD PROCESS CREATION IMPLIMENTATION 
+//--------------------------------------------------------------------------------
 
+//--------------------------------------------------------------------------------
+// PROCESS CREATION CONSTANTS 
+//--------------------------------------------------------------------------------
 #define MAX_TIME_LIMIT 5000
 
 #define KILLING_PROCESS_TIME_VALUE (uint_64(1e18))
 #define KILLING_PROCESS_MEMORY_VALUE (uint_64(1e18))
+
+//--------------------------------------------------------------------------------
 
 #include <string>
 #include <vector>
@@ -29,6 +36,8 @@
 #include <atlalloc.h>
 #include <shlwapi.h>
 #include <cstdint>
+#include "cputime/getCPUTime.h"
+#define _CRT_SECURE_NO_WARNINGS
 	// !BILL_WINDOWS
 #elif defined(LINUS_LINUX)
 #include <wait.h>
@@ -37,15 +46,25 @@
 	// !LINUS_LINUX
 #endif 
 
+
+//--------------------------------------------------------------------------------
+
 class MyProcess
 {
 public:
 	enum PypeType { ZERO = 0, NO_ZERO = 1 };
 
+	/*
+	\brief Base process constructor that initialize time and memory limits.
+	(all created process have max time execution time limit
+	that defined in MAX_TIME_LIMIT define)
+	\param aParameters Process paramemeters for execution.
+	\param aTimeLimit Process time limit.
+	\param aMemoryLimit Process memory limit.
+	*/
 	MyProcess
 	(
 		const std::vector<char*>& aParameters,
-
 #ifdef BILL_WINDOWS
 		uint_64 aTimeLimit = 1e3,
 #elif defined(LINUS_LINUX)
@@ -55,15 +74,16 @@ public:
 	);
 	~MyProcess();
 
-	bool run(uint_16 aTimeLimit = MAX_TIME_LIMIT);
+	/*
+	\brief Execute process without time and memory evaluation. 
+	
+	\param aParameters Process paramemeters for execution.
+	\param aTimeLimit Process time limit.
+	\param aMemoryLimit Process memory limit.
+	*/
+	//bool run(uint_16 aTimeLimit = MAX_TIME_LIMIT);
+	bool run();
 	std::pair<uint_64, uint_64> runWithLimits();
-
-	//void setLimits(uint_64 aTimeLimit, uint_64 aMemoryLimit);
-
-
-
-	//void readPipe(std::string& result);
-	//void writePipe(std::string& aMessage, PypeType aType = ZERO);
 
 protected:
 	uint_64 mTimeLimit;
@@ -78,20 +98,12 @@ protected:
 	STARTUPINFOA mStartupInfo;
 	PROCESS_INFORMATION mProcessInfo;
 
-	//HANDLE mThisSTDIN;
-	//HANDLE mThisSTDOUT;
-	//HANDLE mChildSTDIN;
-	//HANDLE mChildSTDOUT;
-
 	std::future<long long> mFuture;
 
 	// !BILL_WINDOWS
 #elif defined(LINUS_LINUX)
 	// LINUS_LINUX
-	//int mPipeA[2];
-	//int mPipeB[2];
 	int mChildPID;
-
 	// !LINUS_LINUX
 #endif 
 
