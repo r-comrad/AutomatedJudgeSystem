@@ -1,0 +1,156 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Исходные файлы">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Файлы заголовков">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Файлы ресурсов">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Исходные файлы\core">
+      <UniqueIdentifier>{a55888d1-f217-4a81-9e03-b98278b65ddf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\database">
+      <UniqueIdentifier>{4017db7a-5afd-4c2e-8cc8-48130b8a534d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\domain">
+      <UniqueIdentifier>{d09ef37f-650c-4486-a57b-8e8bb4736d02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\process">
+      <UniqueIdentifier>{84a408db-df5b-4de5-9d01-0abdb1d9b829}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\structs">
+      <UniqueIdentifier>{6c5141f9-96ed-4ae7-8469-c4b173fb43c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\sqllite">
+      <UniqueIdentifier>{9c552307-0686-4dcc-96c8-6c859223675a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\core">
+      <UniqueIdentifier>{a38f5390-4489-476e-af56-14ae30d63760}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\database">
+      <UniqueIdentifier>{80cf9c78-a706-4513-859b-c2c07e36e401}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\domain">
+      <UniqueIdentifier>{d4227c90-86c5-4011-aa3f-903cf97cf13d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\process">
+      <UniqueIdentifier>{234ab642-ab47-4d54-b068-f63301bafdce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\sqllite">
+      <UniqueIdentifier>{32abfbb5-8938-4b7a-900b-c4422d8ae60e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\structs">
+      <UniqueIdentifier>{7f263112-8653-41c4-9692-33a77d4ea573}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\sources\core\core.cpp">
+      <Filter>Исходные файлы\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\core\main.cpp">
+      <Filter>Исходные файлы\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\database\database.cpp">
+      <Filter>Исходные файлы\database</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\database\database_query.cpp">
+      <Filter>Исходные файлы\database</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\domain\errors.cpp">
+      <Filter>Исходные файлы\domain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\domain\files_manager.cpp">
+      <Filter>Исходные файлы\domain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\domain\my_strings.cpp">
+      <Filter>Исходные файлы\domain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\process\pipe_process.cpp">
+      <Filter>Исходные файлы\process</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\process\my_process.cpp">
+      <Filter>Исходные файлы\process</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\process\file_process.cpp">
+      <Filter>Исходные файлы\process</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\structs\problem_information.cpp">
+      <Filter>Исходные файлы\structs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\structs\submission_information.cpp">
+      <Filter>Исходные файлы\structs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\structs\testlib_message.cpp">
+      <Filter>Исходные файлы\structs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\domain\paths.cpp">
+      <Filter>Исходные файлы\structs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libraries\sqllite\shell.c">
+      <Filter>Исходные файлы\sqllite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libraries\sqllite\sqlite3.c">
+      <Filter>Исходные файлы\sqllite</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\headers\domain\errors.hpp">
+      <Filter>Файлы заголовков\domain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\headers\domain\files_manager.hpp">
+      <Filter>Файлы заголовков\domain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\headers\domain\my_strings.hpp">
+      <Filter>Файлы заголовков\domain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\headers\domain\pair.hpp">
+      <Filter>Файлы заголовков\domain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\headers\domain\paths.hpp">
+      <Filter>Файлы заголовков\domain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libraries\sqllite\sqlite3.h">
+      <Filter>Файлы заголовков\sqllite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libraries\sqllite\sqlite3ext.h">
+      <Filter>Файлы заголовков\sqllite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\headers\structs\problem_information.hpp">
+      <Filter>Файлы заголовков\structs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\headers\structs\submission_information.hpp">
+      <Filter>Файлы заголовков\structs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\headers\structs\testlib_message.hpp">
+      <Filter>Файлы заголовков\structs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\headers\process\file_process.hpp">
+      <Filter>Файлы заголовков\process</Filter>
+    </ClInclude>
+    <ClInclude Include="..\headers\process\my_process.hpp">
+      <Filter>Файлы заголовков\process</Filter>
+    </ClInclude>
+    <ClInclude Include="..\headers\process\pipe_process.hpp">
+      <Filter>Файлы заголовков\process</Filter>
+    </ClInclude>
+    <ClInclude Include="..\headers\domain\domain.hpp">
+      <Filter>Файлы заголовков\domain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\headers\database\database.hpp">
+      <Filter>Файлы заголовков\database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\headers\database\database_query.hpp">
+      <Filter>Файлы заголовков\database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\headers\core\core.hpp">
+      <Filter>Файлы заголовков\core</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
