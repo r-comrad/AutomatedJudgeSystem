@@ -1,6 +1,9 @@
 #ifndef ERRORS_HPP
 #define ERRORS_HPP
 
+#include <iostream>
+#include <string>
+
 #include "domain/domain.hpp"
 #include "domain/my_strings.hpp"
 

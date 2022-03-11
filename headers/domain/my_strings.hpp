@@ -1,6 +1,8 @@
 #ifndef MY_STRINGS_HPP
 #define MY_STRINGS_HPP
 
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <string>
 
 #include "domain/domain.hpp"
@@ -8,8 +10,6 @@
 typedef std::string         std_string;
 typedef char                std_string_cell;
 typedef std_string&			std_string_ref;
-
-#define _CRT_SECURE_NO_WARNINGS
 
 #define newStrCopy(str) \
 std::strcpy(new char[str.size() + 1], str.c_str())

@@ -24,14 +24,8 @@ getString
     bool aCheckZero
 )
 {
-    std_string result;// (aString);
+    std_string result;
     for (int i = 0; aString[i]; ++i) result.push_back(aString[i]);
-    //if (aCheckZero && result[result.size()] != 0)
-    //{
-    //    // TODO: check for zero index
-    //    // TODO1
-    //    result.push_back(0);
-    //}
     return result;
 }
 

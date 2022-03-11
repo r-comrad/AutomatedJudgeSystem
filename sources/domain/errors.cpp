@@ -4,7 +4,7 @@
 std_string
 GetLastErrorAsString()
 {
-    setlocale(LC_ALL, "Russian");
+    //setlocale(LC_ALL, "Russian");
 
     //Get the error message ID, if any.
     DWORD errorMessageID = ::GetLastError();

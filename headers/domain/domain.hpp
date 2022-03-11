@@ -47,8 +47,6 @@
 #endif
 
 #ifdef CHINESE_DEBUG
-
-#define _DBG_
 #define GOOD_DEBUG_ERRORS
 #endif
 
@@ -71,13 +69,6 @@ typedef unsigned long long	uint_64;
 //------------------------------------------------------------
 
 #include <cstring>
-
-#include <vector>
-#include <fstream>
-#include <string>
-#include <iostream>
-#include <fstream>
-
 #ifdef BILL_WINDOWS
 #include <windows.h>
 #endif

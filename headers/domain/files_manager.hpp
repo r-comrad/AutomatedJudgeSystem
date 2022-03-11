@@ -1,6 +1,8 @@
 #ifndef FILES_MANAGER_HPP
 #define FILES_MANAGER_HPP
 
+#include <fstream>
+
 #include "domain/domain.hpp"
 #include "domain/my_strings.hpp"
 #include "domain/errors.hpp"

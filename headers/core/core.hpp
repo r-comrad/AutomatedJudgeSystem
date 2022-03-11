@@ -28,12 +28,7 @@ public:
 	//	enum DataStructure {FILES = 0, MAGIC_IVAN = 1};
 
 private:
-	enum Language 
-	{ 
-		NUN			=	0, 
-		MAGIC_CPP	=	1, 
-		SNAKE		=	2
-	};
+
 
 	std::vector<std::thread*> mChecks;
 	std::vector<std::mutex> mChecksMutexs;
@@ -49,25 +44,6 @@ private:
 	MDatabaseQuery mDBQ;
 	ProblemInformation mProblemInfo;
     std::mutex mProblemInfoLock;
-
-	/*
-	\brief Method of adding direction to a Point (Pair).
-	\param aFileName Reference point of direction.
-	\return The neighbor point is offset from the start
-	point in that direction.
-*/
-	Core::Language getLanguage(std::string aFileName);
-	void compile
-	(
-		std::string aFileName, std::string aOutName, 
-		Language aLanguage,
-		std::vector<char*>& aCpmandParameters
-	);
-	void makeExecutable
-	(
-		std::string aFileName, std::string aOutputName,
-		std::vector<char*>& aCpmandParameters
-	);
 
 	void check();
     bool resultEvoluation(int aCheckNum);

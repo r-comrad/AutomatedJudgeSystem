@@ -5,15 +5,7 @@
 //				CHILD PROCESS CREATION IMPLIMENTATION 
 //--------------------------------------------------------------------------------
 
-//--------------------------------------------------------------------------------
-// PROCESS CREATION CONSTANTS 
-//--------------------------------------------------------------------------------
-#define MAX_TIME_LIMIT 5000
-
-#define KILLING_PROCESS_TIME_VALUE (uint_64(1e18))
-#define KILLING_PROCESS_MEMORY_VALUE (uint_64(1e18))
-
-//--------------------------------------------------------------------------------
+#define _CRT_SECURE_NO_WARNINGS
 
 #include <string>
 #include <vector>
@@ -25,8 +17,26 @@
 #include "domain/paths.hpp"
 #include "domain/pair.hpp"
 
+//--------------------------------------------------------------------------------
+// PROCESS CREATION CONSTANTS 
+//--------------------------------------------------------------------------------
+#ifdef BILL_WINDOWS
+#define MAX_TIME_LIMIT 5000
+#elif defined(LINUS_LINUX)
+#define MAX_TIME_LIMIT 5
+#endif 
+
+#define MAX_MEMORY_LIMIT 5000
+
+
+#define KILLING_PROCESS_TIME_VALUE (uint_64(1e18))
+#define KILLING_PROCESS_MEMORY_VALUE (uint_64(1e18))
+
+//--------------------------------------------------------------------------------
+
 #ifdef BILL_WINDOWS
 	// BILL_WINDOWS
+#define _CRT_SECURE_NO_WARNINGS
 #include <future>
 #include <windows.h>
 #include <userenv.h>
@@ -36,8 +46,8 @@
 #include <atlalloc.h>
 #include <shlwapi.h>
 #include <cstdint>
-#include "cputime/getCPUTime.h"
-#define _CRT_SECURE_NO_WARNINGS
+
+#include "cputime/getCPUTime.hpp"
 	// !BILL_WINDOWS
 #elif defined(LINUS_LINUX)
 #include <wait.h>
@@ -45,7 +55,6 @@
 #include <fcntl.h>
 	// !LINUS_LINUX
 #endif 
-
 
 //--------------------------------------------------------------------------------
 
@@ -55,64 +64,69 @@ public:
 	enum PypeType { ZERO = 0, NO_ZERO = 1 };
 
 	/*
-	\brief Base process constructor that initialize time and memory limits.
-	(all created process have max time execution time limit
-	that defined in MAX_TIME_LIMIT define)
-	\param aParameters Process paramemeters for execution.
-	\param aTimeLimit Process time limit.
-	\param aMemoryLimit Process memory limit.
+	\brief Base process constructor that initialize time and memory 
+	usage limits for child process.
+	(all child process have max time and memory usage limits
+	that defined in MAX_TIME_LIMIT and MAX_MEMORY_LIMIT)
+	\param aParameters Child process parameters for execution.
+	\param aTimeLimit Child process maximum time usage.
+	\param aMemoryLimit Child process maximum memory usage.
 	*/
 	MyProcess
 	(
 		const std::vector<char*>& aParameters,
-#ifdef BILL_WINDOWS
-		uint_64 aTimeLimit = 1e3,
-#elif defined(LINUS_LINUX)
-		uint_64 aTimeLimit = 1e1,
-#endif 
+		uint_64 aTimeLimit = MAX_TIME_LIMIT,
 		uint_64 aMemoryLimit = 1e9
 	);
 	~MyProcess();
 
 	/*
-	\brief Execute process without time and memory evaluation. 
-	
-	\param aParameters Process paramemeters for execution.
-	\param aTimeLimit Process time limit.
-	\param aMemoryLimit Process memory limit.
+	\brief Executing the child process without time and memory 
+	usage evaluation.
+	\return Returns true if the process is completed successfully.
 	*/
-	//bool run(uint_16 aTimeLimit = MAX_TIME_LIMIT);
 	bool run();
+
+	/*
+	\brief Executing the child process with time and memory 
+	usage evaluation.
+	\return Returns the time and memory used by the process.
+	*/
 	std::pair<uint_64, uint_64> runWithLimits();
 
 protected:
-	uint_64 mTimeLimit;
-	uint_64 mMemoryLimit;
-
+	/*
+	\brief Sets time and memory usage limits.
+	\param aTimeLimit Child process maximum time usage.
+	\param aMemoryLimit Child process maximum memory usage.
+	*/
 	void setLimits(uint_64 aTimeLimit, uint_64 aMemoryLimit);
 
-	enum ProcessType { PIPE = 0, FILE = 1 };
-
-#ifdef BILL_WINDOWS
-	// BILL_WINDOWS
-	STARTUPINFOA mStartupInfo;
-	PROCESS_INFORMATION mProcessInfo;
-
-	std::future<long long> mFuture;
-
-	// !BILL_WINDOWS
-#elif defined(LINUS_LINUX)
-	// LINUS_LINUX
-	int mChildPID;
-	// !LINUS_LINUX
-#endif 
-
+	/*
+	\brief Create a child process with the specified parameters.
+	\param aParameters Child process parameters for execution.
+	*/
 	virtual void create(const std::vector<char*>& aParameters);
 
+	/*
+	\brief Redirecting input and output streams for a child process.
+	*/
 	virtual void IORedirection() = 0;
+
+	/*
+	\brief Closes the input and output handler for the child process.
+	(finishing of communication with the child process)
+	*/
 	virtual void closeHandles() = 0;
 
 #ifdef BILL_WINDOWS
+protected:
+	STARTUPINFOA mStartupInfo;
+	PROCESS_INFORMATION mProcessInfo;
+
+private:
+	std::future<long long> mFuture;
+
 	long long getMillisecondsNow();
 
 	long long getCurrentMemoryUsage(HANDLE&);
@@ -120,10 +134,14 @@ protected:
 
 	DWORD getExitCode(HANDLE&);
 	bool killProcess(PROCESS_INFORMATION&);
-#endif // !BILL_WINDOWS
+
+#elif defined(LINUS_LINUX)
+	int mChildPID;
+#endif 
 
 private:
-	ProcessType mType;
+	uint_64 mTimeLimit;
+	uint_64 mMemoryLimit;
 };
 
 //--------------------------------------------------------------------------------

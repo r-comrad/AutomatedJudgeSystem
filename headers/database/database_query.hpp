@@ -2,6 +2,7 @@
 #define DATABASE_QUERY_H
 
 #include <string>
+#include <fstream>
 
 #include "domain/domain.hpp"
 #include "domain/paths.hpp"

@@ -1,6 +1,8 @@
 #ifndef SUBMISSION_INFORMATION_H
 #define SUBMISSION_INFORMATION_H
 
+#include <string>
+
 #include "domain/domain.hpp"
 
 struct SubmissionInformation
