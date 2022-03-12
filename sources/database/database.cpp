@@ -1,8 +1,12 @@
 #include "database/database.hpp"
 
+//--------------------------------------------------------------------------------
+//					    SQLLITE INTERFACE  IMPLEMENTATION
+//--------------------------------------------------------------------------------
+
 Database::Database
 (
-    std_string aPath
+    str_const_ref aPath
 ) :
     mBase(NULL)
 {
@@ -16,25 +20,25 @@ Database::Database
 void 
 Database::select
 (
-    std_string aTableName,
-    std_string aColum, 
-    std_string aConditon,
+    str_const_ref aTableName,
+    str_val aColum,
+    str_val aConditon,
     int aStatementID
 )
 
 {
     if (aColum == "") aColum = "*";
     if (aConditon != "") aConditon = " WHERE " + aConditon;
-    std_string statement = "SELECT " + aColum + " FROM " + aTableName + aConditon;
+    str_val statement = "SELECT " + aColum + " FROM " + aTableName + aConditon;
     prepare(statement, aStatementID);
 }
 
 void 
 Database::update
 (
-    std_string aTableName,
-    std_string aValue,
-    std_string aConditon,
+    str_const_ref aTableName,
+    str_const_ref aValue,
+    str_const_ref aConditon,
     int aStatementID
 )
 {
@@ -94,7 +98,7 @@ Database::toAscii(const unsigned char* s, int aStatementID)
 }
 
 void 
-Database::prepare(std_string_ref aStatment, int aStatementID)
+Database::prepare(str_const_ref aStatment, int aStatementID)
 {
     if (mStatement.size() < aStatementID + 1)
     {

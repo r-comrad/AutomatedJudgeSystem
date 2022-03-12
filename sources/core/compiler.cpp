@@ -1,6 +1,8 @@
 #include "core/compiler.hpp"
 
 //--------------------------------------------------------------------------------
+//					COMPILER AND INTERPRETATOR IMPLEMENTATION
+//--------------------------------------------------------------------------------
 
 sys::Compiler::Compiler() {}
 
@@ -11,29 +13,16 @@ sys::Compiler::~Compiler() {}
 //--------------------------------------------------------------------------------
 
 void
-sys::Compiler::makeExecutable
+sys::Compiler::prepareExecutableCommand
 (
-    std_string_ref aFileName,
-    std_string_ref aOutputName,
+    str_const_ref aFileName,
+    str_const_ref aOutName,
     std::vector<char*>& aCpmandParameters
 )
 {
     sys::Compiler::Language language = getLanguage(aFileName);
-    return compile(aFileName, aOutputName, language, aCpmandParameters);
-}
 
-//--------------------------------------------------------------------------------
-
-void
-sys::Compiler::compile
-(
-    std_string_ref aFileName,
-    std_string_ref aOutName,
-    Language aLanguage,
-    std::vector<char*>& aCpmandParameters
-)
-{
-    if (aLanguage == Language::MAGIC_CPP)
+    if (language == Language::MAGIC_CPP)
     {
         aCpmandParameters.push_back(newStrCopy((aOutName + ".exe")));
         std::vector<char*> comand;
@@ -58,12 +47,12 @@ sys::Compiler::compile
         delete comand[1];
 
 #if defined(_DBG_) && defined(COMPILER_LOG_OUTPUT)
-        std_string compilerOutput;
+        str_val compilerOutput;
         compiler.readPipe(compilerOutput);
         WD_LOG(compilerOutput);
 #endif
     }
-    else if (aLanguage == Language::SNAKE)
+    else if (language == Language::SNAKE)
     {
 #ifdef BILL_WINDOWS
         aCpmandParameters.push_back(newCharPtrCopy(""));
@@ -71,13 +60,17 @@ sys::Compiler::compile
         aCpmandParameters.push_back(newCharPtrCopy("python3"));
         aCpmandParameters.push_back(newStrCopy(aFileName));
     }
+    else
+    {
+        WD_ERROR(compiler.0, "undefined language");
+    }
     aCpmandParameters.push_back(NULL);
 }
 
 //--------------------------------------------------------------------------------
 
 sys::Compiler::Language
-sys::Compiler::getLanguage(std_string_ref aFileName)
+sys::Compiler::getLanguage(str_const_ref aFileName)
 {
     int num = aFileName.find('.');
     if (num == -1) return sys::Compiler::Language::NUN;

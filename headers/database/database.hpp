@@ -1,5 +1,9 @@
-#ifndef DATABASE_H
-#define DATABASE_H
+#ifndef DATABASE_HPP
+#define DATABASE_HPP
+
+//--------------------------------------------------------------------------------
+//						SQLLITE INTERFACE DECLARATION
+//--------------------------------------------------------------------------------
 
 #include <string>
 #include <iostream>
@@ -12,17 +16,68 @@
 #include "domain/errors.hpp"
 #include "domain/pair.hpp"
 
+//--------------------------------------------------------------------------------
+
 typedef sqlite3 Base;
 typedef sqlite3_stmt Statement;
 
 class Database
 {
 public:
-	Database(std_string aPath);
-	void select(std_string aTableName, std_string aColum = "", std_string aConditon = "", int aStatementID = 0);
-	void update(std_string aTableName, std_string aValue, std_string aConditon, int aStatementID = 0);
+	Database(str_const_ref aPath);
+
+	//--------------------------------------------------------------------------------
+	//							DATABASE QUERY FUNCTIONS
+	//--------------------------------------------------------------------------------
+
+	/*
+	\brief Prepare the sqlite SELECT statement.
+	\param aTableName The name of the table for data selection.
+	\param aColum The names of the columns to be selected. 
+	If empty, select all columns.
+	\param aConditon Specifies the conditions for the selection request. 
+	If empty, then no conditions are used.
+	\param aStatementID Number of statment array cell to use. 
+	To simultaneously execute multiple queries, you must use 
+	different cells for each query.
+	If empty, the first cell (#0) is used.
+	*/
+	void select(str_const_ref aTableName, str_val aColum = "", 
+		str_val aConditon = "", int aStatementID = 0);
+
+	/*
+	\brief Prepare the sqlite UPDATE statement.
+	\param aTableName The name of the table for data update.
+	\param aValue New value for the sqlite table cell.
+	\param aConditon Specifies the conditions for data update.
+	\param aStatementID Number of statment array cell to use.
+	To simultaneously execute multiple queries, you must use 
+	different cells for each query.
+	If empty, the first cell (#0) is used.
+	*/
+	void update(str_const_ref aTableName, str_const_ref aValue, 
+		str_const_ref aConditon, int aStatementID = 0);
+
+	/*
+	\brief Close the selected statment.
+	\param aStatementID The number of the statment array cell 
+	that should be closed.
+	If empty, the first cell (#0) is used.
+	*/
 	void closeStatment(int aStatementID = 0);
+
+	/*
+	\brief Make a step for the selected statment.
+	\param aStatementID The number of the statment array cell
+	that should make a step.
+	If empty, the first cell (#0) is used.
+	\return SQLLite step status.
+	*/
 	int	step(int aStatementID = 0);
+
+	//--------------------------------------------------------------------------------
+	//						INFORMATION RECEIVING FUNCTIONS
+	//--------------------------------------------------------------------------------
 
 	const unsigned char* getTextFromRow(int aColumNumber, int aStatementID = 0);
 	const void* getText16FromRow(int aColumNumber, int aStatementID = 0);
@@ -34,7 +89,9 @@ private:
 	Base* mBase;
 	std::vector<Statement*> mStatement;
 
-	void prepare(std_string_ref aStatment, int aStatementID);
+	void prepare(str_const_ref aStatment, int aStatementID);
 };
 
-#endif
+//--------------------------------------------------------------------------------
+
+#endif // !DATABASE_HPP
