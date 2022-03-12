@@ -18,6 +18,8 @@
 #include "structs/problem_information.hpp"
 #include "structs/submission_information.hpp"
 
+#include "core/compiler.hpp"
+
 class Core
 {
 public:

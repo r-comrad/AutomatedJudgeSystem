@@ -3,6 +3,8 @@
 
 //--------------------------------------------------------------------------------
 
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <vector>
 
 #include "domain/domain.hpp"
@@ -27,12 +29,6 @@ namespace sys {
 		Compiler();
 		virtual ~Compiler();
 
-		void compile
-		(
-			std_string_ref aFileName, std_string_ref aOutName,
-			Language aLanguage,
-			std::vector<char*>& aCpmandParameters
-		);
 		void makeExecutable
 		(
 			std_string_ref aFileName, std_string_ref aOutputName,
@@ -40,6 +36,13 @@ namespace sys {
 		);
 	
 	private:
+		void compile
+		(
+			std_string_ref aFileName, std_string_ref aOutName,
+			Language aLanguage,
+			std::vector<char*>& aCpmandParameters
+		);
+
 		Compiler::Language getLanguage(std_string_ref aFileName);
 	};
 }

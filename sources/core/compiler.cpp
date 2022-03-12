@@ -11,6 +11,20 @@ sys::Compiler::~Compiler() {}
 //--------------------------------------------------------------------------------
 
 void
+sys::Compiler::makeExecutable
+(
+    std_string_ref aFileName,
+    std_string_ref aOutputName,
+    std::vector<char*>& aCpmandParameters
+)
+{
+    sys::Compiler::Language language = getLanguage(aFileName);
+    return compile(aFileName, aOutputName, language, aCpmandParameters);
+}
+
+//--------------------------------------------------------------------------------
+
+void
 sys::Compiler::compile
 (
     std_string_ref aFileName,
@@ -58,20 +72,6 @@ sys::Compiler::compile
         aCpmandParameters.push_back(newStrCopy(aFileName));
     }
     aCpmandParameters.push_back(NULL);
-}
-
-//--------------------------------------------------------------------------------
-
-void
-sys::Compiler::makeExecutable
-(
-    std_string_ref aFileName,
-    std_string_ref aOutputName,
-    std::vector<char*>& aCpmandParameters
-)
-{
-    sys::Compiler::Language language = getLanguage(aFileName);
-    return compile(aFileName, aOutputName, language, aCpmandParameters);
 }
 
 //--------------------------------------------------------------------------------

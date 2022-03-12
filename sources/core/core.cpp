@@ -74,16 +74,26 @@ Core::run
 #endif 
 #endif
 
-    makeExecutable
+    sys::Compiler compiler;
+
+    std_string codePath = MAEDIA + mProblemInfo.mSolutionFileName;
+    std_string desirableExecutablePath = SOLUTION_PATH + "-" +
+        std::to_string(mProblemInfo.mID);
+    compiler.makeExecutable
     (
-        MAEDIA + mProblemInfo.mSolutionFileName,
-        SOLUTION_PATH + "-" + std::to_string(mProblemInfo.mID), 
+        codePath,
+        desirableExecutablePath,
         mSolutionParameters
     );
-    makeExecutable
+
+    codePath = MAEDIA + mProblemInfo.mCheckerFileName;
+    desirableExecutablePath = CHECKER_PATH + "-" +
+        std::to_string(mProblemInfo.mID);
+
+    compiler.makeExecutable
     (
-        MAEDIA + mProblemInfo.mCheckerFileName,
-        CHECKER_PATH + "-" + std::to_string(mProblemInfo.mID),
+        codePath,
+        desirableExecutablePath,
         mCheckerParameters
     );
     
