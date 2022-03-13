@@ -1,5 +1,9 @@
 #include "database/database_query.hpp"
 
+//--------------------------------------------------------------------------------
+//					    DATABASE QUERYS HANDLER IMPLEMENTATION
+//--------------------------------------------------------------------------------
+
 //UPDATE core_solutions SET result = hh WHERE id = 10
 //SELECT * FROM core_solutions WHERE id = 10
 //UPDATE core_solutions SET lang = "C:\task1\checker\checker.cpp" WHERE id = 10
@@ -9,7 +13,7 @@
 
 MDatabaseQuery::MDatabaseQuery
 (
-    std::string aDatabasePath
+    str_const_ref aDatabasePath
 ) :
     mDatabase                   (aDatabasePath),
     mReservedStatementNumber    (0)
@@ -44,10 +48,10 @@ MDatabaseQuery::prepareForTesting
 void 
 MDatabaseQuery::writeResult
 (
-    int         aID, 
-    std::string aResult, 
-    int         aTime, 
-    int         aMemory
+    int             aID, 
+    str_const_ref   aResult,
+    int             aTime, 
+                    aMemory
 )
 {
     WD_LOG("Updating database");
@@ -79,7 +83,7 @@ MDatabaseQuery::getNextTest(ProblemInformation& aSudmissionInformation, TestLibM
     }
 
     aSudmissionInformation.mTestsCount++;
-    aTLM.mTest = std::string(reinterpret_cast<const char*>(input));
+    aTLM.mTest = str_val(reinterpret_cast<const char*>(input));
     //aTLM.mTest += "\n";
     aTLM.mAnswer = std::string(reinterpret_cast<const char*>(output));
 }

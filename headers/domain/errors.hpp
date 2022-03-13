@@ -7,17 +7,29 @@
 #include "domain/domain.hpp"
 #include "domain/my_strings.hpp"
 
+/*
+\brief Write log information to output.
+\param aMessege Log messege.
+*/
 #define W_LOG(aMessege)                                 \
     do {                                                \
         std::cout <<aMessege << "\n";                   \
     } while(0)
 
+/*
+\brief Write array to log output.
+\param aMessege Aray for output.
+*/
 #define W_VECTOR_LOG(aMessege)                          \
     do {                                                \
         for(auto& i : aMessege)                         \
             std::cout << i << "\n";                     \
     } while (0)
 
+/*
+\brief Write array that contains pointers to log output.
+\param aMessege Aray for output.
+*/
 #define W_VECTOR_PTR_LOG(aMessege)                      \
     do {                                                \
         for(auto& i : aMessege)                         \

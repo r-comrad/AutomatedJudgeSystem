@@ -25,10 +25,11 @@ class Database
 {
 public:
 	Database(str_const_ref aPath);
+	virtual ~Database();
 
-	//--------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------
 	//							DATABASE QUERY FUNCTIONS
-	//--------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------
 
 	/*
 	\brief Prepare the sqlite SELECT statement.
@@ -75,15 +76,71 @@ public:
 	*/
 	int	step(int aStatementID = 0);
 
-	//--------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------
 	//						INFORMATION RECEIVING FUNCTIONS
-	//--------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------
 
+	/*
+	\brief Gets UTF-8 string from colum of current row. The current line 
+	defined by the statement step.
+	\param aColumNumber The number of the column with string to get.
+	\param aStatementID Number of statment array cell to use.
+	To simultaneously execute multiple queries, you must use
+	different cells for each query.
+	If empty, the first cell (#0) is used.
+	\return Pointer to unt-8 string from specidied cell.
+	*/
 	const unsigned char* getTextFromRow(int aColumNumber, int aStatementID = 0);
+
+	/*
+	\brief Gets UTF-16 string from colum of current row. The current line
+	defined by the statement step.
+	\param aColumNumber The number of the column with string to get.
+	\param aStatementID Number of statment array cell to use.
+	To simultaneously execute multiple queries, you must use
+	different cells for each query.
+	If empty, the first cell (#0) is used.
+	\return Pointer to unt-8 string from specidied cell.
+	*/
 	const void* getText16FromRow(int aColumNumber, int aStatementID = 0);
+
+	/*
+	\brief Gets integer from colum of current row. The current line
+	defined by the statement step.
+	\param aColumNumber The number of the column with number to get.
+	\param aStatementID Number of statment array cell to use.
+	To simultaneously execute multiple queries, you must use
+	different cells for each query.
+	If empty, the first cell (#0) is used.
+	\return Number from specidied cell.
+	*/
 	int getIntFromRow(int aColumNumber, int aStatementID = 0);
+
+	/*
+	\brief Gets large nteger from colum of current row. The current line
+	defined by the statement step.
+	\param aColumNumber The number of the column with number to get.
+	\param aStatementID Number of statment array cell to use.
+	To simultaneously execute multiple queries, you must use
+	different cells for each query.
+	If empty, the first cell (#0) is used.
+	\return Number from specidied cell.
+	*/
 	sint_64 getInt64FromRow(int aColumNumber, int aStatementID = 0);
-	char* toAscii(const unsigned char* input, int aStatementID = 0);
+
+	//----------------------------------------------------------------------------
+
+	/*
+	\brief Gets Integer from colum of current row. The current line
+	defined by the statement step.
+	\param aColumNumber The number of the column with number to get.
+	\param aStatementID Number of statment array cell to use.
+	To simultaneously execute multiple queries, you must use
+	different cells for each query.
+	If empty, the first cell (#0) is used.
+	\return Number from specidied cell.
+	*/
+	char* toAscii(const unsigned char* input);
 
 private:
 	Base* mBase;

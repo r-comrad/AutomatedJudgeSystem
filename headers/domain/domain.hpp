@@ -1,5 +1,5 @@
-#ifndef DOMAIN_H
-#define DOMAIN_H
+#ifndef DOMAIN_HPP
+#define DOMAIN_HPP
 
 //------------------------------------------------------------
 //						PROJECT SETTINGS
@@ -73,4 +73,4 @@ typedef unsigned long long	uint_64;
 #include <windows.h>
 #endif
 
-#endif // !DOMAIN_H
+#endif // !DOMAIN_HPP

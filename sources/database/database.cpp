@@ -17,6 +17,9 @@ Database::Database
     WD_END_LOG;
 }
 
+Database::~Database() {}
+
+
 void 
 Database::select
 (
@@ -87,14 +90,16 @@ Database::step(int aStatementID)
 }
 
 char* 
-Database::toAscii(const unsigned char* s, int aStatementID)
+Database::toAscii(const unsigned char* s)
 {
+    //TODO: use my defines
     int cnt = 0;
     while (s[cnt++]);
     char* result = (char*) malloc(sizeof(char) * (cnt));
     result[cnt - 1] = 0;
     for (int i = 0; s[i];) result[i] = s[i++];
     return result;
+    //TODO end
 }
 
 void 
