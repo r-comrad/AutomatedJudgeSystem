@@ -1,7 +1,7 @@
 #include "domain/errors.hpp"
 
 #ifdef BILL_WINDOWS
-std_string
+str_val
 GetLastErrorAsString()
 {
     //setlocale(LC_ALL, "Russian");

@@ -1,6 +1,10 @@
 #ifndef ERRORS_HPP
 #define ERRORS_HPP
 
+//------------------------------------------------------------
+//					ERROR MESSEGES DECLARATION
+//------------------------------------------------------------
+
 #include <iostream>
 #include <string>
 
@@ -37,13 +41,20 @@
                 std::cout << i << "\n";                 \
     } while (0)
 
-
+/*
+\brief Write empty line in log output.
+*/
 #define W_END_LOG                                       \
     do {                                                \
         std::cout << std::endl;                         \
     } while (0)
 
 #ifdef  GOOD_DEBUG_ERRORS
+/*
+\brief Write error messege in log output with red text color.
+\param aNumber Error name.
+\param aMessege Errore messege.
+*/
 #define W_ERROR(aNumber, aMessege)                      \
     do {                                                \
         std::cout << std::string("\n\n\x1b[31m!!!!!!!!!"\
@@ -54,6 +65,11 @@
             << std::endl; exit(0);                      \
     } while (0)
 #else
+/*
+\brief Write error messege in log output.
+\param aNumber Error name.
+\param aMessege Errore messege.
+*/
 #define W_ERROR(aNumber, aMessege)                      \
     do {                                                \
         std::cout << std::string("\n\n!!!!!!!!! "       \
@@ -76,7 +92,11 @@
 #endif // DEBUG
 
 #ifdef BILL_WINDOWS
-std_string GetLastErrorAsString();
+/*
+\brief Gets error of WinAPI.
+\return String with error messege.
+*/
+str_val GetLastErrorAsString();
 #endif // !BILL_WINDOWS
 
 #endif // !ERRORS_HPP
