@@ -7,6 +7,6 @@
 #include "domain/my_strings.hpp"
 #include "domain/errors.hpp"
 
-void copyFile(std_string_ref aFromFileName, std_string_ref aToFileName);
+void copyFile(str_const_ref aFromFileName, str_const_ref aToFileName);
 
 #endif // !FILES_MANAGER_HPP

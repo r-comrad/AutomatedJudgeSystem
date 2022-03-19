@@ -81,10 +81,10 @@ Core::run
 
     sys::Compiler compiler;
 
-    std_string codePath = MAEDIA + mProblemInfo.mSolutionFileName;
-    std_string desirableExecutablePath = SOLUTION_PATH + "-" +
+    str_val codePath = MAEDIA + mProblemInfo.mSolutionFileName;
+    str_val desirableExecutablePath = SOLUTION_PATH + "-" +
         std::to_string(mProblemInfo.mID);
-    compiler.makeExecutable
+    compiler.prepareExecutableCommand
     (
         codePath,
         desirableExecutablePath,
@@ -95,7 +95,7 @@ Core::run
     desirableExecutablePath = CHECKER_PATH + "-" +
         std::to_string(mProblemInfo.mID);
 
-    compiler.makeExecutable
+    compiler.prepareExecutableCommand
     (
         codePath,
         desirableExecutablePath,

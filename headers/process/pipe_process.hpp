@@ -21,8 +21,8 @@ public:
 	);
 	virtual ~PipeProcess();
 
-	void readPipe(std_string_ref result);
-	void writePipe(std_string_ref aMessage, PypeType aType = ZERO);
+	void readPipe(str_ref result);
+	void writePipe(str_ref aMessage, PypeType aType = ZERO);
 
 private:
 	virtual void IORedirection();

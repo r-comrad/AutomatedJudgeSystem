@@ -59,6 +59,6 @@
 
 #define CPP_COMPILER_NAME   COMPILERS +   "magicCPPCompiler.cmd"
 
-std_string getMainPath();
+str_val getMainPath();
 
 #endif // !PATHS_HPP

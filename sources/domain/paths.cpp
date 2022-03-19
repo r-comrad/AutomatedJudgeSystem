@@ -1,6 +1,6 @@
 #include "domain/paths.hpp"
 
-std_string
+str_val
 getMainPath() {
 #ifdef BILL_WINDOWS
     CHAR buffer[MAX_PATH] = { 0 };

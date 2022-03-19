@@ -1,13 +1,13 @@
 #include "domain/my_strings.hpp"
 
-std_string
+str_val
 getString
 (
     const char* aString,
     bool aCheckZero
 )
 {
-    std_string result(aString);
+    str_val result(aString);
     if (aCheckZero && result[result.size()] != 0)
     {
         // TODO: check for zero index
@@ -17,14 +17,14 @@ getString
     return result;
 }
 
-std_string
+str_val
 getString
 (
     const unsigned char* aString,
     bool aCheckZero
 )
 {
-    std_string result;
+    str_val result;
     for (int i = 0; aString[i]; ++i) result.push_back(aString[i]);
     return result;
 }
@@ -33,7 +33,7 @@ getString
 void
 makeWindowString
 (
-    std_string_ref aString
+    str_ref aString
 )
 {
     for (std_string_cell& i : aString)

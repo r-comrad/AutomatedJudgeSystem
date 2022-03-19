@@ -51,7 +51,7 @@ MDatabaseQuery::writeResult
     int             aID, 
     str_const_ref   aResult,
     int             aTime, 
-                    aMemory
+    int             aMemory
 )
 {
     WD_LOG("Updating database");

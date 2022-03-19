@@ -24,7 +24,7 @@ public:
 	\brief Construct querys handler for base with specifien name
 	\param aDatabasePath Path to database.
 	*/
-	void MDatabaseQuery(str_const_ref aDatabasePath);
+	MDatabaseQuery(str_const_ref aDatabasePath);
 	~MDatabaseQuery();
 
 	/*

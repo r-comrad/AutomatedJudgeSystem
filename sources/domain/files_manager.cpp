@@ -1,9 +1,10 @@
 #include "domain/files_manager.hpp"
 
 void
-copyFile(
-    std_string_ref aFromFileName,
-    std_string_ref aToFileName
+copyFile
+(
+    str_const_ref aFromFileName,
+    str_const_ref aToFileName
 )
 {
     WD_LOG("Copying file\nFrom : " << aFromFileName);
