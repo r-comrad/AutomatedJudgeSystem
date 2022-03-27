@@ -6,6 +6,9 @@ add_library(
     database_query.hpp
     database_query.cpp
 
+    postgres.hpp
+    postgres.cpp
+
     sqlite_database.hpp
     sqlite_database.cpp
 )
