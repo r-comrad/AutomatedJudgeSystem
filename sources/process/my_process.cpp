@@ -42,7 +42,7 @@ MyProcess::run()
         return false;
     }
 
-    closeHandles();
+    //closeHandles();
 #else
     //sint_32 status;
     //int status;
@@ -90,6 +90,7 @@ MyProcess::runWithLimits()
     timeUsage = endTime - startTime;
 
     memoryUsage = mFuture.get();
+
 #elif defined(LINUS_LINUX)
     rusage resourseUsage;
     int status;

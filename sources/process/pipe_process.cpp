@@ -20,7 +20,9 @@ PipeProcess::PipeProcess
 
 PipeProcess::~PipeProcess() 
 {
+    #if		defined(BILL_WINDOWS)
     closeHandles();
+    #endif // BILL_WINDOWS
 }
 
 #ifdef LINUS_LINUX
