@@ -4,11 +4,15 @@
 //					COMPILER AND INTERPRETATOR IMPLEMENTATION
 //--------------------------------------------------------------------------------
 
-sys::Compiler::Compiler() {}
+sys::Compiler::Compiler() 
+{
+        mLanguageTypes.add("cpp", MAGIC_CPP);
+        mLanguageTypes.add("py", SNAKE);
+}
 
 //--------------------------------------------------------------------------------
 
-sys::Compiler::~Compiler() {}
+//sys::Compiler::~Compiler() {}
 
 //--------------------------------------------------------------------------------
 
@@ -72,14 +76,15 @@ sys::Compiler::prepareExecutableCommand
 sys::Compiler::Language
 sys::Compiler::getLanguage(str_const_ref aFileName)
 {
-    int num = aFileName.find('.');
-    if (num == -1) return sys::Compiler::Language::NUN;
+     int num = aFileName.find('.');
+     if (num == -1) return sys::Compiler::Language::NUN;
 
-    sys::Compiler::Language result = sys::Compiler::Language::NUN;
-    std::string fileExtension = aFileName.substr(num + 1);
-    if (fileExtension == "cpp") result = sys::Compiler::Language::MAGIC_CPP;
-    if (fileExtension == "py") result = sys::Compiler::Language::SNAKE;
-    return result;
+//     sys::Compiler::Language result = sys::Compiler::Language::NUN;
+     std::string fileExtension = aFileName.substr(num + 1);
+//     if (fileExtension == "cpp") result = sys::Compiler::Language::MAGIC_CPP;
+//     if (fileExtension == "py") result = sys::Compiler::Language::SNAKE;
+//     return result;
+        return Language(mLanguageTypes.get(fileExtension));
 }
 
 //--------------------------------------------------------------------------------

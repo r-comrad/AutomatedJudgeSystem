@@ -17,13 +17,15 @@
 #include "domain/path.hpp"
 #include "process/pipe_process.hpp"
 
+#include "algorithms/suffix_tree.hpp"
+
 //--------------------------------------------------------------------------------
 
 namespace sys {
 	class Compiler
 	{
 	private:
-		enum Language
+		enum class Language
 		{
 			NUN = 0,
 			MAGIC_CPP = 1,
@@ -32,7 +34,8 @@ namespace sys {
 
 	public:
 		Compiler();
-		virtual ~Compiler();
+		//virtual ~Compiler();
+		virtual ~Compiler() = default;
 
 		/*
 		\brief Prepare a command that executes the child process and
@@ -56,6 +59,8 @@ namespace sys {
 		\return Returns the language of the passed file.
 		*/
 		Compiler::Language getLanguage(str_const_ref aFileName);
+
+		alg::SuffixTree mLanguageTypes;
 	};
 }
 

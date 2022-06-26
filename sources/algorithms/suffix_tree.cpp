@@ -1,10 +1,15 @@
 #include "suffix_tree.hpp"
 
 void
-alg::SuffixTree::add(std::string aName, uint_32 aFinishNumber)
+alg::SuffixTree::add(const std::string& aName, uint_32 aFinishNumber)
 {
-    std::reverse(aName.begin(), aName.end());
-    mRoot->add(std::move(aName), aFinishNumber);
+    mRoot->add(aName, aFinishNumber);
+}
+
+uint_32 
+alg::SuffixTree::get(const std::string& aName)
+{
+
 }
 
 alg::SuffixTree::Node::Node() :
@@ -13,17 +18,20 @@ alg::SuffixTree::Node::Node() :
 {}
 
 void
-alg::SuffixTree::Node::add(std::string&& aName, uint_32 aFinishNumber)
+alg::SuffixTree::Node::add(const std::string& aName, uint_32 aFinishValue, size_t aCurNum)
 {
-    if (!aName.size())
+    if (aCurNum == aName.size())
     {
-        this->mIsFinish = true;
-        this->mFinishNumber = aFinishNumber;
+        mIsFinish = true;
+        mFinishNumber = aFinishValue;
         return;
     }
-    char temp = aName.back();
-    aName.pop_back();
-    this->mNextNodes[temp]->add(std::move(aName), aFinishNumber);
+    mNextNodes[aName[aCurNum]]->add(aName, aFinishValue, aCurNum++);
 }
 
-uint_32 get(std::string&& aName);
+uint_32
+alg::SuffixTree::Node::get(const std::string& aName, size_t aCurNum)
+{
+    if (mFinishNumber) return mFinishNumber;
+    return mNextNodes[aName[aCurNum]]->get(aName, aCurNum++);
+}

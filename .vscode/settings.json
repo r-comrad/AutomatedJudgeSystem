@@ -109,7 +109,8 @@
         "semaphore": "cpp",
         "source_location": "cpp",
         "span": "cpp",
-        "syncstream": "cpp"
+        "syncstream": "cpp",
+        "resumable": "cpp"
     },
     "workbench.editor.revealIfOpen" : true
 }

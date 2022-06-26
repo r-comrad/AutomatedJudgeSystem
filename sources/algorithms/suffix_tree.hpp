@@ -17,8 +17,8 @@ namespace alg
 		SuffixTree()  = default;
 		~SuffixTree() = default;
 
-		void add(std::string&& aName, uint_32 aFinishNumber);
-		uint_32 get(std::string&& aName);
+		void add(const std::string& aName, uint_32 aFinishNumber);
+		uint_32 get(const std::string& aName);
 
 	private:
 		struct Node
@@ -30,7 +30,8 @@ namespace alg
 			uint_32 mFinishNumber;
 			std::map<char, std::shared_ptr<Node>> mNextNodes;
 
-			void add(std::string&& aName, uint_32 aFinishNumber);
+			void add(const std::string& aName, uint_32 aFinishValue, size_t aCurNum = 0);
+			uint_32 get(const std::string& aName, size_t aCurNum = 0);
 		};
 
 		std::shared_ptr<Node> mRoot;
