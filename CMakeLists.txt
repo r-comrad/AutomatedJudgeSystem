@@ -1,24 +1,31 @@
-cmake_minimum_required(VERSION 3.21)
-project(SubmissionTester VERSION 0.95)
+cmake_minimum_required(VERSION 3.21.3)
+project(ChineseTeste VERSION 1.0)
+set(CMAKE_CXX_STANDARD 20)
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 
-add_compile_definitions(WIN_BY_ME)
+ADD_DEFINITIONS("-DBOOST_ALL_NO_LIB")
+find_package(Boost 1.40 COMPONENTS program_options REQUIRED)
 
-INCLUDE_DIRECTORIES("libraries")
+include(${CMAKE_CURRENT_SOURCE_DIR}/sources/sources.cmake)
 
-add_executable(${PROJECT_NAME} "sources/main/main.cpp")
+get_sources(${CMAKE_CURRENT_SOURCE_DIR}/sources SOURCES)
 
-find_package(PostgreSQL REQUIRED)
-target_include_directories(${PROJECT_NAME} PRIVATE ${PostgreSQL_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} PRIVATE ${PostgreSQL_LIBRARIES})
+add_executable(${PROJECT_NAME} ${SOURCES})
 
-add_subdirectory("libraries")
-add_subdirectory("sources")
+target_include_directories(${PROJECT_NAME} PRIVATE ${Boost_INCLUDE_DIR})
 
-set(Configuration "D")
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/sources)
 
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+                           LINUS_LINUX LOGS_OUTPUT_TYPE=1 ERRORS_OUTPUT_TYPE=4)
+if(WIN32)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE BILL_WINDOWS)
+else()
+    target_compile_definitions(${PROJECT_NAME} PRIVATE LINUS_LINUX)
+endif()
+
+set(Configuration D)
 set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin/$<0:>)
-
-set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}_NewVegasEdition")
-set_target_properties(${PROJECT_NAME}  PROPERTIES SUFFIX "_V${CMAKE_PROJECT_VERSION}_${Configuration}.exe")
+set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME ${PROJECT_NAME})
+set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX _V${CMAKE_PROJECT_VERSION}_${Configuration}.exe)

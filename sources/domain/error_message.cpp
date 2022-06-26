@@ -1,8 +1,42 @@
 #include "domain/error_message.hpp"
 
+std::ostream* dom::ErrorMessages::mLogStream    =  &std::cout;
+std::ostream* dom::ErrorMessages::mErrorStream  =  &std::cout;
+
+sint_8 dom::ErrorMessages::mLogBlockCount       =  0;
+
+dom::ErrorMessages mGreatCrutch;
+
+dom::ErrorMessages::ErrorMessages()
+{
+    #if     defined(LOGS_DEFAULT_OUTPUT)
+        mLogStream = &std::cout;
+    #elif   defined(LOGS_TO_COUT_OUTPUT)
+        mLogStream = &std::cout;
+    #elif   defined(LOGS_TO_FILE_OUTPUT)
+        mLogStream = new std::ofstream(LOGS_PATH + "out.log");
+    #endif
+
+    #if     defined(ERRORS_DEFAULT_OUTPUT)
+        mErrorStream = &std::cout;
+    #elif   defined(ERRORS_TO_COUT_OUTPUT)
+        mErrorStream = &std::cout;
+    #elif   defined(ERRORS_TO_FILE_OUTPUT)
+        mErrorStream = new std::ofstream(ERRORS_PATH + "out.err");
+    #elif   defined(ERRORS_TO_LOG_OUTPU)
+        mErrorStream = mLogStream;
+    #endif
+}
+
+void 
+dom::ErrorMessages::writeLogEndl()
+{
+    (*mLogStream) << '\n';
+}
+
 #ifdef BILL_WINDOWS
 str_val
-GetLastErrorAsString()
+dom::ErrorMessages::GetLastErrorAsString()
 {
     //setlocale(LC_ALL, "Russian");
 

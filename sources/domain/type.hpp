@@ -1,6 +1,5 @@
-#ifndef TYPES_HPP
-#define TYPES_HPP
-
+#ifndef DOM_TYPES_HPP
+#define DOM_TYPES_HPP
 
 //------------------------------------------------------------
 //							COMMON TYPES
@@ -20,5 +19,4 @@ typedef unsigned long long	uint_64;
 
 //------------------------------------------------------------
 
-
-#endif // !TYPES_HPP
+#endif // !DOM_TYPES_HPP
