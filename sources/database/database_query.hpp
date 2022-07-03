@@ -9,11 +9,14 @@
 
 #include "domain/type.hpp"
 #include "domain/path.hpp"
-#include "database/sqlite_database.hpp"
-#include "domain/my_string.hpp"
+#include "domain/string.hpp"
+
+#include "main/path.hpp"
 
 #include "structs/problem_information.hpp"
 #include "structs/testlib_message.hpp"
+
+#include "sqlite_database.hpp"
 
 //--------------------------------------------------------------------------------
 
@@ -59,7 +62,7 @@ public:
 	*/
 	void getAllTests(ProblemInformation& aSudmissionInformation);
 private:
-	Database mDatabase;
+	SQLiteDatabase mDatabase;
 	int mReservedStatementNumber;
 public:
 	void prepareTestsStatement(ProblemInformation& aSudmissionInformation);

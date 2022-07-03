@@ -4,5 +4,5 @@ add_library(
     CPUTime
 
     getCPUTime.cpp
-    getCPUTime.cpp
+    getCPUTime.hpp
 )

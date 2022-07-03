@@ -1,5 +1,5 @@
-#ifndef DATABASE_HPP
-#define DATABASE_HPP
+#ifndef SQLITE_DATABASE_HPP
+#define SQLITE_DATABASE_HPP
 
 //--------------------------------------------------------------------------------
 //						SQLLITE INTERFACE DECLARATION
@@ -12,20 +12,20 @@
 #include "SQLite/sqlite3.h"
 
 #include "domain/type.hpp"
-#include "domain/my_string.hpp"
+#include "domain/string.hpp"
 #include "domain/error_message.hpp"
-#include "domain/my_pair.hpp"
+#include "domain/pair.hpp"
 
 //--------------------------------------------------------------------------------
 
 typedef sqlite3 Base;
 typedef sqlite3_stmt Statement;
 
-class Database
+class SQLiteDatabase
 {
 public:
-	Database(str_const_ref aPath);
-	virtual ~Database();
+	SQLiteDatabase(str_const_ref aPath);
+	virtual ~SQLiteDatabase();
 
 	//----------------------------------------------------------------------------
 	//							DATABASE QUERY FUNCTIONS
@@ -151,4 +151,4 @@ private:
 
 //--------------------------------------------------------------------------------
 
-#endif // !DATABASE_HPP
+#endif // !SQLITE_DATABASE_HPP

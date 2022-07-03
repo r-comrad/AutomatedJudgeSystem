@@ -7,18 +7,22 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 ADD_DEFINITIONS("-DBOOST_ALL_NO_LIB")
 find_package(Boost 1.40 COMPONENTS program_options REQUIRED)
 
+# include_directories(ChineseTesters libraries)
+
 include(${CMAKE_CURRENT_SOURCE_DIR}/sources/sources.cmake)
 
 get_sources(${CMAKE_CURRENT_SOURCE_DIR}/sources SOURCES)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
+add_subdirectory(libraries)
+
 target_include_directories(${PROJECT_NAME} PRIVATE ${Boost_INCLUDE_DIR})
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/sources)
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE
-                           LINUS_LINUX LOGS_OUTPUT_TYPE=1 ERRORS_OUTPUT_TYPE=4)
+                           BILL_WINDOWS LOGS_OUTPUT_TYPE=1 ERRORS_OUTPUT_TYPE=4)
 if(WIN32)
     target_compile_definitions(${PROJECT_NAME} PRIVATE BILL_WINDOWS)
 else()

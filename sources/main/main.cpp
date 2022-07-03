@@ -14,6 +14,8 @@
 
 #include "core/core.hpp"
 
+#include "domain/error_message.hpp"
+
 //
 //int pipeA[2];
 //int pipeB[2];
@@ -131,12 +133,8 @@ int main(int argc, char* argv[])
         num = std::stoi(getString(argv[1]));
     }
 
-#ifdef LOG_TO_FILE_OUTPUT
-    freopen((LOGS_PATH + std::to_string(num)).c_str(), "w", stdout);
-#endif
-
-    WD_LOG("ID: " << num);
-    WD_END_LOG;
+    WRITE_LOG("ID:", num);
+    WRITE_LOG_ENDL();
     Core core(DATABASE_PATH);
     core.run(num);
     return 0;

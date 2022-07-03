@@ -1,4 +1,4 @@
-#include "cputime/getCPUTime.hpp"
+#include "getCPUTime.hpp"
 
 #if defined(_WIN32)
 #include <Windows.h>

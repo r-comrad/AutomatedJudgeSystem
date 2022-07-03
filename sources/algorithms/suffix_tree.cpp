@@ -9,7 +9,7 @@ alg::SuffixTree::add(const std::string& aName, uint_32 aFinishNumber)
 uint_32 
 alg::SuffixTree::get(const std::string& aName)
 {
-
+    return mRoot->get(aName);
 }
 
 alg::SuffixTree::Node::Node() :

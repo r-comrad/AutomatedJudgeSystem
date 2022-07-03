@@ -31,7 +31,7 @@ MyProcess::~MyProcess() {}
 bool
 MyProcess::run()
 {
-    WD_LOG("Runing simple process");
+    WRITE_LOG("Runing_simple_process");
 #ifdef BILL_WINDOWS
     ResumeThread(mProcessInfo.hThread);
     WaitForSingleObject(mProcessInfo.hProcess, mTimeLimit);
@@ -51,7 +51,6 @@ MyProcess::run()
     wait(NULL);
     //wait4(mChildPID,NULL,0,NULL);
 #endif
-    WD_END_LOG;
 
     return true;
 }
@@ -73,7 +72,7 @@ MyProcess::setLimits(uint_64 aTimeLimit, uint_64 aMemoryLimit)
 std::pair<uint_64, uint_64>
 MyProcess::runWithLimits()
 {
-    WD_LOG("Runing process with time and memory evaluation");
+    START_LOG_BLOCK("Runing_process_with_time_and_memory_evaluation");
 
     uint_64 timeUsage = 0;
     uint_64 memoryUsage = 0;
@@ -107,9 +106,8 @@ MyProcess::runWithLimits()
     timeUsage += resourseUsage.ru_stime.tv_usec;
 #endif 
 
-    WD_LOG("time usage: " << timeUsage);
-    WD_LOG("memory usage: " << memoryUsage);
-    WD_END_LOG;
+    WRITE_LOG("time_usage:", timeUsage);
+    END_LOG_BLOCK("memory_usage:", memoryUsage);
 
     return { timeUsage , memoryUsage };
 }
@@ -119,7 +117,7 @@ MyProcess::runWithLimits()
 void 
 MyProcess::create(const std::vector<char*>& aParameters)
 {
-    WD_LOG("Creating process name: " << aParameters[0]);
+    WRITE_LOG("Creating_process_name:", aParameters[0]);
 
     //TODO: in my_strinh.hpp
 
@@ -159,8 +157,7 @@ MyProcess::create(const std::vector<char*>& aParameters)
         &mProcessInfo
     ) == FALSE)
     {
-        WD_ERROR(process.0, (std::string("Can't start process ") 
-            + aParameters[0]));
+        WRITE_ERROR("MyProcess", 10, "Can't_start_process", aParameters[0]);
     }
     delete name;
     delete cmd;
@@ -241,7 +238,7 @@ MyProcess::getExitCode(HANDLE& hProcess)
 bool 
 MyProcess::killProcess(PROCESS_INFORMATION& processInfo) 
 {
-    WD_LOG("Killing process");
+    START_LOG_BLOCK("Killing_process");
 
     DWORD           processId = processInfo.dwProcessId;
     PROCESSENTRY32 processEntry = { 0 };
@@ -275,8 +272,7 @@ MyProcess::killProcess(PROCESS_INFORMATION& processInfo)
         return false;
     }
 
-    WD_LOG("Process killed?");
-    WD_END_LOG;
+    END_LOG_BLOCK("Process killed?");
 
     return true;
 }

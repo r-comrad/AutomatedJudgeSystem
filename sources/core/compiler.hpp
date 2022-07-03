@@ -12,12 +12,14 @@
 #include "main/flags.hpp"
 
 #include "domain/type.hpp"
-#include "domain/my_string.hpp"
+#include "domain/string.hpp"
 #include "domain/error_message.hpp"
 #include "domain/path.hpp"
 #include "process/pipe_process.hpp"
 
 #include "algorithms/suffix_tree.hpp"
+
+#include "main/path.hpp"
 
 //--------------------------------------------------------------------------------
 

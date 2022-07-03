@@ -30,7 +30,7 @@ dom::copyFile
     }
 
     END_LOG_BLOCK();
-    WRITE_LOG_ENDL;
+    WRITE_LOG_ENDL();
 }
 
 dom::File::File(str_const_ref aFileName) :

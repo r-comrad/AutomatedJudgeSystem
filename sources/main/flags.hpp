@@ -29,13 +29,13 @@
 //							OS FLAGS
 //------------------------------------------------------------
 
-#if defined(WIN32) || defined(WIN_BY_ME)
-#define BILL_WINDOWS
-#endif
+// #if defined(WIN32) || defined(WIN_BY_ME)
+// #define BILL_WINDOWS
+// #endif
 
-#ifndef BILL_WINDOWS
-#define LINUS_LINUX
-#endif
+// #ifndef BILL_WINDOWS
+// #define LINUS_LINUX
+// #endif
 
 //------------------------------------------------------------
 //							DEBUG FLAGS

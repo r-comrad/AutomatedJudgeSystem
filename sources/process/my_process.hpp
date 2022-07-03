@@ -12,10 +12,10 @@
 #include <iostream>
 
 #include "domain/type.hpp"
-#include "domain/my_string.hpp"
+#include "domain/string.hpp"
 #include "domain/error_message.hpp"
 #include "domain/path.hpp"
-#include "domain/my_pair.hpp"
+#include "domain/pair.hpp"
 
 //--------------------------------------------------------------------------------
 // PROCESS CREATION CONSTANTS 

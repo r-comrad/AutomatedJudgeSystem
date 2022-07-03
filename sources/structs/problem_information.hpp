@@ -4,7 +4,7 @@
 #include "main/flags.hpp"
 
 #include "domain/type.hpp"
-#include "domain/my_string.hpp"
+#include "domain/string.hpp"
 
 struct ProblemInformation
 {

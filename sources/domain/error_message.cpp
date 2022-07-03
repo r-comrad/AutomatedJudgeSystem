@@ -1,14 +1,16 @@
 #include "domain/error_message.hpp"
 
-std::ostream* dom::ErrorMessages::mLogStream    =  &std::cout;
-std::ostream* dom::ErrorMessages::mErrorStream  =  &std::cout;
+// std::ostream* dom::ErrorMessages::mLogStream    =  &std::cout;
+// std::ostream* dom::ErrorMessages::mErrorStream  =  &std::cout;
 
-sint_8 dom::ErrorMessages::mLogBlockCount       =  0;
+// sint_8 dom::ErrorMessages::mLogBlockCount       =  0;
 
-dom::ErrorMessages mGreatCrutch;
+dom::Message dom::Message::globalMessages;
 
-dom::ErrorMessages::ErrorMessages()
+dom::Message::Message() noexcept
 {
+    mLogBlockCount       =  0;
+
     #if     defined(LOGS_DEFAULT_OUTPUT)
         mLogStream = &std::cout;
     #elif   defined(LOGS_TO_COUT_OUTPUT)
@@ -29,14 +31,14 @@ dom::ErrorMessages::ErrorMessages()
 }
 
 void 
-dom::ErrorMessages::writeLogEndl()
+dom::Message::writeLogEndl() noexcept
 {
     (*mLogStream) << '\n';
 }
 
 #ifdef BILL_WINDOWS
 str_val
-dom::ErrorMessages::GetLastErrorAsString()
+dom::Message::GetLastWinAPIError() noexcept
 {
     //setlocale(LC_ALL, "Russian");
 

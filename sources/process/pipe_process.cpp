@@ -27,18 +27,18 @@ PipeProcess::~PipeProcess()
 
 #ifdef LINUS_LINUX
 void
-MyProcess::create(const std::vector<char*>& aParameters)
+PipeProcess::create(const std::vector<char*>& aParameters)
 {
     //aParameters = aName + aParameters;
 
-    WD_LOG("Creating process name: " << aParameters[0]);
+    WRITE_LOG("Creating_process_with_name:", aParameters[0]);
     //WD_LOG("Parameters: " << aParameters[1]);
     //signal(SIGCONT, MyProcess::handleContinueSignal);
 
     mChildPID = fork();
     if (mChildPID == -1)
     {
-        WD_ERROR(process.linux.0, "Can't create process");
+        WRITE_ERROR("PipeProcess", 10, "Linux", "Can't_create_process");
     }
     else if (!mChildPID)
     {
@@ -105,7 +105,6 @@ MyProcess::create(const std::vector<char*>& aParameters)
        /* param[j] = NULL;
         execv((char*) aName.c_str(), param);
     }*/
-    WD_END_LOG;
 }
 #endif
 
@@ -114,7 +113,7 @@ MyProcess::create(const std::vector<char*>& aParameters)
 void
 PipeProcess::IORedirection()
 {
-    WD_LOG("Rederecting input and output to pipe");
+    WRITE_LOG("Rederecting_input_and_output_to_pipe");
 
 #ifdef BILL_WINDOWS
     SECURITY_ATTRIBUTES securatyAttributes;
@@ -124,12 +123,12 @@ PipeProcess::IORedirection()
 
     if (!CreatePipe(&mChildSTDIN, &mThisSTDOUT, &securatyAttributes, 0))
     {
-        WD_ERROR(process.pipe.0, "Can't create pipe ");
+        WRITE_ERROR("PipeProcess", "IORedirection", 20, "Can't_create_pipe", "Windows");
     }
 
     if (!CreatePipe(&mThisSTDIN, &mChildSTDOUT, &securatyAttributes, 0))
     {
-        WD_ERROR(process.pipe.1, "Can't create pipe ");
+        WRITE_ERROR("PipeProcess", "IORedirection", 21, "Can't_create_pipe", "Windows");
     }
     //else if (aType == Process::IOType::MIXED) {}
 
@@ -153,8 +152,6 @@ PipeProcess::IORedirection()
     fcntl(mPipeB[1], F_SETPIPE_SZ, BUFFER_SIZE);
 
 #endif // BILL_WINDOWS
-
-    WD_END_LOG;
 }
 
 
@@ -162,7 +159,7 @@ void
 PipeProcess::readPipe(str_ref result)
 {
 #ifdef PIPE_LOGS
-    WD_LOG("Reading from pipe");
+    WRITE_LOG("Reading_from_pipe");
 #endif // !PIPE_LOG_OUTPUT
 
 #ifdef BILL_WINDOWS
@@ -211,7 +208,7 @@ void
 PipeProcess::writePipe(str_ref aMessage, PypeType aType)
 {
 #ifdef PIPE_LOGS
-    WD_LOG("Writing from pipe");
+    WRITE_LOG("Writing_from_pipe");
 #endif // !PIPE_LOG_OUTPUT
 
 #ifdef BILL_WINDOWS

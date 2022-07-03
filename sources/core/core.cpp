@@ -108,28 +108,34 @@ Core::run
 bool
 Core::resultEvoluation(int aCheckNum)
 {
+    START_LOG_BLOCK("Result_evoluation");
     mProblemInfoLock.lock();
     if (mChecksInfo[aCheckNum].mResult.substr(0, 2) != "ok")
     {
         mProblemInfo.mResult = mChecksInfo[aCheckNum].mResult;
-        WD_LOG("Result not okay");
-        WD_LOG("Today result is: " << mProblemInfo.mResult);
+        WRITE_LOG("Result_not_okay");
+        WRITE_LOG("Today_result_is:", mProblemInfo.mResult);
         mProblemInfoLock.unlock();
+        END_LOG_BLOCK();
         return false;
     }
     else if (mChecksInfo[aCheckNum].mUsedTime > mProblemInfo.mTimeLimit * 1000000)
     {
         mProblemInfo.mResult = "tle";
-        WD_LOG("Result is TLE: wanted " << mProblemInfo.mTimeLimit <<
-                                        " vs received " << mChecksInfo[aCheckNum].mUsedTime);
+        START_LOG_BLOCK("Result_is_TLE");
+        WRITE_LOG("wanted:", mProblemInfo.mTimeLimit);
+        END_LOG_BLOCK("received:", mChecksInfo[aCheckNum].mUsedTime);
         mProblemInfoLock.unlock();
+        END_LOG_BLOCK();
         return false;
     }
     else if (mChecksInfo[aCheckNum].mUsedMemory > mProblemInfo.mMemoryLimit)
     {
         mProblemInfo.mResult = "mle";
-        WD_LOG("Result is MLE: wanted " << mProblemInfo.mMemoryLimit <<
-                                        " vs received " << mChecksInfo[aCheckNum].mUsedMemory);
+        START_LOG_BLOCK("Result_is_MLE");
+        WRITE_LOG("wanted:", mProblemInfo.mMemoryLimit);
+        END_LOG_BLOCK("received:", mChecksInfo[aCheckNum].mUsedMemory);
+        END_LOG_BLOCK();
         mProblemInfoLock.unlock();
         return false;
     }
@@ -141,7 +147,7 @@ Core::resultEvoluation(int aCheckNum)
     mProblemInfoLock.unlock();
 
     return true;
-    WD_END_LOG;
+    END_LOG_BLOCK("result_is_ok");
 }
 
 void
@@ -153,9 +159,7 @@ Core::check
     //const std::vector<char*>& aCheckerParameters
 )
 {
-#ifdef _DBG_
-    //mProblemInfo.mMemoryLimit += 1000000;
-#endif // _DBG_
+    START_LOG_BLOCK("Checking_participant_code");
 
     mDBQ.prepareTestsStatement(mProblemInfo);
    //pipesTesting(0);
@@ -200,10 +204,9 @@ Core::check
     mDBQ.writeResult(mProblemInfo.mID, mProblemInfo.mResult, 
         mProblemInfo.mUsedTime, mProblemInfo.mUsedMemory);
 
-    WD_LOG("Final result : " + mProblemInfo.mResult);
-    WD_LOG("Final time : " << mProblemInfo.mUsedTime);
-    WD_LOG("Final memory : " << mProblemInfo.mUsedMemory);
-    WD_END_LOG;
+    WRITE_LOG("Final_result:", mProblemInfo.mResult);
+    WRITE_LOG("Final_time:", mProblemInfo.mUsedTime);
+    END_LOG_BLOCK("Final_memory:", mProblemInfo.mUsedMemory);
 }
 
 void
@@ -218,8 +221,7 @@ Core::pipesTesting
     //std::string aCheckerName
 )
 {
-    WD_LOG("Checking test #" << aThreadNum + mFinishedTest);
-    WD_LOG("Runing test #" << aThreadNum + mFinishedTest);
+    WRITE_LOG("Checking_test#", aThreadNum + mFinishedTest);
 //if (aThreadNum == 100)
 //{
 //    int yy = 0;
@@ -238,7 +240,7 @@ Core::pipesTesting
         mChecksMutexs[aThreadNum].lock();
         mChecksInfo[aThreadNum].mIsFinishedTesting = true;
         mChecksInfo[aThreadNum].mResult = "ok";
-        WD_LOG("Tests are over");
+        WRITE_LOG("Tests_are_over");
         mChecksMutexs[aThreadNum].unlock();
         mGetTestLock.unlock();
         return;
@@ -285,9 +287,9 @@ Core::pipesTesting
     checker.writePipe(TLM.mAnswerSize,  PipeProcess::PypeType::NO_ZERO);
     checker.writePipe(TLM.mAnswer,      PipeProcess::PypeType::NO_ZERO);
 
-#if defined(_DBG_) && defined (CODE_OUTPUT_LOG)
-    WD_LOG("Test: " + TLM.mTest + "\nOutput: " + TLM.mOutput + "\nAnswer: " + TLM.mAnswer);
-#endif
+    START_LOG_BLOCK("Test:", TLM.mTest);
+    WRITE_LOG("Output:", TLM.mOutput);
+    END_LOG_BLOCK("Answer:", TLM.mAnswer);
 
     checker.run();
     checker.readPipe(mChecksInfo[aThreadNum].mResult);

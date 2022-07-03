@@ -4,24 +4,23 @@
 //					    SQLLITE INTERFACE  IMPLEMENTATION
 //--------------------------------------------------------------------------------
 
-Database::Database
+SQLiteDatabase::SQLiteDatabase
 (
     str_const_ref aPath
 ) :
     mBase(NULL)
 {
-    WD_LOG("Opening database : " << aPath);
+    WRITE_LOG("Opening_database:", aPath);
     if (sqlite3_open(aPath.c_str(), &mBase) != SQLITE_OK) 
-        WD_ERROR(database.0, "Can't open database " + aPath);
+        WRITE_ERROR("SQLiteDatabase", "constructor(string)", 0, "Can't_open_database ", aPath);
     //TODO: check don't work
-    WD_END_LOG;
 }
 
-Database::~Database() {}
+SQLiteDatabase::~SQLiteDatabase() {}
 
 
 void 
-Database::select
+SQLiteDatabase::select
 (
     str_const_ref aTableName,
     str_val aColum,
@@ -37,7 +36,7 @@ Database::select
 }
 
 void 
-Database::update
+SQLiteDatabase::update
 (
     str_const_ref aTableName,
     str_const_ref aValue,
@@ -50,32 +49,32 @@ Database::update
 }
 
 const unsigned char* 
-Database::getTextFromRow(int aColumNumber, int aStatementID)
+SQLiteDatabase::getTextFromRow(int aColumNumber, int aStatementID)
 {
     return sqlite3_column_text(mStatement[aStatementID], aColumNumber);
 }
 
 
 const void* 
-Database::getText16FromRow(int aColumNumber, int aStatementID)
+SQLiteDatabase::getText16FromRow(int aColumNumber, int aStatementID)
 {
     return sqlite3_column_text16(mStatement[aStatementID], aColumNumber);
 }
 
 int 
-Database::getIntFromRow(int aColumNumber, int aStatementID)
+SQLiteDatabase::getIntFromRow(int aColumNumber, int aStatementID)
 {
     return sqlite3_column_int(mStatement[aStatementID], aColumNumber);
 }
 
 sint_64 
-Database::getInt64FromRow(int aColumNumber, int aStatementID)
+SQLiteDatabase::getInt64FromRow(int aColumNumber, int aStatementID)
 {
     return sqlite3_column_int64(mStatement[aStatementID], aColumNumber);
 }
 
 void 
-Database::closeStatment(int aStatementID)
+SQLiteDatabase::closeStatment(int aStatementID)
 {
     sqlite3_finalize(mStatement[aStatementID]);
     mStatement[aStatementID] = NULL;
@@ -84,13 +83,13 @@ Database::closeStatment(int aStatementID)
 }
 
 int 
-Database::step(int aStatementID)
+SQLiteDatabase::step(int aStatementID)
 {
     return sqlite3_step(mStatement[aStatementID]);
 }
 
 char* 
-Database::toAscii(const unsigned char* s)
+SQLiteDatabase::toAscii(const unsigned char* s)
 {
     //TODO: use my defines
     int cnt = 0;
@@ -103,7 +102,7 @@ Database::toAscii(const unsigned char* s)
 }
 
 void 
-Database::prepare(str_const_ref aStatment, int aStatementID)
+SQLiteDatabase::prepare(str_const_ref aStatment, int aStatementID)
 {
     if (mStatement.size() < aStatementID + 1)
     {
@@ -117,5 +116,5 @@ Database::prepare(str_const_ref aStatment, int aStatementID)
         -1,                 /* Maximum length of zSql in bytes. */
         &(mStatement[aStatementID]),             /* OUT: Statement handle */
         NULL                /* OUT: Pointer to unused portion of zSql */
-    ) != SQLITE_OK) WD_ERROR(database.2, "Can't prepare statement " + aStatment);
+    ) != SQLITE_OK) WRITE_ERROR("SQLiteDatabase", "prepare", 10, "Can't_prepare_statement", aStatment);
 }

@@ -11,20 +11,21 @@
 #include "type.hpp"
 #include "string.hpp"
 #include "path.hpp"
+#include <fstream>
 
 #ifdef BILL_WINDOWS
-#include <windows.h>
+// #include <windows.h>
 #endif // !BILL_WINDOWS
 
 namespace dom
 {
-    class ErrorMessages
+    class Message
     {
     public:
-        ErrorMessages();
+        static Message globalMessages;
 
         template<typename... Args>
-        static void startLogBlock(Args... args)
+        void startLogBlock(Args... args) noexcept
         {
             for(sint_8 i = 0; i < mLogBlockCount; ++i) (*mLogStream) << '\t';
             ++mLogBlockCount;
@@ -38,7 +39,7 @@ namespace dom
         }
 
         template<typename... Args>
-        static void endLogBlock(Args... args)
+        void endLogBlock(Args... args) noexcept
         {
             for(sint_8 i = 0; i < mLogBlockCount; ++i) (*mLogStream) << '\t';
             --mLogBlockCount;
@@ -52,7 +53,7 @@ namespace dom
         }
 
         template<typename... Args>
-        static void writeLog(Args... args)
+        void writeLog(Args... args) noexcept
         {
             for(sint_8 i = 0; i < mLogBlockCount; ++i) (*mLogStream) << '\t';
 
@@ -65,7 +66,7 @@ namespace dom
         }
 
         template<typename... Args>
-        static void writeError(Args... args)
+        void writeError(Args... args) noexcept
         {
             #ifdef ERRORS_TO_LOG_OUTPU
                 for(sint_8 i = 0; i < mLogBlockCount; ++i) (*mLogStream) << '\t';
@@ -81,33 +82,37 @@ namespace dom
             (*mErrorStream) << '\n';
         }
 
-        static void writeLogEndl();
+        void writeLogEndl() noexcept;
 
         #ifdef BILL_WINDOWS
         /*
         \brief Gets error of WinAPI.
         \return String with error messege.
         */
-        str_val GetLastErrorAsString();
+        str_val GetLastWinAPIError() noexcept;
         #endif // !BILL_WINDOWS
 
     private:
-        static ErrorMessages mGreatCrutch;
 
-        static std::ostream* mLogStream;
-        static std::ostream* mErrorStream;
+        Message() noexcept;
 
-        static sint_8 mLogBlockCount;
+        std::ostream* mLogStream;
+        std::ostream* mErrorStream;
+
+        sint_8 mLogBlockCount;
     };
 }
 
+/*
+ERROR FORMAT: <file or class name>, <function>, <approximate error number>, <error message>
+*/
 
 #ifdef _DBG_
-    #define START_LOG_BLOCK(...)    dom::ErrorMessages::startLogBlock(__VA_ARGS__)
-    #define END_LOG_BLOCK(...)      dom::ErrorMessages::endLogBlock(__VA_ARGS__)
-    #define WRITE_LOG(...)          dom::ErrorMessages::writeLog(__VA_ARGS__)
-    #define WRITE_LOG_ENDL          dom::ErrorMessages::writeLogEndl
-    #define WRITE_ERROR(...)        dom::ErrorMessages::writeError(__VA_ARGS__)
+    #define START_LOG_BLOCK(...)    dom::Message::globalMessages.startLogBlock(__VA_ARGS__)
+    #define END_LOG_BLOCK(...)      dom::Message::globalMessages.endLogBlock(__VA_ARGS__)
+    #define WRITE_LOG(...)          dom::Message::globalMessages.writeLog(__VA_ARGS__)
+    #define WRITE_LOG_ENDL          dom::Message::globalMessages.writeLogEndl
+    #define WRITE_ERROR(...)        dom::Message::globalMessages.writeError(__VA_ARGS__)
 #else
     #define START_LOG_BLOCK(...)    void(0)
     #define END_LOG_BLOCK(...)      void(0)

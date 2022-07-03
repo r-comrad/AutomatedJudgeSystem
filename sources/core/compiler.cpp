@@ -6,8 +6,8 @@
 
 sys::Compiler::Compiler() 
 {
-        mLanguageTypes.add("cpp", MAGIC_CPP);
-        mLanguageTypes.add("py", SNAKE);
+        mLanguageTypes.add("cpp",       uint_32(Language::MAGIC_CPP));
+        mLanguageTypes.add("py",        uint_32(Language::SNAKE));
 }
 
 //--------------------------------------------------------------------------------
@@ -53,7 +53,7 @@ sys::Compiler::prepareExecutableCommand
 #if defined(_DBG_) && defined(COMPILER_LOG_OUTPUT)
         str_val compilerOutput;
         compiler.readPipe(compilerOutput);
-        WD_LOG(compilerOutput);
+        WRITE_LOG(compilerOutput);
 #endif
     }
     else if (language == Language::SNAKE)
@@ -66,7 +66,7 @@ sys::Compiler::prepareExecutableCommand
     }
     else
     {
-        WD_ERROR(compiler.0, "undefined language");
+        WRITE_ERROR("Compiler", "prepareExecutableCommand", 10, "undefined_language");
     }
     aCpmandParameters.push_back(NULL);
 }

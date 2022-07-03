@@ -54,7 +54,8 @@ MDatabaseQuery::writeResult
     int             aMemory
 )
 {
-    WD_LOG("Updating database");
+    START_LOG_BLOCK("Updating_database");
+    WRITE_LOG("Updating...");
 
     mDatabase.update("core_solutions", "result = '" + aResult + "'" +
         ", time = " + std::to_string(aTime) +
@@ -62,14 +63,14 @@ MDatabaseQuery::writeResult
     mDatabase.step();
     mDatabase.closeStatment();
 
-    WD_LOG("Database updated?");
-    WD_END_LOG;
+    END_LOG_BLOCK("Database_updated?");
 }
 
 void
 MDatabaseQuery::getNextTest(ProblemInformation& aSudmissionInformation, TestLibMessage& aTLM)
 {
-    WD_LOG("Taking next test");
+
+    WRITE_LOG("Taking_next_test");
     mDatabase.step(mReservedStatementNumber);
     //if (mDatabase.step() != SQLITE_OK) break; TODO: fixing that shit
     const unsigned char* input = mDatabase.getTextFromRow(0, mReservedStatementNumber);
@@ -94,7 +95,7 @@ MDatabaseQuery::getAllTests
     ProblemInformation& aSudmissionInformation
 )
 {
-    WD_LOG("Geting test from database");
+    START_LOG_BLOCK("Geting_test_from_database");
 
     mDatabase.select("core_test", "input, output", "contest_id = " + std::to_string(aSudmissionInformation.mContestID));
     int cnt = 0;
@@ -111,12 +112,12 @@ MDatabaseQuery::getAllTests
 
         if (!taskFile.is_open())
         {
-            WD_ERROR(database.0, "Can't open file " + TEST_PATH + std::to_string(cnt));
+            WRITE_ERROR("MDatabaseQuery", 10, "Can't_open_file", TEST_PATH + std::to_string(cnt));
             continue;//TODO
         }
         if (!ansFile.is_open())
         {
-            WD_ERROR(database.0, "Can't open file " + ANSWERS_PATH + std::to_string(cnt));
+            WRITE_ERROR("MDatabaseQuery", 11, "Can't_open_file", ANSWERS_PATH + std::to_string(cnt));
             continue;
         }
 
@@ -127,8 +128,7 @@ MDatabaseQuery::getAllTests
 
     mDatabase.closeStatment();
 
-    WD_LOG("Tests taken from pashae");
-    WD_END_LOG;
+    END_LOG_BLOCK("Tests_taken_from_pashae");
 }
 
 void
@@ -140,11 +140,10 @@ MDatabaseQuery::prepareTestsStatement
     aSudmissionInformation.mTestsAreOver = false;
     aSudmissionInformation.mTestsCount = 0;
 
-    WD_LOG("Prepare geting test from database");
+    START_LOG_BLOCK("Prepare_geting_test_from_database");
     mDatabase.select("core_test", "input, output", "contest_id = " +
         std::to_string(aSudmissionInformation.mContestID), mReservedStatementNumber);
-    WD_LOG("I'm ready");
-    WD_END_LOG;
+    END_LOG_BLOCK("I'm_ready");
 }
 
 void 
@@ -153,7 +152,7 @@ MDatabaseQuery::getIDInformation
     ProblemInformation& aSudmissionInformation
 )
 {
-    WD_LOG("Geting ID and name from database");
+    START_LOG_BLOCK("Geting_ID_and_name_from_database");
 
     mDatabase.select("core_solutions", "file_name, contest_id", "id = " + std::to_string(aSudmissionInformation.mID));
     mDatabase.step();
@@ -162,9 +161,8 @@ MDatabaseQuery::getIDInformation
     aSudmissionInformation.mContestID = mDatabase.getInt64FromRow(1);
     mDatabase.closeStatment();
 
-    WD_LOG("File name: " << aSudmissionInformation.mSolutionFileName);
-    WD_LOG("Contest ID: " << aSudmissionInformation.mContestID);
-    WD_END_LOG;
+    WRITE_LOG("File_name:", aSudmissionInformation.mSolutionFileName);
+    END_LOG_BLOCK("Contest_ID:", aSudmissionInformation.mContestID);
 }
 
 void 
@@ -173,7 +171,7 @@ MDatabaseQuery::getLimitsInformation
     ProblemInformation& aSudmissionInformation
 )
 {
-    WD_LOG("Geting limits from database");
+    START_LOG_BLOCK("Geting_limits_from_database");
 
     mDatabase.select("core_contests", "time_limit, memory_limit, checker", "id = " + std::to_string(aSudmissionInformation.mContestID));
     mDatabase.step();
@@ -182,7 +180,6 @@ MDatabaseQuery::getLimitsInformation
     aSudmissionInformation.mCheckerFileName = getString(mDatabase.getTextFromRow(2));
     mDatabase.closeStatment();
 
-    WD_LOG("Time limit: " << aSudmissionInformation.mTimeLimit);
-    WD_LOG("Memory limit: " << aSudmissionInformation.mMemoryLimit);
-    WD_END_LOG;
+    WRITE_LOG("Time_limit:", aSudmissionInformation.mTimeLimit);
+    END_LOG_BLOCK("Memory_limit:", aSudmissionInformation.mMemoryLimit);
 }
