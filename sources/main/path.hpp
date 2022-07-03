@@ -6,7 +6,7 @@
 #define WORK_DIR        RESOURCES   + "working_directory\\"
 #define MAEDIA          MAIN_PATH   + "media\\"
 
-#define DB_PATH         MAIN_PATH   
+#define DB_PATH         EXECUTABLE_PATH   
 #define DATABASE_PATH   DB_PATH     + "db.sqlite3"
 
 #define CHECKER_PATH    WORK_DIR    + "checker\\checker"
@@ -23,8 +23,7 @@
 
 #define MAEDIA          MAIN_PATH   + "media/"
 
-#define MAIN_PATH       dom::MainPath::getPath()
-#define DB_PATH         MAIN_PATH
+#define DB_PATH         EXECUTABLE_PATH
 
 #define DATABASE_PATH   DB_PATH     + "db.sqlite3"
 

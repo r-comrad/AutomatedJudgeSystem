@@ -14,22 +14,22 @@
     #include <limits.h>
 #endif
 
+#define MAIN_PATH       dom::Path::getMainPath()
+#define EXECUTABLE_PATH dom::Path::getExecutablePath()
+
 #if     defined(BILL_WINDOWS)
-    #define MAIN_PATH       dom::MainPath::getPath()
     #define RESOURCES       MAIN_PATH   + "resources\\"s
     #define OUTPUT_PATH     RESOURCES   + "output\\"s
     #define LOGS_PATH       RESOURCES   + "logs\\"s
     #define ERRORS_PATH     RESOURCES   + "errors\\"s
 // !BILL_WINDOWS
 #elif   defined(LINUS_LINUX)
-    #define MAIN_PATH       dom::MainPath::getPath()
     #define RESOURCES       MAIN_PATH   + "resources/"s
     #define OUTPUT_PATH     RESOURCES   + "output/"s
     #define LOGS_PATH       RESOURCES   + "logs/"s
     #define ERRORS_PATH     WORK_DIR    + "errors/"s
 // !LINUS_LINUX
 #else   // NUN
-    #define MAIN_PATH       ""s
     #define RESOURCES       ""s
     #define OUTPUT_PATH     ""s
     #define LOGS_PATH       ""s
@@ -39,12 +39,15 @@
 
 namespace dom
 {
-    class MainPath
+    class Path
     {
     public:
-        static str_const_ref getPath();
+        static std::string getMainPath() noexcept;
+        static std::string getExecutablePath() noexcept;
+
     private:
-        static str_val getMainPath();
+        static std::string getMainPathOnce() noexcept;
+        static std::string getExecutablePathOnce() noexcept;
     };
 }
 

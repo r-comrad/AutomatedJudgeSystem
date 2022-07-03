@@ -1,19 +1,34 @@
 #include "path.hpp"
 
-str_const_ref
-dom::MainPath::getPath()
+std::string
+dom::Path::getMainPath() noexcept
 {
-    static str_val path = getMainPath();
+    static std::string globalMainPath = getMainPathOnce();
+    return globalMainPath;
+}
+
+std::string
+dom::Path::getExecutablePath() noexcept
+{
+    static std::string globalExecutablePath = getExecutablePathOnce();
+    return globalExecutablePath;
+}
+
+str_val
+dom::Path::getMainPathOnce() noexcept
+{
+    std::string path = getExecutablePath();
+    while(path.back() != '\\' || path.back() != '/') path.pop_back();
     return path;
 }
 
 str_val
-dom::MainPath::getMainPath()
+dom::Path::getExecutablePathOnce() noexcept
 {
 #if     defined(BILL_WINDOWS)
     CHAR buffer[MAX_PATH] = { 0 };
     uint_8 size = GetModuleFileNameA(NULL, buffer, MAX_PATH);
-    for (int i = 0; i < 2; ++i) while (buffer[--size] != L'\\');
+    for (int i = 0; i < 1; ++i) while (buffer[--size] != L'\\');
     buffer[size + 1] = 0;
     //return std::string(buffer).substr(0, size + 1);
     return getString(buffer);
