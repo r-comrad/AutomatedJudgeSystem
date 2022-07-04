@@ -14,7 +14,7 @@ namespace alg
 	class SuffixTree
 	{
 	public:
-		SuffixTree()  = default;
+		SuffixTree();
 		~SuffixTree() = default;
 
 		void add(const std::string& aName, uint_32 aFinishNumber);

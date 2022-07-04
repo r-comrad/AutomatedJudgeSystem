@@ -157,7 +157,7 @@ MyProcess::create(const std::vector<char*>& aParameters)
         &mProcessInfo
     ) == FALSE)
     {
-        WRITE_ERROR("MyProcess", 10, "Can't_start_process", aParameters[0]);
+        WRITE_ERROR("Process", "create", 10, "Can't_start_process", aParameters[0]);
     }
     delete name;
     delete cmd;

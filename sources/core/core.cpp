@@ -10,7 +10,7 @@
 
 #include <cmath>
 
-#define THREAD_COUNTS 30
+#define THREAD_COUNTS 1
 #define DEBUG_PLUS_SOLUTION_SUBMISSION 1
 
 #if DEBUG_PLUS_SOLUTION_SUBMISSION
@@ -109,15 +109,14 @@ bool
 Core::resultEvoluation(int aCheckNum)
 {
     START_LOG_BLOCK("Result_evoluation");
+    bool result = false;
+
     mProblemInfoLock.lock();
     if (mChecksInfo[aCheckNum].mResult.substr(0, 2) != "ok")
     {
         mProblemInfo.mResult = mChecksInfo[aCheckNum].mResult;
-        WRITE_LOG("Result_not_okay");
-        WRITE_LOG("Today_result_is:", mProblemInfo.mResult);
-        mProblemInfoLock.unlock();
-        END_LOG_BLOCK();
-        return false;
+        START_LOG_BLOCK("Result_not_okay");
+        END_LOG_BLOCK("Today_result_is:", mProblemInfo.mResult);
     }
     else if (mChecksInfo[aCheckNum].mUsedTime > mProblemInfo.mTimeLimit * 1000000)
     {
@@ -125,9 +124,6 @@ Core::resultEvoluation(int aCheckNum)
         START_LOG_BLOCK("Result_is_TLE");
         WRITE_LOG("wanted:", mProblemInfo.mTimeLimit);
         END_LOG_BLOCK("received:", mChecksInfo[aCheckNum].mUsedTime);
-        mProblemInfoLock.unlock();
-        END_LOG_BLOCK();
-        return false;
     }
     else if (mChecksInfo[aCheckNum].mUsedMemory > mProblemInfo.mMemoryLimit)
     {
@@ -135,19 +131,21 @@ Core::resultEvoluation(int aCheckNum)
         START_LOG_BLOCK("Result_is_MLE");
         WRITE_LOG("wanted:", mProblemInfo.mMemoryLimit);
         END_LOG_BLOCK("received:", mChecksInfo[aCheckNum].mUsedMemory);
-        END_LOG_BLOCK();
-        mProblemInfoLock.unlock();
-        return false;
     }
-
-    if (mProblemInfo.mUsedTime < mChecksInfo[aCheckNum].mUsedTime)
-        mProblemInfo.mUsedTime = mChecksInfo[aCheckNum].mUsedTime;
-    if (mProblemInfo.mUsedMemory < mChecksInfo[aCheckNum].mUsedMemory)
-        mProblemInfo.mUsedMemory = mChecksInfo[aCheckNum].mUsedMemory;
+    else
+    {
+        result = true;
+        if (mProblemInfo.mUsedTime < mChecksInfo[aCheckNum].mUsedTime)
+            mProblemInfo.mUsedTime = mChecksInfo[aCheckNum].mUsedTime;
+        if (mProblemInfo.mUsedMemory < mChecksInfo[aCheckNum].mUsedMemory)
+            mProblemInfo.mUsedMemory = mChecksInfo[aCheckNum].mUsedMemory;
+        START_LOG_BLOCK("ok_test_passed");
+        END_LOG_BLOCK();
+    }
     mProblemInfoLock.unlock();
 
-    return true;
-    END_LOG_BLOCK("result_is_ok");
+    END_LOG_BLOCK();
+    return result;
 }
 
 void
@@ -221,7 +219,7 @@ Core::pipesTesting
     //std::string aCheckerName
 )
 {
-    WRITE_LOG("Checking_test#", aThreadNum + mFinishedTest);
+    START_LOG_BLOCK("Checking_test#", aThreadNum + mFinishedTest);
 //if (aThreadNum == 100)
 //{
 //    int yy = 0;
@@ -243,6 +241,7 @@ Core::pipesTesting
         WRITE_LOG("Tests_are_over");
         mChecksMutexs[aThreadNum].unlock();
         mGetTestLock.unlock();
+        END_LOG_BLOCK();
         return;
     }
     mGetTestLock.unlock();
@@ -262,6 +261,7 @@ Core::pipesTesting
         mChecksMutexs[aThreadNum].lock();
         mChecksInfo[aThreadNum].mIsFinishedTesting = true;
         mChecksMutexs[aThreadNum].unlock();
+        END_LOG_BLOCK();
         return;
     }
     code.readPipe(TLM.mOutput);
@@ -290,6 +290,7 @@ Core::pipesTesting
     START_LOG_BLOCK("Test:", TLM.mTest);
     WRITE_LOG("Output:", TLM.mOutput);
     END_LOG_BLOCK("Answer:", TLM.mAnswer);
+    END_LOG_BLOCK();
 
     checker.run();
     checker.readPipe(mChecksInfo[aThreadNum].mResult);

@@ -18,7 +18,8 @@ str_val
 dom::Path::getMainPathOnce() noexcept
 {
     std::string path = getExecutablePath();
-    while(path.back() != '\\' || path.back() != '/') path.pop_back();
+    path.pop_back();
+    while(path.back() != '\\' && path.back() != '/') path.pop_back();
     return path;
 }
 
