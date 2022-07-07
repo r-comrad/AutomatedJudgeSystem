@@ -1,6 +1,9 @@
 #ifndef COMPILER_HPP
 #define COMPILER_HPP
 
+#include <string>
+using ComandType = std::string;
+
 //--------------------------------------------------------------------------------
 //						COMPILER AND INTERPRETER DECLARATION
 //--------------------------------------------------------------------------------
@@ -21,6 +24,8 @@
 
 #include "main/path.hpp"
 
+#include "code_info.hpp"
+
 //--------------------------------------------------------------------------------
 
 namespace sys {
@@ -36,7 +41,6 @@ namespace sys {
 
 	public:
 		Compiler();
-		//virtual ~Compiler();
 		virtual ~Compiler() = default;
 
 		/*
@@ -46,12 +50,18 @@ namespace sys {
 		\param aOutputName Specified compiler output path.
 		\param aCpmandParameters An array containing the resulting command.
 		*/
-		void prepareExecutableCommand
-		(
-			str_const_ref aFileName,
-			str_const_ref aOutName,
-			std::vector<char*>& aCpmandParameters
-		);
+		// void prepareExecutableCommand
+		// (
+		// 	str_const_ref aFileName,
+		// 	str_const_ref aOutName,
+		// 	std::vector<char*>& aCpmandParameters
+		// );
+
+
+
+		StringTable getExecutableCommand(cor::CodeInfo&& aCode) const noexcept;
+		StringTable prepareCommandForCPP(cor::CPPInfo&& aInfo) const noexcept;
+		StringTable prepareCommandForPython(cor::CPPInfo&& aInfo) const noexcept;
 	
 	private:
 		/*
@@ -60,7 +70,7 @@ namespace sys {
 		\param aFileName A file with the code path.
 		\return Returns the language of the passed file.
 		*/
-		Compiler::Language getLanguage(str_const_ref aFileName);
+		Compiler::Language getLanguage(str_const_ref aFileName) const noexcept;
 
 		alg::SuffixTree mLanguageTypes;
 	};

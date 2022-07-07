@@ -58,93 +58,97 @@
 
 //--------------------------------------------------------------------------------
 
-class MyProcess
+namespace proc
 {
-public:
-	enum PypeType { ZERO = 0, NO_ZERO = 1 };
+	class Process
+	{
+	public:
+		enum PypeType { ZERO = 0, NO_ZERO = 1 };
 
-	/*
-	\brief Base process constructor that initialize time and memory 
-	usage limits for child process.
-	(all child process have max time and memory usage limits
-	that defined in MAX_TIME_LIMIT and MAX_MEMORY_LIMIT)
-	\param aParameters Child process parameters for execution.
-	\param aTimeLimit Child process maximum time usage.
-	\param aMemoryLimit Child process maximum memory usage.
-	*/
-	MyProcess
-	(
-		const std::vector<char*>& aParameters,
-		uint_64 aTimeLimit = MAX_TIME_LIMIT,
-		uint_64 aMemoryLimit = 1e9
-	);
-	~MyProcess();
+		/*
+		\brief Base process constructor that initialize time and memory 
+		usage limits for child process.
+		(all child process have max time and memory usage limits
+		that defined in MAX_TIME_LIMIT and MAX_MEMORY_LIMIT)
+		\param aParameters Child process parameters for execution.
+		\param aTimeLimit Child process maximum time usage.
+		\param aMemoryLimit Child process maximum memory usage.
+		*/
+		Process
+		(
+			const std::vector<std::unique_ptr<char[]>>&aParameters,
+			uint_64 aTimeLimit = MAX_TIME_LIMIT,
+			uint_64 aMemoryLimit = 1e9
+		) noexcept;
+		virtual ~Process() = default;
 
-	/*
-	\brief Executing the child process without time and memory 
-	usage evaluation.
-	\return Returns true if the process is completed successfully.
-	*/
-	bool run();
+		/*
+		\brief Executing the child process without time and memory 
+		usage evaluation.
+		\return Returns true if the process is completed successfully.
+		*/
+		bool run();
 
-	/*
-	\brief Executing the child process with time and memory 
-	usage evaluation.
-	\return Returns the time and memory used by the process.
-	*/
-	std::pair<uint_64, uint_64> runWithLimits();
+		/*
+		\brief Executing the child process with time and memory 
+		usage evaluation.
+		\return Returns the time and memory used by the process.
+		*/
+		std::pair<uint_64, uint_64> runWithLimits();
 
-protected:
-	/*
-	\brief Sets time and memory usage limits.
-	\param aTimeLimit Child process maximum time usage.
-	\param aMemoryLimit Child process maximum memory usage.
-	*/
-	void setLimits(uint_64 aTimeLimit, uint_64 aMemoryLimit);
+	protected:
+		/*
+		\brief Sets time and memory usage limits.
+		\param aTimeLimit Child process maximum time usage.
+		\param aMemoryLimit Child process maximum memory usage.
+		*/
+		void setLimits(uint_64 aTimeLimit, uint_64 aMemoryLimit);
 
-	/*
-	\brief Create a child process with the specified parameters.
-	\param aParameters Child process parameters for execution.
-	*/
-	virtual void create(const std::vector<char*>& aParameters);
+		/*
+		\brief Create a child process with the specified parameters.
+		\param aParameters Child process parameters for execution.
+		*/
+		virtual void create(const StringTable& aParameters);
 
-	/*
-	\brief Redirecting input and output streams for a child process.
-	*/
-	virtual void IORedirection() = 0;
+		/*
+		\brief Redirecting input and output streams for a child process.
+		*/
+		virtual void IORedirection() = 0;
 
-	/*
-	\brief Closes the input and output handler for the child process.
-	(finishing of communication with the child process)
-	*/
-#if		defined(BILL_WINDOWS)
-	virtual void closeHandles() = 0;
-#endif // BILL_WINDOWS
+		/*
+		\brief Closes the input and output handler for the child process.
+		(finishing of communication with the child process)
+		*/
+	#if		defined(BILL_WINDOWS)
+		virtual void closeHandles() = 0;
+	#endif // BILL_WINDOWS
 
-#ifdef BILL_WINDOWS
-protected:
-	STARTUPINFOA mStartupInfo;
-	PROCESS_INFORMATION mProcessInfo;
+	#ifdef BILL_WINDOWS
+	protected:
+		STARTUPINFOA mStartupInfo;
+		PROCESS_INFORMATION mProcessInfo;
 
-private:
-	std::future<long long> mFuture;
+	private:
+		std::future<long long> mFuture;
 
-	long long getMillisecondsNow();
+		long long getMillisecondsNow();
 
-	long long getCurrentMemoryUsage(HANDLE&);
-	long long getMaxMemoryUsage(PROCESS_INFORMATION&, long long);
+		long long getCurrentMemoryUsage(HANDLE&);
+		long long getMaxMemoryUsage(PROCESS_INFORMATION&, long long);
 
-	DWORD getExitCode(HANDLE&);
-	bool killProcess(PROCESS_INFORMATION&);
+		DWORD getExitCode(HANDLE&);
+		bool killProcess(PROCESS_INFORMATION&);
 
-#elif defined(LINUS_LINUX)
-	int mChildPID;
-#endif 
+	#elif defined(LINUS_LINUX)
+		int mChildPID;
+	#endif 
 
-private:
-	uint_64 mTimeLimit;
-	uint_64 mMemoryLimit;
-};
+	private:
+		uint_64 mTimeLimit;
+		uint_64 mMemoryLimit;
+	};
+
+}
 
 //--------------------------------------------------------------------------------
 

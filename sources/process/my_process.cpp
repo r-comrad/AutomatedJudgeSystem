@@ -2,12 +2,12 @@
 
 #include "process/my_process.hpp"
 
-MyProcess::MyProcess
+proc::Process::Process
 (
-    const std::vector<char*>& aParameters,
+    const std::vector<std::unique_ptr<char[]>>& aParameters,
     uint_64 aTimeLimit,
     uint_64 aMemoryLimit
-) :
+)  noexcept :
     mTimeLimit      (aTimeLimit),
     mMemoryLimit    (aMemoryLimit)
 //#ifdef BILL_WINDOWS
@@ -24,12 +24,8 @@ MyProcess::MyProcess
 
 //--------------------------------------------------------------------------------
 
-MyProcess::~MyProcess() {}
-
-//--------------------------------------------------------------------------------
-
 bool
-MyProcess::run()
+proc::Process::run()
 {
     WRITE_LOG("Runing_simple_process");
 #ifdef BILL_WINDOWS
@@ -58,7 +54,7 @@ MyProcess::run()
 //--------------------------------------------------------------------------------
 
 void
-MyProcess::setLimits(uint_64 aTimeLimit, uint_64 aMemoryLimit)
+proc::Process::setLimits(uint_64 aTimeLimit, uint_64 aMemoryLimit)
 {
     if (aTimeLimit > MAX_TIME_LIMIT) aTimeLimit = MAX_TIME_LIMIT;
     if (aMemoryLimit > MAX_MEMORY_LIMIT) aMemoryLimit = MAX_MEMORY_LIMIT;
@@ -70,7 +66,7 @@ MyProcess::setLimits(uint_64 aTimeLimit, uint_64 aMemoryLimit)
 //--------------------------------------------------------------------------------
 
 std::pair<uint_64, uint_64>
-MyProcess::runWithLimits()
+proc::Process::runWithLimits()
 {
     START_LOG_BLOCK("Runing_process_with_time_and_memory_evaluation");
 
@@ -115,38 +111,38 @@ MyProcess::runWithLimits()
 //--------------------------------------------------------------------------------
 
 void 
-MyProcess::create(const std::vector<char*>& aParameters)
+proc::Process::create(const StringTable& aParameters)
 {
-    WRITE_LOG("Creating_process_name:", aParameters[0]);
+    WRITE_LOG("Creating_process_name:", aParameters[0].get());
 
     //TODO: in my_strinh.hpp
 
-    char* name = newCharPtrCopy(aParameters[0]);
-    if (name[0] == 0) name = NULL;
+    char* name = newCharPtrCopy(aParameters[0].get());
+    if (name[0] == 0) name = nullptr;
 
-    int size = aParameters.size() + 1;
-    for (int i = 0; i < aParameters.size() - 1; ++i)
-    {
-        size += strlen(aParameters[i]);
-    }
+    // int size = aParameters.size() + 1;
+    // for (int i = 0; i < aParameters.size() - 1; ++i)
+    // {
+    //     size += strlen(aParameters[i]);
+    // }
 
-    char* cmd = new char[size];
-    cmd[0] = 0;
-    for (int i = 0; i < aParameters.size() - 1; ++i)
-    {
-        strCopy(cmd, aParameters[i]);
-        if (cmd[0] != 0) strCopy(cmd, " ");
-    }
-    if (cmd[0] == 0) cmd = NULL;
+    CharArray cmd = getCharArray(aParameters);
+    // cmd[0] = 0;
+    // for (int i = 0; i < aParameters.size() - 1; ++i)
+    // {
+    //     strCopy(cmd, aParameters[i]);
+    //     if (cmd[0] != 0) strCopy(cmd, " ");
+    // }
+    if (cmd[0] == 0) cmd = nullptr;
     
     // TODO: end
 
-    mFuture = std::async(std::launch::async, &MyProcess::getMaxMemoryUsage,
+    mFuture = std::async(std::launch::async, &proc::Process::getMaxMemoryUsage,
         this, std::ref(mProcessInfo), 1000000);
 
     if (CreateProcessA(
         name,
-        cmd,
+        cmd.get(),
         NULL,
         NULL,
         TRUE,
@@ -157,17 +153,16 @@ MyProcess::create(const std::vector<char*>& aParameters)
         &mProcessInfo
     ) == FALSE)
     {
-        WRITE_ERROR("Process", "create", 10, "Can't_start_process", aParameters[0]);
+        WRITE_ERROR("Process", "create", 10, "Can't_start_process", aParameters[0].get());
     }
     delete name;
-    delete cmd;
 }
 
 //--------------------------------------------------------------------------------
 
 #ifdef BILL_WINDOWS
 long long 
-MyProcess::getMillisecondsNow()
+proc::Process::getMillisecondsNow()
 {
     static LARGE_INTEGER frequency;
     static BOOL useQpf = QueryPerformanceFrequency(&frequency);
@@ -185,7 +180,7 @@ MyProcess::getMillisecondsNow()
 //--------------------------------------------------------------------------------
 
 long long 
-MyProcess::getCurrentMemoryUsage(HANDLE& hProcess) 
+proc::Process::getCurrentMemoryUsage(HANDLE& hProcess) 
 {
     PROCESS_MEMORY_COUNTERS pmc;
     long long  currentMemoryUsage = 0;
@@ -204,7 +199,7 @@ MyProcess::getCurrentMemoryUsage(HANDLE& hProcess)
 //--------------------------------------------------------------------------------
 
 long long 
-MyProcess::getMaxMemoryUsage
+proc::Process::getMaxMemoryUsage
 (
     PROCESS_INFORMATION& processInfo, 
     long long memoryLimit
@@ -226,7 +221,7 @@ MyProcess::getMaxMemoryUsage
 }
 
 DWORD 
-MyProcess::getExitCode(HANDLE& hProcess) 
+proc::Process::getExitCode(HANDLE& hProcess) 
 {
     DWORD exitCode = 0;
     GetExitCodeProcess(hProcess, &exitCode);
@@ -236,7 +231,7 @@ MyProcess::getExitCode(HANDLE& hProcess)
 //--------------------------------------------------------------------------------
 
 bool 
-MyProcess::killProcess(PROCESS_INFORMATION& processInfo) 
+proc::Process::killProcess(PROCESS_INFORMATION& processInfo) 
 {
     START_LOG_BLOCK("Killing_process");
 

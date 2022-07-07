@@ -112,5 +112,8 @@
         "syncstream": "cpp",
         "resumable": "cpp"
     },
-    "workbench.editor.revealIfOpen" : true
+    "workbench.editor.revealIfOpen" : true,
+    "editor.detectIndentation": false,
+    "editor.tabSize": 4,
+    "editor.insertSpaces": false
 }

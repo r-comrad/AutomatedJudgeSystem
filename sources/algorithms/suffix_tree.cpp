@@ -1,17 +1,17 @@
 #include "suffix_tree.hpp"
 
-alg::SuffixTree::SuffixTree() : 
+alg::SuffixTree::SuffixTree() noexcept : 
     mRoot   (new Node)
 {}
 
 void
-alg::SuffixTree::add(const std::string& aName, uint_32 aFinishNumber)
+alg::SuffixTree::add(const std::string& aName, uint_32 aFinishNumber) noexcept
 {
     mRoot->add(aName, aFinishNumber);
 }
 
 uint_32 
-alg::SuffixTree::get(const std::string& aName)
+alg::SuffixTree::get(const std::string& aName) const noexcept
 {
     return mRoot->get(aName);
 }
@@ -22,7 +22,7 @@ alg::SuffixTree::Node::Node() :
 {}
 
 void
-alg::SuffixTree::Node::add(const std::string& aName, uint_32 aFinishValue, size_t aCurNum)
+alg::SuffixTree::Node::add(const std::string& aName, uint_32 aFinishValue, size_t aCurNum) noexcept
 {
     if (aCurNum == aName.size())
     {
@@ -35,8 +35,13 @@ alg::SuffixTree::Node::add(const std::string& aName, uint_32 aFinishValue, size_
 }
 
 uint_32
-alg::SuffixTree::Node::get(const std::string& aName, size_t aCurNum)
+alg::SuffixTree::Node::get(const std::string& aName, size_t aCurNum) const noexcept
 {
-    if (mFinishNumber) return mFinishNumber;
-    return mNextNodes[aName[aCurNum]]->get(aName, aCurNum + 1);
+	uint_32 result = mFinishNumber;
+    if (!mFinishNumber) 
+	{
+		auto it = mNextNodes.find(aName[aCurNum]);
+		result = it->second->get(aName, aCurNum + 1);
+	}
+	return result;
 }

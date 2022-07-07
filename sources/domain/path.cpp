@@ -32,7 +32,7 @@ dom::Path::getExecutablePathOnce() noexcept
     for (int i = 0; i < 1; ++i) while (buffer[--size] != L'\\');
     buffer[size + 1] = 0;
     //return std::string(buffer).substr(0, size + 1);
-    return getString(buffer);
+    return std::string(buffer);
 #elif   defined(LINUS_LINUX)
     char buf[PATH_MAX + 1];
     if (readlink("/proc/self/exe", buf, sizeof(buf) - 1) == -1)

@@ -29,123 +29,103 @@ namespace dom
 			T2 second;
 		};
 
-		Pair() :
+		Pair() noexcept :
 			x(),
 			y()
 		{}
 
-		// template <typename ARG>
-		// Pair(ARG&& other) : 
-		// 	x(std::forward<T1>(other.x)),
-		// 	y(std::forward<T2>(other.y))
-		// {}
-		Pair(const Pair<T1, T2>& other) : 
-			x(other.x),
-			y(other.y)
-		{}
-		Pair(Pair<T1, T2>&& other) : 
+		template <typename ARG>
+		Pair(ARG&& other) noexcept : 
 			x(std::forward<T1>(other.x)),
 			y(std::forward<T2>(other.y))
 		{}
 
 		template <typename ARG1, typename ARG2>
-		Pair(ARG1&& xInit, ARG2&& yInit) :
+		Pair(ARG1&& xInit, ARG2&& yInit) noexcept :
 			x(std::forward<T1>(xInit)),
 			y(std::forward<T2>(yInit))
 		{}
 
-		~Pair() = default;
+		~Pair() noexcept = default;
 
-		void operator+= (const Pair& other)
+		void operator+= (const Pair& other) noexcept
 		{
 			x += other.x;
 			y += other.y;
 		}
-		void operator-= (const Pair& other)
+		void operator-= (const Pair& other) noexcept
 		{
 			x -= other.x;
 			y -= other.y;
 		}
 
-		// template <typename ARG>
-		// Pair& operator=(ARG&& other)
-		// {
-		// 	x = std::forward<T1>(other.x);
-		// 	y = std::forward<T2>(other.y);
-		// 	return *this;
-		// }
-		Pair& operator=(const Pair<T1, T2>& other)
-		{
-			x = other.x;
-			y = other.y;
-			return *this;
-		}
-		Pair& operator=(Pair<T1, T2>&& other)
+		template <typename ARG>
+		Pair& operator=(ARG&& other) noexcept
 		{
 			x = std::forward<T1>(other.x);
 			y = std::forward<T2>(other.y);
 			return *this;
 		}
 
-		friend Pair operator+ (const Pair& a1, const Pair& a2)
+		friend Pair operator+ (const Pair& a1, const Pair& a2) noexcept
 		{
 			Pair<T1, T2> res{ a1.x + a2.x, a1.y + a2.y };
 			return res;
 		}
-		friend Pair operator+ (const Pair& a1, Pair&& a2)
+		friend Pair operator+ (const Pair& a1, Pair&& a2) noexcept
 		{
 			a2.x += a1.x;
 			a2.y += a1.y;
 			return a2;
 		}
-		friend Pair operator+ (Pair&& a1, const Pair& a2)
+		friend Pair operator+ (Pair&& a1, const Pair& a2) noexcept
 		{
 			return a2 + std::move(a1);
 		}
-		friend Pair operator+ (Pair&& a1, Pair&& a2)
+		friend Pair operator+ (Pair&& a1, Pair&& a2) noexcept
 		{
 			a1.x += a2.x;
 			a1.y += a2.y;
 			return a1;
 		}
 
-		friend Pair operator- (const Pair& a1, const Pair& a2)
+		friend Pair operator- (const Pair& a1, const Pair& a2) noexcept
 		{
 			Pair<T1, T2> res{ a1.x - a2.x, a1.y - a2.y };
 			return res;
 		}
-		friend Pair operator- (const Pair& a1, Pair&& a2)
+		friend Pair operator- (const Pair& a1, Pair&& a2) noexcept
 		{
 			a2.x -= a1.x;
 			a2.y -= a1.y;
 			return a2;
 		}
-		friend Pair operator- (Pair&& a1, const Pair& a2)
+		friend Pair operator- (Pair&& a1, const Pair& a2) noexcept
 		{
 			return a2 - std::move(a1);
 		}
-		friend Pair operator- (Pair&& a1, Pair&& a2)
+		friend Pair operator- (Pair&& a1, Pair&& a2) noexcept
 		{
 			a1.x -= a2.x;
 			a1.y -= a2.y;
 			return a1;
 		}
 
-		bool operator< (const Pair& other) const
+		bool operator< (const Pair& other) const noexcept
 		{
 			if (x != other.x) return y < other.y;
 			return y < other.y;
 		}
-		bool operator>(const Pair& other) const
+		bool operator>(const Pair& other) const noexcept
 		{
 			if (x != other.x) return y > other.y;
 			return y > other.y;
 		}
-		bool operator== (const Pair& other) const
+		bool operator== (const Pair& other) const noexcept
 		{
 			return x == other.x && y == other.y;
 		}
-		bool operator!= (const Pair& other) const
+		bool operator!= (const Pair& other) const noexcept
 		{
 			return x != other.x || y != other.y;
 		}
@@ -155,13 +135,13 @@ namespace dom
 		{
 			friend Pair;
 		public:
-			operator T1&()
+			operator T1&() noexcept
 			{
 				if (mIndex != 0) exit(-1);
 				return mRes.x;
 			}
 
-			operator T2&()
+			operator T2&() noexcept
 			{
 				if (mIndex != 1) exit(-1);
 				return mRes.y;
@@ -171,14 +151,14 @@ namespace dom
 			Pair& mRes;
 			int mIndex;
 
-			PairBracketAccessResult(Pair& aRes, int aIndex) :
+			PairBracketAccessResult(Pair& aRes, int aIndex) noexcept :
 				mRes	(aRes),
 				mIndex	(aIndex)
 			{}
 		};
 
 		public:
-			PairBracketAccessResult operator[] (const int& aIndex)
+			PairBracketAccessResult operator[] (const int& aIndex) noexcept
 			{
 				return PairBracketAccessResult(*this, aIndex);
 			}

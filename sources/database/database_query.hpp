@@ -35,7 +35,7 @@ public:
 	from the database and puts it in the ProblemInformation structure.
 	\param aSudmissionInformation ProblemInformation structure for obtaining data.
 	*/
-	void prepareForTesting(ProblemInformation& aSudmissionInformation);
+	ProblemInformation getProblemInfo(int ID);
 
 	/*
 	\brief Writing result of submission check in database.
@@ -61,13 +61,14 @@ public:
 	\param aSudmissionInformation Problem info (ID) for tests search.
 	*/
 	void getAllTests(ProblemInformation& aSudmissionInformation);
+
+	void prepareTestsStatement(ProblemInformation& aSudmissionInformation);
+
 private:
 	SQLiteDatabase mDatabase;
 	int mReservedStatementNumber;
-public:
-	void prepareTestsStatement(ProblemInformation& aSudmissionInformation);
-private:
-	void getIDInformation(ProblemInformation& aSudmissionInformation);
+
+	void getGeneralInformation(ProblemInformation& aSudmissionInformation);
 	void getLimitsInformation(ProblemInformation& aSudmissionInformation);
 };
 

@@ -36,8 +36,8 @@ private:
 	std::vector<std::mutex> mChecksMutexs;
 	std::vector<SubmissionInformation> mChecksInfo;
 
-	std::vector<char*> mSolutionParameters;
-	std::vector<char*> mCheckerParameters;
+	StringTable mSolutionParameters;
+	StringTable mCheckerParameters;
 
 	std::mutex mGetTestLock;
 

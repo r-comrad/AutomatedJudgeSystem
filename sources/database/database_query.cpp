@@ -22,27 +22,16 @@ MDatabaseQuery::MDatabaseQuery
 MDatabaseQuery::~MDatabaseQuery()
 {}
 
-void 
-MDatabaseQuery::prepareForTesting
-(
-    ProblemInformation& aSudmissionInformation
-)
+ProblemInformation 
+MDatabaseQuery::getProblemInfo(int ID)
 {
-    getIDInformation(aSudmissionInformation);
-    getLimitsInformation(aSudmissionInformation);
-    //aSudmissionInformation.id += 200;
+	ProblemInformation result;
+	result.mID = ID;
 
-    // TODO: make good timelimits
-#ifdef BILL_WINDOWS
-    // BILL_WINDOWS
-    
-    //aSudmissionInformation.mTimeLimit *= 1000;
-    // !BILL_WINDOWS
-#elif defined(LINUS_LINUX)
-    // LINUS_LINUX
-    aSudmissionInformation.mTimeLimit /= 1000;
-    // !LINUS_LINUX
-#endif 
+    getGeneralInformation(result);
+    getLimitsInformation(result);
+
+	return result;
 }
 
 void 
@@ -147,7 +136,7 @@ MDatabaseQuery::prepareTestsStatement
 }
 
 void 
-MDatabaseQuery::getIDInformation
+MDatabaseQuery::getGeneralInformation
 (
     ProblemInformation& aSudmissionInformation
 )
@@ -157,11 +146,11 @@ MDatabaseQuery::getIDInformation
     mDatabase.select("core_solutions", "file_name, contest_id", "id = " + std::to_string(aSudmissionInformation.mID));
     mDatabase.step();
 
-    aSudmissionInformation.mSolutionFileName = getString(mDatabase.getTextFromRow(0));
+    aSudmissionInformation.mSolutionFileName = getCharArray(mDatabase.getTextFromRow(0));
     aSudmissionInformation.mContestID = mDatabase.getInt64FromRow(1);
     mDatabase.closeStatment();
 
-    WRITE_LOG("File_name:", aSudmissionInformation.mSolutionFileName);
+    WRITE_LOG("File_name:", aSudmissionInformation.mSolutionFileName.get());
     END_LOG_BLOCK("Contest_ID:", aSudmissionInformation.mContestID);
 }
 
@@ -177,7 +166,7 @@ MDatabaseQuery::getLimitsInformation
     mDatabase.step();
     aSudmissionInformation.mTimeLimit = mDatabase.getInt64FromRow(0);
     aSudmissionInformation.mMemoryLimit = mDatabase.getInt64FromRow(1);
-    aSudmissionInformation.mCheckerFileName = getString(mDatabase.getTextFromRow(2));
+    aSudmissionInformation.mCheckerFileName = getCharArray(mDatabase.getTextFromRow(2));
     mDatabase.closeStatment();
 
     WRITE_LOG("Time_limit:", aSudmissionInformation.mTimeLimit);

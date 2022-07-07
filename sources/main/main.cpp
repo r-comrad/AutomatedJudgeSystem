@@ -130,7 +130,7 @@ int main(int argc, char* argv[])
     int num = 3;
     if (argc > 1)
     {
-        num = std::stoi(getString(argv[1]));
+        num = std::stoi(std::string(argv[1]));
     }
 
     WRITE_LOG("ID:", num);

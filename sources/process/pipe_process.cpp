@@ -1,13 +1,13 @@
 ﻿//--------------------------------------------------------------------------------
 #include "process/pipe_process.hpp"
 
-PipeProcess::PipeProcess
+proc::PipeProcess::PipeProcess
 (
-    const std::vector<char*>& aParameters,
+    const StringTable& aParameters,
     uint_64 aTimeLimit,
     uint_64 aMemoryLimit
 ) :
-    MyProcess(aParameters)
+    Process(aParameters)
 {
     if (aTimeLimit != 1e18 && aMemoryLimit != 1e18)
     {
@@ -18,7 +18,7 @@ PipeProcess::PipeProcess
     create(aParameters);
 }
 
-PipeProcess::~PipeProcess() 
+proc::PipeProcess::~PipeProcess() 
 {
     #if		defined(BILL_WINDOWS)
     closeHandles();
@@ -111,7 +111,7 @@ PipeProcess::create(const std::vector<char*>& aParameters)
 #define BUFFER_SIZE 65336 * 10
 
 void
-PipeProcess::IORedirection()
+proc::PipeProcess::IORedirection()
 {
     WRITE_LOG("Rederecting_input_and_output_to_pipe");
 
@@ -156,7 +156,7 @@ PipeProcess::IORedirection()
 
 
 void
-PipeProcess::readPipe(str_ref result)
+proc::PipeProcess::readPipe(str_ref result)
 {
 #ifdef PIPE_LOGS
     WRITE_LOG("Reading_from_pipe");
@@ -205,7 +205,7 @@ PipeProcess::readPipe(str_ref result)
 }
 
 void
-PipeProcess::writePipe(str_ref aMessage, PypeType aType)
+proc::PipeProcess::writePipe(str_ref aMessage, PypeType aType)
 {
 #ifdef PIPE_LOGS
     WRITE_LOG("Writing_from_pipe");
@@ -244,7 +244,7 @@ PipeProcess::writePipe(str_ref aMessage, PypeType aType)
 
 
 void
-PipeProcess::closeHandles()
+proc::PipeProcess::closeHandles()
 {
 #ifdef BILL_WINDOWS
     CloseHandle(mChildSTDIN);

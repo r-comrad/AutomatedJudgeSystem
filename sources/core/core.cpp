@@ -44,31 +44,16 @@ Core::~Core()
             delete mChecks[i];
         }
     }
-
-    for (char* i : mSolutionParameters)
-    {
-        if (i != NULL) delete i;
-    }
-
-    for (char* i : mCheckerParameters)
-    {
-        if (i != NULL) delete i;
-    }
 }
 
 void
-Core::run
-(
-    int aID
-)
-{
-    mProblemInfo.mID = aID;
-    mDBQ.prepareForTesting(mProblemInfo);
+Core::run(int aID){
+    mProblemInfo = mDBQ.(aID);
 
-#ifdef BILL_WINDOWS
-    makeWindowString(mProblemInfo.mSolutionFileName);
-    makeWindowString(mProblemInfo.mCheckerFileName);
-#endif // BILL_WINDOWS
+// #ifdef BILL_WINDOWS
+//     makeWindowString(mProblemInfo.mSolutionFileName);
+//     makeWindowString(mProblemInfo.mCheckerFileName);
+// #endif // BILL_WINDOWS
     mProblemInfo.mSolutionFileName.clear();
 
 #ifdef _DEBUG_SOL_SUB_
@@ -81,9 +66,10 @@ Core::run
 
     sys::Compiler compiler;
 
-    str_val codePath = MAEDIA + mProblemInfo.mSolutionFileName;
-    str_val desirableExecutablePath = SOLUTION_PATH + "-" +
+    auto codePath = MAEDIA + mProblemInfo.mSolutionFileName.get();
+    auto desirableExecutablePath = SOLUTION_PATH + "-" +
         std::to_string(mProblemInfo.mID);
+	cor::CodeInfo codeInfo(codePath.c_str(), );
     compiler.prepareExecutableCommand
     (
         codePath,
@@ -249,7 +235,7 @@ Core::pipesTesting
     TLM.makeTestSizes();
 
     //MyProcess code(mSolutionParameters, mProblemInfo.mTimeLimit, mProblemInfo.mMemoryLimit);
-    PipeProcess code(mSolutionParameters, mProblemInfo.mTimeLimit, mProblemInfo.mMemoryLimit);
+    proc::PipeProcess code(mSolutionParameters, mProblemInfo.mTimeLimit, mProblemInfo.mMemoryLimit);
 
     code.writePipe(TLM.mTest);
     //std::pair<uint_64, uint_64> cur = code.runWithLimits(mProblemInfo.mTimeLimit, mProblemInfo.mMemoryLimit);
@@ -270,7 +256,7 @@ Core::pipesTesting
     mChecksInfo[aThreadNum].mUsedMemory = cur.second;
 
     //MyProcess checker(mCheckerParameters);
-    PipeProcess checker(mCheckerParameters);
+    proc::PipeProcess checker(mCheckerParameters);
 
 //    TLM.mAnswer.pop_back();
 //    TLM.mAnswer.pop_back();
@@ -278,14 +264,14 @@ Core::pipesTesting
     TLM.makeOutputSizes();
     TLM.makeAnswerSizes();
 
-    checker.writePipe(TLM.mTestSize,    PipeProcess::PypeType::NO_ZERO);
-    checker.writePipe(TLM.mTest,        PipeProcess::PypeType::NO_ZERO);
+    checker.writePipe(TLM.mTestSize,    proc::PipeProcess::PypeType::NO_ZERO);
+    checker.writePipe(TLM.mTest,        proc::PipeProcess::PypeType::NO_ZERO);
 
-    checker.writePipe(TLM.mOutputSize,  PipeProcess::PypeType::NO_ZERO);
-    checker.writePipe(TLM.mOutput,      PipeProcess::PypeType::NO_ZERO);
+    checker.writePipe(TLM.mOutputSize,  proc::PipeProcess::PypeType::NO_ZERO);
+    checker.writePipe(TLM.mOutput,      proc::PipeProcess::PypeType::NO_ZERO);
 
-    checker.writePipe(TLM.mAnswerSize,  PipeProcess::PypeType::NO_ZERO);
-    checker.writePipe(TLM.mAnswer,      PipeProcess::PypeType::NO_ZERO);
+    checker.writePipe(TLM.mAnswerSize,  proc::PipeProcess::PypeType::NO_ZERO);
+    checker.writePipe(TLM.mAnswer,      proc::PipeProcess::PypeType::NO_ZERO);
 
     START_LOG_BLOCK("Test:", TLM.mTest);
     WRITE_LOG("Output:", TLM.mOutput);

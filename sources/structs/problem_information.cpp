@@ -6,8 +6,8 @@ ProblemInformation::ProblemInformation() :
 
 	mTimeLimit			(0),
 	mMemoryLimit		(0),
-	mSolutionFileName	("NUN NAME"),
-	mCheckerFileName	("NUN NAME"),
+	mSolutionFileName	(nullptr),
+	mCheckerFileName	(nullptr),
 
 	mTestsCount			(0),
 	mTestsAreOver		(false),

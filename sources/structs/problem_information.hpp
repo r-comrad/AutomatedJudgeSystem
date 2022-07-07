@@ -14,15 +14,15 @@ public:
 
 	uint_64 mTimeLimit;
 	uint_64 mMemoryLimit;
-	str_val mSolutionFileName;
-	str_val mCheckerFileName;
+	CharArray mSolutionFileName;
+	CharArray mCheckerFileName;
 
 	int mTestsCount;
 	bool mTestsAreOver;
 
 	uint_64 mUsedTime;
 	uint_64 mUsedMemory;
-	str_val mResult;
+	std::string mResult;
 
 	ProblemInformation();
 	void remakeResultForPasha();
