@@ -55,32 +55,32 @@ namespace dom
 	{
 	public:
 		String() noexcept;
-		String(			const char* aStr)	noexcept;
-		String(const unsigned char* aStr)	noexcept;
-		String(	 const std::string& aStr)	noexcept;
-		String(       std::string&& aStr)	noexcept;
+		String(         const char* aStr)   noexcept;
+		String(const unsigned char* aStr)   noexcept;
+		String(  const std::string& aStr)   noexcept;
+		String(       std::string&& aStr)   noexcept;
 
-		String(		const String& aOther)	noexcept = delete;
-		String(			 String&& aOther)	noexcept = default;
+		String(     const String& aOther)   noexcept = delete;
+		String(          String&& aOther)   noexcept = default;
 
 		~String() = default;
 //--------------------------------------------------------------------------------
-		String& operator=	(			const char* aStr)	noexcept;
-		String& operator=	(  const unsigned char* aStr)	noexcept;
-		String& operator=	(	const std::string&	aStr)	noexcept;
-		String& operator=	(		  std::string&& aStr)	noexcept;
-		String& operator=	(	   const String&  aOther)	noexcept = delete;
-		String& operator=	(			 String&& aOther)	noexcept = default;
+		String& operator=	(           const char* aStr)   noexcept;
+		String& operator=	(  const unsigned char* aStr)   noexcept;
+		String& operator=	(   const std::string&	aStr)   noexcept;
+		String& operator=	(         std::string&& aStr)   noexcept;
+		String& operator=	(      const String&  aOther)   noexcept = delete;
+		String& operator=	(            String&& aOther)   noexcept = default;
 
-		String& operator+	(			const char* aStr)	noexcept;
-		String& operator+	(  const unsigned char* aStr)	noexcept;
-		String& operator+	(   const std::string&  aStr)	noexcept;
-		String& operator+	(		  std::string&& aStr)	noexcept;
+		String& operator+	(           const char* aStr)   noexcept;
+		String& operator+	(  const unsigned char* aStr)   noexcept;
+		String& operator+	(   const std::string&  aStr)   noexcept;
+		String& operator+	(         std::string&& aStr)   noexcept;
 
-		void	operator+=	(			const char* aStr)	noexcept;
-		void	operator+=	(  const unsigned char* aStr) 	noexcept;
-		void	operator+=	(   const std::string&  aStr) 	noexcept;
-		void	operator+=	(		  std::string&& aStr) 	noexcept;
+		void    operator+=	(           const char* aStr)   noexcept;
+		void    operator+=	(  const unsigned char* aStr)   noexcept;
+		void    operator+=	(   const std::string&  aStr)   noexcept;
+		void    operator+=	(         std::string&& aStr)   noexcept;
 
 		void merge() noexcept;
 
