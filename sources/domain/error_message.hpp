@@ -89,7 +89,7 @@ namespace dom
         \brief Gets error of WinAPI.
         \return String with error messege.
         */
-        str_val GetLastWinAPIError() noexcept;
+        std::string GetLastWinAPIError() noexcept;
         #endif // !BILL_WINDOWS
 
     private:

@@ -115,5 +115,5 @@
     "workbench.editor.revealIfOpen" : true,
     "editor.detectIndentation": false,
     "editor.tabSize": 4,
-    "editor.insertSpaces": false
+    "editor.insertSpaces": true
 }

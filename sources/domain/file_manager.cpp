@@ -3,8 +3,8 @@
 void
 dom::copyFile
 (
-    str_const_ref aFromFileName,
-    str_const_ref aToFileName
+    const std::string& aFromFileName,
+    const std::string& aToFileName
 )
 {
     START_LOG_BLOCK("Copying file");
@@ -33,7 +33,7 @@ dom::copyFile
     WRITE_LOG_ENDL();
 }
 
-dom::File::File(str_const_ref aFileName) :
+dom::File::File(const std::string& aFileName) :
     mOut    (aFileName)
 {}
 
@@ -50,7 +50,7 @@ dom::File::write(const std::vector<std::string>& aMessage)
 }
 
 void
-dom::File::setDelimiter(str_const_ref aDelimiter)
+dom::File::setDelimiter(const std::string& aDelimiter)
 {
     mDelimiter = aDelimiter;
 }

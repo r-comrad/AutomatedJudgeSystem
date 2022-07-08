@@ -156,7 +156,7 @@ proc::PipeProcess::IORedirection()
 
 
 void
-proc::PipeProcess::readPipe(str_ref result)
+proc::PipeProcess::readPipe(std::string& result)
 {
 #ifdef PIPE_LOGS
     WRITE_LOG("Reading_from_pipe");
@@ -205,7 +205,7 @@ proc::PipeProcess::readPipe(str_ref result)
 }
 
 void
-proc::PipeProcess::writePipe(str_ref aMessage, PypeType aType)
+proc::PipeProcess::writePipe(std::string& aMessage, PypeType aType)
 {
 #ifdef PIPE_LOGS
     WRITE_LOG("Writing_from_pipe");

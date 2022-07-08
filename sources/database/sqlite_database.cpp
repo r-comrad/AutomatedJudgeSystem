@@ -6,7 +6,7 @@
 
 SQLiteDatabase::SQLiteDatabase
 (
-    str_const_ref aPath
+    const std::string& aPath
 ) :
     mBase(NULL)
 {
@@ -22,26 +22,26 @@ SQLiteDatabase::~SQLiteDatabase() {}
 void 
 SQLiteDatabase::select
 (
-    str_const_ref aTableName,
-    str_val aColum,
-    str_val aConditon,
-    int aStatementID
+    const std::string&  aTableName,
+    std::string         aColum,
+    std::string         aConditon,
+    int                 aStatementID
 )
 
 {
     if (aColum == "") aColum = "*";
     if (aConditon != "") aConditon = " WHERE " + aConditon;
-    str_val statement = "SELECT " + aColum + " FROM " + aTableName + aConditon;
+    std::string statement = "SELECT " + aColum + " FROM " + aTableName + aConditon;
     prepare(statement, aStatementID);
 }
 
 void 
 SQLiteDatabase::update
 (
-    str_const_ref aTableName,
-    str_const_ref aValue,
-    str_const_ref aConditon,
-    int aStatementID
+    const std::string&  aTableName,
+    const std::string&  aValue,
+    const std::string&  aConditon,
+    int                 aStatementID
 )
 {
     std::string statement = "UPDATE " + aTableName + " SET " + aValue + " WHERE " + aConditon;
@@ -102,7 +102,7 @@ SQLiteDatabase::toAscii(const unsigned char* s)
 }
 
 void 
-SQLiteDatabase::prepare(str_const_ref aStatment, int aStatementID)
+SQLiteDatabase::prepare(const std::string& aStatment, int aStatementID)
 {
     if (mStatement.size() < aStatementID + 1)
     {

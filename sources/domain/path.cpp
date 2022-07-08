@@ -14,7 +14,7 @@ dom::Path::getExecutablePath() noexcept
     return globalExecutablePath;
 }
 
-str_val
+std::string
 dom::Path::getMainPathOnce() noexcept
 {
     std::string path = getExecutablePath();
@@ -23,7 +23,7 @@ dom::Path::getMainPathOnce() noexcept
     return path;
 }
 
-str_val
+std::string
 dom::Path::getExecutablePathOnce() noexcept
 {
 #if     defined(BILL_WINDOWS)

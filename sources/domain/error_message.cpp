@@ -37,7 +37,7 @@ dom::Message::writeLogEndl() noexcept
 }
 
 #ifdef BILL_WINDOWS
-str_val
+std::string
 dom::Message::GetLastWinAPIError() noexcept
 {
     //setlocale(LC_ALL, "Russian");

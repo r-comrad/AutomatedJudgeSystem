@@ -22,8 +22,8 @@ namespace proc {
 		);
 		virtual ~PipeProcess();
 
-		void readPipe(str_ref result);
-		void writePipe(str_ref aMessage, PypeType aType = ZERO);
+		void readPipe(std::string& result);
+		void writePipe(std::string& aMessage, PypeType aType = ZERO);
 
 	private:
 		virtual void IORedirection();

@@ -13,7 +13,7 @@
 
 MDatabaseQuery::MDatabaseQuery
 (
-    str_const_ref aDatabasePath
+    const std::string& aDatabasePath
 ) :
     mDatabase                   (aDatabasePath),
     mReservedStatementNumber    (0)
@@ -37,10 +37,10 @@ MDatabaseQuery::getProblemInfo(int ID)
 void 
 MDatabaseQuery::writeResult
 (
-    int             aID, 
-    str_const_ref   aResult,
-    int             aTime, 
-    int             aMemory
+    int                 aID, 
+    const std::string&  aResult,
+    int                 aTime, 
+    int                 aMemory
 )
 {
     START_LOG_BLOCK("Updating_database");
@@ -73,7 +73,7 @@ MDatabaseQuery::getNextTest(ProblemInformation& aSudmissionInformation, TestLibM
     }
 
     aSudmissionInformation.mTestsCount++;
-    aTLM.mTest = str_val(reinterpret_cast<const char*>(input));
+    aTLM.mTest = std::string(reinterpret_cast<const char*>(input));
     //aTLM.mTest += "\n";
     aTLM.mAnswer = std::string(reinterpret_cast<const char*>(output));
 }

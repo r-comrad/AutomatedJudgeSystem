@@ -12,12 +12,12 @@
 
 namespace dom
 {
-    void copyFile(str_const_ref aFromFileName, str_const_ref aToFileName);
+    void copyFile(const std::string& aFromFileName, const std::string& aToFileName);
 
     class File
     {
     public:
-        File(str_const_ref aFileName);
+        File(const std::string& aFileName);
         ~File();
 
         void write(const std::vector<std::string>& aMessage);
@@ -31,14 +31,14 @@ namespace dom
             mOut << '\n';
         }
 
-        void setDelimiter(str_const_ref aDelimiter);
+        void setDelimiter(const std::string& aDelimiter);
         void writeEndl();
 
         void close();
 
     private:
         std::ofstream mOut;
-        str_val mDelimiter;
+        std::string mDelimiter;
     };
 } // namespace dom
 

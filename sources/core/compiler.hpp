@@ -70,7 +70,7 @@ namespace sys {
 		\param aFileName A file with the code path.
 		\return Returns the language of the passed file.
 		*/
-		Compiler::Language getLanguage(str_const_ref aFileName) const noexcept;
+		Compiler::Language getLanguage(const std::string& aFileName) const noexcept;
 
 		alg::SuffixTree mLanguageTypes;
 	};

@@ -27,7 +27,7 @@ public:
 	\brief Construct querys handler for base with specifien name
 	\param aDatabasePath Path to database.
 	*/
-	MDatabaseQuery(str_const_ref aDatabasePath);
+	MDatabaseQuery(const std::string& aDatabasePath);
 	~MDatabaseQuery();
 
 	/*
@@ -44,7 +44,7 @@ public:
 	\param aTime Submission time usage.
 	\param aMemory Submission memory usage.
 	*/
-	void writeResult(int aID, str_const_ref aResult, int aTime, int aMemory);
+	void writeResult(int aID, const std::string& aResult, int aTime, int aMemory);
 
 	/*
 	\brief Retrieves the next test from the database and puts it in 

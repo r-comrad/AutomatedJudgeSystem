@@ -55,43 +55,43 @@ namespace dom
 	{
 	public:
 		String() noexcept;
-		String(const char* aStr) noexcept;
-		String(const unsigned char* aStr) noexcept;
-		String(const std::string& aStr) noexcept;
-		String(std::string&& aStr) noexcept;
+		String(			const char* aStr)	noexcept;
+		String(const unsigned char* aStr)	noexcept;
+		String(	 const std::string& aStr)	noexcept;
+		String(       std::string&& aStr)	noexcept;
 
-		String(const String& aOther) noexcept = delete;
-		String(String&& aOther) noexcept = default;
+		String(		const String& aOther)	noexcept = delete;
+		String(			 String&& aOther)	noexcept = default;
 
 		~String() = default;
+//--------------------------------------------------------------------------------
+		String& operator=	(			const char* aStr)	noexcept;
+		String& operator=	(  const unsigned char* aStr)	noexcept;
+		String& operator=	(	const std::string&	aStr)	noexcept;
+		String& operator=	(		  std::string&& aStr)	noexcept;
+		String& operator=	(	   const String&  aOther)	noexcept = delete;
+		String& operator=	(			 String&& aOther)	noexcept = default;
 
-		String& operator= (const char* aStr) noexcept;
-		String& operator= (const unsigned char* aStr) noexcept;
-		String& operator= (const std::string& aStr) noexcept;
-		String& operator= (std::string&& aStr) noexcept;
-		String& operator= (const String& aOther) noexcept = delete;
-		String& operator= (String&& aOther) noexcept = default;
+		String& operator+	(			const char* aStr)	noexcept;
+		String& operator+	(  const unsigned char* aStr)	noexcept;
+		String& operator+	(   const std::string&  aStr)	noexcept;
+		String& operator+	(		  std::string&& aStr)	noexcept;
 
-		String& operator+ (const char* aStr) noexcept;
-		String& operator+ (const unsigned char* aStr) noexcept;
-		String& operator+ (const std::string& aStr) noexcept;
-		String& operator+ (std::string&& aStr) noexcept;
-
-		void operator+= (const char* aStr) noexcept;
-		void operator+= (const unsigned char* aStr) noexcept;
-		void operator+= (const std::string& aStr) noexcept;
-		void operator+= (std::string&& aStr) noexcept;
+		void	operator+=	(			const char* aStr)	noexcept;
+		void	operator+=	(  const unsigned char* aStr) 	noexcept;
+		void	operator+=	(   const std::string&  aStr) 	noexcept;
+		void	operator+=	(		  std::string&& aStr) 	noexcept;
 
 		void merge() noexcept;
 
-		void switchToCharArray() noexcept;
-		void switchToString() noexcept;
+		void switchToCharArray()	noexcept;
+		void switchToString()		noexcept;
 
-		operator CharArray() const noexcept;
-		operator std::string() const noexcept;
+		operator CharArray()	const noexcept;
+		operator std::string()	const noexcept;
 
-		CharArray harvestCharArray() noexcept;
-		std::string harvestString() noexcept;
+		CharArray	harvestCharArray()	noexcept;
+		std::string harvestString()		noexcept;
 
 	private:
 		enum class StrType { NonDetermin, CharArray, String };
@@ -100,16 +100,16 @@ namespace dom
 		CharArrayTable mCharData;
 		std::vector<std::string> mStrData;
 
-		auto getSizeLumbda(const char* str) const noexcept;
-		auto getSizeLumbda(const CharArray& str) const noexcept;
-		auto getSizeLumbda(const std::string& str) const noexcept;
+		auto getSizeLumbda(const char* str)			const noexcept;
+		auto getSizeLumbda(const CharArray& str)	const noexcept;
+		auto getSizeLumbda(const std::string& str)	const noexcept;
 
 		//auto getEmplaceLumbda(const CharArray& str) const noexcept;
 		//auto getEmplaceLumbda(const std::string& str) const noexcept;
 
-		auto getConstructorLumbda(const char* str) const noexcept;
-		auto getConstructorLumbda(const CharArray& str) const noexcept;
-		auto getConstructorLumbda(const std::string& str) const noexcept;
+		auto getConstructorLumbda(const char* str)			const noexcept;
+		auto getConstructorLumbda(const CharArray& str)		const noexcept;
+		auto getConstructorLumbda(const std::string& str)	const noexcept;
 
 		void clear(StrType aType = StrType::NonDetermin) noexcept;
 

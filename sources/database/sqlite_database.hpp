@@ -24,7 +24,7 @@ typedef sqlite3_stmt Statement;
 class SQLiteDatabase
 {
 public:
-	SQLiteDatabase(str_const_ref aPath);
+	SQLiteDatabase(const std::string& aPath);
 	virtual ~SQLiteDatabase();
 
 	//----------------------------------------------------------------------------
@@ -43,8 +43,8 @@ public:
 	different cells for each query.
 	If empty, the first cell (#0) is used.
 	*/
-	void select(str_const_ref aTableName, str_val aColum = "", 
-		str_val aConditon = "", int aStatementID = 0);
+	void select(const std::string& aTableName, std::string aColum = "", 
+		std::string aConditon = "", int aStatementID = 0);
 
 	/*
 	\brief Prepare the sqlite UPDATE statement.
@@ -56,8 +56,8 @@ public:
 	different cells for each query.
 	If empty, the first cell (#0) is used.
 	*/
-	void update(str_const_ref aTableName, str_const_ref aValue, 
-		str_const_ref aConditon, int aStatementID = 0);
+	void update(const std::string& aTableName, const std::string& aValue, 
+		const std::string& aConditon, int aStatementID = 0);
 
 	/*
 	\brief Close the selected statment.
@@ -146,7 +146,7 @@ private:
 	Base* mBase;
 	std::vector<Statement*> mStatement;
 
-	void prepare(str_const_ref aStatment, int aStatementID);
+	void prepare(const std::string& aStatment, int aStatementID);
 };
 
 //--------------------------------------------------------------------------------
