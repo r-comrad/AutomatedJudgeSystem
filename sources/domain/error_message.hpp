@@ -25,7 +25,7 @@ namespace dom
         static Message globalMessages;
 
         template<typename... Args>
-        void startLogBlock(Args... args) noexcept
+        void startLogBlock(const Args&... args) noexcept
         {
             for(sint_8 i = 0; i < mLogBlockCount; ++i) (*mLogStream) << '\t';
             ++mLogBlockCount;
@@ -39,7 +39,7 @@ namespace dom
         }
 
         template<typename... Args>
-        void endLogBlock(Args... args) noexcept
+        void endLogBlock(const Args&... args) noexcept
         {
             for(sint_8 i = 0; i < mLogBlockCount; ++i) (*mLogStream) << '\t';
             --mLogBlockCount;
@@ -53,7 +53,7 @@ namespace dom
         }
 
         template<typename... Args>
-        void writeLog(Args... args) noexcept
+        void writeLog(const Args&... args) noexcept
         {
             for(sint_8 i = 0; i < mLogBlockCount; ++i) (*mLogStream) << '\t';
 
@@ -66,7 +66,7 @@ namespace dom
         }
 
         template<typename... Args>
-        void writeError(Args... args) noexcept
+        void writeError(const Args&... args) noexcept
         {
             #ifdef ERRORS_TO_LOG_OUTPU
                 for(sint_8 i = 0; i < mLogBlockCount; ++i) (*mLogStream) << '\t';

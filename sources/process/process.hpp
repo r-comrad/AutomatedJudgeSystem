@@ -1,11 +1,9 @@
-#ifndef MY_PROCESS_H
-#define MY_PROCESS_H
+#ifndef PROCESS_H
+#define PROCESS_H
 
 //--------------------------------------------------------------------------------
 //				CHILD PROCESS CREATION IMPLIMENTATION 
 //--------------------------------------------------------------------------------
-
-#define _CRT_SECURE_NO_WARNINGS
 
 #include <string>
 #include <vector>
@@ -20,41 +18,9 @@
 //--------------------------------------------------------------------------------
 // PROCESS CREATION CONSTANTS 
 //--------------------------------------------------------------------------------
-#ifdef BILL_WINDOWS
+
 #define MAX_TIME_LIMIT 5000
-#elif defined(LINUS_LINUX)
-#define MAX_TIME_LIMIT 5
-#endif 
-
 #define MAX_MEMORY_LIMIT 5000
-
-
-#define KILLING_PROCESS_TIME_VALUE (uint_64(1e18))
-#define KILLING_PROCESS_MEMORY_VALUE (uint_64(1e18))
-
-//--------------------------------------------------------------------------------
-
-#ifdef BILL_WINDOWS
-	// BILL_WINDOWS
-#define _CRT_SECURE_NO_WARNINGS
-#include <future>
-#include <windows.h>
-#include <userenv.h>
-#include <psapi.h>
-#include <tlhelp32.h>
-#include <atlconv.h>
-#include <atlalloc.h>
-#include <shlwapi.h>
-#include <cstdint>
-
-#include "CPUTime/getCPUTime.hpp"
-	// !BILL_WINDOWS
-#elif defined(LINUS_LINUX)
-#include <wait.h>
-#include <unistd.h>
-#include <fcntl.h>
-	// !LINUS_LINUX
-#endif 
 
 //--------------------------------------------------------------------------------
 
@@ -74,42 +40,38 @@ namespace proc
 		\param aTimeLimit Child process maximum time usage.
 		\param aMemoryLimit Child process maximum memory usage.
 		*/
-		Process
-		(
-			const std::vector<std::unique_ptr<char[]>>&aParameters,
-			uint_64 aTimeLimit = MAX_TIME_LIMIT,
-			uint_64 aMemoryLimit = 1e9
-		) noexcept;
+		Process() noexcept;
 		virtual ~Process() = default;
+
+        virtual void setComand(const dom::String& aParameters) noexcept = 0;
+        /*
+		\brief Create a child process with the specified parameters.
+		\param aParameters Child process parameters for execution.
+		*/
+		virtual void create() noexcept = 0;
+
+		/*
+		\brief Sets time and memory usage limits.
+		\param aTimeLimit Child process maximum time usage.
+		\param aMemoryLimit Child process maximum memory usage.
+		*/
+		void setLimits(uint_64 aTimeLimit, uint_64 aMemoryLimit) noexcept;
 
 		/*
 		\brief Executing the child process without time and memory 
 		usage evaluation.
 		\return Returns true if the process is completed successfully.
 		*/
-		bool run();
+		virtual bool run() noexcept = 0;
 
 		/*
 		\brief Executing the child process with time and memory 
 		usage evaluation.
 		\return Returns the time and memory used by the process.
 		*/
-		std::pair<uint_64, uint_64> runWithLimits();
+		virtual dom::Pair<uint_64> runWithLimits() noexcept = 0;
 
 	protected:
-		/*
-		\brief Sets time and memory usage limits.
-		\param aTimeLimit Child process maximum time usage.
-		\param aMemoryLimit Child process maximum memory usage.
-		*/
-		void setLimits(uint_64 aTimeLimit, uint_64 aMemoryLimit);
-
-		/*
-		\brief Create a child process with the specified parameters.
-		\param aParameters Child process parameters for execution.
-		*/
-		virtual void create(const StringTable& aParameters);
-
 		/*
 		\brief Redirecting input and output streams for a child process.
 		*/
@@ -119,29 +81,6 @@ namespace proc
 		\brief Closes the input and output handler for the child process.
 		(finishing of communication with the child process)
 		*/
-	#if		defined(BILL_WINDOWS)
-		virtual void closeHandles() = 0;
-	#endif // BILL_WINDOWS
-
-	#ifdef BILL_WINDOWS
-	protected:
-		STARTUPINFOA mStartupInfo;
-		PROCESS_INFORMATION mProcessInfo;
-
-	private:
-		std::future<long long> mFuture;
-
-		long long getMillisecondsNow();
-
-		long long getCurrentMemoryUsage(HANDLE&);
-		long long getMaxMemoryUsage(PROCESS_INFORMATION&, long long);
-
-		DWORD getExitCode(HANDLE&);
-		bool killProcess(PROCESS_INFORMATION&);
-
-	#elif defined(LINUS_LINUX)
-		int mChildPID;
-	#endif 
 
 	private:
 		uint_64 mTimeLimit;
@@ -152,4 +91,4 @@ namespace proc
 
 //--------------------------------------------------------------------------------
 
-#endif // MY_PROCESS_H
+#endif // PROCESS_H

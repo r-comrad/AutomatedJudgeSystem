@@ -1,148 +1,87 @@
 //--------------------------------------------------------------------------------
 
-#include "process/my_process.hpp"
+#include "windows_process.hpp"
 
-proc::Process::Process
-(
-    const std::vector<std::unique_ptr<char[]>>& aParameters,
-    uint_64 aTimeLimit,
-    uint_64 aMemoryLimit
-)  noexcept :
-    mTimeLimit      (aTimeLimit),
-    mMemoryLimit    (aMemoryLimit)
-//#ifdef BILL_WINDOWS
-//    , 
-//    mStartupInfo    ({ 0 })
-//#elif defined(LINUS_LINUX)
-//#endif
+proc::WindowsProcess::WindowsProcess()  noexcept
 {
-#ifdef BILL_WINDOWS
     ZeroMemory(&mProcessInfo, sizeof(PROCESS_INFORMATION));
     ZeroMemory(&mStartupInfo, sizeof(STARTUPINFOA));
-#endif
 }
 
 //--------------------------------------------------------------------------------
 
 bool
-proc::Process::run()
+proc::WindowsProcess::run() noexcept
 {
-    WRITE_LOG("Runing_simple_process");
-#ifdef BILL_WINDOWS
+    bool result = true;
+    WRITE_LOG("Runing_simple_windows_process");
+
     ResumeThread(mProcessInfo.hThread);
     WaitForSingleObject(mProcessInfo.hProcess, mTimeLimit);
 
     if (getExitCode(mProcessInfo.hProcess) == STILL_ACTIVE)
     {
         killProcess(mProcessInfo);
-        return false;
+        result = false;
     }
 
-    //closeHandles();
-#else
-    //sint_32 status;
-    //int status;
-    //wait(&status);
-    //kill(mChildPID, SIGCONT);
-    wait(NULL);
-    //wait4(mChildPID,NULL,0,NULL);
-#endif
-
-    return true;
+    return result;
 }
 
 //--------------------------------------------------------------------------------
 
-void
-proc::Process::setLimits(uint_64 aTimeLimit, uint_64 aMemoryLimit)
+dom::Pair<uint_64>
+proc::WindowsProcess::runWithLimits() noexcept
 {
-    if (aTimeLimit > MAX_TIME_LIMIT) aTimeLimit = MAX_TIME_LIMIT;
-    if (aMemoryLimit > MAX_MEMORY_LIMIT) aMemoryLimit = MAX_MEMORY_LIMIT;
+    START_LOG_BLOCK("Runing_windows_process_with_time_and_memory_evaluation");
 
-    mTimeLimit = aTimeLimit;
-    mMemoryLimit = aMemoryLimit;
-}
-
-//--------------------------------------------------------------------------------
-
-std::pair<uint_64, uint_64>
-proc::Process::runWithLimits()
-{
-    START_LOG_BLOCK("Runing_process_with_time_and_memory_evaluation");
+    dom::Pair<uint_64> result { KILLING_PROCESS_TIME_VALUE, KILLING_PROCESS_MEMORY_VALUE };
 
     uint_64 timeUsage = 0;
     uint_64 memoryUsage = 0;
 
-#ifdef BILL_WINDOWS
     int reservedTime = 200;
     long long startTime = getCPUTime();
 
-    if (!run()) 
-        return { KILLING_PROCESS_TIME_VALUE, 
-        KILLING_PROCESS_MEMORY_VALUE };
+    if (run()) 
+    {
+        long long endTime = getCPUTime();
+        timeUsage = endTime - startTime;
 
-    long long endTime = getCPUTime();
-    timeUsage = endTime - startTime;
+        memoryUsage = mFuture.get();
 
-    memoryUsage = mFuture.get();
+        WRITE_LOG("time_usage:", timeUsage);
+        END_LOG_BLOCK("memory_usage:", memoryUsage);
 
-#elif defined(LINUS_LINUX)
-    rusage resourseUsage;
-    int status;
-    wait4(mChildPID, &status, 0, &resourseUsage);
-    int gg = WIFEXITED(status);
-    if (!WIFEXITED(status)) 
-        return { KILLING_PROCESS_TIME_VALUE,
-        KILLING_PROCESS_MEMORY_VALUE };
-    //wait(NULL);
+        result = { timeUsage , memoryUsage };
+    }
 
-    timeUsage += resourseUsage.ru_utime.tv_sec * 1000000L;
-    timeUsage += resourseUsage.ru_utime.tv_usec;
-    timeUsage += resourseUsage.ru_stime.tv_sec * 1000000L;
-    timeUsage += resourseUsage.ru_stime.tv_usec;
-#endif 
-
-    WRITE_LOG("time_usage:", timeUsage);
-    END_LOG_BLOCK("memory_usage:", memoryUsage);
-
-    return { timeUsage , memoryUsage };
+    return result;
 }
 
 //--------------------------------------------------------------------------------
 
 void 
-proc::Process::create(const StringTable& aParameters)
+proc::WindowsProcess::setComand(const dom::String& aParameters) noexcept
 {
-    WRITE_LOG("Creating_process_name:", aParameters[0].get());
+    mProcessArgs = aParameters;
+    mProcessName =  dom::String(mProcessArgs, ' ');
+}
 
-    //TODO: in my_strinh.hpp
+//--------------------------------------------------------------------------------
 
-    char* name = newCharPtrCopy(aParameters[0].get());
-    if (name[0] == 0) name = nullptr;
+void 
+proc::WindowsProcess::create() noexcept
+{
+    START_LOG_BLOCK("Creating_windows_process_with_name:", mProcessName.get());
+    WRITE_LOG("args:", mProcessArgs.get());
 
-    // int size = aParameters.size() + 1;
-    // for (int i = 0; i < aParameters.size() - 1; ++i)
-    // {
-    //     size += strlen(aParameters[i]);
-    // }
-
-    CharArray cmd = getCharArray(aParameters);
-    // cmd[0] = 0;
-    // for (int i = 0; i < aParameters.size() - 1; ++i)
-    // {
-    //     strCopy(cmd, aParameters[i]);
-    //     if (cmd[0] != 0) strCopy(cmd, " ");
-    // }
-    if (cmd[0] == 0) cmd = nullptr;
-    
-    // TODO: end
-
-    mFuture = std::async(std::launch::async, &proc::Process::getMaxMemoryUsage,
+    mFuture = std::async(std::launch::async, &proc::WindowsProcess::getMaxMemoryUsage,
         this, std::ref(mProcessInfo), 1000000);
 
     if (CreateProcessA(
-        name,
-        cmd.get(),
+        mProcessName.get(),
+        mProcessArgs.get(),
         NULL,
         NULL,
         TRUE,
@@ -153,16 +92,15 @@ proc::Process::create(const StringTable& aParameters)
         &mProcessInfo
     ) == FALSE)
     {
-        WRITE_ERROR("Process", "create", 10, "Can't_start_process", aParameters[0].get());
+        WRITE_ERROR("Process", "create", 10, "Can't_start_process", mProcessName.get());
     }
-    delete name;
+    END_LOG_BLOCK();
 }
 
 //--------------------------------------------------------------------------------
 
-#ifdef BILL_WINDOWS
 long long 
-proc::Process::getMillisecondsNow()
+proc::WindowsProcess::getMillisecondsNow() noexcept
 {
     static LARGE_INTEGER frequency;
     static BOOL useQpf = QueryPerformanceFrequency(&frequency);
@@ -180,7 +118,7 @@ proc::Process::getMillisecondsNow()
 //--------------------------------------------------------------------------------
 
 long long 
-proc::Process::getCurrentMemoryUsage(HANDLE& hProcess) 
+proc::WindowsProcess::getCurrentMemoryUsage(HANDLE& hProcess) noexcept
 {
     PROCESS_MEMORY_COUNTERS pmc;
     long long  currentMemoryUsage = 0;
@@ -199,11 +137,11 @@ proc::Process::getCurrentMemoryUsage(HANDLE& hProcess)
 //--------------------------------------------------------------------------------
 
 long long 
-proc::Process::getMaxMemoryUsage
+proc::WindowsProcess::getMaxMemoryUsage
 (
     PROCESS_INFORMATION& processInfo, 
     long long memoryLimit
-) 
+) noexcept
 {
     long long maxMemoryUsage = 0,
         currentMemoryUsage = 0;
@@ -221,7 +159,7 @@ proc::Process::getMaxMemoryUsage
 }
 
 DWORD 
-proc::Process::getExitCode(HANDLE& hProcess) 
+proc::WindowsProcess::getExitCode(HANDLE& hProcess) noexcept
 {
     DWORD exitCode = 0;
     GetExitCodeProcess(hProcess, &exitCode);
@@ -231,7 +169,7 @@ proc::Process::getExitCode(HANDLE& hProcess)
 //--------------------------------------------------------------------------------
 
 bool 
-proc::Process::killProcess(PROCESS_INFORMATION& processInfo) 
+proc::WindowsProcess::killProcess(PROCESS_INFORMATION& processInfo) noexcept
 {
     START_LOG_BLOCK("Killing_process");
 
@@ -271,6 +209,5 @@ proc::Process::killProcess(PROCESS_INFORMATION& processInfo)
 
     return true;
 }
-#endif // BILL_WINDOWS
 
 //--------------------------------------------------------------------------------

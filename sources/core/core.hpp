@@ -36,17 +36,18 @@ private:
 	std::vector<std::mutex> mChecksMutexs;
 	std::vector<SubmissionInformation> mChecksInfo;
 
-	StringTable mSolutionParameters;
-	StringTable mCheckerParameters;
+	dom::String mSolutionParameters;
+	dom::String mCheckerParameters;
 
 	std::mutex mGetTestLock;
 
 	uint_32 mFinishedTest;
 
-	MDatabaseQuery mDBQ;
+	data::DatabaseQuery mDBQ;
 	ProblemInformation mProblemInfo;
     std::mutex mProblemInfoLock;
 
+    void prepareForTesting() noexcept;
 	void check();
     bool resultEvoluation(int aCheckNum);
 	//void fileTesting(uint_32 aTestNum, std::string& aSolutionName, std::string& aCheckerName);

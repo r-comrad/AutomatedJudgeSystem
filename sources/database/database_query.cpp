@@ -11,37 +11,19 @@
 //UPDATE core_contests SET time_limit = 1000 WHERE id = 20
 //UPDATE core_contests SET memory_limit = 262144 WHERE id = 21
 
-MDatabaseQuery::MDatabaseQuery
-(
-    const std::string& aDatabasePath
-) :
+data::DatabaseQuery::DatabaseQuery (const std::string& aDatabasePath) noexcept :
     mDatabase                   (aDatabasePath),
     mReservedStatementNumber    (0)
 {}
 
-MDatabaseQuery::~MDatabaseQuery()
-{}
-
-ProblemInformation 
-MDatabaseQuery::getProblemInfo(int ID)
-{
-	ProblemInformation result;
-	result.mID = ID;
-
-    getGeneralInformation(result);
-    getLimitsInformation(result);
-
-	return result;
-}
-
 void 
-MDatabaseQuery::writeResult
+data::DatabaseQuery::writeResult
 (
     int                 aID, 
     const std::string&  aResult,
     int                 aTime, 
     int                 aMemory
-)
+) noexcept
 {
     START_LOG_BLOCK("Updating_database");
     WRITE_LOG("Updating...");
@@ -56,7 +38,11 @@ MDatabaseQuery::writeResult
 }
 
 void
-MDatabaseQuery::getNextTest(ProblemInformation& aSudmissionInformation, TestLibMessage& aTLM)
+data::DatabaseQuery::getNextTest
+(
+    ProblemInformation&     aSudmissionInformation, 
+    TestLibMessage&         aTLM
+) noexcept
 {
 
     WRITE_LOG("Taking_next_test");
@@ -79,10 +65,7 @@ MDatabaseQuery::getNextTest(ProblemInformation& aSudmissionInformation, TestLibM
 }
 
 void
-MDatabaseQuery::getAllTests
-(
-    ProblemInformation& aSudmissionInformation
-)
+data::DatabaseQuery::getAllTests(ProblemInformation& aSudmissionInformation) noexcept
 {
     START_LOG_BLOCK("Geting_test_from_database");
 
@@ -121,10 +104,7 @@ MDatabaseQuery::getAllTests
 }
 
 void
-MDatabaseQuery::prepareTestsStatement
-(
-    ProblemInformation& aSudmissionInformation
-)
+data::DatabaseQuery::prepareTestsStatement(ProblemInformation& aSudmissionInformation) noexcept
 {
     aSudmissionInformation.mTestsAreOver = false;
     aSudmissionInformation.mTestsCount = 0;
@@ -135,40 +115,41 @@ MDatabaseQuery::prepareTestsStatement
     END_LOG_BLOCK("I'm_ready");
 }
 
-void 
-MDatabaseQuery::getGeneralInformation
-(
-    ProblemInformation& aSudmissionInformation
-)
+data::DatabaseQuery::ParticipantlInfo 
+data::DatabaseQuery::getParticipantInfo(uint_64 aID) noexcept
 {
+    ParticipantlInfo result;
+
     START_LOG_BLOCK("Geting_ID_and_name_from_database");
 
-    mDatabase.select("core_solutions", "file_name, contest_id", "id = " + std::to_string(aSudmissionInformation.mID));
+    mDatabase.select("core_solutions", "file_name, contest_id", "id = " + std::to_string(aID));
     mDatabase.step();
 
-    aSudmissionInformation.mSolutionFileName = getCharArray(mDatabase.getTextFromRow(0));
-    aSudmissionInformation.mContestID = mDatabase.getInt64FromRow(1);
+    result.contestId = mDatabase.getInt64FromRow(1);
+    result.fileName= dom::String(mDatabase.getTextFromRow(0));
     mDatabase.closeStatment();
 
-    WRITE_LOG("File_name:", aSudmissionInformation.mSolutionFileName.get());
-    END_LOG_BLOCK("Contest_ID:", aSudmissionInformation.mContestID);
+    WRITE_LOG("Contest_ID:", result.contestId);
+    END_LOG_BLOCK("File_name:", result.fileName);
+
+    return result;
 }
 
-void 
-MDatabaseQuery::getLimitsInformation
-(
-    ProblemInformation& aSudmissionInformation
-)
+data::DatabaseQuery::CheckInfo
+data::DatabaseQuery::getCheckInfo(uint_64 aID) noexcept
 {
+    data::DatabaseQuery::CheckInfo result;
     START_LOG_BLOCK("Geting_limits_from_database");
 
-    mDatabase.select("core_contests", "time_limit, memory_limit, checker", "id = " + std::to_string(aSudmissionInformation.mContestID));
+    mDatabase.select("core_contests", "time_limit, memory_limit, checker", "id = " + std::to_string(aID));
     mDatabase.step();
-    aSudmissionInformation.mTimeLimit = mDatabase.getInt64FromRow(0);
-    aSudmissionInformation.mMemoryLimit = mDatabase.getInt64FromRow(1);
-    aSudmissionInformation.mCheckerFileName = getCharArray(mDatabase.getTextFromRow(2));
+    result.timeLimit = mDatabase.getInt64FromRow(0);
+    result.memoryLimit = mDatabase.getInt64FromRow(1);
+    result.checkerName = dom::String(mDatabase.getTextFromRow(2));
     mDatabase.closeStatment();
 
-    WRITE_LOG("Time_limit:", aSudmissionInformation.mTimeLimit);
-    END_LOG_BLOCK("Memory_limit:", aSudmissionInformation.mMemoryLimit);
+    WRITE_LOG("Time_limit:", result.timeLimit);
+    END_LOG_BLOCK("Memory_limit:", result.memoryLimit);
+
+    return result;
 }

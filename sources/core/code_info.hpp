@@ -31,7 +31,7 @@ namespace cor
 		std::string getFileLanguage() const noexcept;
 		std::string getFileExtension() const noexcept;
 
-		CodeInfo(CharArray&& fileName, CharArray&& outputFileileName) noexcept;
+		CodeInfo(dom::String&& fileName, dom::String&& outputFileileName) noexcept;
 
 	private:
 		std::vector<std::unique_ptr<char[]>> mCodeData;

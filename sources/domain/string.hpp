@@ -45,23 +45,26 @@ using namespace std::literals;
 // void makeWindowString(str_ref aString);
 // #endif // !BILL_WINDOWS
 
-using CharArray = std::unique_ptr<char[]>;
-using CharArrayTable = std::vector<std::unique_ptr<char[]>>;
-
 //TODO: move operations!
 namespace dom
 {
+    using CharArray = std::unique_ptr<char[]>;
+    using CharArrayTable = std::vector<std::unique_ptr<char[]>>;
+
 	class String
 	{
 	public:
 		String() noexcept;
 		String(         const char* aStr)   noexcept;
 		String(const unsigned char* aStr)   noexcept;
-		String(  const std::string& aStr)   noexcept;
+		String( const std::string&  aStr)   noexcept;
 		String(       std::string&& aStr)   noexcept;
 
-		String(     const String& aOther)   noexcept = delete;
+		String(    const String&  aOther)   noexcept = delete;
 		String(          String&& aOther)   noexcept = default;
+
+        String(const CharArray&  aStr, size_t aNum) noexcept;
+        String(const CharArray&  aStr, char aLetter) noexcept;
 
 		~String() = default;
 //--------------------------------------------------------------------------------
@@ -84,14 +87,16 @@ namespace dom
 
 		void merge() noexcept;
 
-		void switchToCharArray()	noexcept;
-		void switchToString()		noexcept;
+		void switchToCharArray()    noexcept;
+		void switchToString()       noexcept;
 
-		operator CharArray()	const noexcept;
-		operator std::string()	const noexcept;
+		operator CharArray()    const noexcept;
+		operator std::string()  const noexcept;
 
-		CharArray	harvestCharArray()	noexcept;
-		std::string harvestString()		noexcept;
+		CharArray	harvestCharArray()  noexcept;
+		std::string harvestString()     noexcept;
+
+        friend std::ostream& operator<<(std::ostream& os, const dom::String& aStr);
 
 	private:
 		enum class StrType { NonDetermin, CharArray, String };
@@ -100,16 +105,16 @@ namespace dom
 		CharArrayTable mCharData;
 		std::vector<std::string> mStrData;
 
-		auto getSizeLumbda(const char* str)			const noexcept;
-		auto getSizeLumbda(const CharArray& str)	const noexcept;
-		auto getSizeLumbda(const std::string& str)	const noexcept;
+		auto getSizeLumbda(const char* str)         const noexcept;
+		auto getSizeLumbda(const CharArray& str)    const noexcept;
+		auto getSizeLumbda(const std::string& str)  const noexcept;
 
 		//auto getEmplaceLumbda(const CharArray& str) const noexcept;
 		//auto getEmplaceLumbda(const std::string& str) const noexcept;
 
-		auto getConstructorLumbda(const char* str)			const noexcept;
-		auto getConstructorLumbda(const CharArray& str)		const noexcept;
-		auto getConstructorLumbda(const std::string& str)	const noexcept;
+		auto getConstructorLumbda(const char* str)          const noexcept;
+		auto getConstructorLumbda(const CharArray& str)     const noexcept;
+		auto getConstructorLumbda(const std::string& str)   const noexcept;
 
 		void clear(StrType aType = StrType::NonDetermin) noexcept;
 

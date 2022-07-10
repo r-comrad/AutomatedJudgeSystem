@@ -14,8 +14,8 @@ public:
 
 	uint_64 mTimeLimit;
 	uint_64 mMemoryLimit;
-	CharArray mSolutionFileName;
-	CharArray mCheckerFileName;
+	dom::String mSolutionFileName;
+	dom::String mCheckerFileName;
 
 	int mTestsCount;
 	bool mTestsAreOver;

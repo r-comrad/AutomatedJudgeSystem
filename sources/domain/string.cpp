@@ -121,6 +121,22 @@ dom::String::String(std::string&& aStr) noexcept :
 	add(std::move(aStr));
 }
 
+dom::String::String(const CharArray&  aStr, size_t aNum) noexcept :
+	mType	(StrType::CharArray)
+{
+    auto ptr = std::make_unique<char[]> (aNum + 1);
+    ptr[aNum] = 0;
+    add(ptr);
+}
+
+dom::String::String(const CharArray&  aStr, char aLetter) noexcept :
+	mType	(StrType::CharArray)
+{
+    size_t i = 0;
+    while(aStr[i] && aStr[i++] != aLetter);
+    (*this) = String(aStr, i);
+}
+
 //------------------------------------------------------
 
 dom::String&
@@ -247,7 +263,7 @@ dom::String::switchToString() noexcept
 
 //------------------------------------------------------
 
-dom::String::operator CharArray() const noexcept
+dom::String::operator dom::CharArray() const noexcept
 {
 	CharArray result;
 
@@ -279,7 +295,7 @@ dom::String::operator std::string() const noexcept
 	return result;
 }
 
-CharArray
+dom::CharArray
 dom::String::harvestCharArray() noexcept
 {
 	CharArray result {nullptr};
@@ -314,6 +330,20 @@ dom::String::harvestString() noexcept
 	}
 
 	return result;
+}
+
+std::ostream& 
+dom::operator<<(std::ostream& os, const dom::String& aStr)
+{
+    if (aStr.mType != String::StrType::CharArray)
+	{
+		for(auto& str : aStr.mStrData) os << str << "\n";
+	}
+	else
+	{
+		for(auto& str : aStr.mCharData) os << str.get() << "\n";		
+	}
+    return os;
 }
 
 //------------------------------------------------------

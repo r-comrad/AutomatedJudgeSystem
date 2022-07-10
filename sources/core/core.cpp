@@ -91,6 +91,15 @@ Core::run(int aID){
     check();
 }
 
+void
+Core::prepareForTesting() noexcept
+{
+    auto partInfo = mDBQ.getParticipantInfo();
+    auto checkInfo = mDBQ.getCheckInfo();
+
+    
+}
+
 bool
 Core::resultEvoluation(int aCheckNum)
 {

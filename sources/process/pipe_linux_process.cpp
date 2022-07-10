@@ -1,33 +1,12 @@
-﻿//--------------------------------------------------------------------------------
-#include "process/pipe_process.hpp"
+#include "pipe_linux_process.hpp"
 
-proc::PipeProcess::PipeProcess
-(
-    const StringTable& aParameters,
-    uint_64 aTimeLimit,
-    uint_64 aMemoryLimit
-) :
-    Process(aParameters)
+proc::PipeLinuxProcess::PipeLinuxProcess() noexcept
 {
-    if (aTimeLimit != 1e18 && aMemoryLimit != 1e18)
-    {
-        setLimits(aTimeLimit, aMemoryLimit);
-    }
-
-    IORedirection();
-    create(aParameters);
+    IORedirection()
 }
 
-proc::PipeProcess::~PipeProcess() 
-{
-    #if		defined(BILL_WINDOWS)
-    closeHandles();
-    #endif // BILL_WINDOWS
-}
-
-#ifdef LINUS_LINUX
 void
-PipeProcess::create(const std::vector<char*>& aParameters)
+proc::PipeLinuxProcess::create(const std::vector<char*>& aParameters)
 {
     //aParameters = aName + aParameters;
 
@@ -106,41 +85,13 @@ PipeProcess::create(const std::vector<char*>& aParameters)
         execv((char*) aName.c_str(), param);
     }*/
 }
-#endif
 
 #define BUFFER_SIZE 65336 * 10
 
 void
-proc::PipeProcess::IORedirection()
+proc::PipeLinuxProcess::IORedirection()
 {
     WRITE_LOG("Rederecting_input_and_output_to_pipe");
-
-#ifdef BILL_WINDOWS
-    SECURITY_ATTRIBUTES securatyAttributes;
-    securatyAttributes.nLength = sizeof(SECURITY_ATTRIBUTES);
-    securatyAttributes.lpSecurityDescriptor = NULL;
-    securatyAttributes.bInheritHandle = true;
-
-    if (!CreatePipe(&mChildSTDIN, &mThisSTDOUT, &securatyAttributes, 0))
-    {
-        WRITE_ERROR("PipeProcess", "IORedirection", 20, "Can't_create_pipe", "Windows");
-    }
-
-    if (!CreatePipe(&mThisSTDIN, &mChildSTDOUT, &securatyAttributes, 0))
-    {
-        WRITE_ERROR("PipeProcess", "IORedirection", 21, "Can't_create_pipe", "Windows");
-    }
-    //else if (aType == Process::IOType::MIXED) {}
-
-    //GetStartupInfo(&mStartupInfo);
-    ZeroMemory(&mStartupInfo, sizeof(STARTUPINFO));
-    mStartupInfo.cb = sizeof(STARTUPINFO);
-    mStartupInfo.dwFlags |= STARTF_USESTDHANDLES;
-
-    mStartupInfo.hStdInput = mChildSTDIN;
-    mStartupInfo.hStdError = mChildSTDOUT;
-    mStartupInfo.hStdOutput = mChildSTDOUT;
-#elif defined(LINUS_LINUX)
 
     pipe(mPipeA);
     pipe(mPipeB);
@@ -150,39 +101,16 @@ proc::PipeProcess::IORedirection()
     fcntl(mPipeA[1], F_SETPIPE_SZ, BUFFER_SIZE);
     fcntl(mPipeB[0], F_SETPIPE_SZ, BUFFER_SIZE);
     fcntl(mPipeB[1], F_SETPIPE_SZ, BUFFER_SIZE);
-
-#endif // BILL_WINDOWS
 }
 
 
 void
-proc::PipeProcess::readPipe(std::string& result)
+proc::PipeLinuxProcess::readPipe(str_ref result)
 {
 #ifdef PIPE_LOGS
     WRITE_LOG("Reading_from_pipe");
 #endif // !PIPE_LOG_OUTPUT
 
-#ifdef BILL_WINDOWS
-    char buf[1024];
-    memset(buf, 0, sizeof(buf));
-    unsigned long bread = 0;
-    unsigned long avail = 0;
-
-    while (bread == 0 && avail == 0)
-    {
-        PeekNamedPipe(mThisSTDIN, buf, 1023, &bread, &avail, NULL);
-    }
-
-    memset(buf, 0, sizeof(buf));
-    bread = 1024;
-    result.clear();
-    while (bread >= 1023)
-    {
-        memset(buf, 0, sizeof(buf));
-        ReadFile(mThisSTDIN, buf, 1023, &bread, NULL);
-        result += std::string(buf);
-    }
-#elif defined(LINUS_LINUX)
     result.clear();
     char buf[1024];
     memset(buf, 0, sizeof(buf));
@@ -197,7 +125,6 @@ proc::PipeProcess::readPipe(std::string& result)
     //    while (read(mPipefd[0], &buf, 1) > 0)
     //        write(STDOUT_FILENO, &buf, 1);
     //    close(mPipefd[0]);
-#endif
 
 #ifdef PIPE_LOGS
     WD_END_LOG;
@@ -205,22 +132,12 @@ proc::PipeProcess::readPipe(std::string& result)
 }
 
 void
-proc::PipeProcess::writePipe(std::string& aMessage, PypeType aType)
+proc::PipeLinuxProcess::writePipe(str_ref aMessage, PypeType aType)
 {
 #ifdef PIPE_LOGS
     WRITE_LOG("Writing_from_pipe");
 #endif // !PIPE_LOG_OUTPUT
 
-#ifdef BILL_WINDOWS
-    unsigned long bread;
-    //WriteFile(mThisSTDOUT, aMessage.c_str(), aMessage.size()
-    //    + ((aType == ZERO) ? 1 : 0), &bread, NULL);
-    WriteFile(mThisSTDOUT, aMessage.c_str(), aMessage.size(), &bread, NULL);
-    if (aType == ZERO)
-    {
-        WriteFile(mThisSTDOUT, "\n", 1, &bread, NULL);
-    }
-#else
     //aMessage.push_back('\n');
     write(mPipeA[1], aMessage.c_str(), aMessage.size());
     if (aType == ZERO)
@@ -233,25 +150,9 @@ proc::PipeProcess::writePipe(std::string& aMessage, PypeType aType)
     //        write(mPipefd[1], "\n", 1);
     //    }
     //    close(mPipefd[1]);
-#endif // BILL_WINDOWS
 
 #ifdef PIPE_LOGS
     WD_LOG("write " + std::to_string(bread) + " bites\n");
     WD_END_LOG;
 #endif // !PIPE_LOG_OUTPUT
-
 }
-
-
-void
-proc::PipeProcess::closeHandles()
-{
-#ifdef BILL_WINDOWS
-    CloseHandle(mChildSTDIN);
-    CloseHandle(mChildSTDOUT);
-#endif // BILL_WINDOWS
-}
-
-//--------------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------------
