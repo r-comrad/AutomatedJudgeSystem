@@ -8,37 +8,38 @@
 
 namespace cor
 {
-	struct CPPInfo
-	{
-		CharArray compilerName;
-		CharArray inputFileName;
-		CharArray outputFileileName;
-	};
+    struct CPPInfo
+    {
+        dom::String inputFileName;
+        dom::String outputFileileName;
+        dom::String compilerName;
+    };
 
-	struct PythonInfo
-	{
-		CharArray interpretatorName;
-		CharArray fileName;
-	};
+    struct PythonInfo
+    {
+        dom::String fileName;
+        dom::String interpretatorName;
+    };
 
-	class CodeInfo
-	{
-	public:
-		operator CPPInfo() noexcept;
-		operator PythonInfo() noexcept;
+    class CodeInfo
+    {
+    public:
+        operator CPPInfo() noexcept;
+        operator PythonInfo() noexcept;
 
-		bool isLanguageStated() const noexcept;
-		std::string getFileLanguage() const noexcept;
-		std::string getFileExtension() const noexcept;
+        bool isLanguageStated() const noexcept;
+        std::string getFileLanguage() const noexcept;
+        std::string getFileExtension() const noexcept;
 
-		CodeInfo(dom::String&& fileName, dom::String&& outputFileileName) noexcept;
+        CodeInfo(dom::String&& fileName, dom::String&& outputFileileName) noexcept;
 
-	private:
-		std::vector<std::unique_ptr<char[]>> mCodeData;
-		// First	cell			- language
-		// Secind	cell			- input file name
-		// Therd	cell [optional]	- output file name
-	};
+    private:
+        std::vector<dom::String> mCodeData;
+        // First    cell            -  input file name
+        // Secind   cell [optional] - output file name
+        // Therd    cell [optional] - language
+        // ...
+    };
 }
 
 #endif // !CODE_INFO_HPP

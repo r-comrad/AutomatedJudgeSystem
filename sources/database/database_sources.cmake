@@ -9,4 +9,6 @@ set(
 
     sqlite_database.cpp
     sqlite_database.hpp
+
+    data_structures.hpp
 )

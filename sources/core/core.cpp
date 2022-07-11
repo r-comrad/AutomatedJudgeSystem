@@ -97,7 +97,9 @@ Core::prepareForTesting() noexcept
     auto partInfo = mDBQ.getParticipantInfo();
     auto checkInfo = mDBQ.getCheckInfo();
 
-    
+    CodeInfo codeInfo(std::move(partInfo.fileName), "part");
+    sys::Compiler comp;
+    auto cmd = comp.getExecutableCommand(codeInfo);
 }
 
 bool

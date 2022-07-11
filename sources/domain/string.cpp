@@ -1,128 +1,33 @@
 #include "domain/string.hpp"
 
-// str_val
-// getString
-// (
-//     const char* aString,
-//     bool aCheckZero
-// )
-// {
-//     str_val result(aString);
-//     if (aCheckZero && result[result.size()] != 0)
-//     {
-//         // TODO: check for zero index
-//         // TODO1
-//         result.push_back(0);
-//     }
-//     return result;
-// }
-
-// std::string
-// getString
-// (
-//     const unsigned char* aString
-// ) noexcept
-// {
-//     str_val result;
-//     for (int i = 0; aString[i]; ++i) result.push_back(aString[i]);
-//     return result;
-// }
-
-// std::string 
-// getString(const StringTable& aStrArray) noexcept
-// {
-// 	std::string result;
-
-// 	int size = 0;
-// 	for(auto& str : aStrArray) size += strlen(str.get());
-// 	result.reserve(size + 1);
-
-// 	for(auto& str : aStrArray) 
-// 	{
-// 		result.append(str.get());
-// 	}
-
-// 	return result;
-// }
-
-// std::unique_ptr<char[]>
-// getCharArray(const StringTable& aStrArray) noexcept
-// {
-// 	std::unique_ptr<char[]> result;
-
-// 	int size = 0;
-// 	for(auto& str : aStrArray) size += strlen(str.get());
-// 	result.reset(new char[size + 1]);
-
-// 	for(auto& str : aStrArray) 
-// 	{
-// 		strcat(result.get(), str.get());
-// 	}
-
-// 	return result;
-// }
-
-// CharArray
-// getCharArray
-// (
-//     const unsigned char* aString
-// ) noexcept
-// {
-//     int size = 0;
-// 	while (aString[size++]);
-// 	CharArray result {new char[size]};
-//     for (int i = 0;i < size; ++i) 
-// 	{
-// 		result[i] = aString[i];
-// 	}
-//     return result;
-// }
-
-// #ifdef BILL_WINDOWS
-// void
-// makeWindowString
-// (
-//     str_ref aString
-// )
-// {
-//     for (char& i : aString)
-//     {
-//         if (i == '/') i = '\\';
-//     }
-// }
-
-// #endif // !BILL_WINDOWS
-
-//------------------------------------------------------
-
 dom::String::String() noexcept :
-	mType(StrType::NonDetermin)
+    mType(StrType::NonDetermin)
 {}
 
 dom::String::String(const char* aStr) noexcept :
-	mType	(StrType::CharArray)
+    mType    (StrType::CharArray)
 {
-	add(aStr);
+    add(aStr);
 }
 
 dom::String::String(const unsigned char* aStr) noexcept :
-	String	((const char*)aStr)
+    String    ((const char*)aStr)
 {}
 
 dom::String::String(const std::string& aStr) noexcept :
-	mType	(StrType::String)
+    mType    (StrType::String)
 {
-	add(aStr);
+    add(aStr);
 }
 
 dom::String::String(std::string&& aStr) noexcept :
-	mType	(StrType::String)
+    mType    (StrType::String)
 {
-	add(std::move(aStr));
+    add(std::move(aStr));
 }
 
 dom::String::String(const CharArray&  aStr, size_t aNum) noexcept :
-	mType	(StrType::CharArray)
+    mType    (StrType::CharArray)
 {
     auto ptr = std::make_unique<char[]> (aNum + 1);
     ptr[aNum] = 0;
@@ -130,7 +35,7 @@ dom::String::String(const CharArray&  aStr, size_t aNum) noexcept :
 }
 
 dom::String::String(const CharArray&  aStr, char aLetter) noexcept :
-	mType	(StrType::CharArray)
+    mType    (StrType::CharArray)
 {
     size_t i = 0;
     while(aStr[i] && aStr[i++] != aLetter);
@@ -142,32 +47,32 @@ dom::String::String(const CharArray&  aStr, char aLetter) noexcept :
 dom::String&
 dom::String::operator= (const char* aStr) noexcept
 {
-	clear(StrType::CharArray);
-	add(aStr);
-	return *this;
+    clear(StrType::CharArray);
+    add(aStr);
+    return *this;
 }
 
 dom::String&
 dom::String::operator= (const unsigned char* aStr) noexcept
 {
-	return this->operator+((const char*)aStr);
-	return *this;
+    return this->operator+((const char*)aStr);
+    return *this;
 }
 
 dom::String&
 dom::String::operator= (const std::string& aStr) noexcept
 {
-	clear(StrType::String);
-	add(aStr);
-	return *this;
+    clear(StrType::String);
+    add(aStr);
+    return *this;
 }
 
 dom::String&
 dom::String::operator= (std::string&& aStr) noexcept
 {
-	clear(StrType::String);
-	add(std::move(aStr));
-	return *this;
+    clear(StrType::String);
+    add(std::move(aStr));
+    return *this;
 }
 
 //------------------------------------------------------
@@ -175,29 +80,29 @@ dom::String::operator= (std::string&& aStr) noexcept
 dom::String&
 dom::String::operator+ (const char* aStr) noexcept
 {
-	add(aStr);
-	return *this;
+    add(aStr);
+    return *this;
 }
 
 dom::String&
 dom::String::operator+ (const unsigned char* aStr) noexcept
 {
-	return this->operator+((const char*)aStr);
-	return *this;
+    return this->operator+((const char*)aStr);
+    return *this;
 }
 
 dom::String&
 dom::String::operator+ (const std::string& aStr) noexcept
 {
-	add(aStr);
-	return *this;
+    add(aStr);
+    return *this;
 }
 
 dom::String&
 dom::String::operator+ (std::string&& aStr) noexcept
 {
-	add(std::move(aStr));
-	return *this;
+    add(std::move(aStr));
+    return *this;
 }
 
 //------------------------------------------------------
@@ -205,25 +110,25 @@ dom::String::operator+ (std::string&& aStr) noexcept
 void
 dom::String::operator+= (const char* aStr) noexcept
 {
-	add(aStr);
+    add(aStr);
 }
 
 void
 dom::String::operator+= (const unsigned char* aStr) noexcept
 {
-	this->operator+=((const char*)aStr);
+    this->operator+=((const char*)aStr);
 }
 
 void
 dom::String::operator+= (const std::string& aStr) noexcept
 {
-	add(aStr);
+    add(aStr);
 }
 
 void
 dom::String::operator+= (std::string&& aStr) noexcept
 {
-	add(std::move(aStr));
+    add(std::move(aStr));
 }
 
 //------------------------------------------------------
@@ -231,20 +136,20 @@ dom::String::operator+= (std::string&& aStr) noexcept
 void
 dom::String::merge() noexcept
 {
-	if (mType != StrType::CharArray)
-	{
-		std::string str;
-		copyFromVector(str, mStrData);
-		mStrData.resize(1);
-		mStrData[0] = std::move(str);
-	}
-	else
-	{
-		CharArray str;
-		copyFromVector(str, mCharData);
-		mCharData.resize(1);
-		mCharData[0] = std::move(str);
-	}
+    if (mType != StrType::CharArray)
+    {
+        std::string str;
+        copyFromVector(str, mStrData);
+        mStrData.resize(1);
+        mStrData[0] = std::move(str);
+    }
+    else
+    {
+        CharArray str;
+        copyFromVector(str, mCharData);
+        mCharData.resize(1);
+        mCharData[0] = std::move(str);
+    }
 }
 
 //------------------------------------------------------
@@ -252,159 +157,144 @@ dom::String::merge() noexcept
 void
 dom::String::switchToCharArray() noexcept
 {
-	mType = StrType::CharArray;
+    mType = StrType::CharArray;
 }
 
 void
 dom::String::switchToString() noexcept
 {
-	mType = StrType::String;
+    mType = StrType::String;
 }
 
 //------------------------------------------------------
 
 dom::String::operator dom::CharArray() const noexcept
 {
-	CharArray result;
+    CharArray result;
 
-	if (mType != StrType::CharArray)
-	{
-		copyFromVector(result, mStrData);
-	}
-	else
-	{
-		copyFromVector(result, mCharData);
-	}
+    if (mType != StrType::CharArray)
+    {
+        copyFromVector(result, mStrData);
+    }
+    else
+    {
+        copyFromVector(result, mCharData);
+    }
 
-	return result;
+    return result;
 }
 
 dom::String::operator std::string() const noexcept
 {
-	std::string result;
+    std::string result;
 
-	if (mType != StrType::CharArray)
-	{
-		copyFromVector(result, mStrData);
-	}
-	else
-	{
-		copyFromVector(result, mCharData);
-	}
+    if (mType != StrType::CharArray)
+    {
+        copyFromVector(result, mStrData);
+    }
+    else
+    {
+        copyFromVector(result, mCharData);
+    }
 
-	return result;
+    return result;
 }
 
 dom::CharArray
 dom::String::harvestCharArray() noexcept
 {
-	CharArray result {nullptr};
+    CharArray result {nullptr};
 
-	merge();
-	if (mType != StrType::CharArray)
-	{
-		copyFromVector(result, mStrData);
-	}
-	else if (mCharData.size() > 0)
-	{
-		result = std::move(mCharData[0]);
-	}
+    merge();
+    if (mType != StrType::CharArray)
+    {
+        copyFromVector(result, mStrData);
+    }
+    else if (mCharData.size() > 0)
+    {
+        result = std::move(mCharData[0]);
+    }
 
-	return result;
+    return result;
 }
 
 std::string
 dom::String::harvestString() noexcept
 {
-	std::string result;
+    std::string result;
 
-	merge();
-	if (mType != StrType::CharArray)
-	{
-		result = std::move(mStrData[0]);
-	}
-	else if (mCharData.size() > 0)
-	{
-		copyFromVector(result, mCharData);
-		
-	}
+    merge();
+    if (mType != StrType::CharArray)
+    {
+        result = std::move(mStrData[0]);
+    }
+    else if (mCharData.size() > 0)
+    {
+        copyFromVector(result, mCharData);
+        
+    }
 
-	return result;
+    return result;
 }
 
 std::ostream& 
 dom::operator<<(std::ostream& os, const dom::String& aStr)
 {
     if (aStr.mType != String::StrType::CharArray)
-	{
-		for(auto& str : aStr.mStrData) os << str << "\n";
-	}
-	else
-	{
-		for(auto& str : aStr.mCharData) os << str.get() << "\n";		
-	}
+    {
+        for(auto& str : aStr.mStrData) os << str << "\n";
+    }
+    else
+    {
+        for(auto& str : aStr.mCharData) os << str.get() << "\n";        
+    }
     return os;
 }
 
 //------------------------------------------------------
 
 auto
-dom::String::getSizeLumbda(const char* str) const noexcept
+dom::String::getSize(const char* str) const noexcept
 {
-	return [](const char* str) noexcept { return strlen(str); };
+    return strlen(str);
 }
 
 auto
-dom::String::getSizeLumbda(const CharArray& str) const noexcept
+dom::String::getSize(const CharArray& str) const noexcept
 {
-	return [](const CharArray& str) noexcept { return strlen(str.get()); };
+    return strlen(str.get());
 }
 
 auto
-dom::String::getSizeLumbda(const std::string& str) const noexcept
+dom::String::getSize(const std::string& str) const noexcept
 {
-	return [](const std::string& str) noexcept { return str.size(); };
-}
-
-//auto
-//dom::String::getEmplaceLumbda(const CharArray& str) const noexcept
-//{
-//	return [](const CharArray& str, int num, ) noexcept { return strlen(str.get()); };
-//}
-//
-//auto
-//dom::String::getEmplaceLumbda(const std::string& str) const noexcept
-//{
-//	return [](const std::string& str, ) noexcept { return str.size(); };
-//}
-
-auto
-dom::String::getConstructorLumbda(const char* str) const noexcept
-{
-	return [](size_t aSize) noexcept { return new char[aSize + 1]; };
+    return str.size();
 }
 
 auto
-dom::String::getConstructorLumbda(const CharArray& str) const noexcept
+dom::String::construct(const char* str, size_t aSize) const noexcept
 {
-	return [](size_t aSize) noexcept { return std::move(std::make_unique<char[]>(aSize + 1)); };
+    return new char[aSize + 1];
+}
+
+auto
+dom::String::construct(const CharArray& str, size_t aSize) const noexcept
+{
+    return std::move(std::make_unique<char[]>(aSize + 1));
 }
 
 auto 
-dom::String::getConstructorLumbda(const std::string& str) const noexcept
+dom::String::construct(const std::string& str, size_t aSize) const noexcept
 {
-	return [](size_t aSize) noexcept
-	{
-		std::string result;
-		result.resize(aSize);
-		return result;
-	};
+    std::string result;
+    result.resize(aSize);
+    return result;
 }
 
 void
 dom::String::clear(StrType aType) noexcept
 {
-	mType = aType;
-	mCharData.resize(0);
-	mStrData.resize(0);
+    mType = aType;
+    mCharData.resize(0);
+    mStrData.resize(0);
 }

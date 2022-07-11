@@ -37,7 +37,7 @@ namespace data
             uint_64 memoryLimit;
             dom::String checkerName;
         };
-        
+
     public:
         /*
         \brief Construct querys handler for base with specifien name

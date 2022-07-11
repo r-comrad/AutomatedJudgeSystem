@@ -57,13 +57,11 @@ namespace sys {
 		// 	std::vector<char*>& aCpmandParameters
 		// );
 
-
-
 		StringTable getExecutableCommand(cor::CodeInfo&& aCode) const noexcept;
+
+	private:
 		StringTable prepareCommandForCPP(cor::CPPInfo&& aInfo) const noexcept;
 		StringTable prepareCommandForPython(cor::CPPInfo&& aInfo) const noexcept;
-	
-	private:
 		/*
 		\brief Determining the language of the file based on 
 		the file extension.
