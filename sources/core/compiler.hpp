@@ -12,17 +12,17 @@ using ComandType = std::string;
 
 #include <vector>
 
-#include "main/flags.hpp"
-
 #include "domain/type.hpp"
 #include "domain/string.hpp"
 #include "domain/error_message.hpp"
 #include "domain/path.hpp"
-#include "process/pipe_process.hpp"
+
+#include "process/pipe_windows_process.hpp"
 
 #include "algorithms/suffix_tree.hpp"
 
 #include "main/path.hpp"
+#include "main/flags.hpp"
 
 #include "code_info.hpp"
 
@@ -57,11 +57,11 @@ namespace sys {
 		// 	std::vector<char*>& aCpmandParameters
 		// );
 
-		StringTable getExecutableCommand(cor::CodeInfo&& aCode) const noexcept;
+		dom::StringTable getExecutableCommand(cor::CodeInfo&& aCode) const noexcept;
 
 	private:
-		StringTable prepareCommandForCPP(cor::CPPInfo&& aInfo) const noexcept;
-		StringTable prepareCommandForPython(cor::CPPInfo&& aInfo) const noexcept;
+		dom::StringTable prepareCommandForCPP(cor::CPPInfo&& aInfo) const noexcept;
+		dom::StringTable prepareCommandForPython(cor::CPPInfo&& aInfo) const noexcept;
 		/*
 		\brief Determining the language of the file based on 
 		the file extension.

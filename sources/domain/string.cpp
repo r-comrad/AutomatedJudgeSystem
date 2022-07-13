@@ -242,13 +242,34 @@ dom::operator<<(std::ostream& os, const dom::String& aStr)
 {
     if (aStr.mType != String::StrType::CharArray)
     {
-        for(auto& str : aStr.mStrData) os << str << "\n";
+        for(const auto& str : aStr.mStrData) os << str << "\n";
     }
     else
     {
-        for(auto& str : aStr.mCharData) os << str.get() << "\n";        
+        for(const auto& str : aStr.mCharData) os << str.get() << "\n";
     }
     return os;
+}
+
+bool
+dom::String::isEmpty() const noexcept
+{
+    return getSize() == 0;
+}
+
+size_t
+dom::String::getSize() const noexcept
+{
+    size_t result;
+    if (mType != String::StrType::CharArray)
+    {
+        result = countElements(mStrData);
+    }
+    else
+    {
+        result = countElements(mCharData);
+    }
+    return result;
 }
 
 //------------------------------------------------------

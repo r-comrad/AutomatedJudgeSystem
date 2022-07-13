@@ -1,5 +1,5 @@
-#ifndef PIPE_PROCESS_H
-#define PIPE_PROCESS_H
+#ifndef WINDOWS_PIPE_PROCESS_H
+#define WINDOWS_PIPE_PROCESS_H
 
 //--------------------------------------------------------------------------------
 
@@ -12,14 +12,12 @@ namespace proc
 	class PipeWindowsProcess : public WindowsProcess
 	{
 	public:
-		enum PypeType { ZERO = 0, NO_ZERO = 1 };
-
-
 		PipeWindowsProcess() noexcept;
 		virtual ~PipeWindowsProcess();
+        NOC__NOD_FUNCs(PipeWindowsProcess)
 
 		void readPipe(std::string& result) noexcept;
-		void writePipe(std::string& aMessage, PypeType aType = ZERO) noexcept;
+		void writePipe(std::string& aMessage, PypeType aType = Process::PypeType::ZERO) noexcept;
 
 	private:
 		virtual void IORedirection() noexcept;
@@ -34,4 +32,4 @@ namespace proc
 
 //--------------------------------------------------------------------------------
 
-#endif // PIPE_PROCESS_H
+#endif // !WINDOWS_PIPE_PROCESS_H

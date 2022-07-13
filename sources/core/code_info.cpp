@@ -7,7 +7,8 @@ cor::CodeInfo::CodeInfo
 ) noexcept :
     mCodeData(3)
 {
-    mCodeData[0] = std::move(fileName);
+    //mCodeData[0] = std::move(fileName);
+    mCodeData[0] = std::move("2/plus.cpp");
     mCodeData[1] = std::move(outputFileileName);
     mCodeData[2] = "";
 }
@@ -34,7 +35,7 @@ cor::CodeInfo::operator cor::PythonInfo() noexcept
 bool
 cor::CodeInfo::isLanguageStated() const noexcept
 {
-    return mCodeData[2] == ""s;
+    return mCodeData[2].isEmpty();
 }
 
 std::string
@@ -48,11 +49,13 @@ cor::CodeInfo::getFileExtension() const noexcept
 {
     std::string result = "";
 
-    int strSize = strlen(mCodeData[1].get());
+    //TODO: substr and etc
+    dom::CharArray str = mCodeData[0];
+    int strSize = strlen(str.get());
     int num = -1;
     for(int i = strSize; i >= 0; --i)
     {
-        if ( mCodeData[1][i] == '.') 
+        if ( str[i] == '.') 
         {
             num = i;
             break;
@@ -63,7 +66,7 @@ cor::CodeInfo::getFileExtension() const noexcept
     {
         for(int i = strSize; i >= strSize - num; --i)
         {
-            result.push_back(mCodeData[1][i]);
+            result.push_back(str[i]);
         }
     }
 

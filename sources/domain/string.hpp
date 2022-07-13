@@ -6,6 +6,7 @@
 #undef _CRT_SECURE_NO_WARNINGS
 #include <vector>
 #include <memory>
+#include <iostream>
 
 #include "flags.hpp"
 #include "type.hpp"
@@ -16,6 +17,7 @@ using namespace std::literals;
 namespace dom
 {
     using CharArray = std::unique_ptr<char[]>;
+    using CharSharedArray = std::shared_ptr<char[]>;
     using CharArrayTable = std::vector<std::unique_ptr<char[]>>;
 
 	class String
@@ -64,6 +66,9 @@ namespace dom
         std::string harvestString()     noexcept;
 
         friend std::ostream& operator<<(std::ostream& os, const dom::String& aStr);
+
+        bool isEmpty() const noexcept;
+        size_t getSize() const noexcept;
 
     private:
         enum class StrType { NonDetermin, CharArray, String };
@@ -138,6 +143,8 @@ namespace dom
             copy(aTo.back(), aFrom, 0);
         }
     };
+
+    using StringTable = std::vector<String>;
 }
 
 #endif // !DOM_STRINGS_HPP

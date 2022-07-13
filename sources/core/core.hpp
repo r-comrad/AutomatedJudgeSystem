@@ -12,7 +12,7 @@
 #include "database/database_query.hpp"
 
 #include "process/file_process.hpp"
-#include "process/pipe_process.hpp"
+#include "process/pipe_windows_process.hpp"
 
 #include "structs/testlib_message.hpp"
 #include "structs/problem_information.hpp"
@@ -36,8 +36,8 @@ private:
 	std::vector<std::mutex> mChecksMutexs;
 	std::vector<SubmissionInformation> mChecksInfo;
 
-	dom::String mSolutionParameters;
-	dom::String mCheckerParameters;
+    proc::PipeWindowsProcess mSolutionProcess;
+    proc::PipeWindowsProcess mCheckerProcess;
 
 	std::mutex mGetTestLock;
 
@@ -47,7 +47,8 @@ private:
 	ProblemInformation mProblemInfo;
     std::mutex mProblemInfoLock;
 
-    void prepareForTesting() noexcept;
+    void prepareSolutionProcess(int aID)    noexcept;
+    void prepareCheckerProcess(int aID)     noexcept;
 	void check();
     bool resultEvoluation(int aCheckNum);
 	//void fileTesting(uint_32 aTestNum, std::string& aSolutionName, std::string& aCheckerName);

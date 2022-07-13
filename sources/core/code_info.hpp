@@ -34,7 +34,7 @@ namespace cor
         CodeInfo(dom::String&& fileName, dom::String&& outputFileileName) noexcept;
 
     private:
-        std::vector<dom::String> mCodeData;
+        dom::StringTable mCodeData;
         // First    cell            -  input file name
         // Secind   cell [optional] - output file name
         // Therd    cell [optional] - language

@@ -1,4 +1,4 @@
-#include "core/core.hpp"
+#include "core.hpp"
 
 //--------------------------------------------------------------------------------
 //				CHILD PROCESS CREATION IMPLIMENTATION 
@@ -48,59 +48,86 @@ Core::~Core()
 
 void
 Core::run(int aID){
-    mProblemInfo = mDBQ.(aID);
+    // mProblemInfo = mDBQ.(aID);
 
 // #ifdef BILL_WINDOWS
 //     makeWindowString(mProblemInfo.mSolutionFileName);
 //     makeWindowString(mProblemInfo.mCheckerFileName);
 // #endif // BILL_WINDOWS
-    mProblemInfo.mSolutionFileName.clear();
+    // mProblemInfo.mSolutionFileName.clear();
 
-#ifdef _DEBUG_SOL_SUB_
-#if  defined(BILL_WINDOWS)
-    mProblemInfo.mSolutionFileName = "2\\plus.cpp";
-#elif defined(LINUS_LINUX)
-    mProblemInfo.mSolutionFileName = "2/plus.cpp";
-#endif 
-#endif
+// #ifdef _DEBUG_SOL_SUB_
+// #if  defined(BILL_WINDOWS)
+//     mProblemInfo.mSolutionFileName = "2\\plus.cpp";
+// #elif defined(LINUS_LINUX)
+//     mProblemInfo.mSolutionFileName = "2/plus.cpp";
+// #endif 
+// #endif
 
-    sys::Compiler compiler;
+    // sys::Compiler compiler;
 
-    auto codePath = MAEDIA + mProblemInfo.mSolutionFileName.get();
-    auto desirableExecutablePath = SOLUTION_PATH + "-" +
-        std::to_string(mProblemInfo.mID);
-	cor::CodeInfo codeInfo(codePath.c_str(), );
-    compiler.prepareExecutableCommand
-    (
-        codePath,
-        desirableExecutablePath,
-        mSolutionParameters
-    );
+    // auto codePath = MAEDIA + mProblemInfo.mSolutionFileName.get();
+    // auto desirableExecutablePath = SOLUTION_PATH + "-" +
+        // std::to_string(mProblemInfo.mID);
+	// cor::CodeInfo codeInfo(codePath.c_str(), );
+    // compiler.prepareExecutableCommand
+    // (
+        // codePath,
+        // desirableExecutablePath,
+        // mSolutionParameters
+    // );
 
-    codePath = MAEDIA + mProblemInfo.mCheckerFileName;
-    desirableExecutablePath = CHECKER_PATH + "-" +
-        std::to_string(mProblemInfo.mID);
+    // codePath = MAEDIA + mProblemInfo.mCheckerFileName;
+    // desirableExecutablePath = CHECKER_PATH + "-" +
+    //     std::to_string(mProblemInfo.mID);
 
-    compiler.prepareExecutableCommand
-    (
-        codePath,
-        desirableExecutablePath,
-        mCheckerParameters
-    );
-    
+    // compiler.prepareExecutableCommand
+    // (
+    //     codePath,
+    //     desirableExecutablePath,
+    //     mCheckerParameters
+    // );
+
+    auto partInfo = mDBQ.getParticipantInfo(aID);
+    mProblemInfo.mContestID = partInfo.contestId;
+    mProblemInfo.mID = aID;
+
+    prepareSolutionProcess(aID);
+    prepareCheckerProcess(aID);
     check();
 }
 
 void
-Core::prepareForTesting() noexcept
+Core::prepareSolutionProcess(int aID) noexcept
 {
-    auto partInfo = mDBQ.getParticipantInfo();
-    auto checkInfo = mDBQ.getCheckInfo();
+    //TODO: Second getParticipantInfo
+    auto partInfo = mDBQ.getParticipantInfo(aID);
+    //TODO: Second getCheckInfo
+    auto checkInfo = mDBQ.getCheckInfo(aID);
 
-    CodeInfo codeInfo(std::move(partInfo.fileName), "part");
+    //TODO:
+    cor::CodeInfo codeInfo(std::move(partInfo.fileName), "part");
     sys::Compiler comp;
-    auto cmd = comp.getExecutableCommand(codeInfo);
+    auto cmd = comp.getExecutableCommand(std::move(codeInfo));
+
+    mSolutionProcess.setComand(cmd);
+    mSolutionProcess.setLimits(checkInfo.timeLimit, checkInfo.memoryLimit);
 }
+
+void
+Core::prepareCheckerProcess(int aID) noexcept
+{
+    //TODO: Second getCheckInfo
+    auto checkInfo = mDBQ.getCheckInfo(aID);
+
+    //TODO:
+    cor::CodeInfo codeInfo(std::move(checkInfo.checkerName), "check");
+    sys::Compiler comp;
+    auto cmd = comp.getExecutableCommand(std::move(codeInfo));
+
+    mCheckerProcess.setComand(cmd);
+}
+
 
 bool
 Core::resultEvoluation(int aCheckNum)
@@ -246,13 +273,13 @@ Core::pipesTesting
     TLM.makeTestSizes();
 
     //MyProcess code(mSolutionParameters, mProblemInfo.mTimeLimit, mProblemInfo.mMemoryLimit);
-    proc::PipeProcess code(mSolutionParameters, mProblemInfo.mTimeLimit, mProblemInfo.mMemoryLimit);
+    //proc::PipeProcess code(mSolutionParameters, mProblemInfo.mTimeLimit, mProblemInfo.mMemoryLimit);
 
+    proc::PipeWindowsProcess code = mSolutionProcess;
     code.writePipe(TLM.mTest);
     //std::pair<uint_64, uint_64> cur = code.runWithLimits(mProblemInfo.mTimeLimit, mProblemInfo.mMemoryLimit);
-    std::pair<uint_64, uint_64> cur = code.runWithLimits();
-    if (cur.first == KILLING_PROCESS_TIME_VALUE && 
-        cur.second == KILLING_PROCESS_MEMORY_VALUE)
+    auto testRes = code.runWithLimits();
+    if (!testRes)
     {
         mChecksInfo[aThreadNum].mResult = "tle";
         mChecksMutexs[aThreadNum].lock();
@@ -263,11 +290,12 @@ Core::pipesTesting
     }
     code.readPipe(TLM.mOutput);
 
-    mChecksInfo[aThreadNum].mUsedTime = cur.first;
-    mChecksInfo[aThreadNum].mUsedMemory = cur.second;
+    mChecksInfo[aThreadNum].mUsedTime = testRes.value().first;
+    mChecksInfo[aThreadNum].mUsedMemory = testRes.value().second;
 
     //MyProcess checker(mCheckerParameters);
-    proc::PipeProcess checker(mCheckerParameters);
+    //proc::PipeProcess checker(mCheckerParameters);
+    proc::PipeWindowsProcess checker = mCheckerProcess;
 
 //    TLM.mAnswer.pop_back();
 //    TLM.mAnswer.pop_back();
@@ -275,14 +303,14 @@ Core::pipesTesting
     TLM.makeOutputSizes();
     TLM.makeAnswerSizes();
 
-    checker.writePipe(TLM.mTestSize,    proc::PipeProcess::PypeType::NO_ZERO);
-    checker.writePipe(TLM.mTest,        proc::PipeProcess::PypeType::NO_ZERO);
+    checker.writePipe(TLM.mTestSize,    proc::Process::PypeType::NO_ZERO);
+    checker.writePipe(TLM.mTest,        proc::Process::PypeType::NO_ZERO);
 
-    checker.writePipe(TLM.mOutputSize,  proc::PipeProcess::PypeType::NO_ZERO);
-    checker.writePipe(TLM.mOutput,      proc::PipeProcess::PypeType::NO_ZERO);
+    checker.writePipe(TLM.mOutputSize,  proc::Process::PypeType::NO_ZERO);
+    checker.writePipe(TLM.mOutput,      proc::Process::PypeType::NO_ZERO);
 
-    checker.writePipe(TLM.mAnswerSize,  proc::PipeProcess::PypeType::NO_ZERO);
-    checker.writePipe(TLM.mAnswer,      proc::PipeProcess::PypeType::NO_ZERO);
+    checker.writePipe(TLM.mAnswerSize,  proc::Process::PypeType::NO_ZERO);
+    checker.writePipe(TLM.mAnswer,      proc::Process::PypeType::NO_ZERO);
 
     START_LOG_BLOCK("Test:", TLM.mTest);
     WRITE_LOG("Output:", TLM.mOutput);

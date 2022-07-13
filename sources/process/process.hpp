@@ -8,12 +8,14 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <optional>
 
 #include "domain/type.hpp"
 #include "domain/string.hpp"
 #include "domain/error_message.hpp"
 #include "domain/path.hpp"
 #include "domain/pair.hpp"
+#include "domain/class_member_functions.hpp"
 
 //--------------------------------------------------------------------------------
 // PROCESS CREATION CONSTANTS 
@@ -29,7 +31,7 @@ namespace proc
 	class Process
 	{
 	public:
-		enum PypeType { ZERO = 0, NO_ZERO = 1 };
+		enum class PypeType { ZERO = 0, NO_ZERO = 1 };
 
 		/*
 		\brief Base process constructor that initialize time and memory 
@@ -41,9 +43,13 @@ namespace proc
 		\param aMemoryLimit Child process maximum memory usage.
 		*/
 		Process() noexcept;
-		virtual ~Process() = default;
+		// virtual ~Process() = default;
+        // Process(const Process& other) noexcept = default;
+        // Process(Process&& other) noexcept = default;
 
-        virtual void setComand(const dom::String& aParameters) noexcept = 0;
+        NO_DC_VD_FUNCs(Process)
+
+        virtual void setComand(const dom::StringTable& aParameters) noexcept = 0;
         /*
 		\brief Create a child process with the specified parameters.
 		\param aParameters Child process parameters for execution.
@@ -69,7 +75,7 @@ namespace proc
 		usage evaluation.
 		\return Returns the time and memory used by the process.
 		*/
-		virtual dom::Pair<uint_64> runWithLimits() noexcept = 0;
+		virtual std::optional<dom::Pair<uint_64>> runWithLimits() noexcept = 0;
 
 	protected:
 		/*

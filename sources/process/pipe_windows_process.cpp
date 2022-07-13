@@ -88,7 +88,7 @@ proc::PipeWindowsProcess::writePipe(std::string& aMessage, PypeType aType) noexc
     //WriteFile(mThisSTDOUT, aMessage.c_str(), aMessage.size()
     //    + ((aType == ZERO) ? 1 : 0), &bread, NULL);
     WriteFile(mThisSTDOUT, aMessage.c_str(), aMessage.size(), &bread, NULL);
-    if (aType == ZERO)
+    if (aType == Process::PypeType::ZERO)
     {
         WriteFile(mThisSTDOUT, "\n", 1, &bread, NULL);
     }

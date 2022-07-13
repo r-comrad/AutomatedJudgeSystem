@@ -68,10 +68,10 @@ sys::Compiler::Compiler()
 //     aCpmandParameters.push_back(NULL);
 // }
 
-StringTable
+dom::StringTable
 sys::Compiler::getExecutableCommand(cor::CodeInfo&& aCode) const noexcept
 {
-	std::vector<std::unique_ptr<char[]>> result;
+	dom::StringTable result;
 
 	sys::Compiler::Language fileLanguage;
 	if (aCode.isLanguageStated())
@@ -97,33 +97,36 @@ sys::Compiler::getExecutableCommand(cor::CodeInfo&& aCode) const noexcept
 	return result;
 }
 
-StringTable
+dom::StringTable
 sys::Compiler::prepareCommandForCPP(cor::CPPInfo&& aInfo) const noexcept
 {
-	std::vector<std::unique_ptr<char[]>> result(1);
-	std::vector<std::unique_ptr<char[]>> compileCommand(3);
+	dom::StringTable compileCommand;
 
-	std::string exeFile(aInfo.outputFileileName.get());
-	exeFile.append(".exe");
-	result[0].reset(newStrCopy(exeFile));
+    //TODO: Move
+    compileCommand.emplace_back(CPP_COMPILER_NAME);
+    compileCommand.emplace_back(std::move(aInfo.inputFileName));    // compileCommand.emplace_back(aInfo.outputFileileName);
+    compileCommand.back() += ".exe";
+    compileCommand.back().merge();
 
-	auto compName = CPP_COMPILER_NAME;
-	compileCommand[0].reset(newStrCopy(compName));
-	compileCommand[1] = std::move(aInfo.inputFileName);
-	compileCommand[2].reset(newStrCopy(exeFile));
+	proc::PipeWindowsProcess compiler;
+    compiler.setComand(compileCommand);
+    compiler.create();
+	compiler.run();
 
-	proc::PipeProcess process(compileCommand);
-	process.run();
+	dom::StringTable result;
+    result.emplace_back(std::move(compileCommand.back()));
+    result.back() += ".exe";
+    result.back().merge();
 
 	return result;
 }
 
-StringTable
+dom::StringTable
 sys::Compiler::prepareCommandForPython(cor::CPPInfo&& aInfo) const noexcept
 {
-	std::vector<std::unique_ptr<char[]>> result(2);
-	result[0].reset(newCharPtrCopy("python3"));
-	result[1] = std::move(aInfo.inputFileName);
+	dom::StringTable result;
+    result.emplace_back("python3");
+    result.emplace_back(std::move(aInfo.inputFileName));
 	return result;
 }
 
