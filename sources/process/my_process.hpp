@@ -53,6 +53,8 @@
 #include <wait.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <sys/time.h>
+#include <sys/resource.h>
 	// !LINUS_LINUX
 #endif 
 
@@ -141,7 +143,7 @@ private:
 	int mChildPID;
 #endif 
 
-private:
+protected:
 	uint_64 mTimeLimit;
 	uint_64 mMemoryLimit;
 };

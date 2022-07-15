@@ -89,7 +89,7 @@ namespace dom
 
 		friend Pair operator+ (const Pair& a1, const Pair& a2)
 		{
-			Pair<T1, T2> res{ a1.x + a2.x, a1.y + a2.y };
+			decltype(a1) res{ a1.x + a2.x, a1.y + a2.y };
 			return res;
 		}
 		friend Pair operator+ (const Pair& a1, Pair&& a2)
@@ -111,7 +111,7 @@ namespace dom
 
 		friend Pair operator- (const Pair& a1, const Pair& a2)
 		{
-			Pair<T1, T2> res{ a1.x - a2.x, a1.y - a2.y };
+			decltype(a1) res{ a1.x - a2.x, a1.y - a2.y };
 			return res;
 		}
 		friend Pair operator- (const Pair& a1, Pair&& a2)

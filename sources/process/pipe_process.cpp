@@ -57,15 +57,15 @@ PipeProcess::create(const std::vector<char*>& aParameters)
         //        fcntl(mPipeB[0], F_SETPIPE_SZ, 65336 * 2);
         //        fcntl(mPipeB[1], F_SETPIPE_SZ, 65336 * 2);
 
-        rlimit timeLimit;
-        timeLimit.rlim_cur = mTimeLimit;
-        timeLimit.rlim_max = mTimeLimit;
-        setrlimit(RLIMIT_CPU, &timeLimit);
+        // rlimit timeLimit;
+        // timeLimit.rlim_cur = mTimeLimit;
+        // timeLimit.rlim_max = mTimeLimit;
+        // setrlimit(RLIMIT_CPU, &timeLimit);
 
-        rlimit memoryLimit;
-        memoryLimit.rlim_cur = mMemoryLimit;
-        memoryLimit.rlim_max = mMemoryLimit;
-        setrlimit(RLIMIT_STACK, &memoryLimit);
+        // rlimit memoryLimit;
+        // memoryLimit.rlim_cur = mMemoryLimit;
+        // memoryLimit.rlim_max = mMemoryLimit;
+        // setrlimit(RLIMIT_STACK, &memoryLimit);
 
         //        dup2(mChildPipes[0], STDIN_FILENO);
         //        dup2(mParentPipes[1], STDOUT_FILENO);
@@ -242,16 +242,16 @@ PipeProcess::writePipe(str_ref aMessage, PypeType aType)
 
 }
 
-
+#ifdef BILL_WINDOWS
 void
 PipeProcess::closeHandles()
 {
-#ifdef BILL_WINDOWS
+
     CloseHandle(mChildSTDIN);
     CloseHandle(mChildSTDOUT);
-#endif // BILL_WINDOWS
-}
 
+}
+#endif // BILL_WINDOWS
 //--------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------

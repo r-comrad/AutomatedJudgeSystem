@@ -111,13 +111,13 @@ ERROR FORMAT: <file or class name>, <function>, <approximate error number>, <err
     #define START_LOG_BLOCK(...)    dom::Message::globalMessages.startLogBlock(__VA_ARGS__)
     #define END_LOG_BLOCK(...)      dom::Message::globalMessages.endLogBlock(__VA_ARGS__)
     #define WRITE_LOG(...)          dom::Message::globalMessages.writeLog(__VA_ARGS__)
-    #define WRITE_LOG_ENDL          dom::Message::globalMessages.writeLogEndl
+    #define WRITE_LOG_ENDL(...)     dom::Message::globalMessages.writeLogEndl(__VA_ARGS__)
     #define WRITE_ERROR(...)        dom::Message::globalMessages.writeError(__VA_ARGS__)
 #else
     #define START_LOG_BLOCK(...)    void(0)
     #define END_LOG_BLOCK(...)      void(0)
     #define WRITE_LOG(...)          void(0)
-    #define WRITE_LOG_ENDL          void(0) 
+    #define WRITE_LOG_ENDL(...)     void(0) 
     #define WRITE_ERROR(...)        void(0)    
 #endif // DEBUG
 

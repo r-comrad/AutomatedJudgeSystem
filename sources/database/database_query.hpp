@@ -17,6 +17,7 @@
 #include "structs/testlib_message.hpp"
 
 #include "sqlite_database.hpp"
+#include "postgresql.hpp"
 
 //--------------------------------------------------------------------------------
 
@@ -62,7 +63,8 @@ public:
 	*/
 	void getAllTests(ProblemInformation& aSudmissionInformation);
 private:
-	SQLiteDatabase mDatabase;
+	//SQLiteDatabase mDatabase;
+	Posdtgres mDatabase;
 	int mReservedStatementNumber;
 public:
 	void prepareTestsStatement(ProblemInformation& aSudmissionInformation);

@@ -4,8 +4,15 @@
 //--------------------------------------------------------------------------------
 
 #include <string>
+#include <cstring>
 
-#include "process/my_process.hpp"
+#include "my_process.hpp"
+
+#ifdef LINUS_LINUX
+#include <sys/time.h>
+#include <sys/resource.h>
+#include <unistd.h>
+#endif
 
 class PipeProcess : public MyProcess
 {
@@ -35,8 +42,14 @@ private:
 	HANDLE mChildSTDIN;
 	HANDLE mChildSTDOUT;
 #elif	defined(LINUS_LINUX)
-    int mParentPipes[2];
-    int mChildPipes[2];
+	void create(const std::vector<char*>& aParameters);
+
+    // int mParentPipes[2];
+    // int mChildPipes[2];
+
+
+    int mPipeA[2];
+    int mPipeB[2];
 #endif // BILL_WINDOWS
 };
 

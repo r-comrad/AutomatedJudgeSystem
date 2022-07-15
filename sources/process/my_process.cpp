@@ -95,9 +95,7 @@ MyProcess::runWithLimits()
     int status;
     wait4(mChildPID, &status, 0, &resourseUsage);
     int gg = WIFEXITED(status);
-    if (!WIFEXITED(status)) 
-        return { KILLING_PROCESS_TIME_VALUE,
-        KILLING_PROCESS_MEMORY_VALUE };
+
     //wait(NULL);
 
     timeUsage += resourseUsage.ru_utime.tv_sec * 1000000L;
@@ -106,9 +104,17 @@ MyProcess::runWithLimits()
     timeUsage += resourseUsage.ru_stime.tv_usec;
 #endif 
 
+    WRITE_LOG("status:", status);
+    WRITE_LOG("WIFEXITED:", WIFEXITED(status));
+    WRITE_LOG("WEXITSTATUS:", WEXITSTATUS(status));
+    WRITE_LOG("WIFSIGNALED:", WIFSIGNALED(status));
+    WRITE_LOG("WTERMSIG:", WTERMSIG(status));
+    WRITE_LOG("WIFSTOPPED:", WIFSTOPPED(status));
     WRITE_LOG("time_usage:", timeUsage);
     END_LOG_BLOCK("memory_usage:", memoryUsage);
-
+    if (!WIFEXITED(status)) 
+        return { KILLING_PROCESS_TIME_VALUE,
+        KILLING_PROCESS_MEMORY_VALUE };
     return { timeUsage , memoryUsage };
 }
 
@@ -117,6 +123,7 @@ MyProcess::runWithLimits()
 void 
 MyProcess::create(const std::vector<char*>& aParameters)
 {
+    #ifdef BILL_WINDOWS
     WRITE_LOG("Creating_process_name:", aParameters[0]);
 
     //TODO: in my_strinh.hpp
@@ -144,6 +151,7 @@ MyProcess::create(const std::vector<char*>& aParameters)
     mFuture = std::async(std::launch::async, &MyProcess::getMaxMemoryUsage,
         this, std::ref(mProcessInfo), 1000000);
 
+
     if (CreateProcessA(
         name,
         cmd,
@@ -161,6 +169,7 @@ MyProcess::create(const std::vector<char*>& aParameters)
     }
     delete name;
     delete cmd;
+    #endif
 }
 
 //--------------------------------------------------------------------------------

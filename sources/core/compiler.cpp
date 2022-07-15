@@ -50,11 +50,11 @@ sys::Compiler::prepareExecutableCommand
         delete comand[0];
         delete comand[1];
 
-#if defined(_DBG_) && defined(COMPILER_LOG_OUTPUT)
-        str_val compilerOutput;
-        compiler.readPipe(compilerOutput);
-        WRITE_LOG(compilerOutput);
-#endif
+// #if defined(_DBG_) && defined(COMPILER_LOG_OUTPUT)
+//         str_val compilerOutput;
+//         compiler.readPipe(compilerOutput);
+//         WRITE_LOG(compilerOutput);
+// #endif
     }
     else if (language == Language::SNAKE)
     {

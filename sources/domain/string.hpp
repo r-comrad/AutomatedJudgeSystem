@@ -1,7 +1,7 @@
 #ifndef DOM_STRINGS_HPP
 #define DOM_STRINGS_HPP
 
-#define _CRT_SECURE_NO_WARNINGS
+//#define _CRT_SECURE_NO_WARNINGS
 
 #include <string>
 
