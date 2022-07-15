@@ -56,6 +56,7 @@ public:
 	\param TestLibMessage  TestLibMessage structure for obtaining test.
 	*/
 	void getNextTest(ProblemInformation& aSudmissionInformation, TestLibMessage& aTLM);
+	void closeTests();
 
 	/*
 	\brief Extracts all problem tests from the database and puts it in files.

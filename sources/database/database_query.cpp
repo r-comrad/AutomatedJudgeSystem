@@ -90,6 +90,13 @@ MDatabaseQuery::getNextTest(ProblemInformation& aSudmissionInformation, TestLibM
 }
 
 void
+MDatabaseQuery::closeTests()
+{
+
+    mDatabase.closeStatment(mReservedStatementNumber);
+}
+
+void
 MDatabaseQuery::getAllTests
 (
     ProblemInformation& aSudmissionInformation
@@ -154,11 +161,28 @@ MDatabaseQuery::getIDInformation
 {
     START_LOG_BLOCK("Geting_ID_and_name_from_database");
 
+    WRITE_LOG("Send_select_query");
     mDatabase.select("core_solutions", "file_name, contest_id", "id = " + std::to_string(aSudmissionInformation.mID));
+    WRITE_LOG("Select_step");
     mDatabase.step();
 
+    // auto str = mDatabase.getInt64FromRow(0);
+    // str = mDatabase.getInt64FromRow(1);
+    // str = mDatabase.getInt64FromRow(2);
+    // str =  mDatabase.getInt64FromRow(3);
+
+
+    WRITE_LOG("Get_solution_filename");
     aSudmissionInformation.mSolutionFileName = getString(mDatabase.getTextFromRow(0));
+    START_LOG_BLOCK("Solution_filename:", aSudmissionInformation.mSolutionFileName);
+    END_LOG_BLOCK();
+
+    WRITE_LOG("Get_contestID");
     aSudmissionInformation.mContestID = mDatabase.getInt64FromRow(1);
+    START_LOG_BLOCK("Contest_id:", aSudmissionInformation.mContestID);
+    END_LOG_BLOCK();
+
+    WRITE_LOG("Close_statment");
     mDatabase.closeStatment();
 
     WRITE_LOG("File_name:", aSudmissionInformation.mSolutionFileName);

@@ -26,7 +26,7 @@
     #define RESOURCES       MAIN_PATH   + "resources/"s
     #define OUTPUT_PATH     RESOURCES   + "output/"s
     #define LOGS_PATH       RESOURCES   + "logs/"s
-    #define ERRORS_PATH     WORK_DIR    + "errors/"s
+    #define ERRORS_PATH     RESOURCES    + "errors/"s
 // !LINUS_LINUX
 #else   // NUN
     #define MAIN_PATH       ""s

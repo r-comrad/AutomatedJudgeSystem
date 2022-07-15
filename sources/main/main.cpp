@@ -127,7 +127,7 @@ void foo()
 int main(int argc, char* argv[])
 {
 
-    int num = 3;
+    int num = 2;
     if (argc > 1)
     {
         num = std::stoi(getString(argv[1]));

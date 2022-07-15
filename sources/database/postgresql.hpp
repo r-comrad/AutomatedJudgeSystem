@@ -11,6 +11,8 @@
 #include <memory>
 #include "domain/type.hpp"
 
+#include "domain/error_message.hpp"
+
 #include <pqxx/pqxx>
 
 //--------------------------------------------------------------------------------

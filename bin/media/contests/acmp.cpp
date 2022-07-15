@@ -1,4 +1,4 @@
-#include "../include/StandardReaders.h"
+#include "testlib.h"
 
 #define EPS 1.5E-6
 

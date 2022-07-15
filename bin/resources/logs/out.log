@@ -1,0 +1,69 @@
+ID: 2 
+
+Opened_database_successfully 
+Geting_ID_and_name_from_database 
+	Send_select_query 
+	Select_step 
+	Get_solution_filename 
+	Solution_filename: 2/1.py 
+		
+	Get_contestID 
+	Contest_id: 1 
+		
+	Close_statment 
+	File_name: 2/1.py 
+	Contest_ID: 1 
+Geting_limits_from_database 
+	Time_limit: 1000 
+	Memory_limit: 256 
+Rederecting_input_and_output_to_pipe 
+Creating_process_with_name: g++ 
+Runing_simple_process 
+Checking_participant_code 
+	Prepare_geting_test_from_database 
+		I'm_ready 
+	Result_evoluation 
+		ok_test_passed 
+			result_is_ok 
+		
+	Checking_test# 1 
+		Taking_next_test 
+		Rederecting_input_and_output_to_pipe 
+		Creating_process_with_name: python3 
+		Runing_process_with_time_and_memory_evaluation 
+			status: 0 
+			WIFEXITED: 1 
+			WEXITSTATUS: 0 
+			WIFSIGNALED: 0 
+			WTERMSIG: 0 
+			WIFSTOPPED: 0 
+			time_usage: 10808 
+			memory_usage: 0 
+		Rederecting_input_and_output_to_pipe 
+		Creating_process_with_name: /home/sasiska/projects/ChineseTester/bin/resources/working_directory/checker/checker-2.exe 
+		Test: 2 3
+
+ 
+			Output: 3
+ 
+			Answer: 3 
+		
+	Runing_simple_process 
+	Result_evoluation 
+		ok_test_passed 
+			result_is_ok 
+		
+	Checking_test# 2 
+		Taking_next_test 
+		Tests_are_over 
+		
+	Result_evoluation 
+		ok_test_passed 
+			result_is_ok 
+		
+	Updating_database 
+		Updating... 
+		Database_updated? 
+	Final_result: OK 
+	Final_time: 10808 
+	Final_memory: 0 

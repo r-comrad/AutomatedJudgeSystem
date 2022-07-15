@@ -16,11 +16,13 @@ Posdtgres::Posdtgres
 {
     if (mConnexion.is_open()) 
     {
-        std::cout << "Opened database successfully: " << mConnexion.dbname() << std::endl;
+        //std::cout << "Opened database successfully: " << mConnexion.dbname() << std::endl;
+        WRITE_LOG("Opened_database_successfully");
     } 
     else 
     {
-        std::cout << "Can't open database" << std::endl;
+        WRITE_LOG("Can't_open_database");
+        //std::cout << "Can't open database" << std::endl;
     }
 }
 
@@ -85,9 +87,10 @@ Posdtgres::getInt64FromRow(int aColumNumber, int aStatementID)
 void 
 Posdtgres::closeStatment(int aStatementID)
 {
+    if (mStatement.size() <= aStatementID) return;
     mStatement[aStatementID]->commit();
     mStatement[aStatementID] = nullptr;
-    while (mStatement.size() > 1 && mStatement[aStatementID] == nullptr) 
+    while (mStatement.size() >= 1 && mStatement[aStatementID] == nullptr) 
     {
         mStatement.pop_back();
         mResult.pop_back();
@@ -124,7 +127,21 @@ Posdtgres::prepare(std::string aStatment, int aStatementID)
         mResult.resize(aStatementID + 1);
         mResultIterator.resize(aStatementID + 1);
     }
-    mStatement[aStatementID] = std::make_unique<pqxx::work>(mConnexion);
-    mResult[aStatementID] = pqxx::result( mStatement[aStatementID]->exec(aStatment.c_str()));
-    mResultIterator[aStatementID] = mResult[aStatementID].begin();
+
+try
+{
+        mStatement[aStatementID] = std::make_unique<pqxx::work>(mConnexion);
+        mResult[aStatementID] = pqxx::result( mStatement[aStatementID]->exec(aStatment.c_str()));
+        mResultIterator[aStatementID] = --mResult[aStatementID].begin();
+}
+catch(const std::exception& e)
+{
+    std::cerr << e.what() << '\n';
+    std::cout << e.what() << '\n';
+    WRITE_ERROR(e.what());
+}
+
+
+
+
 }

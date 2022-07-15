@@ -65,19 +65,19 @@ Core::run
     mProblemInfo.mID = aID;
     mDBQ.prepareForTesting(mProblemInfo);
 
-#ifdef BILL_WINDOWS
-    makeWindowString(mProblemInfo.mSolutionFileName);
-    makeWindowString(mProblemInfo.mCheckerFileName);
-#endif // BILL_WINDOWS
-    mProblemInfo.mSolutionFileName.clear();
+// #ifdef BILL_WINDOWS
+//     makeWindowString(mProblemInfo.mSolutionFileName);
+//     makeWindowString(mProblemInfo.mCheckerFileName);
+// #endif // BILL_WINDOWS
+//     mProblemInfo.mSolutionFileName.clear();
 
-#ifdef _DEBUG_SOL_SUB_
-#if  defined(BILL_WINDOWS)
-    mProblemInfo.mSolutionFileName = "2\\plus.cpp";
-#elif defined(LINUS_LINUX)
-    mProblemInfo.mSolutionFileName = "2/plus.cpp";
-#endif 
-#endif
+// #ifdef _DEBUG_SOL_SUB_
+// #if  defined(BILL_WINDOWS)
+//     mProblemInfo.mSolutionFileName = "2\\plus.cpp";
+// #elif defined(LINUS_LINUX)
+//     mProblemInfo.mSolutionFileName = "2/plus.cpp";
+// #endif 
+// #endif
 
     sys::Compiler compiler;
 
@@ -209,6 +209,7 @@ Core::check
 
         }
     }
+    mDBQ.closeTests();
 
     mProblemInfo.remakeResultForPasha();
     mDBQ.writeResult(mProblemInfo.mID, mProblemInfo.mResult, 
@@ -250,6 +251,7 @@ Core::pipesTesting
         mChecksMutexs[aThreadNum].lock();
         mChecksInfo[aThreadNum].mIsFinishedTesting = true;
         mChecksInfo[aThreadNum].mResult = "ok";
+        mDBQ.closeTests();
         WRITE_LOG("Tests_are_over");
         mChecksMutexs[aThreadNum].unlock();
         mGetTestLock.unlock();
@@ -270,6 +272,7 @@ Core::pipesTesting
         cur.second == KILLING_PROCESS_MEMORY_VALUE)
     {
         mChecksInfo[aThreadNum].mResult = "tle";
+        mDBQ.closeTests();
         mChecksMutexs[aThreadNum].lock();
         mChecksInfo[aThreadNum].mIsFinishedTesting = true;
         mChecksMutexs[aThreadNum].unlock();

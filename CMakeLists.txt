@@ -33,7 +33,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${Boost_INCLUDE_DIR})
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/sources)
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE
-                            LINUS_LINUX LOGS_OUTPUT_TYPE=1 ERRORS_OUTPUT_TYPE=4)
+                            LINUS_LINUX LOGS_OUTPUT_TYPE=2 ERRORS_OUTPUT_TYPE=4)
 if(WIN32)
     target_compile_definitions(${PROJECT_NAME} PRIVATE BILL_WINDOWS)
 else()
