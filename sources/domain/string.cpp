@@ -133,6 +133,52 @@ dom::String::operator+= (std::string&& aStr) noexcept
 
 //------------------------------------------------------
 
+bool
+dom::String::operator== (const char* aStr) const noexcept
+{
+    bool result;
+    if (mType != StrType::CharArray)
+    {
+        result = compare(mStrData, aStr);
+    }
+    else
+    {
+        result = compare(mCharData, aStr);
+    }
+    return result;
+}
+
+bool
+dom::String::operator== (const std::string& aStr) const noexcept
+{
+    bool result;
+    if (mType != StrType::String)
+    {
+        if (mStrData.size() == 1 && mStrData.front().size() != aStr.size()) result = false;
+    }
+    else
+    {
+        if (mType != StrType::CharArray)
+        {
+            result = compare(mStrData, aStr);
+        }
+        else
+        {
+            result = compare(mCharData, aStr);
+        }
+    }
+    return result;
+}
+
+bool
+dom::String::operator== (const dom::String& aStr) const noexcept
+{
+    exit(0);
+    return false;
+}
+
+//------------------------------------------------------
+
 void
 dom::String::merge() noexcept
 {
@@ -141,14 +187,14 @@ dom::String::merge() noexcept
         std::string str;
         copyFromVector(str, mStrData);
         mStrData.resize(1);
-        mStrData[0] = std::move(str);
+        mStrData.front() = std::move(str);
     }
     else
     {
         CharArray str;
         copyFromVector(str, mCharData);
         mCharData.resize(1);
-        mCharData[0] = std::move(str);
+        mCharData.front() = std::move(str);
     }
 }
 
@@ -212,7 +258,7 @@ dom::String::harvestCharArray() noexcept
     }
     else if (mCharData.size() > 0)
     {
-        result = std::move(mCharData[0]);
+        result = std::move(mCharData.front());
     }
 
     return result;
@@ -226,7 +272,7 @@ dom::String::harvestString() noexcept
     merge();
     if (mType != StrType::CharArray)
     {
-        result = std::move(mStrData[0]);
+        result = std::move(mStrData.front());
     }
     else if (mCharData.size() > 0)
     {
@@ -237,8 +283,46 @@ dom::String::harvestString() noexcept
     return result;
 }
 
+//------------------------------------------------------
+
+dom::String
+dom::operator+(const char* lhs, String&& rhs) noexcept
+{
+    rhs.pushFront(lhs);
+    return std::move(rhs);
+}
+
+dom::String
+dom::operator+(const std::string& lhs, String&& rhs) noexcept
+{
+    rhs.pushFront(lhs);
+    return std::move(rhs);
+}
+
+// dom::String
+// dom::operator+(dom::String&& lhs, const dom::String& rhs) noexcept
+// {
+//     lhs += (rhs);
+//     return std::move(lhs);
+// }
+
+
+// dom::String 
+// dom::operator+(dom::String&& lhs, const std::string& rhs) noexcept
+// {
+//     lhs += (rhs);
+//     return std::move(lhs);
+// }
+
+// dom::String 
+// dom::operator+(dom::String&& lhs, const char* rhs) noexcept
+// {
+//     lhs += (rhs);
+//     return std::move(lhs);
+// }
+
 std::ostream& 
-dom::operator<<(std::ostream& os, const dom::String& aStr)
+dom::operator<<(std::ostream& os, const dom::String& aStr) noexcept
 {
     if (aStr.mType != String::StrType::CharArray)
     {
@@ -274,6 +358,47 @@ dom::String::getSize() const noexcept
 
 //------------------------------------------------------
 
+void
+dom::String::pushFront(const char* aStr) noexcept
+{
+    if (mType != String::StrType::CharArray)
+    {
+        copyToVector(mStrData, aStr, false);
+    }
+    else
+    {
+        copyToVector(mCharData, aStr, false);
+    }
+}
+
+void
+dom::String::pushFront(const std::string&  aStr) noexcept
+{
+    if (mType != String::StrType::CharArray)
+    {
+        copyToVector(mStrData, aStr, false);
+    }
+    else
+    {
+        copyToVector(mCharData, aStr, false);
+    }
+}
+
+void
+dom::String::pushFront(std::string&& aStr) noexcept
+{
+    if (mType != String::StrType::CharArray)
+    {
+        copyToVector(mStrData, aStr, false);
+    }
+    else
+    {
+        copyToVector(mCharData, aStr, false);
+    }
+}
+
+//------------------------------------------------------
+
 auto
 dom::String::getSize(const char* str) const noexcept
 {
@@ -292,6 +417,53 @@ dom::String::getSize(const std::string& str) const noexcept
     return str.size();
 }
 
+const char*
+dom::String::getFront() const noexcept
+{
+    if (mType != String::StrType::CharArray)
+    {
+        return mStrData.front().c_str();
+    }
+    else
+    {
+        return mCharData.front().get();
+    }
+}
+
+std::optional <std::string>
+dom::String::backSubStr(char aDelimiter) const noexcept
+{
+    std::optional <std::string> result;
+    if (mType != String::StrType::CharArray)
+    {
+        result = backSubStr(mStrData, aDelimiter);
+    }
+    else
+    {
+        result = backSubStr(mCharData, aDelimiter);
+    }
+    return result;
+}
+
+dom::String
+dom::String::getCopy() const noexcept
+{
+    String result;
+    result.mType = mType;
+    //TODO: efficient copy
+    if (mType != String::StrType::CharArray)
+    {
+        result.copyToVector(result.mStrData, mStrData);
+    }
+    else
+    {
+        result.copyToVector(result.mCharData, mCharData);
+    }
+    return result;
+}
+
+//------------------------------------------------------
+
 auto
 dom::String::construct(const char* str, size_t aSize) const noexcept
 {
@@ -301,11 +473,25 @@ dom::String::construct(const char* str, size_t aSize) const noexcept
 auto
 dom::String::construct(const CharArray& str, size_t aSize) const noexcept
 {
-    return std::move(std::make_unique<char[]>(aSize + 1));
+    return std::make_unique<char[]>(aSize + 1);
 }
 
 auto 
 dom::String::construct(const std::string& str, size_t aSize) const noexcept
+{
+    std::string result;
+    result.resize(aSize);
+    return result;
+}
+
+auto
+dom::String::construct(const std::list<std::unique_ptr<char[]>>& str, size_t aSize) const noexcept
+{
+    return std::make_unique<char[]>(aSize + 1);
+}
+
+auto 
+dom::String::construct(const std::list<std::string>& str, size_t aSize) const noexcept
 {
     std::string result;
     result.resize(aSize);

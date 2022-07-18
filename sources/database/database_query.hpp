@@ -17,6 +17,7 @@
 #include "structs/testlib_message.hpp"
 
 #include "sqlite_database.hpp"
+#include "submission_info.hpp"
 
 //--------------------------------------------------------------------------------
 
@@ -46,12 +47,11 @@ namespace data
         DatabaseQuery(const std::string& aDatabasePath) noexcept;
         ~DatabaseQuery() = default;
 
-        // /*
-        // \brief Retrieves the problem information (ID, file names, restrictions) 
-        // from the database and puts it in the ProblemInformation structure.
-        // \param aSudmissionInformation ProblemInformation structure for obtaining data.
-        // */
-
+        /*
+        \brief Retrieves the problem information (ID, file names, restrictions) 
+        from the database and puts it in the SubmissionInfo structure.
+        */
+        SubmissionInfo getSubmissionInfo(int ID) noexcept;
 
         /*
         \brief Writing result of submission check in database.
@@ -80,12 +80,12 @@ namespace data
 
         void prepareTestsStatement(ProblemInformation& aSudmissionInformation) noexcept;
 
-        ParticipantlInfo getParticipantInfo(uint_64 aID) noexcept;
-        CheckInfo getCheckInfo(uint_64 aID) noexcept;
-
     private:
         SQLiteDatabase mDatabase;
         int mReservedStatementNumber;
+
+        void getParticipantInfo(SubmissionInfo& aSubmissionInfo) noexcept;
+        void getCheckerInfo(SubmissionInfo& aSubmissionInfo) noexcept;
     };
 }
 //--------------------------------------------------------------------------------

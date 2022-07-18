@@ -1,8 +1,6 @@
 #ifndef DOM_PAIR_HPP
 #define DOM_PAIR_HPP
 
-#include <utility>
-
 namespace dom
 {
 	template<typename T1, typename T2 = T1>
@@ -46,7 +44,8 @@ namespace dom
 			y(std::forward<T2>(yInit))
 		{}
 
-		~Pair() noexcept = default;
+        // not default by purpose 
+		~Pair(){}
 
 		void operator+= (const Pair& other) noexcept
 		{

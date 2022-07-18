@@ -20,6 +20,9 @@ if exist %VS% goto Compile
 SET VS="C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\VsDevCmd.bat"
 if exist %VS% goto Compile
 
+SET VS="D:\programs\VS 2022\Common7\Tools\VsDevCmd.bat"
+if exist %VS% goto Compile
+
 goto NoCompiler
 
 :NoCompiler

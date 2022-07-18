@@ -52,8 +52,11 @@ namespace proc
 		\param aMemoryLimit Child process maximum memory usage.
 		*/
 		WindowsProcess() noexcept;
+        WindowsProcess(const WindowsProcess& other) noexcept;
+
 		//virtual ~WindowsProcess() = default;
-        virtual ~WindowsProcess();
+        virtual ~WindowsProcess() = default;
+
         NOC__NOD_FUNCs(WindowsProcess)
 
         virtual void setComand(const dom::StringTable& aParameters) noexcept;
@@ -77,11 +80,12 @@ namespace proc
 		*/
 		virtual std::optional<dom::Pair<uint_64>> runWithLimits() noexcept;
 
+        virtual void IORedirection() noexcept = 0;
+
 	protected:
 		/*
 		\brief Redirecting input and output streams for a child process.
 		*/
-		virtual void IORedirection() noexcept = 0;
 
 		/*
 		\brief Closes the input and output handler for the child process.
@@ -96,7 +100,7 @@ namespace proc
 
 	private:
     //TODO: ptr
-		std::future<long long> *mFuture;
+	//	std::future<long long> *mFuture;
 
 		long long getMillisecondsNow() noexcept;
 
@@ -107,11 +111,9 @@ namespace proc
 		bool killProcess(PROCESS_INFORMATION&) noexcept;
 
 	private:
-		uint_64 mTimeLimit;
-		uint_64 mMemoryLimit;
-
         dom::CharSharedArray mProcessName;
-        dom::CharSharedArray mProcessArgs;
+        //dom::CharArray mProcessArgs;
+        dom::String mProcessArgs;
 	};
 
 }

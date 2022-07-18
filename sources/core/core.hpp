@@ -25,7 +25,7 @@ class Core
 public:
 	Core(std::string aDatabasePath);
 	~Core();
-	void run(int aID);
+	void run(int aID) noexcept;
 
 	//	enum DataStructure {FILES = 0, MAGIC_IVAN = 1};
 
@@ -47,8 +47,8 @@ private:
 	ProblemInformation mProblemInfo;
     std::mutex mProblemInfoLock;
 
-    void prepareSolutionProcess(int aID)    noexcept;
-    void prepareCheckerProcess(int aID)     noexcept;
+    void prepareSolutionProcess(SubmissionInfo& aSubInfo)    noexcept;
+    void prepareCheckerProcess(SubmissionInfo& aSubInfo)     noexcept;
 	void check();
     bool resultEvoluation(int aCheckNum);
 	//void fileTesting(uint_32 aTestNum, std::string& aSolutionName, std::string& aCheckerName);

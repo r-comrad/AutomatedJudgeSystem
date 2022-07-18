@@ -6,11 +6,19 @@ proc::WindowsProcess::WindowsProcess()  noexcept
 {
     ZeroMemory(&mProcessInfo, sizeof(PROCESS_INFORMATION));
     ZeroMemory(&mStartupInfo, sizeof(STARTUPINFOA));
+    setLimits(1e18, 1e18);
 }
-proc::WindowsProcess::~WindowsProcess()  noexcept
+
+proc::WindowsProcess::WindowsProcess(const WindowsProcess& other)  noexcept
 {
-    if (mFuture != nullptr) delete mFuture;
+    mProcessName = other.mProcessName;
+    mProcessArgs = other.mProcessArgs.getCopy();
 }
+
+// proc::WindowsProcess::~WindowsProcess()  noexcept
+// {
+//     //if (mFuture != nullptr) delete mFuture;
+// }
 
 //--------------------------------------------------------------------------------
 
@@ -20,6 +28,11 @@ proc::WindowsProcess::run() noexcept
     bool result = true;
     WRITE_LOG("Runing_simple_windows_process");
 
+    // if (getExitCode(mProcessInfo.hProcess) == STILL_ACTIVE)
+    // {
+    //     int yy;
+    //     yy  = 0;
+    // }
     ResumeThread(mProcessInfo.hThread);
     WaitForSingleObject(mProcessInfo.hProcess, mTimeLimit);
 
@@ -52,7 +65,7 @@ proc::WindowsProcess::runWithLimits() noexcept
         long long endTime = getCPUTime();
         timeUsage = endTime - startTime;
 
-        memoryUsage = mFuture->get();
+    //    memoryUsage = mFuture->get();
 
         WRITE_LOG("time_usage:", timeUsage);
         END_LOG_BLOCK("memory_usage:", memoryUsage);
@@ -69,17 +82,13 @@ void
 proc::WindowsProcess::setComand(const dom::StringTable& aParameters) noexcept
 {
     mProcessName = dom::CharArray(aParameters[0]);
-    dom::String cmd;
     
     for(const auto& str : aParameters)
     {
-        cmd += str;
-        cmd += " ";
+        mProcessArgs += str;
+        mProcessArgs += " ";
     }
-    cmd.merge();
-
-    //TODO : Move
-    mProcessArgs = dom::CharArray(cmd);
+    mProcessArgs.merge();
 }
 
 //--------------------------------------------------------------------------------
@@ -88,14 +97,17 @@ void
 proc::WindowsProcess::create() noexcept
 {
     START_LOG_BLOCK("Creating_windows_process_with_name:", mProcessName.get());
-    WRITE_LOG("args:", mProcessArgs.get());
+    WRITE_LOG("args:", mProcessArgs.getFront().get());
 
-    mFuture = new std::future<long long> (std::async(std::launch::async, &proc::WindowsProcess::getMaxMemoryUsage,
-        this, std::ref(mProcessInfo), 1000000));
+    //mFuture = new std::future<long long>;
+   //  *mFuture = (std::async(std::launch::async, &proc::WindowsProcess::getMaxMemoryUsage,
+    //    this, std::ref(mProcessInfo), 1000000));
 
+    //TODO:     if (name[0] == 0) name = NULL;
     if (CreateProcessA(
+        //TODO: without string
         mProcessName.get(),
-        mProcessArgs.get(),
+        mProcessArgs.getFront().get(),
         NULL,
         NULL,
         TRUE,

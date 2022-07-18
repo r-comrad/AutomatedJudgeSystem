@@ -5,11 +5,14 @@
 #include <string>
 #undef _CRT_SECURE_NO_WARNINGS
 #include <vector>
+#include <list>
 #include <memory>
 #include <iostream>
+#include <optional>
 
 #include "flags.hpp"
 #include "type.hpp"
+#include "pair.hpp"
 
 using namespace std::literals;
 
@@ -54,6 +57,10 @@ namespace dom
         void    operator+=	(   const std::string&  aStr)   noexcept;
         void    operator+=	(         std::string&& aStr)   noexcept;
 
+        bool    operator==	(           const char* aStr)   const noexcept;
+        bool    operator==	(   const std::string&  aStr)   const noexcept;
+        bool    operator==	(   const dom::String&  aStr)   const noexcept;
+
         void merge() noexcept;
 
         void switchToCharArray()        noexcept;
@@ -65,17 +72,39 @@ namespace dom
         CharArray	harvestCharArray()  noexcept;
         std::string harvestString()     noexcept;
 
-        friend std::ostream& operator<<(std::ostream& os, const dom::String& aStr);
+        friend String operator+(const char* lhs, String&& rhs) noexcept;
+        friend String operator+(const std::string& lhs, String&& rhs) noexcept;
+        //friend String operator+(dom::String&& lhs, const dom::String& rhs) noexcept;
+        //friend String operator+(dom::String&& lhs, const std::string& rhs) noexcept;
+        //friend String operator+(dom::String&& lhs, const char* rhs) noexcept;
+        friend std::ostream& operator<<(std::ostream& os, const dom::String& aStr) noexcept;
 
         bool isEmpty() const noexcept;
         size_t getSize() const noexcept;
+
+        void pushFront(const char* aStr) noexcept;
+        void pushFront(const std::string&  aStr) noexcept;
+        void pushFront(std::string&& aStr) noexcept;
+
+        
+        const char* getFront() const noexcept;
+
+        template <typename T>
+        T getFront() noexcept
+        {
+            return getFront<T>();
+        }
+
+        std::optional <std::string> backSubStr(char aDelimiter) const noexcept;
+
+        String getCopy() const noexcept;
 
     private:
         enum class StrType { NonDetermin, CharArray, String };
 
         StrType mType;
-        CharArrayTable mCharData;
-        std::vector<std::string> mStrData;
+        std::list<std::unique_ptr<char[]>> mCharData;
+        std::list<std::string> mStrData;
 
         auto getSize(const char* str)         const noexcept;
         auto getSize(const CharArray& str)    const noexcept;
@@ -84,6 +113,8 @@ namespace dom
         auto construct(const char* str, size_t aSize)          const noexcept;
         auto construct(const CharArray& str, size_t aSize)     const noexcept;
         auto construct(const std::string& str, size_t aSize)   const noexcept;
+        auto construct(const std::list<std::unique_ptr<char[]>>& str, size_t aSize) const noexcept;
+        auto construct(const std::list<std::string>& str, size_t aSize)   const noexcept;
 
         void clear(StrType aType = StrType::NonDetermin) noexcept;
 
@@ -136,12 +167,136 @@ namespace dom
         }
 
         template <typename To, typename From>
-        void copyToVector(To&& aTo, From&& aFrom) const noexcept
+        void copyToVector(To&& aTo, From&& aFrom, bool aBackdoorInsert = true) const noexcept
         {
-            aTo.resize(aTo.size() + 1);
-            aTo.back() = construct(aTo[0], getSize(aFrom));
-            copy(aTo.back(), aFrom, 0);
+            auto temp = construct(aTo, getSize(aFrom));
+            if (aBackdoorInsert) 
+            {
+                //TODO: do i need move?
+                aTo.emplace_back(std::move(temp));  
+                copy(aTo.back(), aFrom, 0);
+            }
+            else
+            {
+                //TODO: do i need move?
+                aTo.emplace_front(std::move(temp));    
+                copy(aTo.front(), aFrom, 0);
+            }
         }
+
+        template <typename T1, typename T2>
+        bool compare(const T1& lhs, const T2& rhs) const noexcept
+        {
+            auto it = lhs.begin();
+            size_t i = 0, j = 0;
+            while(rhs[j])
+            {
+                if ((*it)[i++] != rhs[j++]) return false;
+                if ((*it)[i] == '\0') 
+                {
+                    ++it;
+                    i = 0;
+                }
+                if (it == lhs.end()) return rhs[j] == '\0';
+            }
+            return false;
+        }
+
+
+        //
+        //template <typename T>
+        //auto backFindgg(const T& aStr, char aChar) const noexcept
+
+        template <typename T>
+        struct Slice
+        {
+            T::const_iterator it;
+            size_t ind;
+            size_t size;
+        };
+
+        //std::optional <dom::Pair<decltype(std::begin(T())), size_t>> 
+        template <typename T>
+        std::optional <Slice<T>> 
+        backFindg(const T& aStr, char aChar) const noexcept
+        {  
+            Slice<T> pos {aStr.end(), getSize(aStr.back()), 0};       
+
+            do {
+                pos.it--;
+                do {
+                    pos.ind--;
+                    pos.size++;
+                    if ((*pos.it)[pos.ind] == aChar) 
+                    {
+                        return pos;
+                    }
+                }while(pos.ind >= 0);
+            } while(pos.it != aStr.begin());
+
+            return {};
+        }
+
+        template <typename T>
+        std::optional <std::string>
+        backSubStr(const T& aStr, char aChar) const noexcept
+        {     
+            std::optional <std::string> result;
+            auto slice = backFindg(aStr, aChar);
+            if (slice.has_value())
+            {
+                std::string resStr; 
+                resStr.reserve(slice.value().size - 1);
+
+                size_t num = slice.value().ind + 1;
+                while((*slice.value().it)[num])
+                {
+                    resStr.push_back((*slice.value().it)[num++]);
+                }
+
+                slice.value().it++;
+                for(auto it = slice.value().it; it != aStr.end(); ++it)
+                {
+                    num = 0;
+                    while((*it)[num])
+                    {
+                        resStr.push_back((*it)[num]);
+                    }
+                }
+                result = resStr;
+            }
+
+            return result;
+        }
+
+        std::string getFront() noexcept
+        {
+            return mStrData.front();
+        }
+
+        char* getFront() noexcept
+        {
+            return mStrData.front();
+        }
+
+        // template <typename T1, typename T2>
+        // bool compareTwoClasses(T1&& lhs, T2&& rhs) const noexcept
+        // {
+        //     auto it1 = lhs.begin();
+        //     auto it2 = rhs.begin();
+        //     size_t i = 0, j = 0;
+        //     while(rhs[j])
+        //     {
+        //         if (*(it)[i++] != rhs[j++]) return false;
+        //         if (*(it)[i] == '\0') 
+        //         {
+        //             ++it;
+        //             i = 0;
+        //         }
+        //         if (it == lhs.end()) return rhs[j] == '\0';
+        //     }
+        //     return false;
+        // }
     };
 
     using StringTable = std::vector<String>;

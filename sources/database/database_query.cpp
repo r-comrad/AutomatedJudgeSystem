@@ -16,6 +16,23 @@ data::DatabaseQuery::DatabaseQuery (const std::string& aDatabasePath) noexcept :
     mReservedStatementNumber    (0)
 {}
 
+SubmissionInfo 
+data::DatabaseQuery::getSubmissionInfo(int ID) noexcept
+{
+    SubmissionInfo result;
+    result.ID = ID;
+
+    getParticipantInfo(result);
+    getCheckerInfo(result);
+
+#ifdef BILL_WINDOWS
+#elif defined(LINUS_LINUX)
+    result.timeLimit /= 1000;
+#endif 
+
+    return result;
+}
+
 void 
 data::DatabaseQuery::writeResult
 (
@@ -48,9 +65,9 @@ data::DatabaseQuery::getNextTest
     WRITE_LOG("Taking_next_test");
     mDatabase.step(mReservedStatementNumber);
     //if (mDatabase.step() != SQLITE_OK) break; TODO: fixing that shit
-    const unsigned char* input = mDatabase.getTextFromRow(0, mReservedStatementNumber);
-    const unsigned char* output = mDatabase.getTextFromRow(1, mReservedStatementNumber);
-    if (input == NULL)
+    auto input = mDatabase.getTextFromRow(0, mReservedStatementNumber);
+    auto output = mDatabase.getTextFromRow(1, mReservedStatementNumber);
+    if (!input.has_value())
     {
         aSudmissionInformation.mTestsAreOver = true;
         aTLM.mTest = "";
@@ -59,9 +76,9 @@ data::DatabaseQuery::getNextTest
     }
 
     aSudmissionInformation.mTestsCount++;
-    aTLM.mTest = std::string(reinterpret_cast<const char*>(input));
+    aTLM.mTest = input.value();
     //aTLM.mTest += "\n";
-    aTLM.mAnswer = std::string(reinterpret_cast<const char*>(output));
+    aTLM.mAnswer = output.value();
 }
 
 void
@@ -75,9 +92,9 @@ data::DatabaseQuery::getAllTests(ProblemInformation& aSudmissionInformation) noe
     {
         mDatabase.step();
         //if (mDatabase.step() != SQLITE_OK) break; TODO: fixing that shit
-        const unsigned char* input = mDatabase.getTextFromRow(0);
-        const unsigned char* output = mDatabase.getTextFromRow(1);
-        if (input == NULL) break;
+        auto input = mDatabase.getTextFromRow(0);
+        auto output = mDatabase.getTextFromRow(1);
+        if (!input.has_value()) break;
 
         std::ofstream taskFile(TEST_PATH + std::to_string(aSudmissionInformation.mID) + "-" + std::to_string(cnt));
         std::ofstream ansFile(ANSWERS_PATH + std::to_string(aSudmissionInformation.mID) + "-" + std::to_string(cnt));
@@ -93,8 +110,11 @@ data::DatabaseQuery::getAllTests(ProblemInformation& aSudmissionInformation) noe
             continue;
         }
 
-        for (int i = 0; input[i];) taskFile << input[i++];
-        for (int i = 0; output[i];) ansFile << output[i++];
+        auto inStr = input.value().getFront();
+        auto outStr = output.value().getFront();
+
+        for (int i = 0; inStr[i];) taskFile << inStr[i++];
+        for (int i = 0; outStr[i];) ansFile << outStr[i++];
     }
     aSudmissionInformation.mTestsCount = cnt;
 
@@ -115,41 +135,34 @@ data::DatabaseQuery::prepareTestsStatement(ProblemInformation& aSudmissionInform
     END_LOG_BLOCK("I'm_ready");
 }
 
-data::DatabaseQuery::ParticipantlInfo 
-data::DatabaseQuery::getParticipantInfo(uint_64 aID) noexcept
+void
+data::DatabaseQuery::getParticipantInfo(SubmissionInfo& aSubmissionInfo) noexcept
 {
-    ParticipantlInfo result;
-
     START_LOG_BLOCK("Geting_ID_and_name_from_database");
 
-    mDatabase.select("core_solutions", "file_name, contest_id", "id = " + std::to_string(aID));
+    mDatabase.select("core_solutions", "file_name, contest_id", "id = " + std::to_string(aSubmissionInfo.ID));
     mDatabase.step();
 
-    result.contestId = mDatabase.getInt64FromRow(1);
-    result.fileName= dom::String(mDatabase.getTextFromRow(0));
+    aSubmissionInfo.problemID = mDatabase.getInt64FromRow(1);
+    aSubmissionInfo.solutionFileName = mDatabase.getTextFromRow(0).value();
     mDatabase.closeStatment();
 
-    WRITE_LOG("Contest_ID:", result.contestId);
-    END_LOG_BLOCK("File_name:", result.fileName);
-
-    return result;
+    WRITE_LOG("Problem_ID:", aSubmissionInfo.problemID);
+    END_LOG_BLOCK("File_name:", aSubmissionInfo.solutionFileName);
 }
 
-data::DatabaseQuery::CheckInfo
-data::DatabaseQuery::getCheckInfo(uint_64 aID) noexcept
+void
+data::DatabaseQuery::getCheckerInfo(SubmissionInfo& aSubmissionInfo) noexcept
 {
-    data::DatabaseQuery::CheckInfo result;
     START_LOG_BLOCK("Geting_limits_from_database");
 
-    mDatabase.select("core_contests", "time_limit, memory_limit, checker", "id = " + std::to_string(aID));
+    mDatabase.select("core_contests", "time_limit, memory_limit, checker", "id = " + std::to_string(aSubmissionInfo.problemID));
     mDatabase.step();
-    result.timeLimit = mDatabase.getInt64FromRow(0);
-    result.memoryLimit = mDatabase.getInt64FromRow(1);
-    result.checkerName = dom::String(mDatabase.getTextFromRow(2));
+    aSubmissionInfo.timeLimit = mDatabase.getInt64FromRow(0);
+    aSubmissionInfo.memoryLimit = mDatabase.getInt64FromRow(1);
+    aSubmissionInfo.checkerFileName = mDatabase.getTextFromRow(2).value();
     mDatabase.closeStatment();
 
-    WRITE_LOG("Time_limit:", result.timeLimit);
-    END_LOG_BLOCK("Memory_limit:", result.memoryLimit);
-
-    return result;
+    WRITE_LOG("Time_limit:", aSubmissionInfo.timeLimit);
+    END_LOG_BLOCK("Memory_limit:", aSubmissionInfo.memoryLimit);
 }

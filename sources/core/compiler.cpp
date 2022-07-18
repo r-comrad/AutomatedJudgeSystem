@@ -73,17 +73,7 @@ sys::Compiler::getExecutableCommand(cor::CodeInfo&& aCode) const noexcept
 {
 	dom::StringTable result;
 
-	sys::Compiler::Language fileLanguage;
-	if (aCode.isLanguageStated())
-	{
-        //TODO:
-		// fileLanguage = aCode.getFileLanguage();
-		// fileLanguage = getLanguage(aCode.getFileExtension());
-	}
-	else
-	{
-		fileLanguage = getLanguage(aCode.getFileExtension());
-	}
+	sys::Compiler::Language fileLanguage = getLanguage(aCode.getFileLanguage());
 
 	if (fileLanguage == Language::MAGIC_CPP)
     {
@@ -104,7 +94,8 @@ sys::Compiler::prepareCommandForCPP(cor::CPPInfo&& aInfo) const noexcept
 
     //TODO: Move
     compileCommand.emplace_back(CPP_COMPILER_NAME);
-    compileCommand.emplace_back(std::move(aInfo.inputFileName));    // compileCommand.emplace_back(aInfo.outputFileileName);
+    compileCommand.emplace_back(std::move(aInfo.inputFileName));    
+    compileCommand.emplace_back(std::move(aInfo.outputFileileName));
     compileCommand.back() += ".exe";
     compileCommand.back().merge();
 
@@ -115,7 +106,6 @@ sys::Compiler::prepareCommandForCPP(cor::CPPInfo&& aInfo) const noexcept
 
 	dom::StringTable result;
     result.emplace_back(std::move(compileCommand.back()));
-    result.back() += ".exe";
     result.back().merge();
 
 	return result;

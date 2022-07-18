@@ -18,9 +18,10 @@ namespace proc
 
 		void readPipe(std::string& result) noexcept;
 		void writePipe(std::string& aMessage, PypeType aType = Process::PypeType::ZERO) noexcept;
+        virtual void IORedirection() noexcept;
+        virtual void create() noexcept;
 
 	private:
-		virtual void IORedirection() noexcept;
 		virtual void closeHandles() noexcept;
 
 		HANDLE mThisSTDIN;

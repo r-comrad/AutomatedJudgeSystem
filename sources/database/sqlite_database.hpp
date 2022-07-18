@@ -5,9 +5,9 @@
 //						SQLLITE INTERFACE DECLARATION
 //--------------------------------------------------------------------------------
 
-#include <string>
 #include <iostream>
 #include <vector>
+#include <optional>
 
 #include "SQLite/sqlite3.h"
 
@@ -24,7 +24,7 @@ typedef sqlite3_stmt Statement;
 class SQLiteDatabase
 {
 public:
-	SQLiteDatabase(const std::string& aPath);
+	SQLiteDatabase(dom::String aPath);
 	virtual ~SQLiteDatabase();
 
 	//----------------------------------------------------------------------------
@@ -43,8 +43,8 @@ public:
 	different cells for each query.
 	If empty, the first cell (#0) is used.
 	*/
-	void select(const std::string& aTableName, std::string aColum = "", 
-		std::string aConditon = "", int aStatementID = 0);
+	void select(dom::String&& aTableName, dom::String&& aColum = "", 
+		dom::String&& aConditon = "", int aStatementID = 0);
 
 	/*
 	\brief Prepare the sqlite UPDATE statement.
@@ -56,8 +56,8 @@ public:
 	different cells for each query.
 	If empty, the first cell (#0) is used.
 	*/
-	void update(const std::string& aTableName, const std::string& aValue, 
-		const std::string& aConditon, int aStatementID = 0);
+	void update(dom::String&& aTableName, dom::String&& aValue, 
+		dom::String&& aConditon, int aStatementID = 0) noexcept;
 
 	/*
 	\brief Close the selected statment.
@@ -90,7 +90,7 @@ public:
 	If empty, the first cell (#0) is used.
 	\return Pointer to unt-8 string from specidied cell.
 	*/
-	const unsigned char* getTextFromRow(int aColumNumber, int aStatementID = 0);
+	std::optional<dom::String> getTextFromRow(int aColumNumber, int aStatementID = 0);
 
 	/*
 	\brief Gets UTF-16 string from colum of current row. The current line
@@ -102,7 +102,7 @@ public:
 	If empty, the first cell (#0) is used.
 	\return Pointer to unt-8 string from specidied cell.
 	*/
-	const void* getText16FromRow(int aColumNumber, int aStatementID = 0);
+	dom::String getText16FromRow(int aColumNumber, int aStatementID = 0);
 
 	/*
 	\brief Gets integer from colum of current row. The current line
@@ -140,13 +140,13 @@ public:
 	If empty, the first cell (#0) is used.
 	\return Number from specidied cell.
 	*/
-	char* toAscii(const unsigned char* input);
+	
 
 private:
 	Base* mBase;
 	std::vector<Statement*> mStatement;
 
-	void prepare(const std::string& aStatment, int aStatementID);
+	void prepare(dom::String&& aStatment, int aStatementID);
 };
 
 //--------------------------------------------------------------------------------

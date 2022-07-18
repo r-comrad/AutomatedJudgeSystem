@@ -88,7 +88,6 @@ namespace proc
 		(finishing of communication with the child process)
 		*/
 
-	private:
 		uint_64 mTimeLimit;
 		uint_64 mMemoryLimit;
 	};

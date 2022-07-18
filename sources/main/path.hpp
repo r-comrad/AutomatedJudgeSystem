@@ -2,17 +2,17 @@
 
 #if     defined(BILL_WINDOWS)
 
-#define CHINA_RESOURCES EXECUTABLE_PATH + "resources/"
+#define CHINA_RESOURCES EXECUTABLE_PATH + "resources\\"
 #define COMPILERS       CHINA_RESOURCES + "compilers\\"
 #define EXAMPLES        CHINA_RESOURCES + "examples\\"
 #define WORK_DIR        CHINA_RESOURCES + "working_directory\\"
-#define MAEDIA          CHINA_RESOURCES + "media\\"
+#define MAEDIA          EXECUTABLE_PATH + "media\\"
 
 #define DB_PATH         EXECUTABLE_PATH   
 #define DATABASE_PATH   DB_PATH     + "db.sqlite3"
 
-#define CHECKER_PATH    WORK_DIR    + "checker\\checker"
-#define SOLUTION_PATH   WORK_DIR    + "solution\\solution"
+#define CHECKER_PATH    WORK_DIR    + "checkers\\"
+#define SOLUTION_PATH   WORK_DIR    + "solutions\\"
 #define TEST_PATH       WORK_DIR    + "tests\\"
 #define ANSWERS_PATH    WORK_DIR    + "answers\\"
 #define RESULT_PATH     WORK_DIR    + "results\\"

@@ -3,7 +3,7 @@
 
 proc::PipeWindowsProcess::PipeWindowsProcess() noexcept
 {
-    IORedirection();
+
 }
 
 proc::PipeWindowsProcess::~PipeWindowsProcess() 
@@ -12,6 +12,13 @@ proc::PipeWindowsProcess::~PipeWindowsProcess()
 }
 
 #define BUFFER_SIZE 65336 * 10
+
+void
+proc::PipeWindowsProcess::create() noexcept
+{
+    IORedirection();
+    this->WindowsProcess::create();
+}
 
 void
 proc::PipeWindowsProcess::IORedirection() noexcept

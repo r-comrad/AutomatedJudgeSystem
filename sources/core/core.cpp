@@ -47,92 +47,54 @@ Core::~Core()
 }
 
 void
-Core::run(int aID){
-    // mProblemInfo = mDBQ.(aID);
-
-// #ifdef BILL_WINDOWS
-//     makeWindowString(mProblemInfo.mSolutionFileName);
-//     makeWindowString(mProblemInfo.mCheckerFileName);
-// #endif // BILL_WINDOWS
-    // mProblemInfo.mSolutionFileName.clear();
-
-// #ifdef _DEBUG_SOL_SUB_
-// #if  defined(BILL_WINDOWS)
-//     mProblemInfo.mSolutionFileName = "2\\plus.cpp";
-// #elif defined(LINUS_LINUX)
-//     mProblemInfo.mSolutionFileName = "2/plus.cpp";
-// #endif 
-// #endif
-
-    // sys::Compiler compiler;
-
-    // auto codePath = MAEDIA + mProblemInfo.mSolutionFileName.get();
-    // auto desirableExecutablePath = SOLUTION_PATH + "-" +
-        // std::to_string(mProblemInfo.mID);
-	// cor::CodeInfo codeInfo(codePath.c_str(), );
-    // compiler.prepareExecutableCommand
-    // (
-        // codePath,
-        // desirableExecutablePath,
-        // mSolutionParameters
-    // );
-
-    // codePath = MAEDIA + mProblemInfo.mCheckerFileName;
-    // desirableExecutablePath = CHECKER_PATH + "-" +
-    //     std::to_string(mProblemInfo.mID);
-
-    // compiler.prepareExecutableCommand
-    // (
-    //     codePath,
-    //     desirableExecutablePath,
-    //     mCheckerParameters
-    // );
-
-    auto partInfo = mDBQ.getParticipantInfo(aID);
-    mProblemInfo.mContestID = partInfo.contestId;
+Core::run(int aID) noexcept
+{
+    auto partInfo = mDBQ.getSubmissionInfo(aID);
     mProblemInfo.mID = aID;
+    mProblemInfo.mContestID = partInfo.problemID;
+    partInfo.solutionFileName = "2\\plus.cpp";
 
-    prepareSolutionProcess(aID);
-    prepareCheckerProcess(aID);
+    prepareSolutionProcess(partInfo);
+    prepareCheckerProcess(partInfo);
+    mSolutionProcess.setLimits(partInfo.timeLimit, partInfo.memoryLimit);
+
     check();
 }
 
 void
-Core::prepareSolutionProcess(int aID) noexcept
+Core::prepareSolutionProcess(SubmissionInfo& aSubInfo) noexcept
 {
-    //TODO: Second getParticipantInfo
-    auto partInfo = mDBQ.getParticipantInfo(aID);
-    //TODO: Second getCheckInfo
-    auto checkInfo = mDBQ.getCheckInfo(aID);
+    cor::CodeInfo codeInfo(cor::CodeInfo::CodeInfoType::Submission);
+    codeInfo.setFileName(std::move(aSubInfo.solutionFileName));
+    codeInfo.setDesirableOutputFileName(std::to_string(aSubInfo.ID));
+    //TODO: set language
+    codeInfo.setLanguage();
 
-    //TODO:
-    cor::CodeInfo codeInfo(std::move(partInfo.fileName), "part");
     sys::Compiler comp;
     auto cmd = comp.getExecutableCommand(std::move(codeInfo));
-
     mSolutionProcess.setComand(cmd);
-    mSolutionProcess.setLimits(checkInfo.timeLimit, checkInfo.memoryLimit);
 }
 
 void
-Core::prepareCheckerProcess(int aID) noexcept
+Core::prepareCheckerProcess(SubmissionInfo& aSubInfo) noexcept
 {
-    //TODO: Second getCheckInfo
-    auto checkInfo = mDBQ.getCheckInfo(aID);
+    cor::CodeInfo codeInfo(cor::CodeInfo::CodeInfoType::Checker);
+    codeInfo.setFileName(std::move(aSubInfo.checkerFileName));
+    codeInfo.setDesirableOutputFileName(std::to_string(aSubInfo.ID));
+    //TODO: set language
+    codeInfo.setLanguage();
 
-    //TODO:
-    cor::CodeInfo codeInfo(std::move(checkInfo.checkerName), "check");
     sys::Compiler comp;
     auto cmd = comp.getExecutableCommand(std::move(codeInfo));
-
     mCheckerProcess.setComand(cmd);
 }
-
 
 bool
 Core::resultEvoluation(int aCheckNum)
 {
     START_LOG_BLOCK("Result_evoluation");
+    WRITE_LOG("time:", mChecksInfo[aCheckNum].mUsedTime);
+    WRITE_LOG("memory:", mChecksInfo[aCheckNum].mUsedMemory);
     bool result = false;
 
     mProblemInfoLock.lock();
@@ -173,13 +135,7 @@ Core::resultEvoluation(int aCheckNum)
 }
 
 void
-Core::check
-(
-    //std::string& aSolutionName,
-    //std::string& aCheckerName
-    //const std::vector<char*>& aSolutionParameters,
-    //const std::vector<char*>& aCheckerParameters
-)
+Core::check()
 {
     START_LOG_BLOCK("Checking_participant_code");
 
@@ -232,25 +188,22 @@ Core::check
 }
 
 void
-Core::pipesTesting
-(
-    int             aThreadNum
-    //const std::vector<char*>& aSolutionParameters,
-    //const std::vector<char*>& aCheckerParameters
-    //std::string&    aSolutionName,
-    //std::string&    aCheckerName
-    //std::string aSolutionName,
-    //std::string aCheckerName
-)
+Core::pipesTesting(int aThreadNum)
 {
     START_LOG_BLOCK("Checking_test#", aThreadNum + mFinishedTest);
-//if (aThreadNum == 100)
-//{
-//    int yy = 0;
-//    ++yy;
-//std::cout << yy;
-//
-//}
+    if (aThreadNum + mFinishedTest == 66)
+    {
+        int yy = 0;
+        ++yy;
+        std::cout << yy;
+    }
+    if (aThreadNum + mFinishedTest == 67)
+    {
+        int yy = 0;
+        ++yy;
+        std::cout << yy;
+    }
+
     TestLibMessage TLM;
     mGetTestLock.lock();
     if (!mProblemInfo.mTestsAreOver)
@@ -276,6 +229,9 @@ Core::pipesTesting
     //proc::PipeProcess code(mSolutionParameters, mProblemInfo.mTimeLimit, mProblemInfo.mMemoryLimit);
 
     proc::PipeWindowsProcess code = mSolutionProcess;
+    //code.IORedirection();
+    code.create();
+
     code.writePipe(TLM.mTest);
     //std::pair<uint_64, uint_64> cur = code.runWithLimits(mProblemInfo.mTimeLimit, mProblemInfo.mMemoryLimit);
     auto testRes = code.runWithLimits();
@@ -296,6 +252,8 @@ Core::pipesTesting
     //MyProcess checker(mCheckerParameters);
     //proc::PipeProcess checker(mCheckerParameters);
     proc::PipeWindowsProcess checker = mCheckerProcess;
+    //checker.IORedirection();
+    checker.create();
 
 //    TLM.mAnswer.pop_back();
 //    TLM.mAnswer.pop_back();
