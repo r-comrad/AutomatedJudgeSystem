@@ -10,7 +10,7 @@
 
 #include <cmath>
 
-#define THREAD_COUNTS 1
+#define THREAD_COUNTS 30
 #define DEBUG_PLUS_SOLUTION_SUBMISSION 1
 
 #if DEBUG_PLUS_SOLUTION_SUBMISSION
@@ -219,7 +219,7 @@ Core::check
     WRITE_LOG("Final_time:", mProblemInfo.mUsedTime);
     END_LOG_BLOCK("Final_memory:", mProblemInfo.mUsedMemory);
 }
-
+//int cntt = 0;
 void
 Core::pipesTesting
 (
@@ -233,6 +233,12 @@ Core::pipesTesting
 )
 {
     START_LOG_BLOCK("Checking_test#", aThreadNum + mFinishedTest);
+    WRITE_LOG("Thread_num:", aThreadNum);
+    // if (aThreadNum + mFinishedTest == 17) 
+    // {
+    //     int yy = 0;
+    //     ++yy;
+    // }
 //if (aThreadNum == 100)
 //{
 //    int yy = 0;
@@ -245,8 +251,11 @@ Core::pipesTesting
     if (!mProblemInfo.mTestsAreOver)
     {
         mDBQ.getNextTest(mProblemInfo, TLM);
+        //TLM.mTest = "10 10";
+        //TLM.mAnswer = "10";
+        //cntt++;
     }
-    if (mProblemInfo.mTestsAreOver)
+    if (/*cntt > 100 ||*/ mProblemInfo.mTestsAreOver)
     {
         mChecksMutexs[aThreadNum].lock();
         mChecksInfo[aThreadNum].mIsFinishedTesting = true;
@@ -263,28 +272,42 @@ Core::pipesTesting
     TLM.makeTestSizes();
 
     //MyProcess code(mSolutionParameters, mProblemInfo.mTimeLimit, mProblemInfo.mMemoryLimit);
+    mGetTestLock.lock();
+    // std::vector<std::string> vvs;
+    // for(auto& i : mSolutionParameters) vvs.emplace_back(i);
+    // std::vector<char*> vvss;
+    // for(auto& i : vvs) vvss.emplace_back(const_cast<char*>(i.c_str()));
+    // PipeProcess code(vvss, mProblemInfo.mTimeLimit, mProblemInfo.mMemoryLimit);
     PipeProcess code(mSolutionParameters, mProblemInfo.mTimeLimit, mProblemInfo.mMemoryLimit);
 
     code.writePipe(TLM.mTest);
     //std::pair<uint_64, uint_64> cur = code.runWithLimits(mProblemInfo.mTimeLimit, mProblemInfo.mMemoryLimit);
     std::pair<uint_64, uint_64> cur = code.runWithLimits();
+    mGetTestLock.unlock();
     if (cur.first == KILLING_PROCESS_TIME_VALUE && 
         cur.second == KILLING_PROCESS_MEMORY_VALUE)
     {
-        mChecksInfo[aThreadNum].mResult = "tle";
+        mGetTestLock.lock();
         mDBQ.closeTests();
+        mGetTestLock.unlock();
+
         mChecksMutexs[aThreadNum].lock();
+        mChecksInfo[aThreadNum].mResult = "tle";
         mChecksInfo[aThreadNum].mIsFinishedTesting = true;
         mChecksMutexs[aThreadNum].unlock();
         END_LOG_BLOCK();
         return;
     }
+
     code.readPipe(TLM.mOutput);
 
+    mChecksMutexs[aThreadNum].lock();
     mChecksInfo[aThreadNum].mUsedTime = cur.first;
     mChecksInfo[aThreadNum].mUsedMemory = cur.second;
+    mChecksMutexs[aThreadNum].unlock();
 
     //MyProcess checker(mCheckerParameters);
+
     PipeProcess checker(mCheckerParameters);
 
 //    TLM.mAnswer.pop_back();
