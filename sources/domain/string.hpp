@@ -89,10 +89,38 @@ namespace dom
         
         const char* getFront() const noexcept;
 
+    private:
+        struct FrontResult
+        {
+            dom::String* mThis;
+
+            operator char*()
+            {
+                return mThis->mCharData.front().get();
+            }
+            operator const char*()
+            {
+                if (mThis->mType != StrType::CharArray)
+                {
+                    return mThis->mStrData.front().c_str();
+                }
+                else
+                {
+                    return mThis->mCharData.front().get();
+                }
+
+            }
+            operator std::string&()
+            {
+                return mThis->mStrData.front();
+            }
+        };
+
+    public:
         template <typename T>
         T getFront() noexcept
         {
-            return getFront<T>();
+            return T(FrontResult(this));
         }
 
         std::optional <std::string> backSubStr(char aDelimiter) const noexcept;
@@ -157,7 +185,7 @@ namespace dom
         }
 
         template <typename To, typename From>
-        void copyFromVector(To&& aTo, From&& aFrom) const noexcept
+        void copyFromVector(To& aTo, From&& aFrom) const noexcept
         {
             aTo = construct(aTo, countElements(aFrom));
             aTo[0] = '\0';
@@ -267,16 +295,6 @@ namespace dom
             }
 
             return result;
-        }
-
-        std::string getFront() noexcept
-        {
-            return mStrData.front();
-        }
-
-        char* getFront() noexcept
-        {
-            return mStrData.front();
         }
 
         // template <typename T1, typename T2>

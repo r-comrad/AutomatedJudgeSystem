@@ -203,6 +203,7 @@ dom::String::merge() noexcept
 void
 dom::String::switchToCharArray() noexcept
 {
+    //TODO:
     mType = StrType::CharArray;
 }
 
@@ -453,11 +454,43 @@ dom::String::getCopy() const noexcept
     //TODO: efficient copy
     if (mType != String::StrType::CharArray)
     {
-        result.copyToVector(result.mStrData, mStrData);
+        result.mStrData.resize(1);
+        result.copyFromVector(result.mStrData.front(), mStrData);
     }
     else
     {
-        result.copyToVector(result.mCharData, mCharData);
+        result.mCharData.resize(1);
+        result.copyFromVector(result.mCharData.front(), mCharData);
+    }
+    return result;
+}
+
+dom::String
+dom::String::getCopy(String& result) const noexcept
+{
+
+    if(result.mType == String::StrType::NonDetermin) result.mType = mType;
+    //TODO: efficient copy
+    if (result.mType != String::StrType::CharArray)
+    {
+        result.mStrData.resize(1);
+        result.copyFromVector(result.mStrData.front(), mStrData);
+    }
+    else
+    {
+        result.mCharData.resize(1);
+        result.copyFromVector(result.mCharData.front(), mCharData);
+    }
+
+    if (mType != String::StrType::CharArray)
+    {
+        result.mStrData.resize(1);
+        result.copyFromVector(result.mStrData.front(), mStrData);
+    }
+    else
+    {
+        result.mCharData.resize(1);
+        result.copyFromVector(result.mCharData.front(), mCharData);
     }
     return result;
 }

@@ -57,7 +57,7 @@ namespace proc
 		//virtual ~WindowsProcess() = default;
         virtual ~WindowsProcess() = default;
 
-        NOC__NOD_FUNCs(WindowsProcess)
+        //NOC__NOD_FUNCs(WindowsProcess)
 
         virtual void setComand(const dom::StringTable& aParameters) noexcept;
         /*

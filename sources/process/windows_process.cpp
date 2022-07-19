@@ -97,7 +97,7 @@ void
 proc::WindowsProcess::create() noexcept
 {
     START_LOG_BLOCK("Creating_windows_process_with_name:", mProcessName.get());
-    WRITE_LOG("args:", mProcessArgs.getFront().get());
+    WRITE_LOG("args:", mProcessArgs.getFront<char*>());
 
     //mFuture = new std::future<long long>;
    //  *mFuture = (std::async(std::launch::async, &proc::WindowsProcess::getMaxMemoryUsage,
@@ -107,7 +107,7 @@ proc::WindowsProcess::create() noexcept
     if (CreateProcessA(
         //TODO: without string
         mProcessName.get(),
-        mProcessArgs.getFront().get(),
+        mProcessArgs.getFront<char*>(),
         NULL,
         NULL,
         TRUE,
