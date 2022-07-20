@@ -7,12 +7,14 @@ proc::WindowsProcess::WindowsProcess()  noexcept
     ZeroMemory(&mProcessInfo, sizeof(PROCESS_INFORMATION));
     ZeroMemory(&mStartupInfo, sizeof(STARTUPINFOA));
     setLimits(1e18, 1e18);
+
+    mProcessArgs.switchToCharArray();
 }
 
 proc::WindowsProcess::WindowsProcess(const WindowsProcess& other)  noexcept
 {
     mProcessName = other.mProcessName;
-    mProcessArgs = other.mProcessArgs.getCopy();
+    mProcessArgs = other.mProcessArgs.getCopy(dom::String::StrType::CharArray);
 }
 
 // proc::WindowsProcess::~WindowsProcess()  noexcept
@@ -30,8 +32,6 @@ proc::WindowsProcess::run() noexcept
 
     // if (getExitCode(mProcessInfo.hProcess) == STILL_ACTIVE)
     // {
-    //     int yy;
-    //     yy  = 0;
     // }
     ResumeThread(mProcessInfo.hThread);
     WaitForSingleObject(mProcessInfo.hProcess, mTimeLimit);

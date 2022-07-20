@@ -10,7 +10,7 @@
 
 #include <cmath>
 
-#define THREAD_COUNTS 1
+#define THREAD_COUNTS 30
 #define DEBUG_PLUS_SOLUTION_SUBMISSION 1
 
 #if DEBUG_PLUS_SOLUTION_SUBMISSION
@@ -57,6 +57,10 @@ Core::run(int aID) noexcept
     prepareSolutionProcess(partInfo);
     prepareCheckerProcess(partInfo);
     mSolutionProcess.setLimits(partInfo.timeLimit, partInfo.memoryLimit);
+
+    //TODO: remove mProblemInfo?
+    mProblemInfo.mTimeLimit = partInfo.timeLimit;
+    mProblemInfo.mMemoryLimit = partInfo.memoryLimit;
 
     check();
 }
@@ -227,7 +231,7 @@ Core::pipesTesting(int aThreadNum)
 
     //MyProcess code(mSolutionParameters, mProblemInfo.mTimeLimit, mProblemInfo.mMemoryLimit);
     //proc::PipeProcess code(mSolutionParameters, mProblemInfo.mTimeLimit, mProblemInfo.mMemoryLimit);
-
+// mGetTestLock.lock();
     proc::PipeWindowsProcess code = mSolutionProcess;
     //code.IORedirection();
     code.create();
@@ -235,6 +239,7 @@ Core::pipesTesting(int aThreadNum)
     code.writePipe(TLM.mTest);
     //std::pair<uint_64, uint_64> cur = code.runWithLimits(mProblemInfo.mTimeLimit, mProblemInfo.mMemoryLimit);
     auto testRes = code.runWithLimits();
+    // mGetTestLock.unlock();
     if (!testRes)
     {
         mChecksInfo[aThreadNum].mResult = "tle";
@@ -251,6 +256,7 @@ Core::pipesTesting(int aThreadNum)
 
     //MyProcess checker(mCheckerParameters);
     //proc::PipeProcess checker(mCheckerParameters);
+    // mGetTestLock.lock();
     proc::PipeWindowsProcess checker = mCheckerProcess;
     //checker.IORedirection();
     checker.create();
@@ -277,7 +283,7 @@ Core::pipesTesting(int aThreadNum)
 
     checker.run();
     checker.readPipe(mChecksInfo[aThreadNum].mResult);
-
+    // mGetTestLock.unlock();
     mChecksMutexs[aThreadNum].lock();
     mChecksInfo[aThreadNum].mIsFinishedTesting = true;
     mChecksMutexs[aThreadNum].unlock();

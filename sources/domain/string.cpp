@@ -447,51 +447,39 @@ dom::String::backSubStr(char aDelimiter) const noexcept
 }
 
 dom::String
-dom::String::getCopy() const noexcept
+dom::String::getCopy(String::StrType aType) const noexcept
 {
-    String result;
-    result.mType = mType;
-    //TODO: efficient copy
-    if (mType != String::StrType::CharArray)
-    {
-        result.mStrData.resize(1);
-        result.copyFromVector(result.mStrData.front(), mStrData);
-    }
-    else
-    {
-        result.mCharData.resize(1);
-        result.copyFromVector(result.mCharData.front(), mCharData);
-    }
-    return result;
-}
-
-dom::String
-dom::String::getCopy(String& result) const noexcept
-{
-
+    dom::String result;
+    result.mType = aType;
     if(result.mType == String::StrType::NonDetermin) result.mType = mType;
-    //TODO: efficient copy
+
     if (result.mType != String::StrType::CharArray)
     {
         result.mStrData.resize(1);
-        result.copyFromVector(result.mStrData.front(), mStrData);
+        if (mType != String::StrType::CharArray)
+        {         
+            result.copyFromVector(result.mStrData.front(), mStrData);
+        }
+        else
+        {
+            result.mCharData.resize(1);
+            result.copyFromVector(result.mStrData.front(), mCharData);
+        }
     }
     else
     {
         result.mCharData.resize(1);
-        result.copyFromVector(result.mCharData.front(), mCharData);
+        if (mType != String::StrType::CharArray)
+        {         
+            result.copyFromVector(result.mCharData.front(), mStrData);
+        }
+        else
+        {
+            result.mCharData.resize(1);
+            result.copyFromVector(result.mCharData.front(), mCharData);
+        }
     }
 
-    if (mType != String::StrType::CharArray)
-    {
-        result.mStrData.resize(1);
-        result.copyFromVector(result.mStrData.front(), mStrData);
-    }
-    else
-    {
-        result.mCharData.resize(1);
-        result.copyFromVector(result.mCharData.front(), mCharData);
-    }
     return result;
 }
 

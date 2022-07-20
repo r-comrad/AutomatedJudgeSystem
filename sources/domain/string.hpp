@@ -26,6 +26,8 @@ namespace dom
 	class String
 	{
 	public:
+        enum class StrType { NonDetermin, CharArray, String };
+
         String() noexcept;
         String(         const char* aStr)   noexcept;
         String(const unsigned char* aStr)   noexcept;
@@ -125,11 +127,9 @@ namespace dom
 
         std::optional <std::string> backSubStr(char aDelimiter) const noexcept;
 
-        String getCopy() const noexcept;
+        String getCopy(String::StrType aType = String::StrType::NonDetermin) const noexcept;
 
     private:
-        enum class StrType { NonDetermin, CharArray, String };
-
         StrType mType;
         std::list<std::unique_ptr<char[]>> mCharData;
         std::list<std::string> mStrData;
