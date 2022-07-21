@@ -8,52 +8,35 @@
 #include <vector>
 #include <thread>
 #include <mutex>
+#include <list>
 
 #include "database/database_query.hpp"
 
 #include "process/file_process.hpp"
 #include "process/pipe_windows_process.hpp"
 
-#include "structs/testlib_message.hpp"
-#include "structs/problem_information.hpp"
-#include "structs/submission_information.hpp"
-
 #include "compiler.hpp"
+#include "test.hpp"
 
 class Core
 {
 public:
-	Core(std::string aDatabasePath);
+	Core(std::string aDatabasePath) noexcept;
 	~Core();
 	void run(int aID) noexcept;
 
-	//	enum DataStructure {FILES = 0, MAGIC_IVAN = 1};
-
 private:
+    std::list<Test> mTests;
+    data::DatabaseQuery mDBQ;
 
+    std::string mFinalVerdict;
+    //uint_32 mFinalTestNum;
+    uint_64 mFinalTime;
+    uint_64 mFinalMemory;
 
-	std::vector<std::thread*> mChecks;
-	std::vector<std::mutex> mChecksMutexs;
-	std::vector<SubmissionInformation> mChecksInfo;
-
-    proc::PipeWindowsProcess mSolutionProcess;
-    proc::PipeWindowsProcess mCheckerProcess;
-
-	std::mutex mGetTestLock;
-
-	uint_32 mFinishedTest;
-
-	data::DatabaseQuery mDBQ;
-	ProblemInformation mProblemInfo;
-    std::mutex mProblemInfoLock;
-
-    void prepareSolutionProcess(SubmissionInfo& aSubInfo)    noexcept;
-    void prepareCheckerProcess(SubmissionInfo& aSubInfo)     noexcept;
-	void check();
-    bool resultEvoluation(int aCheckNum);
-	//void fileTesting(uint_32 aTestNum, std::string& aSolutionName, std::string& aCheckerName);
-	void pipesTesting(int aThreadNum);
-	//void pipesTesting(int aThreadNum, std::string aSolutionName, std::string aCheckerName);
+    std::shared_ptr<proc::Process> prepareSolutionProcess(SubmissionInfo& aSubInfo)    noexcept;
+    std::shared_ptr<proc::Process> prepareCheckerProcess(SubmissionInfo& aSubInfo)     noexcept;
+	void check(uint_64 aID) noexcept;
 };
 
 #endif //CORE_H

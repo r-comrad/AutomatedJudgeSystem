@@ -17,7 +17,7 @@
 #include "domain/path.hpp"
 #include "domain/pair.hpp"
 
-#include "process.hpp"
+#include "base_process.hpp"
 
 //--------------------------------------------------------------------------------
 
@@ -39,7 +39,7 @@
 
 namespace proc
 {
-	class WindowsProcess : public Process
+	class WindowsProcess : public BaseProcess
 	{
 	public:
 		/*
@@ -52,7 +52,13 @@ namespace proc
 		\param aMemoryLimit Child process maximum memory usage.
 		*/
 		WindowsProcess() noexcept;
+        
+        WindowsProcess(WindowsProcess&& other) noexcept = default;
         WindowsProcess(const WindowsProcess& other) noexcept;
+
+        WindowsProcess& operator=(WindowsProcess&& other) noexcept = default;
+        WindowsProcess& operator=(const WindowsProcess& other) noexcept;
+
 
 		//virtual ~WindowsProcess() = default;
         virtual ~WindowsProcess() = default;
@@ -80,8 +86,6 @@ namespace proc
 		*/
 		virtual std::optional<dom::Pair<uint_64>> runWithLimits() noexcept;
 
-        virtual void IORedirection() noexcept = 0;
-
 	protected:
 		/*
 		\brief Redirecting input and output streams for a child process.
@@ -93,6 +97,7 @@ namespace proc
 		*/
     
 		virtual void closeHandles() noexcept = 0;
+        virtual void IORedirection() noexcept = 0;
 
 	protected:
 		STARTUPINFOA mStartupInfo;

@@ -17,6 +17,14 @@ proc::WindowsProcess::WindowsProcess(const WindowsProcess& other)  noexcept
     mProcessArgs = other.mProcessArgs.getCopy(dom::String::StrType::CharArray);
 }
 
+proc::WindowsProcess&
+proc::WindowsProcess::operator=(const WindowsProcess& other) noexcept
+{
+    mProcessName = other.mProcessName;
+    mProcessArgs = other.mProcessArgs.getCopy(dom::String::StrType::CharArray);
+    return *this;
+}
+
 // proc::WindowsProcess::~WindowsProcess()  noexcept
 // {
 //     //if (mFuture != nullptr) delete mFuture;

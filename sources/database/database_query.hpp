@@ -6,15 +6,14 @@
 //--------------------------------------------------------------------------------
 
 #include <fstream>
+#include <mutex>
+#include <optional>
 
 #include "domain/type.hpp"
 #include "domain/path.hpp"
 #include "domain/string.hpp"
 
 #include "main/path.hpp"
-
-#include "structs/problem_information.hpp"
-#include "structs/testlib_message.hpp"
 
 #include "sqlite_database.hpp"
 #include "submission_info.hpp"
@@ -26,18 +25,13 @@ namespace data
     class DatabaseQuery
     {
     private:
-        struct ParticipantlInfo
+        struct TestData
         {
-            uint_64 contestId;
-            dom::String fileName;
+            dom::String input;
+            dom::String output;
+            uint_32 testNum;
         };
 
-        struct CheckInfo
-        {
-            uint_64 timeLimit;
-            uint_64 memoryLimit;
-            dom::String checkerName;
-        };
 
     public:
         /*
@@ -70,19 +64,22 @@ namespace data
         \param aSudmissionInformation Problem info (ID) for test search.
         \param TestLibMessage  TestLibMessage structure for obtaining test.
         */
-        void getNextTest(ProblemInformation& aSudmissionInformation, TestLibMessage& aTLM) noexcept;
+        //void getNextTest(ProblemInformation& aSudmissionInformation, TestLibMessage& aTLM) noexcept;
+        std::optional<TestData> getNextTest() noexcept;
 
         /*
         \brief Extracts all problem tests from the database and puts it in files.
         \param aSudmissionInformation Problem info (ID) for tests search.
         */
-        void getAllTests(ProblemInformation& aSudmissionInformation) noexcept;
+        // void getAllTests(ProblemInformation& aSudmissionInformation) noexcept;
 
-        void prepareTestsStatement(ProblemInformation& aSudmissionInformation) noexcept;
+        void prepareTestsStatement(uint_64 aProblemID) noexcept;
 
     private:
         SQLiteDatabase mDatabase;
         int mReservedStatementNumber;
+        std::mutex mTestMutex;
+        uint_32 mTestNum;
 
         void getParticipantInfo(SubmissionInfo& aSubmissionInfo) noexcept;
         void getCheckerInfo(SubmissionInfo& aSubmissionInfo) noexcept;

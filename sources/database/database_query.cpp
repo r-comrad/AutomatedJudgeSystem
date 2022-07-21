@@ -13,7 +13,8 @@
 
 data::DatabaseQuery::DatabaseQuery (const std::string& aDatabasePath) noexcept :
     mDatabase                   (aDatabasePath),
-    mReservedStatementNumber    (0)
+    mReservedStatementNumber    (0),
+    mTestNum                    (1)
 {}
 
 SubmissionInfo 
@@ -54,84 +55,84 @@ data::DatabaseQuery::writeResult
     END_LOG_BLOCK("Database_updated?");
 }
 
-void
-data::DatabaseQuery::getNextTest
-(
-    ProblemInformation&     aSudmissionInformation, 
-    TestLibMessage&         aTLM
-) noexcept
+// void
+// data::DatabaseQuery::getNextTest
+// (
+//     TestLibMessage&         aTLM
+// ) noexcept
+std::optional<data::DatabaseQuery::TestData>
+data::DatabaseQuery::getNextTest() noexcept
 {
-
+    TestData data;
     WRITE_LOG("Taking_next_test");
-    mDatabase.step(mReservedStatementNumber);
+   
+    mTestMutex.lock();
     //if (mDatabase.step() != SQLITE_OK) break; TODO: fixing that shit
+    mDatabase.step(mReservedStatementNumber);
     auto input = mDatabase.getTextFromRow(0, mReservedStatementNumber);
     auto output = mDatabase.getTextFromRow(1, mReservedStatementNumber);
-    if (!input.has_value())
+    mTestMutex.unlock();
+
+    std::optional<TestData> result;
+    if (input.has_value())
     {
-        aSudmissionInformation.mTestsAreOver = true;
-        aTLM.mTest = "";
-        aTLM.mAnswer = "";
-        return;
+        data.input = std::move(input.value());
+        data.output = std::move(output.value());
+        data.testNum = mTestNum++;
+        result = std::make_optional<TestData>(std::move(data));
     }
 
-    aSudmissionInformation.mTestsCount++;
-    aTLM.mTest = input.value();
-    //aTLM.mTest += "\n";
-    aTLM.mAnswer = output.value();
+    return result;
 }
 
+// void
+// data::DatabaseQuery::getAllTests(ProblemInformation& aSudmissionInformation) noexcept
+// {
+//     START_LOG_BLOCK("Geting_test_from_database");
+
+//     mDatabase.select("core_test", "input, output", "contest_id = " + std::to_string(aSudmissionInformation.mContestID));
+//     int cnt = 0;
+//     for (;; ++cnt)
+//     {
+//         mDatabase.step();
+//         //if (mDatabase.step() != SQLITE_OK) break; TODO: fixing that shit
+//         auto input = mDatabase.getTextFromRow(0);
+//         auto output = mDatabase.getTextFromRow(1);
+//         if (!input.has_value()) break;
+
+//         std::ofstream taskFile(TEST_PATH + std::to_string(aSudmissionInformation.mID) + "-" + std::to_string(cnt));
+//         std::ofstream ansFile(ANSWERS_PATH + std::to_string(aSudmissionInformation.mID) + "-" + std::to_string(cnt));
+
+//         if (!taskFile.is_open())
+//         {
+//             WRITE_ERROR("MDatabaseQuery", 10, "Can't_open_file", TEST_PATH + std::to_string(cnt));
+//             continue;//TODO
+//         }
+//         if (!ansFile.is_open())
+//         {
+//             WRITE_ERROR("MDatabaseQuery", 11, "Can't_open_file", ANSWERS_PATH + std::to_string(cnt));
+//             continue;
+//         }
+
+//         auto inStr = input.value().getFront();
+//         auto outStr = output.value().getFront();
+
+//         for (int i = 0; inStr[i];) taskFile << inStr[i++];
+//         for (int i = 0; outStr[i];) ansFile << outStr[i++];
+//     }
+//     aSudmissionInformation.mTestsCount = cnt;
+
+//     mDatabase.closeStatment();
+
+//     END_LOG_BLOCK("Tests_taken_from_pashae");
+// }
+
 void
-data::DatabaseQuery::getAllTests(ProblemInformation& aSudmissionInformation) noexcept
+data::DatabaseQuery::prepareTestsStatement(uint_64 aProblemID) noexcept
 {
-    START_LOG_BLOCK("Geting_test_from_database");
-
-    mDatabase.select("core_test", "input, output", "contest_id = " + std::to_string(aSudmissionInformation.mContestID));
-    int cnt = 0;
-    for (;; ++cnt)
-    {
-        mDatabase.step();
-        //if (mDatabase.step() != SQLITE_OK) break; TODO: fixing that shit
-        auto input = mDatabase.getTextFromRow(0);
-        auto output = mDatabase.getTextFromRow(1);
-        if (!input.has_value()) break;
-
-        std::ofstream taskFile(TEST_PATH + std::to_string(aSudmissionInformation.mID) + "-" + std::to_string(cnt));
-        std::ofstream ansFile(ANSWERS_PATH + std::to_string(aSudmissionInformation.mID) + "-" + std::to_string(cnt));
-
-        if (!taskFile.is_open())
-        {
-            WRITE_ERROR("MDatabaseQuery", 10, "Can't_open_file", TEST_PATH + std::to_string(cnt));
-            continue;//TODO
-        }
-        if (!ansFile.is_open())
-        {
-            WRITE_ERROR("MDatabaseQuery", 11, "Can't_open_file", ANSWERS_PATH + std::to_string(cnt));
-            continue;
-        }
-
-        auto inStr = input.value().getFront();
-        auto outStr = output.value().getFront();
-
-        for (int i = 0; inStr[i];) taskFile << inStr[i++];
-        for (int i = 0; outStr[i];) ansFile << outStr[i++];
-    }
-    aSudmissionInformation.mTestsCount = cnt;
-
-    mDatabase.closeStatment();
-
-    END_LOG_BLOCK("Tests_taken_from_pashae");
-}
-
-void
-data::DatabaseQuery::prepareTestsStatement(ProblemInformation& aSudmissionInformation) noexcept
-{
-    aSudmissionInformation.mTestsAreOver = false;
-    aSudmissionInformation.mTestsCount = 0;
-
     START_LOG_BLOCK("Prepare_geting_test_from_database");
     mDatabase.select("core_test", "input, output", "contest_id = " +
-        std::to_string(aSudmissionInformation.mContestID), mReservedStatementNumber);
+        std::to_string(aProblemID), mReservedStatementNumber);
     END_LOG_BLOCK("I'm_ready");
 }
 

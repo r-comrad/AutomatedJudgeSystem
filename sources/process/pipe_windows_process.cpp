@@ -1,11 +1,6 @@
 ﻿//--------------------------------------------------------------------------------
 #include "pipe_windows_process.hpp"
 
-proc::PipeWindowsProcess::PipeWindowsProcess() noexcept
-{
-
-}
-
 proc::PipeWindowsProcess::~PipeWindowsProcess() 
 {
     closeHandles();
@@ -24,6 +19,8 @@ void
 proc::PipeWindowsProcess::IORedirection() noexcept
 {
     WRITE_LOG("Rederecting_input_and_output_to_pipe");
+
+    mIOSet = true;
 
     SECURITY_ATTRIBUTES securatyAttributes;
     securatyAttributes.nLength = sizeof(SECURITY_ATTRIBUTES);
@@ -53,7 +50,7 @@ proc::PipeWindowsProcess::IORedirection() noexcept
 
 
 void
-proc::PipeWindowsProcess::readPipe(std::string& result) noexcept
+proc::PipeWindowsProcess::read(std::string& result) noexcept
 {
 #ifdef PIPE_LOGS
     WRITE_LOG("Reading_from_pipe");
@@ -85,7 +82,7 @@ proc::PipeWindowsProcess::readPipe(std::string& result) noexcept
 }
 
 void
-proc::PipeWindowsProcess::writePipe(std::string& aMessage, PypeType aType) noexcept
+proc::PipeWindowsProcess::write(const std::string& aMessage) noexcept
 {
 #ifdef PIPE_LOGS
     WRITE_LOG("Writing_from_pipe");
@@ -95,10 +92,6 @@ proc::PipeWindowsProcess::writePipe(std::string& aMessage, PypeType aType) noexc
     //WriteFile(mThisSTDOUT, aMessage.c_str(), aMessage.size()
     //    + ((aType == ZERO) ? 1 : 0), &bread, NULL);
     WriteFile(mThisSTDOUT, aMessage.c_str(), aMessage.size(), &bread, NULL);
-    if (aType == Process::PypeType::ZERO)
-    {
-        WriteFile(mThisSTDOUT, "\n", 1, &bread, NULL);
-    }
 
 #ifdef PIPE_LOGS
     WD_LOG("write " + std::to_string(bread) + " bites\n");
@@ -111,8 +104,11 @@ proc::PipeWindowsProcess::writePipe(std::string& aMessage, PypeType aType) noexc
 void
 proc::PipeWindowsProcess::closeHandles() noexcept
 {
-    CloseHandle(mChildSTDIN);
-    CloseHandle(mChildSTDOUT);
+    if (mIOSet)
+    {
+        CloseHandle(mChildSTDIN);
+        CloseHandle(mChildSTDOUT);
+    }
 }
 
 //--------------------------------------------------------------------------------

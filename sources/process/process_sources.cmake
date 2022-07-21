@@ -4,8 +4,8 @@ set(
     file_process.cpp
     file_process.hpp
 
-    process.cpp
-    process.hpp
+    base_process.cpp
+    base_process.hpp
 
     pipe_windows_process.cpp
     pipe_windows_process.hpp
