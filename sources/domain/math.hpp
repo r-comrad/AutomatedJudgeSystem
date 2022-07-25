@@ -6,11 +6,11 @@
 
 namespace dom
 {
-	class Math
-	{
-	public:
-		static uint_64 getHash(const std::string& aStr);
-	};
+    class Math
+    {
+    public:
+        static uint_64 getHash(const std::string& aStr);
+    };
 }
 
 #endif // !DOM_MATH_H

@@ -6,7 +6,7 @@ proc::WindowsProcess::WindowsProcess()  noexcept
 {
     ZeroMemory(&mProcessInfo, sizeof(PROCESS_INFORMATION));
     ZeroMemory(&mStartupInfo, sizeof(STARTUPINFOA));
-    setLimits(1e18, 1e18);
+    setLimits({uint_64(1e18), uint_64(1e18)});
 
     mProcessArgs.switchToCharArray();
 }

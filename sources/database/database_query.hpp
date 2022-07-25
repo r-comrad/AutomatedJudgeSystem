@@ -2,7 +2,7 @@
 #define DATABASE_QUERY_HPP
 
 //--------------------------------------------------------------------------------
-//							DATABASE QUERYS HANDLER DECLARATION
+//                            DATABASE QUERYS HANDLER DECLARATION
 //--------------------------------------------------------------------------------
 
 #include <fstream>
@@ -80,6 +80,8 @@ namespace data
         int mReservedStatementNumber;
         std::mutex mTestMutex;
         uint_32 mTestNum;
+
+        bool mTestAreOver;
 
         void getParticipantInfo(SubmissionInfo& aSubmissionInfo) noexcept;
         void getCheckerInfo(SubmissionInfo& aSubmissionInfo) noexcept;

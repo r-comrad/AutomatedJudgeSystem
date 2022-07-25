@@ -8,13 +8,19 @@ proc::BaseProcess::BaseProcess()  noexcept :
 //--------------------------------------------------------------------------------
 
 void
-proc::BaseProcess::setLimits(uint_64 aTimeLimit, uint_64 aMemoryLimit) noexcept
+proc::BaseProcess::setLimits(const Limits& aTimeMemLimits) noexcept
 {
-    if (aTimeLimit > MAX_TIME_LIMIT) aTimeLimit = MAX_TIME_LIMIT;
-    if (aMemoryLimit > MAX_MEMORY_LIMIT) aMemoryLimit = MAX_MEMORY_LIMIT;
+    mTimeLimit = aTimeMemLimits.timeLimit;
+    mMemoryLimit = aTimeMemLimits.memoryLimit;
 
-    mTimeLimit = aTimeLimit;
-    mMemoryLimit = aMemoryLimit;
+    if (mTimeLimit > MAX_TIME_LIMIT) 
+    {
+        mTimeLimit = MAX_TIME_LIMIT;
+    }
+    if (mMemoryLimit > MAX_MEMORY_LIMIT) 
+    {
+        mMemoryLimit = MAX_MEMORY_LIMIT;
+    }
 }
 
 //--------------------------------------------------------------------------------

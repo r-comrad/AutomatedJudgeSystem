@@ -12,7 +12,7 @@
 
 #include <iostream>
 
-#include "core/core.hpp"
+#include "tester/core.hpp"
 
 #include "domain/error_message.hpp"
 
@@ -135,7 +135,7 @@ int main(int argc, char* argv[])
 
     WRITE_LOG("ID:", num);
     WRITE_LOG_ENDL();
-    Core core(DATABASE_PATH);
+    test::Core core(DATABASE_PATH);
     core.run(num);
     return 0;
 }

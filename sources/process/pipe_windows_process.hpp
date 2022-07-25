@@ -9,10 +9,10 @@
 
 namespace proc 
 {
-	class PipeWindowsProcess : public WindowsProcess
-	{
-	public:
-		PipeWindowsProcess() noexcept = default;
+    class PipeWindowsProcess : public WindowsProcess
+    {
+    public:
+        PipeWindowsProcess() noexcept = default;
 
         PipeWindowsProcess(PipeWindowsProcess&& other) noexcept = default;
         PipeWindowsProcess(const PipeWindowsProcess& other) noexcept = default;
@@ -22,20 +22,20 @@ namespace proc
 
         virtual ~PipeWindowsProcess();
 
-		void read(std::string& result) noexcept;
-		void write(const std::string& aMessage) noexcept;
+        void read(std::string& result) noexcept;
+        void write(const std::string& aMessage) noexcept;
         virtual void IORedirection() noexcept;
         virtual void create() noexcept;
 
-	private:
-		virtual void closeHandles() noexcept;
+    private:
+        virtual void closeHandles() noexcept;
 
         bool mIOSet = false;
-		HANDLE mThisSTDIN;
-		HANDLE mThisSTDOUT;
-		HANDLE mChildSTDIN;
-		HANDLE mChildSTDOUT;
-	};
+        HANDLE mThisSTDIN;
+        HANDLE mThisSTDOUT;
+        HANDLE mChildSTDIN;
+        HANDLE mChildSTDOUT;
+    };
 }
 
 //--------------------------------------------------------------------------------

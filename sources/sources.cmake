@@ -1,6 +1,6 @@
 function(get_sources
          PATH_TO_SOURCES_DIR SOURCES_NAME)
-    set(DIRS_NAMES algorithms core database domain main process)
+    set(DIRS_NAMES algorithms database domain main process tester)
 
     foreach(DIR_NAME IN LISTS DIRS_NAMES)
         include(${PATH_TO_SOURCES_DIR}/${DIR_NAME}/${DIR_NAME}_sources.cmake)

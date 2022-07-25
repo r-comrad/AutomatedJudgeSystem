@@ -23,9 +23,9 @@ namespace dom
     using CharSharedArray = std::shared_ptr<char[]>;
     using CharArrayTable = std::vector<std::unique_ptr<char[]>>;
 
-	class String
-	{
-	public:
+    class String
+    {
+    public:
         enum class StrType { NonDetermin, CharArray, String };
 
         String() noexcept;
@@ -42,26 +42,26 @@ namespace dom
 
         ~String() = default;
 //--------------------------------------------------------------------------------
-        String& operator=	(           const char* aStr)   noexcept;
-        String& operator=	(  const unsigned char* aStr)   noexcept;
-        String& operator=	(   const std::string&	aStr)   noexcept;
-        String& operator=	(         std::string&& aStr)   noexcept;
-        String& operator=	(      const String&  aOther)   noexcept = delete;
-        String& operator=	(            String&& aOther)   noexcept = default;
+        String& operator=    (           const char* aStr)   noexcept;
+        String& operator=    (  const unsigned char* aStr)   noexcept;
+        String& operator=    (   const std::string&    aStr)   noexcept;
+        String& operator=    (         std::string&& aStr)   noexcept;
+        String& operator=    (      const String&  aOther)   noexcept = delete;
+        String& operator=    (            String&& aOther)   noexcept = default;
 
-        String& operator+	(           const char* aStr)   noexcept;
-        String& operator+	(  const unsigned char* aStr)   noexcept;
-        String& operator+	(   const std::string&  aStr)   noexcept;
-        String& operator+	(         std::string&& aStr)   noexcept;
+        String& operator+    (           const char* aStr)   noexcept;
+        String& operator+    (  const unsigned char* aStr)   noexcept;
+        String& operator+    (   const std::string&  aStr)   noexcept;
+        String& operator+    (         std::string&& aStr)   noexcept;
 
-        void    operator+=	(           const char* aStr)   noexcept;
-        void    operator+=	(  const unsigned char* aStr)   noexcept;
-        void    operator+=	(   const std::string&  aStr)   noexcept;
-        void    operator+=	(         std::string&& aStr)   noexcept;
+        void    operator+=    (           const char* aStr)   noexcept;
+        void    operator+=    (  const unsigned char* aStr)   noexcept;
+        void    operator+=    (   const std::string&  aStr)   noexcept;
+        void    operator+=    (         std::string&& aStr)   noexcept;
 
-        bool    operator==	(           const char* aStr)   const noexcept;
-        bool    operator==	(   const std::string&  aStr)   const noexcept;
-        bool    operator==	(   const dom::String&  aStr)   const noexcept;
+        bool    operator==    (           const char* aStr)   const noexcept;
+        bool    operator==    (   const std::string&  aStr)   const noexcept;
+        bool    operator==    (   const dom::String&  aStr)   const noexcept;
 
         void merge() noexcept;
 
@@ -71,7 +71,7 @@ namespace dom
         operator CharArray()      const noexcept;
         operator std::string()    const noexcept;
 
-        CharArray	harvestCharArray()  noexcept;
+        CharArray   harvestCharArray()  noexcept;
         std::string harvestString()     noexcept;
 
         friend String operator+(const char* lhs, String&& rhs) noexcept;

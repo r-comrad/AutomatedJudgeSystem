@@ -1,7 +1,7 @@
 #include "database/database_query.hpp"
 
 //--------------------------------------------------------------------------------
-//					    DATABASE QUERYS HANDLER IMPLEMENTATION
+//                        DATABASE QUERYS HANDLER IMPLEMENTATION
 //--------------------------------------------------------------------------------
 
 //UPDATE core_solutions SET result = hh WHERE id = 10
@@ -14,7 +14,8 @@
 data::DatabaseQuery::DatabaseQuery (const std::string& aDatabasePath) noexcept :
     mDatabase                   (aDatabasePath),
     mReservedStatementNumber    (0),
-    mTestNum                    (1)
+    mTestNum                    (1),
+    mTestAreOver                (false)
 {}
 
 SubmissionInfo 
@@ -63,23 +64,30 @@ data::DatabaseQuery::writeResult
 std::optional<data::DatabaseQuery::TestData>
 data::DatabaseQuery::getNextTest() noexcept
 {
-    TestData data;
-    WRITE_LOG("Taking_next_test");
-   
-    mTestMutex.lock();
-    //if (mDatabase.step() != SQLITE_OK) break; TODO: fixing that shit
-    mDatabase.step(mReservedStatementNumber);
-    auto input = mDatabase.getTextFromRow(0, mReservedStatementNumber);
-    auto output = mDatabase.getTextFromRow(1, mReservedStatementNumber);
-    mTestMutex.unlock();
-
     std::optional<TestData> result;
-    if (input.has_value())
+    if (!mTestAreOver)
     {
-        data.input = std::move(input.value());
-        data.output = std::move(output.value());
-        data.testNum = mTestNum++;
-        result = std::make_optional<TestData>(std::move(data));
+        TestData data;
+        WRITE_LOG("Taking_next_test");
+    
+        mTestMutex.lock();
+        //if (mDatabase.step() != SQLITE_OK) break; TODO: fixing that shit
+        mDatabase.step(mReservedStatementNumber);
+        auto input = mDatabase.getTextFromRow(0, mReservedStatementNumber);
+        auto output = mDatabase.getTextFromRow(1, mReservedStatementNumber);
+        mTestMutex.unlock();
+
+        if (input.has_value())
+        {
+            data.input = std::move(input.value());
+            data.output = std::move(output.value());
+            data.testNum = mTestNum++;
+            result = std::make_optional<TestData>(std::move(data));
+        }
+        else
+        {
+            mTestAreOver = true;
+        }
     }
 
     return result;
@@ -159,11 +167,10 @@ data::DatabaseQuery::getCheckerInfo(SubmissionInfo& aSubmissionInfo) noexcept
 
     mDatabase.select("core_contests", "time_limit, memory_limit, checker", "id = " + std::to_string(aSubmissionInfo.problemID));
     mDatabase.step();
-    aSubmissionInfo.timeLimit = mDatabase.getInt64FromRow(0);
-    aSubmissionInfo.memoryLimit = mDatabase.getInt64FromRow(1);
+    aSubmissionInfo.timeMemLim = { uint_64(mDatabase.getInt64FromRow(0)), uint_64(mDatabase.getInt64FromRow(1))};
     aSubmissionInfo.checkerFileName = mDatabase.getTextFromRow(2).value();
     mDatabase.closeStatment();
 
-    WRITE_LOG("Time_limit:", aSubmissionInfo.timeLimit);
-    END_LOG_BLOCK("Memory_limit:", aSubmissionInfo.memoryLimit);
+    WRITE_LOG("Time_limit:", aSubmissionInfo.timeMemLim.timeLimit);
+    END_LOG_BLOCK("Memory_limit:", aSubmissionInfo.timeMemLim.memoryLimit);
 }

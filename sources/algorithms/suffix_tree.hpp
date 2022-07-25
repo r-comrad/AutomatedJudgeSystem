@@ -2,40 +2,39 @@
 #define SUFFIX_TREE_HPP
 
 #include <map>
-#include <vector>
 #include <memory>
-#include <string>
-#include <algorithm>
 
-#include <domain/type.hpp>
+#include "domain/type.hpp"
+#include "domain/string.hpp"
 
 namespace alg
 {
-	class SuffixTree
-	{
-	public:
-		SuffixTree() noexcept;
-		~SuffixTree() = default;
+    class SuffixTree
+    {
+    public:
+        SuffixTree() noexcept;
+        ~SuffixTree() = default;
 
-		void add(const std::string& aName, uint_32 aFinishNumber) noexcept;
-		uint_32 get(const std::string& aName) const noexcept;
 
-	private:
-		struct Node
-		{	
-			Node();
-			~Node() = default;
+        void add(const std::string& aName, uint_32 aFinishNumber) noexcept;
+        uint_32 get(const std::string& aName) const noexcept;
 
-			bool mIsFinish;
-			uint_32 mFinishNumber;
-			std::map<char, std::shared_ptr<Node>> mNextNodes;
+    private:
+        struct Node
+        {    
+            Node();
+            ~Node() = default;
 
-			void add(const std::string& aName, uint_32 aFinishValue, size_t aCurNum = 0) noexcept;
-			uint_32 get(const std::string& aName, size_t aCurNum = 0) const noexcept;
-		};
+            bool mIsFinish;
+            uint_32 mFinishNumber;
+            std::map<char, std::unique_ptr<Node>> mNextNodes;
 
-		std::shared_ptr<Node> mRoot;
-	};
+            void add(const std::string& aName, uint_32 aFinishValue, size_t aCurNum = 0) noexcept;
+            uint_32 get(const std::string& aName, size_t aCurNum = 0) const noexcept;
+        };
+
+        std::unique_ptr<Node> mRoot;
+    };
 }
 
 

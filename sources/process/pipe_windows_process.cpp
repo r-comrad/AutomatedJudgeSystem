@@ -54,31 +54,32 @@ proc::PipeWindowsProcess::read(std::string& result) noexcept
 {
 #ifdef PIPE_LOGS
     WRITE_LOG("Reading_from_pipe");
-#endif // !PIPE_LOG_OUTPUT
+#endif
 
-    char buf[1024];
-    memset(buf, 0, sizeof(buf));
+    const size_t bufSize = 1024;
+    char buf[bufSize];
+    memset(buf, 0, bufSize - 1);
     unsigned long bread = 0;
     unsigned long avail = 0;
 
     while (bread == 0 && avail == 0)
     {
-        PeekNamedPipe(mThisSTDIN, buf, 1023, &bread, &avail, NULL);
+        PeekNamedPipe(mThisSTDIN, buf, bufSize - 1, &bread, &avail, NULL);
     }
 
     memset(buf, 0, sizeof(buf));
-    bread = 1024;
+    bread = bufSize;
     result.clear();
-    while (bread >= 1023)
+    while (bread >= bufSize - 1)
     {
         memset(buf, 0, sizeof(buf));
-        ReadFile(mThisSTDIN, buf, 1023, &bread, NULL);
+        ReadFile(mThisSTDIN, buf, bufSize - 1, &bread, NULL);
         result += std::string(buf);
     }
 
 #ifdef PIPE_LOGS
     WD_END_LOG;
-#endif // !PIPE_LOG_OUTPUT
+#endif
 }
 
 void
@@ -86,18 +87,15 @@ proc::PipeWindowsProcess::write(const std::string& aMessage) noexcept
 {
 #ifdef PIPE_LOGS
     WRITE_LOG("Writing_from_pipe");
-#endif // !PIPE_LOG_OUTPUT
+#endif
 
     unsigned long bread;
-    //WriteFile(mThisSTDOUT, aMessage.c_str(), aMessage.size()
-    //    + ((aType == ZERO) ? 1 : 0), &bread, NULL);
     WriteFile(mThisSTDOUT, aMessage.c_str(), aMessage.size(), &bread, NULL);
 
 #ifdef PIPE_LOGS
     WD_LOG("write " + std::to_string(bread) + " bites\n");
     WD_END_LOG;
-#endif // !PIPE_LOG_OUTPUT
-
+#endif
 }
 
 

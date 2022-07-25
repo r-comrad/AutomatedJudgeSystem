@@ -2,7 +2,7 @@
 #define ERRORS_HPP
 
 //------------------------------------------------------------
-//					ERROR MESSEGES DECLARATION
+//                    ERROR MESSEGES DECLARATION
 //------------------------------------------------------------
 
 #include <iostream>

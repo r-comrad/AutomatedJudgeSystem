@@ -1,2 +1,6 @@
 /build
 /bin/*.pdb
+/libraries/*.h
+/libraries/*.c
+/libraries/*.hpp
+/libraries/*.cpp

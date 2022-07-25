@@ -2,7 +2,7 @@
 #define WINDOWS_PROCESS_H
 
 //--------------------------------------------------------------------------------
-//				CHILD PROCESS CREATION IMPLIMENTATION 
+//                CHILD PROCESS CREATION IMPLIMENTATION 
 //--------------------------------------------------------------------------------
 
 #define _CRT_SECURE_NO_WARNINGS
@@ -39,19 +39,19 @@
 
 namespace proc
 {
-	class WindowsProcess : public BaseProcess
-	{
-	public:
-		/*
-		\brief Base process constructor that initialize time and memory 
-		usage limits for child process.
-		(all child process have max time and memory usage limits
-		that defined in MAX_TIME_LIMIT and MAX_MEMORY_LIMIT)
-		\param aParameters Child process parameters for execution.
-		\param aTimeLimit Child process maximum time usage.
-		\param aMemoryLimit Child process maximum memory usage.
-		*/
-		WindowsProcess() noexcept;
+    class WindowsProcess : public BaseProcess
+    {
+    public:
+        /*
+        \brief Base process constructor that initialize time and memory 
+        usage limits for child process.
+        (all child process have max time and memory usage limits
+        that defined in MAX_TIME_LIMIT and MAX_MEMORY_LIMIT)
+        \param aParameters Child process parameters for execution.
+        \param aTimeLimit Child process maximum time usage.
+        \param aMemoryLimit Child process maximum memory usage.
+        */
+        WindowsProcess() noexcept;
         
         WindowsProcess(WindowsProcess&& other) noexcept = default;
         WindowsProcess(const WindowsProcess& other) noexcept;
@@ -60,66 +60,66 @@ namespace proc
         WindowsProcess& operator=(const WindowsProcess& other) noexcept;
 
 
-		//virtual ~WindowsProcess() = default;
+        //virtual ~WindowsProcess() = default;
         virtual ~WindowsProcess() = default;
 
         //NOC__NOD_FUNCs(WindowsProcess)
 
         virtual void setComand(const dom::StringTable& aParameters) noexcept;
         /*
-		\brief Create a child process with the specified parameters.
-		\param aParameters Child process parameters for execution.
-		*/
-		virtual void create() noexcept;
+        \brief Create a child process with the specified parameters.
+        \param aParameters Child process parameters for execution.
+        */
+        virtual void create() noexcept;
 
-		/*
-		\brief Executing the child process without time and memory 
-		usage evaluation.
-		\return Returns true if the process is completed successfully.
-		*/
-		virtual bool run() noexcept;
+        /*
+        \brief Executing the child process without time and memory 
+        usage evaluation.
+        \return Returns true if the process is completed successfully.
+        */
+        virtual bool run() noexcept;
 
-		/*
-		\brief Executing the child process with time and memory 
-		usage evaluation.
-		\return Returns the time and memory used by the process.
-		*/
-		virtual std::optional<dom::Pair<uint_64>> runWithLimits() noexcept;
+        /*
+        \brief Executing the child process with time and memory 
+        usage evaluation.
+        \return Returns the time and memory used by the process.
+        */
+        virtual std::optional<dom::Pair<uint_64>> runWithLimits() noexcept;
 
-	protected:
-		/*
-		\brief Redirecting input and output streams for a child process.
-		*/
+    protected:
+        /*
+        \brief Redirecting input and output streams for a child process.
+        */
 
-		/*
-		\brief Closes the input and output handler for the child process.
-		(finishing of communication with the child process)
-		*/
+        /*
+        \brief Closes the input and output handler for the child process.
+        (finishing of communication with the child process)
+        */
     
-		virtual void closeHandles() noexcept = 0;
+        virtual void closeHandles() noexcept = 0;
         virtual void IORedirection() noexcept = 0;
 
-	protected:
-		STARTUPINFOA mStartupInfo;
-		PROCESS_INFORMATION mProcessInfo;
+    protected:
+        STARTUPINFOA mStartupInfo;
+        PROCESS_INFORMATION mProcessInfo;
 
-	private:
+    private:
     //TODO: ptr
-	//	std::future<long long> *mFuture;
+    //    std::future<long long> *mFuture;
 
-		long long getMillisecondsNow() noexcept;
+        long long getMillisecondsNow() noexcept;
 
-		long long getCurrentMemoryUsage(HANDLE&) noexcept;
-		long long getMaxMemoryUsage(PROCESS_INFORMATION&, long long) noexcept;
+        long long getCurrentMemoryUsage(HANDLE&) noexcept;
+        long long getMaxMemoryUsage(PROCESS_INFORMATION&, long long) noexcept;
 
-		DWORD getExitCode(HANDLE&) noexcept;
-		bool killProcess(PROCESS_INFORMATION&) noexcept;
+        DWORD getExitCode(HANDLE&) noexcept;
+        bool killProcess(PROCESS_INFORMATION&) noexcept;
 
-	private:
+    private:
         dom::CharSharedArray mProcessName;
         //dom::CharArray mProcessArgs;
         dom::String mProcessArgs;
-	};
+    };
 
 }
 

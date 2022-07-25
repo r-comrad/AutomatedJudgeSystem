@@ -1,0 +1,2709 @@
+ID: 3 
+
+Opening_database: D:\projects\VSCode\ChineseTester8\bin\db.sqlite3
+ 
+Geting_ID_and_name_from_database 
+	Problem_ID: 21 
+	File_name: 2/1.py
+ 
+Geting_limits_from_database 
+	Time_limit: 1000 
+	Memory_limit: 262144 
+Prepare_geting_test_from_database 
+	I'm_ready 
+Rederecting_input_and_output_to_pipe 
+Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\compilers\magicCPPCompiler.cmd 
+	args: D:\projects\VSCode\ChineseTester8\bin\resources\compilers\magicCPPCompiler.cmd D:\projects\VSCode\ChineseTester8\bin\media\2\plus.cpp D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+	
+Runing_simple_windows_process 
+Rederecting_input_and_output_to_pipe 
+Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\compilers\magicCPPCompiler.cmd 
+	args: D:\projects\VSCode\ChineseTester8\bin\resources\compilers\magicCPPCompiler.cmd D:\projects\VSCode\ChineseTester8\bin\media\contests/checker_QbHsYvZ.cpp D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+	
+Runing_simple_windows_process 
+Checking_participant_code 
+	Taking_next_test 
+	Taking_next_test 
+	Taking_next_test 
+	Taking_next_test 
+	Taking_next_test 
+	Taking_next_test 
+	Taking_next_test 
+	Checking_test#	 	2 
+Taking_next_test 
+		Checking_test# 1 
+			Taking_next_test 
+			Taking_next_test 
+				Rederecting_input_and_output_to_pipe	 	
+Taking_next_test 
+			Checking_test# 3 
+				Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+					args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+					Taking_next_test 
+					Rederecting_input_and_output_to_pipe 
+					Rederecting_input_and_output_to_pipe 
+					Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+						args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+						Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+							args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+							Taking_next_test 
+							Taking_next_test 
+							Taking_next_test 
+							Checking_test# 7	 	
+						Checking_test# 5 
+									Taking_next_test 
+									Rederecting_input_and_output_to_pipe 
+															Creating_windows_process_with_name:	 	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 	
+		Taking_next_test	 	
+							args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+																				Checking_test#	 Rederecting_input_and_output_to_pipe4 
+ 
+																	Taking_next_test	 		
+		Checking_test# 6 
+																Creating_windows_process_with_name:	 	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe	 	
+									Taking_next_test	 	
+							args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+													Taking_next_test 
+													Rederecting_input_and_output_to_pipe 
+														Rederecting_input_and_output_to_pipe	 	
+										Checking_test# 8 
+																												Creating_windows_process_with_name:	 	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe	 
+														Creating_windows_process_with_name:	 	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe	 	
+															Checking_test#	 	9 
+											args: 	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 	 	
+							Taking_next_test	 	
+																								args:	 	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 	 
+				Taking_next_test	 	
+								Checking_test# 10 
+																																											Rederecting_input_and_output_to_pipe						 			
+		Taking_next_test	 	
+								Taking_next_test		 	
+					Rederecting_input_and_output_to_pipe 
+																		Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe	 	
+																																	Taking_next_test	 	
+																																											Rederecting_input_and_output_to_pipeargs:	 Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+													
+							args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+																Taking_next_test	 	
+	 									D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 	 			
+							Checking_test#	 	11				 	
+																					Taking_next_test		 	
+																Checking_test#	 								12		 	
+																																																				Taking_next_test	 	
+																						Checking_test#	 				13				 	
+					Taking_next_test	 	
+						Rederecting_input_and_output_to_pipe 
+																									Creating_windows_process_with_name:		 		D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exeChecking_test#	 		14 	
+						 					
+																																												Rederecting_input_and_output_to_pipe			 					
+																																								Rederecting_input_and_output_to_pipe	 	
+																								Rederecting_input_and_output_to_pipe Checking_test#	
+			 																				15				 	
+																		args:											 		D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 							 	
+									Creating_windows_process_with_name:	 	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe				 	
+																																														Creating_windows_process_with_name:			 		D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe								Checking_test#  	
+		16 
+	Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+																																																																		Rederecting_input_and_output_to_pipe				 		
+	Checking_test#			 	17 
+																																	Checking_test#	 args:	19				 	
+									args:	 	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 	 	
+																																																																																																																																														Rederecting_input_and_output_to_pipe	 	
+																																																													 			D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 	 									Checking_test#			
+	 					20 
+												args:Checking_test# D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+ 21 
+																													Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+																																																																																																								Checking_test#	 		25 
+																																Checking_test#	 					22 
+											Checking_test# 18 
+																																							Rederecting_input_and_output_to_pipe		 	
+																			Checking_test#					 		24 
+																											Rederecting_input_and_output_to_pipe	 		
+																																																																																																																																																																																																							Creating_windows_process_with_name:			 	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe		 		
+																																																																			Checking_test#									 									Rederecting_input_and_output_to_pipeChecking_test#		28 		
+																				 				23											 			
+	 
+
+																												Rederecting_input_and_output_to_pipe			 		
+																																								args:			 																																																																			
+																																															D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 		 							
+																														Creating_windows_process_with_name:																			 					Creating_windows_process_with_name:		 	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe	 				
+																																																																																																																																																																																																								
+																					Runing_windows_process_with_time_and_memory_evaluation		 									
+																																																	Rederecting_input_and_output_to_pipe						 								Rederecting_input_and_output_to_pipe	 	
+				
+																																																				Rederecting_input_and_output_to_pipe	 						
+																																																																																																																																																																					Creating_windows_process_with_name:			 	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe	 	
+	Rederecting_input_and_output_to_pipeCreating_windows_process_with_name: 				
+		  		D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe	
+	 	
+																																																																							
+																													Checking_test#																			 																																													Runing_simple_windows_process		 	29 
+																						
+																						args:		 args:																													D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 	 																																				
+ 																																																												
+														
+																							Checking_test#										Rederecting_input_and_output_to_pipe					 	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 		 	
+	
+							
+			
+																																			
+			 					Creating_windows_process_with_name:				27 
+																																																																																			Runing_windows_process_with_time_and_memory_evaluation	 Rederecting_input_and_output_to_pipe	
+	 	
+																									Runing_windows_process_with_time_and_memory_evaluation	 			 	
+					D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe																																		args:			 									D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 							 																																																			 	
+																													
+																																								Creating_windows_process_with_name:							 	Creating_windows_process_with_name:D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe	 		
+											 																																																																																																														Runing_windows_process_with_time_and_memory_evaluation	 							
+																																		D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe								
+						
+							 	
+args:		 				D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 							 						
+																																								Creating_windows_process_with_name:																																																																																						Creating_windows_process_with_name:	 		D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe																																																args:					 	
+							 		D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe Rederecting_input_and_output_to_pipe	 					 
+								
+																																																																																												Rederecting_input_and_output_to_pipe																																Checking_test#	 	26	 			
+						 				
+																																																									Runing_windows_process_with_time_and_memory_evaluation						 				
+																																																																Runing_simple_windows_process		 	
+	
+				args:		Creating_windows_process_with_name:		 	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe			 		 
+	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 					 											
+																Runing_windows_process_with_time_and_memory_evaluation									 																		
+Runing_simple_windows_process	 	
+																																
+																																																																Rederecting_input_and_output_to_pipe 
+																					args:	 	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 	 	
+																	Creating_windows_process_with_name:		 		D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe	 		
+										
+											Runing_windows_process_with_time_and_memory_evaluation																																																																																																												args:				 						D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 		 		
+									 		D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe	 			
+																																																																																																																																									Creating_windows_process_with_name:	 	 	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe					
+		 																																	Runing_windows_process_with_time_and_memory_evaluation			 					
+		
+																														Runing_simple_windows_process			 			
+														Runing_windows_process_with_time_and_memory_evaluation	 		Runing_simple_windows_process	
+ 	
+																													Runing_windows_process_with_time_and_memory_evaluation		 	
+																																																																										
+																																																																																																		args:																															 																																																																			args:		 				D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 							 			
+										
+										D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 																																								Runing_windows_process_with_time_and_memory_evaluation	 																											args:	 	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe Runing_simple_windows_process	
+	 				args:	 		 	
+D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 					 		
+
+				 					
+								Runing_windows_process_with_time_and_memory_evaluation		 															
+							Runing_simple_windows_process	 	
+																																												
+																																																																																																													Creating_windows_process_with_name:			Runing_simple_windows_process 	 	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe
+	Runing_windows_process_with_time_and_memory_evaluation 	
+		 			
+																																																																																																																																																																																		Runing_windows_process_with_time_and_memory_evaluation								Runing_simple_windows_process	 	
+																																								args:	 							D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 			 		
+																										Runing_windows_process_with_time_and_memory_evaluation	 		
+																										Runing_simple_windows_process		 					
+					args:		 	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 	 	
+																																																															Runing_windows_process_with_time_and_memory_evaluation		 			
+ 	
+													
+																																																																																																																																													Runing_windows_process_with_time_and_memory_evaluation												 		
+									
+																																									Runing_simple_windows_process											 		
+																																																																					Runing_simple_windows_process		 		
+																																																																															Runing_windows_process_with_time_and_memory_evaluation		 	
+					Runing_simple_windows_process		 							
+											Runing_simple_windows_process	 				
+																																																																																																																																																																															Runing_simple_windows_process 
+			Runing_windows_process_with_time_and_memory_evaluation 
+																											Runing_simple_windows_process			 		
+																																																									
+			
+																																																																							Runing_simple_windows_process				 		
+						Creating_windows_process_with_name:	 		D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe		 
+
+																																																																																																																																																																					args:		 			D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 					 			
+																																																									Runing_windows_process_with_time_and_memory_evaluation	 		
+															Runing_windows_process_with_time_and_memory_evaluation				
+
+	 	
+																																																																																																																																																													Runing_windows_process_with_time_and_memory_evaluation	 		
+																																													Runing_simple_windows_process		 	
+																																		Runing_windows_process_with_time_and_memory_evaluation		 	
+																																																																																																																																																								Runing_simple_windows_process		 						
+																																																															Runing_simple_windows_process							Runing_simple_windows_process			 				
+																															
+															Runing_simple_windows_process																							
+																		
+
+			Runing_simple_windows_process	 	 
+
+												 		
+																																																																																																																																																																						Runing_windows_process_with_time_and_memory_evaluation	 	
+																																																														Runing_windows_process_with_time_and_memory_evaluation	 	
+					Runing_windows_process_with_time_and_memory_evaluation 				Runing_windows_process_with_time_and_memory_evaluation	 	
+	
+																																																																																																																													Runing_windows_process_with_time_and_memory_evaluation					 	
+													Runing_simple_windows_process	 	
+										Runing_simple_windows_process	 	
+																																																																Runing_simple_windows_process	 	
+																		Runing_simple_windows_process 
+																																																											
+																																																										Runing_windows_process_with_time_and_memory_evaluation 
+																																																											Runing_simple_windows_process 
+																																																		Runing_simple_windows_process 
+																																																											time_usage: 0 
+																																																											memory_usage: 0 
+																																																										Test: -4966 56757 
+																																																											Output: 56757 
+																																																											Answer: 56757
+ 
+																																																										
+																																																									Rederecting_input_and_output_to_pipe 
+																																																									Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																																										args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																																										time_usage: 0 
+																																																										memory_usage: 0 
+																																																									Test: -46337 37879 
+																																																										Output:	 	37879 	
+																																																																																																														time_usage:	 		0 
+				Answer:		 	37879
+ 	
+																																																																																																						memory_usage:	 	0 
+																																																								Test: 86735 18024 
+																																																									Output: 86735 
+																																																									Answer: 86735
+ 
+																																																								
+	
+																																																						Rederecting_input_and_output_to_pipe 
+																																																						Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																																							args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																																							time_usage: 0 
+																																																							memory_usage: 0 
+																																																						Test: -85444 -67821 
+																																																							Output: -67821 
+																																																							Answer: -67821
+ 
+																																																						
+																																																					Rederecting_input_and_output_to_pipe 
+																																																					Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																																						args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																																						Rederecting_input_and_output_to_pipe 
+																																																						Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																																							args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																																															
+																																																						time_usage:	 	0 
+																																																																																															memory_usage:	 	0Runing_simple_windows_process 
+ 
+																																																					Test: 3403 -37219 
+																																																						Output: 3403 
+																																																						Answer: 3403
+ 
+																																																																																																						
+			
+																																																				Runing_simple_windows_process 
+																																																		Rederecting_input_and_output_to_pipe 
+																																																			Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																																				args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																																				time_usage: 0 
+																																																				memory_usage: 0 
+																																																			Test: 99660 73017 
+																																																				Output: 99660 
+																																																				Answer: 99660
+ 
+																																																			
+																																																		Rederecting_input_and_output_to_pipe 
+																																																		Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																																			args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																																																												time_usage:	 		0									 		
+																																					
+																																											memory_usage: 	0			 	
+																																																																										Runing_simple_windows_process	 	
+																																									
+						Test: 18777 50286 
+																																																																								Output:	 																									Runing_simple_windows_process 
+50286 
+																																																	Answer: 50286
+ 
+																																																
+																																															Rederecting_input_and_output_to_pipe 
+																																																												
+																																																																									
+																																																														Creating_windows_process_with_name:			Runing_simple_windows_process	 	
+	 		D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe	 	
+																																																Runing_simple_windows_process	 	
+																					args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																														
+																																													Runing_simple_windows_process 
+																																													time_usage: 0 
+																																													memory_usage: 0 
+																																												time_usage: 0	 	
+																																																																																					memory_usage:Test:  0 -68947 -20128
+ 
+																																												Output: -20128 
+																																																																							Answer:	 	-20128
+	 	
+																								Test:	 	-87994 -38275	 	
+																																																		
+																					Output: -38275 
+																																											Answer: -38275
+ 
+																																																																																			Rederecting_input_and_output_to_pipe	 
+
+																																									Rederecting_input_and_output_to_pipe 
+																																									Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																										args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																										Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																											args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																											time_usage: 0 
+																																											memory_usage: 0 
+																																										Test: -87153 -42234 
+																																											Output: -42234 
+																																											Answer: -42234
+ 
+																																										
+																																									Rederecting_input_and_output_to_pipe 
+																																									Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																										args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																										time_usage: 0 
+																																										memory_usage: 0 
+																																										Test: -91126 69423	 								
+																																																																							
+									
+																																																																																																Runing_simple_windows_process	 	
+							Runing_simple_windows_process	 		
+					Output: 69423 
+																																								Answer: 69423
+ 
+																																							
+																																						Rederecting_input_and_output_to_pipe 
+																																						Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																							args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																							
+																																						Runing_simple_windows_process 
+																																						
+																																					Runing_simple_windows_process 
+																																					time_usage: 0 
+																																					memory_usage: 0 
+																																				Test: 60393 6283 
+																																					Output: 60393 
+																																					Answer: 60393
+ 
+																																				
+																																			Rederecting_input_and_output_to_pipe 
+																																			Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																				args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																				time_usage: 0 
+																																				memory_usage: 0 
+																																			Test: -20352 -31274 
+																																				Output: -20352 
+																																				Answer: -20352
+ 
+																																			
+																																		Rederecting_input_and_output_to_pipe 
+																																		Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																			args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																			
+																																		Runing_simple_windows_process 
+																																		time_usage: 0 
+																																		memory_usage: 0 
+																																	Test: -60773 -11578 
+																																		Output: -11578 
+																																		Answer: -11578
+ 
+																																	
+																																Rederecting_input_and_output_to_pipe 
+																																time_usage: 0 
+																																																				memory_usage:	 	0			 	
+					Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																Test: 59133 -2994 
+																																	Output: 59133 
+																																	Answer: 59133
+ 
+																																
+																															Rederecting_input_and_output_to_pipe 
+																															Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																
+																															Runing_simple_windows_process 
+																															time_usage: 0 
+																																	memory_usage: 0	 			
+																								time_usage: 0	 	
+																																																										memory_usage:Test:  0 
+30078 -53631 
+																														Output: 30078 
+																																																										Test:	 	9031 -39342	 Answer:
+ 	30078
+	 	
+																																																						Output:	 	9031	 
+
+																													Answer: 9031
+ 
+																												
+																																		Rederecting_input_and_output_to_pipe		 	
+																											Rederecting_input_and_output_to_pipe 
+																	time_usage: 0	 	
+																																																																							Creating_windows_process_with_name:memory_usage:  D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe	0	  	
+
+													Creating_windows_process_with_name:	 	D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe	 	
+																																								args:	 		D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 	 		
+																	args:	 	D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+								Test: -34229 -21949 
+																													Output: -21949 
+																													Answer: -21949
+ 
+																												
+																											Rederecting_input_and_output_to_pipe 
+																											Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																												args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																												time_usage: 0 
+																												memory_usage: 0 
+																											Test: -66676 -76747 
+																												Output: -66676 
+																												Answer: -66676
+ 
+																											
+																										
+																									Runing_simple_windows_process 
+																									Rederecting_input_and_output_to_pipe 
+																									time_usage: 0 
+																									memory_usage: 0	 	
+																						Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																									args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																									
+																																	
+														Runing_simple_windows_process 
+																							
+																						Runing_simple_windows_process 
+																						Runing_simple_windows_process 
+																						Test: 36189 49590 
+																							Output: 49590 
+																							Answer: 49590
+ 
+																						
+																					Rederecting_input_and_output_to_pipe 
+																					Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																						args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																						
+																					Runing_simple_windows_process 
+																					time_usage: 0 
+																					memory_usage: 0 
+																				Test: 71785 -98997 
+																					Output: 71785 
+																					Answer: 71785
+ 
+																				
+																			Rederecting_input_and_output_to_pipe 
+																					time_usage: 0 
+																			memory_usage: 0 
+																		Test: -80369 44283 
+																			Output: 44283 
+																			Answer: 44283
+ 
+																		
+																	Rederecting_input_and_output_to_pipe 
+																	Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																		args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																			args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																			
+																																				
+Runing_simple_windows_process 
+																	Runing_simple_windows_process 
+																	
+																Runing_simple_windows_process 
+																time_usage: 0 
+																memory_usage: 0 	
+															time_usage:	 			0					 	
+																													Test:																						time_usage:								time_usage:	  		0					  	
+						time_usage:62686 69369 	0 
+				0 
+							 			
+													memory_usage:	 
+			0	 			
+																							memory_usage:memory_usage:	 Runing_simple_windows_process0 	
+	 	0	 	
+	 	
+										Output:Test:  69369-90731 -2805  
+
+																															Output:				 	-2805	 	
+	memory_usage:				 					0Test:	 	
+	 	68991 55750			 		
+										Answer:		 Test:-2805
+	 	
+	 		-21927 69562				 			
+																			
+			Output:	 	68991		 		
+															Test:	 	Output:	 	-96578 -2025469562	 		
+		 			Answer:
+		 			68991
+	 				
+																		Rederecting_input_and_output_to_pipe				 	
+			Answer:	Output: 	69562
+	 	Answer:-20254  
+
+
+																		
+ Answer:69369
+  
+-20254
+	 	
+													
+
+			Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+						args:	 D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+						Rederecting_input_and_output_to_pipe 
+						Rederecting_input_and_output_to_pipe 
+					Rederecting_input_and_output_to_pipe 
+						Rederecting_input_and_output_to_pipe 
+						Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 	
+															args:	 Creating_windows_process_with_name:D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 	  
+D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe	 	
+				Creating_windows_process_with_name:	 	D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe	 	
+						args:	 	D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 	 	
+		args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+									Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+										args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+										
+									Runing_simple_windows_process 
+																		
+
+							
+								Runing_simple_windows_process 
+						Runing_simple_windows_process 
+						
+					Runing_simple_windows_process 
+			Runing_simple_windows_process 
+					time_usage: 0 
+					memory_usage: 0 
+				Test: 5195 47326 
+					Output: 47326 
+					Answer: 47326
+ 
+				
+			Rederecting_input_and_output_to_pipe 
+			Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+				args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+				time_usage: 0 
+				memory_usage: 0 
+			Test: 30208 75425 
+				Output: 75425 
+				Answer: 75425
+ 
+			
+		Rederecting_input_and_output_to_pipe 
+		Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+			args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+			
+		Runing_simple_windows_process 
+		
+	Runing_simple_windows_process 
+	Result_evoluation 
+		time: 0 
+		memory: 0 
+		ok_test_passed 
+			
+		
+	Result_evoluation 
+		time: 0 
+		memory: 0 
+		ok_test_passed 
+			
+		
+	Taking_next_test 
+	Checking_test# 30 
+		Rederecting_input_and_output_to_pipe 
+		Result_evoluation 
+						time:Creating_windows_process_with_name:  0 
+				memory: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe0 
+ 	
+			args: 			D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 	 ok_test_passed
+ 
+					
+				
+			Taking_next_test 
+			Checking_test# 31 
+				Rederecting_input_and_output_to_pipe 
+				Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+					args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+					Taking_next_test 
+					Checking_test# 32 
+						Rederecting_input_and_output_to_pipe 
+						Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+							args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+								
+					
+					Runing_windows_process_with_time_and_memory_evaluation	 	
+				Runing_windows_process_with_time_and_memory_evaluation 
+										Runing_simple_windows_process	 	
+		Runing_simple_windows_process 
+							
+						Runing_windows_process_with_time_and_memory_evaluation 
+							Runing_simple_windows_process 
+							Result_evoluation 
+								time: 0	 		
+											Result_evoluation 	
+				memory: 	0	 	
+				time: 0 
+														memory:	 	0	 	
+ok_test_passed 
+																
+					ok_test_passed	 	
+													
+		
+								
+							Result_evoluation 
+								time: 0 
+								memory: 0 
+								ok_test_passed 
+									
+								
+							Result_evoluation 
+								time: 0 
+								memory: 0 
+								ok_test_passed 
+									
+								
+							Taking_next_test 
+							Taking_next_test 
+							Taking_next_test 
+							Checking_test# 33 
+								Rederecting_input_and_output_to_pipe 
+								Checking_test# 34 
+														Creating_windows_process_with_name:	 		D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe	 	
+										args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  Rederecting_input_and_output_to_pipe
+ 
+										Checking_test# 35 
+											Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+																			args:		 	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 	 	
+Rederecting_input_and_output_to_pipe 
+												Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+													args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+													Result_evoluation 
+														time: 0 
+														memory: 0 
+														ok_test_passed 
+															
+														
+													Taking_next_test 
+													Checking_test# 36 
+														Rederecting_input_and_output_to_pipe 
+														Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+															args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+															Taking_next_test 
+															Checking_test# 37 
+																Rederecting_input_and_output_to_pipe 
+																Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+																	args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+																	
+																																
+
+													Runing_windows_process_with_time_and_memory_evaluation 
+																														Runing_windows_process_with_time_and_memory_evaluation	 	
+Runing_windows_process_with_time_and_memory_evaluation	 	
+																																													Runing_simple_windows_processRuning_simple_windows_process  
+
+			Runing_simple_windows_process 
+																	
+																Runing_windows_process_with_time_and_memory_evaluation 
+																	Runing_simple_windows_process 
+																	
+																Runing_windows_process_with_time_and_memory_evaluation 
+																	Runing_simple_windows_process 
+																	Result_evoluation 
+																		time: 0 
+																		memory: 0 
+																		ok_test_passed 
+																			
+																		
+																	Taking_next_test 
+																	Checking_test# 38 
+																		Rederecting_input_and_output_to_pipe 
+																		Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+																			args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+																			
+																		Runing_windows_process_with_time_and_memory_evaluation 
+																			Runing_simple_windows_process 
+																			Result_evoluation 
+																				time: 0 
+																				memory: 0 
+																				ok_test_passed 
+																					
+																				
+																			Result_evoluation 
+																				time: 0 
+																				memory: 0 
+																				ok_test_passed 
+																					
+																				
+																			Result_evoluation 
+																				time: 0 
+																				memory: 0 
+																				ok_test_passed 
+																					
+																				
+																			Result_evoluation 
+																				time: 0 
+																				memory: 0 
+																				ok_test_passed 
+																					
+																				
+																			Result_evoluation 
+																				time: 0 
+																				memory: 0 
+																				ok_test_passed 
+																					
+																				
+																			Result_evoluation 
+																				time: 0 
+																				memory: 0 
+																				ok_test_passed 
+																					
+																				
+																			Taking_next_test 
+																			Result_evoluation 
+																				time: 0 
+																				memory: 0 
+																				ok_test_passed 
+																					
+																				
+																			Checking_test# 39 
+																				Rederecting_input_and_output_to_pipe 
+																				Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+																					args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+																					Taking_next_test 
+																					Taking_next_test 
+																																									Checking_test#	 	40Taking_next_test  
+
+																						Rederecting_input_and_output_to_pipe 
+																						Checking_test# 41 
+																																						Rederecting_input_and_output_to_pipe	 		
+					Checking_test# 42	 	
+																						Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+																																																									args:							 	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 	 	
+							Creating_windows_process_with_name:	 	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe	 	
+												Rederecting_input_and_output_to_pipe			 			
+																													Taking_next_test	 	
+	args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+																										Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+																											args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+																											Checking_test# 43 
+																												Taking_next_test 
+																																											Rederecting_input_and_output_to_pipe	 	
+											Taking_next_test 
+																																																			Checking_test#	 		44				 
+Creating_windows_process_with_name:				 	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe	 	
+																																												Checking_test#	 	45	 		
+																		Rederecting_input_and_output_to_pipe	 	
+																																							args:			 	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 	 	
+	Rederecting_input_and_output_to_pipe 
+																															Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+																																args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+																																Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+																																	args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+																																	Result_evoluation 
+																																		time: 0 
+																																		memory: 0 
+																																		ok_test_passed 
+																																			
+																																		
+																																	Taking_next_test 
+																																	Checking_test# 46 
+																																		Rederecting_input_and_output_to_pipe 
+																																		Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+																																			args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+																																																																					
+																																																																								
+
+																																																																																																																			Runing_windows_process_with_time_and_memory_evaluation 		
+																										
+
+																															Runing_simple_windows_process 
+	Runing_windows_process_with_time_and_memory_evaluation	 	
+																																																																						Runing_windows_process_with_time_and_memory_evaluation	 	
+		Runing_windows_process_with_time_and_memory_evaluation	 			
+																														Runing_windows_process_with_time_and_memory_evaluation	 		
+																																																																																																					Runing_simple_windows_process		 Runing_simple_windows_process
+ 
+																						Runing_simple_windows_process	 	
+										
+Runing_simple_windows_process 
+																																		Runing_windows_process_with_time_and_memory_evaluation 
+																																			Runing_simple_windows_process 
+						
+																																		Runing_windows_process_with_time_and_memory_evaluation 
+																																			Runing_simple_windows_process 	
+																																		
+																																		Runing_windows_process_with_time_and_memory_evaluation 
+																																			Runing_simple_windows_process 
+																																			Result_evoluation 
+																																				time: 0 
+																																				memory: 0 
+																																				ok_test_passed 
+																																					
+																																				
+																																			Result_evoluation 
+																																																										time: 0 
+																																				memory: 0 
+																																				ok_test_passed 
+																																					
+																																							
+										Result_evoluation 
+																																				time: 0 
+																																				memory: 0 
+																																				ok_test_passed 
+																																					
+																																				
+																																			Result_evoluation 
+																																				time: 0 
+																																				memory: 0 
+																																				ok_test_passed 
+																																					
+																																				
+																																			Result_evoluation 
+																																				time: 0 
+																																				memory: 0 
+																																				ok_test_passed 
+																																					
+																																				
+																																			Taking_next_test 
+																																			Checking_test# 47 
+																																				Rederecting_input_and_output_to_pipe 
+																																				Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+																																					args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+																																					Taking_next_test 
+																																					Checking_test# 48	 	
+																																				Taking_next_test 
+																																						Rederecting_input_and_output_to_pipe 
+																																						Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+																																																																					args:	 	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 	 	
+					Checking_test# 49 
+																																																																								Rederecting_input_and_output_to_pipe	 		
+					Result_evoluation 
+																																									time: 0 
+																																																																											memory:	 	0	 	
+			Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+																																																																																				args:ok_test_passed  D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+ 	
+																																										
+																																										
+																																									Result_evoluation 
+																																																																																			time:	Taking_next_test  0						
+																																				Taking_next_test 
+																																										Taking_next_test 
+ 
+																																										memory: 0 
+																																										ok_test_passed	 	
+																																																																																				Checking_test#	 
+50 
+																																											Checking_test# 51	 	
+																																										Rederecting_input_and_output_to_pipe 
+																																																																																							Rederecting_input_and_output_to_pipe	 	
+					Creating_windows_process_with_name: 	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe	 	
+																																																																																																																									args:	 				D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 	 				
+																					Checking_test#	 	
+52 
+																Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+																																															args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+																																													Rederecting_input_and_output_to_pipe 
+																																														Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+																																															args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+																																															Taking_next_test 
+																																															Checking_test# 53 
+																																																Rederecting_input_and_output_to_pipe 
+																																																Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+																																																	args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+																																																	
+																																																Runing_windows_process_with_time_and_memory_evaluation 
+																																																	Runing_simple_windows_process 
+																																																	
+																																																Runing_windows_process_with_time_and_memory_evaluation 
+																																																	Runing_simple_windows_process 
+																																																	
+																																																																																																																			Runing_windows_process_with_time_and_memory_evaluation	 	
+																																																		
+																																																Runing_simple_windows_process 
+																																
+																															
+																	Runing_windows_process_with_time_and_memory_evaluation	 	
+																																																																												Runing_windows_process_with_time_and_memory_evaluation 	
+																																															Runing_simple_windows_process	 			
+																																								Runing_simple_windows_process	 	
+										Runing_windows_process_with_time_and_memory_evaluation 
+																																																	Runing_simple_windows_process 
+																																																	Result_evoluation 
+																																																		time: 0	 	
+																																																																																																Result_evoluation	 	
+		memory:	 	0	 	
+																																																																																			time:	 	0	 	
+																					ok_test_passed	 	
+																																																																														memory:	 	0	 	
+													
+																																																																																														ok_test_passed	 	
+						
+																																																
+																																																		
+																																																	Result_evoluation 
+																																																		time: 0 
+																																																		memory: 0 
+																																																		ok_test_passed 
+																																																			
+																																																		
+																																																	Taking_next_test 
+																																																	Checking_test# 54 
+																																																		Rederecting_input_and_output_to_pipe 
+																																																		Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+																																																			args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+																																																			Taking_next_test 
+																																																			Checking_test# 55 
+																																																				Rederecting_input_and_output_to_pipe 
+																																																				Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+																																																					args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+																																																					Taking_next_test 
+																																																					Checking_test# 56 
+																																																						Rederecting_input_and_output_to_pipe 
+																																																						Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+																																																							args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+																																																							
+																																																						Runing_windows_process_with_time_and_memory_evaluation 
+																																																							Runing_simple_windows_process 
+																																																							
+																																																						Runing_windows_process_with_time_and_memory_evaluation 
+																																																							Runing_simple_windows_process 
+																																																							
+																																																						Runing_windows_process_with_time_and_memory_evaluation 
+																																																							Runing_simple_windows_process 
+																																																							
+																																																						Runing_windows_process_with_time_and_memory_evaluation 
+																																																							Runing_simple_windows_process 
+																																																							Result_evoluation 
+																																																								time: 0 
+																																																								memory: 0 
+																																																								ok_test_passed 
+																																																									
+																																																								
+																																																							Result_evoluation 
+																																																								time: 0 
+																																																								memory: 0 
+																																																								ok_test_passed 
+																																																									
+																																																								
+																																																							Taking_next_test 
+																																																							Checking_test# 57 
+																																																								Rederecting_input_and_output_to_pipe 
+																																																								Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+																																																									args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+																																																									Taking_next_test 
+																																																									Checking_test# 58 
+																																																										Rederecting_input_and_output_to_pipe 
+																																																										Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+																																																											args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+																																																											
+																																																										Runing_windows_process_with_time_and_memory_evaluation 
+																																																											Runing_simple_windows_process 
+																																																											
+																																																										Runing_windows_process_with_time_and_memory_evaluation 
+																																																											Runing_simple_windows_process 
+																																																											time_usage: 0 
+																																																											memory_usage: 0 
+																																																										Test: 96785 57454 
+																																																											Output: 96785 
+																																																											Answer: 96785
+ 
+																																																										
+																																																																time_usage:	 		0 
+																																																																																																			Rederecting_input_and_output_to_pipe	 	
+			memory_usage: 0 
+																																																																		Test:	 	-83393 -49163	 	
+																																																																																							Creating_windows_process_with_name:	 		D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe	 	
+																	Output:	 	-49163	 	
+																																																																																												args:	 	D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 	 	
+								Answer: -49163
+ 
+																																																									
+																																																								Rederecting_input_and_output_to_pipe 
+																																																								Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																																									args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																																									
+																																																								Runing_simple_windows_process 
+																																																								time_usage: 0 
+																																																								memory_usage: 0 
+																																																							Test: 36467 90792 
+																																																								Output: 90792 
+																																																									Answer:	 	90792
+	 	
+																																																																																																						time_usage:	 	0 
+					
+																																																		memory_usage: 0 
+																																																																						Rederecting_input_and_output_to_pipe	 	
+																																		Test: -30153 -99222 
+																																																						Output: -30153 
+																																																																	Answer: 	-30153
+	 	
+																																																																																													Creating_windows_process_with_name:
+ D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																																															args:	 	D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 							 	
+																																	Rederecting_input_and_output_to_pipe 
+																																																					Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																																						args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																																						time_usage: 0 
+																																																						memory_usage: 0 
+																																																					Test: -35862 59951 
+																																																						Output: 59951 
+																																																						Answer: 59951
+ 
+																																																					
+																																																				Rederecting_input_and_output_to_pipe 
+																																																				Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																																					args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																																					
+																																																				Runing_simple_windows_process 
+																																																																																														
+									
+																																																																																												Runing_simple_windows_process		 		
+				Runing_simple_windows_process 
+																																																		
+																																																	Runing_simple_windows_process 
+																																																	time_usage: 0 
+																																																	memory_usage: 0 
+																																																Test: 6955 -19724 
+																																																	Output: 6955 
+																																																	Answer: 6955
+ 
+																																																
+																																															Rederecting_input_and_output_to_pipe 
+																																															Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																																args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																																time_usage: 0 
+																																																memory_usage: 0 
+																																															Test: 67078 -4420 
+																																																Output: 67078 
+																																																Answer: 67078
+ 
+																																															
+																																														Rederecting_input_and_output_to_pipe 
+																																														Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																															args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																															
+																																														Runing_simple_windows_process 
+																																														time_usage: 0 
+																																														memory_usage: 0 
+																																													Test: -45544 37942 
+																																														Output: 37942 
+																																														Answer: 37942
+ 
+																																													
+																																												Rederecting_input_and_output_to_pipe 
+																																												Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																													args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																													
+																																												Runing_simple_windows_process 
+																																												
+																																											Runing_simple_windows_process 
+																																											time_usage: 0 
+																																											memory_usage: 0 
+																																										Test: 35057 -76647 
+																																											Output: 35057 
+																																											Answer: 35057
+ 
+																																										
+																																									Rederecting_input_and_output_to_pipe 
+																																									Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																										args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																										
+																																									Runing_simple_windows_process 
+																																									time_usage: 0 
+																																									memory_usage: 0 
+																																								Test: 59746 65815 
+																																									Output: 65815 
+																																									Answer: 65815
+ 
+																																								
+																																							Rederecting_input_and_output_to_pipe 
+																																							Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																								args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																								time_usage: 0 
+																																								memory_usage: 0 
+																																							Test: 67669 -18103 
+																																								Output: 67669 
+																																								Answer: 67669
+ 
+																																							
+																																						Rederecting_input_and_output_to_pipe 
+																																						Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																							args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																							time_usage: 0 
+																																							memory_usage: 0 
+																																						Test: -6183 -40662 
+																																							Output: -6183 
+																																							Answer: -6183
+ 
+																																						
+																																					Rederecting_input_and_output_to_pipe 
+																																					Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																						args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																						time_usage: 0 
+																																						memory_usage: 0 
+																																					time_usage: 0	 	
+																																																																						Test:		 	92225 38206memory_usage:  
+0	 		
+																																		Output: 92225 
+																																												Answer:	 	92225
+		 	
+																																																			Test:	 	50692 -31355	 	
+											
+																															Output: 50692 
+																																				Answer: 50692
+ 
+																																																								
+													Rederecting_input_and_output_to_pipe 
+																																		Rederecting_input_and_output_to_pipe 
+																																		Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																			args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																			Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																				args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																				time_usage: 0 
+																																				memory_usage: 0 
+																																			Test: 306 -63767 
+																																				Output: 306 
+																																				Answer: 306
+ 
+																																			
+																																		Rederecting_input_and_output_to_pipe 
+																																		Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																			args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																			time_usage: 0 
+																																			memory_usage: 0 
+																																																												Test: 	11436 2998	 	
+													time_usage: 			0																									Output: 11436 
+																				 	
+																						Answer: 	11436
+	 	
+																																										memory_usage:	 	0 
+												
+																																Test: -94318 -15275 
+																																														Output:	 	-15275	 	
+																																	Rederecting_input_and_output_to_pipe		 
+														Answer: -15275
+ 
+																																
+																																					Rederecting_input_and_output_to_pipe	 			
+																					Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																	args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																																																			
+																																									
+
+																							Runing_simple_windows_process	 		
+																																						
+																										Runing_simple_windows_process		 	
+																																								Runing_simple_windows_process	 	
+Runing_simple_windows_process 
+																													
+																												Runing_simple_windows_process 
+																												
+																											Runing_simple_windows_process 
+																											
+																																									
+										Runing_simple_windows_process 
+																									Runing_simple_windows_process 
+																									time_usage: 0 
+																									memory_usage: 0 
+																								Test: -2653 78942 
+																									Output: 78942 
+																									Answer: 78942
+ 
+																								
+																							Rederecting_input_and_output_to_pipe 
+																							Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																								args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																								time_usage: 0	 	
+																																												time_usage:	 	0 
+								memory_usage:	 	0 
+													memory_usage: 0 
+																																	Test:	 		65532 63880	 	
+															Test:	 	-31355 76757	 		
+																																												Output:	 	76757Output:  
+65532	 	
+																														Answer:	 	76757
+	 	
+																						Answer:	 	65532
+	 	
+														
+														
+																																		Rederecting_input_and_output_to_pipe	 	
+				Rederecting_input_and_output_to_pipe 
+																				Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																					args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																					Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																						args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																						time_usage: 0 
+																						memory_usage: 0 
+																					Test: 72792 34134 
+																						Output: 72792 
+																						Answer: 72792
+ 
+																					
+																				Rederecting_input_and_output_to_pipe 
+																				Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																					args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																					
+																				Runing_simple_windows_process 
+																					
+																		
+																														Runing_simple_windows_process	 	
+				Runing_simple_windows_process 
+																		
+																	Runing_simple_windows_process 
+						time_usage: 0 
+																	memory_usage: 0 
+																Test: -45455 57392 
+																	Output: 57392 
+																	Answer: 57392
+ 
+																
+															Rederecting_input_and_output_to_pipe 
+															Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																time_usage: 0 
+																memory_usage: 0 
+															Test: -7530 -23765 
+																Output: -7530 
+																Answer: -7530
+ 
+															
+														Rederecting_input_and_output_to_pipe 
+														Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+															args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+															time_usage: 0 
+															memory_usage: 0 
+														Test: 12193 46912 
+															Output: 46912 
+															Answer: 46912
+ 
+														
+													Rederecting_input_and_output_to_pipe 
+													Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+														args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+														
+													Runing_simple_windows_process 
+													
+												Runing_simple_windows_process 
+												time_usage: 0 
+												memory_usage: 0 
+											Test: 24079 -76452 
+												Output: 24079 
+												Answer: 24079
+ 
+											
+										Rederecting_input_and_output_to_pipe 
+										Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+											args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+											time_usage: 0 
+											memory_usage: 0 
+										Test: -21092 -2711 
+											Output: -2711 
+											Answer: -2711
+ 
+										
+									Rederecting_input_and_output_to_pipe 
+									Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+										args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+										
+									Runing_simple_windows_process 
+									
+								Runing_simple_windows_process 
+								
+							Runing_simple_windows_process 
+							time_usage: 0 
+							memory_usage: 0 
+						Test: 93157 86132 
+							Output: 93157 
+							Answer: 93157
+ 
+						
+					Rederecting_input_and_output_to_pipe 
+					Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+						args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+						time_usage: 0 
+						memory_usage: 0 
+					Test: 91026 4902 
+						Output: 91026 
+						Answer: 91026
+ 
+					
+				Rederecting_input_and_output_to_pipe 
+				Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+					args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+					
+				Runing_simple_windows_process 
+				
+			Runing_simple_windows_process 
+			Result_evoluation 
+				time: 0 
+				memory: 0 
+				ok_test_passed 
+					
+				
+			time_usage: 0 
+			memory_usage: 0 
+		Test: 24866 51982 
+			Output: 51982 
+			Answer: 51982
+ 
+		
+	Rederecting_input_and_output_to_pipe 
+	Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+		args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+		Result_evoluation 
+			time: 0 
+			memory: 0 
+			ok_test_passed 
+				
+			
+		Result_evoluation 
+			time: 0 
+			memory: 0	 	
+	Taking_next_test 	
+		ok_test_passed 
+				
+			
+		Checking_test# 59 
+			Rederecting_input_and_output_to_pipe 
+			Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+				args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+				
+			Runing_simple_windows_process 
+			
+		Runing_windows_process_with_time_and_memory_evaluation 
+			Runing_simple_windows_process 
+			Result_evoluation 
+				time: 0 
+				memory: 0 
+				ok_test_passed 
+					
+				
+			Taking_next_test 
+			Checking_test# 60 
+				Rederecting_input_and_output_to_pipe 
+				Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+					args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+					Taking_next_test 
+					Taking_next_test 
+					Checking_test# 61 
+						Rederecting_input_and_output_to_pipe 
+													Checking_test# 62 
+Result_evoluation 
+																			Creating_windows_process_with_name:	 Rederecting_input_and_output_to_pipeD:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+	
+													time: 	0		 	
+					args:	 	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 	 Creating_windows_process_with_name:
+ 	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 	
+													memory: 		0 
+	args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  	
+									ok_test_passed 
+											
+										
+									Taking_next_test 
+									Checking_test# 63 
+										Rederecting_input_and_output_to_pipe 
+										Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+											args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+											
+										Runing_windows_process_with_time_and_memory_evaluation 
+											Runing_simple_windows_process 
+											
+										Runing_windows_process_with_time_and_memory_evaluation 
+											Runing_simple_windows_process 
+											
+										Runing_windows_process_with_time_and_memory_evaluation 
+											Runing_simple_windows_process 
+											Result_evoluation 
+												time: 0 
+												memory: 0 
+												ok_test_passed 
+													
+												
+											Result_evoluation 
+												time: 0 
+												memory: 0 
+												ok_test_passed 
+													
+												
+											Result_evoluation 
+												time: 0 
+												memory: 0 
+												ok_test_passed 
+													
+												
+											
+										Runing_windows_process_with_time_and_memory_evaluation 
+											Runing_simple_windows_process 
+											Result_evoluation 
+												time: 0 
+												memory: 0 
+												ok_test_passed 
+													
+												
+											Taking_next_test 
+											Taking_next_test 
+											Result_evoluation 
+												time: 0 
+												memory: 0 
+												ok_test_passed 
+													
+												
+																						Result_evoluation	 Taking_next_test
+ 	
+																	Checking_test#	 	65 
+													Rederecting_input_and_output_to_pipe 
+													Checking_test# 64 
+														Checking_test# 66	 													
+		time:		 	0 
+																Rederecting_input_and_output_to_pipe		 		memory:	 
+0 
+																																							Rederecting_input_and_output_to_pipeok_test_passed  
+
+																									
+																Creating_windows_process_with_name:Creating_windows_process_with_name:	  	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exeD:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  	
+	
+																		
+																					args:args:  D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+ 
+																									Creating_windows_process_with_name:	 		D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe	 	
+						Taking_next_test	 	
+												args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+																	Checking_test# 67 
+																		Rederecting_input_and_output_to_pipe 
+																		Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+																			args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+																			Result_evoluation 
+																				time: 0 
+																														memory:	 	0	 	
+						Taking_next_test	 	
+																		ok_test_passed 
+																					
+																				
+																			Taking_next_test 
+																			Result_evoluation 
+																				time: 0	 	
+																																																			memory:	 	0Checking_test# 68								 	 	
+	
+																Taking_next_test	 	
+											Checking_test# 		69 
+							ok_test_passed 
+																																										
+						Rederecting_input_and_output_to_pipe	 	
+																	
+																					Rederecting_input_and_output_to_pipe 
+																					Checking_test# 70	 	
+																				Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+																												args:		 	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 		 	
+																																			Rederecting_input_and_output_to_pipeCreating_windows_process_with_name:  
+D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+																								args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+																								Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+																									args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+																																												Result_evoluation	 	
+												Taking_next_test	 	
+																	time: 0 
+																										memory: 0 
+																										ok_test_passed 
+																											
+																										
+																											Result_evoluation	 	
+																																														Result_evoluation	 	
+																											time:								 			0	 	
+																							
+																																																																																	Checking_test#	memory: 	71								 	
+			 	0 
+														
+																																											Rederecting_input_and_output_to_pipe	 	
+					ok_test_passed	 	
+																																	Runing_windows_process_with_time_and_memory_evaluation			 					
+													
+
+																																																																		
+						Runing_simple_windows_process	 	
+																Runing_windows_process_with_time_and_memory_evaluation	 	
+												Creating_windows_process_with_name:	 	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe			 	
+																																													Runing_simple_windows_process	 			
+																						args:	 	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+ 
+																										Runing_windows_process_with_time_and_memory_evaluation 
+																											Runing_simple_windows_process 
+								Runing_windows_process_with_time_and_memory_evaluation 
+																												Runing_simple_windows_process 
+									time: 0 
+																												memory: 0 
+																												ok_test_passed 
+																													
+																												
+																											
+																										Runing_windows_process_with_time_and_memory_evaluation 
+																											Runing_simple_windows_process 
+																											Taking_next_test 
+																											Taking_next_test 
+																											Checking_test# 72 
+																																Taking_next_test 	
+																																								
+																						Rederecting_input_and_output_to_pipe	 	
+																							Runing_windows_process_with_time_and_memory_evaluation 
+																												Runing_simple_windows_process 
+																								Checking_test#	 		73 
+																													Rederecting_input_and_output_to_pipe 
+																													Creating_windows_process_with_name: 	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe	 	
+																																					Checking_test#	 	74 
+										args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+																															Rederecting_input_and_output_to_pipe 
+																															Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+																																args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+																																Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+																																	args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+																																	Result_evoluation 
+																																		time: 0 
+																																		memory: 0 
+																																		ok_test_passed 
+																																			
+																																			Result_evoluation 
+																																			time: 0 
+																																			memory: 0 
+																																			ok_test_passed 
+																																				
+																																			
+																																	
+																																	Result_evoluation 
+																																		time: 0 
+																																		memory: 0 
+																																		ok_test_passed 
+																																			
+																																		
+																																	Result_evoluation 
+																																		time: 0 
+																																		memory: 0 
+																																		ok_test_passed 
+																																			
+																																		
+																																	Result_evoluation 
+																																		time: 0 
+																																		memory: 0 
+																																		ok_test_passed 
+																																			
+																																		
+																																	Taking_next_test 
+																																																Checking_test# 	75 
+																		Taking_next_test 
+																																		Rederecting_input_and_output_to_pipe 
+																																		Checking_test# 76 
+																																			Rederecting_input_and_output_to_pipe 
+																																			Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+																																				args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+																																													Taking_next_test	 	
+																									
+																																			Runing_windows_process_with_time_and_memory_evaluation 
+																																				Runing_simple_windows_process 
+																																																					Creating_windows_process_with_name:	 		D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe	 
+																																																																					args:	 	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 	 	
+															Checking_test#	 	77 
+	Taking_next_test 
+																																						Rederecting_input_and_output_to_pipe 
+																																						Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+																																							args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+																																							Checking_test# 78 
+																																								Rederecting_input_and_output_to_pipe 
+																																																								
+																																																																	
+									Creating_windows_process_with_name:	 					D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe					 	
+																																																																																	Runing_windows_process_with_time_and_memory_evaluation			 	
+						
+									args:	 	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 	 	
+																																										Runing_simple_windows_process		 	
+																									Runing_windows_process_with_time_and_memory_evaluation		 	
+																																																										Runing_windows_process_with_time_and_memory_evaluation	 	
+																														Runing_simple_windows_process	 	
+																																					Runing_simple_windows_process	 	
+																										
+																																								Runing_windows_process_with_time_and_memory_evaluation 
+																																									Runing_simple_windows_process 
+																																									Taking_next_test 
+																																									Checking_test# 79 
+																																										Rederecting_input_and_output_to_pipe 
+																																										Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+																																											args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+																																																																									
+												
+																																									Runing_windows_process_with_time_and_memory_evaluation 
+																																										Runing_simple_windows_process 
+																																										Runing_windows_process_with_time_and_memory_evaluation 
+																																											Runing_simple_windows_process 
+																																																																									
+																																							
+																																																														Runing_windows_process_with_time_and_memory_evaluation 
+																													Runing_windows_process_with_time_and_memory_evaluation	 	
+																																																															Runing_simple_windows_process	 	
+																					Runing_simple_windows_process	 	
+				
+																																										Runing_windows_process_with_time_and_memory_evaluation 
+																																											Runing_simple_windows_process 
+																																											Result_evoluation 
+																																												time: 0 
+																																												memory: 0 
+																																												ok_test_passed 
+																																													
+																																												
+																																											Taking_next_test 
+																																											Checking_test# 80 
+																																												Rederecting_input_and_output_to_pipe 
+																																												Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+																																													args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+																																													Result_evoluation 
+																																														time: 0 
+																																														memory: 0 
+																																														ok_test_passed 
+																																															
+																																														
+																																													Result_evoluation 
+																																														time: 0 
+																																														memory: 0 
+																																														ok_test_passed 
+																																																		Result_evoluation	 		
+																																																																																																										time:	 		0 
+																																			Taking_next_test	 	
+																																			
+									memory: 		0 
+																																																										
+																												ok_test_passed 
+																																																																										
+																										Checking_test# 	81 
+																																															Rederecting_input_and_output_to_pipe 
+																																															
+																																						Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+																																															args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+																																															
+																																														Runing_windows_process_with_time_and_memory_evaluation 
+																																															Runing_simple_windows_process 
+																																															Taking_next_test 
+																																															Taking_next_test 
+																																															Checking_test# 82 
+																																																Rederecting_input_and_output_to_pipe 
+																																																Checking_test# 83 
+																																																														Creating_windows_process_with_name:	 	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe	 	
+																																																																				Rederecting_input_and_output_to_pipe	 	
+													args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+																																																		Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+																																																			args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+																																																			
+																																																		Runing_windows_process_with_time_and_memory_evaluation 
+																																																			Runing_simple_windows_process 
+																																																			
+																																																		Runing_windows_process_with_time_and_memory_evaluation 
+																																																			Runing_simple_windows_process 
+																																																			
+																																																		Runing_windows_process_with_time_and_memory_evaluation 
+																																																			Runing_simple_windows_process 
+																																																			Result_evoluation 
+																																																				time: 0 
+																																																				memory: 0 
+																																																				ok_test_passed 
+																																																					
+																																																				
+																																																			Result_evoluation 
+																																																				time: 0 
+																																																				memory: 0 
+																																																				ok_test_passed 
+																																																					
+																																																				
+																																																			Result_evoluation 
+																																																				time: 0 
+																																																				memory: 0 
+																																																				ok_test_passed 
+																																																					
+																																																				
+																																																			Taking_next_test 
+																																																			Checking_test# 84 
+																																																				Rederecting_input_and_output_to_pipe 
+																																																				Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+																																																					args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+																																																					Taking_next_test 																																																					Taking_next_test 
+																																																					time_usage: 0 
+																																																					memory_usage: 0	 		
+																																																	Checking_test#	 			85	 		
+																																																																																																		Result_evoluation	 	
+											Test:	 		-34174 -28949	 	
+																																																																																																		time:	 		0								Output: -28949  
+
+																																																																																																													Answer:memory:  0 
+-28949
+ 
+																																																																												
+																															ok_test_passed 
+																																																									
+																																														
+																																																					Rederecting_input_and_output_to_pipe	 	
+		
+																																					Rederecting_input_and_output_to_pipe 
+																																																				Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																																																																																																																																Creating_windows_process_with_name:	 				D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe	 	
+Checking_test#	 	86									 	
+																																																																														args:	 	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 	args: 		
+ D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																										Rederecting_input_and_output_to_pipe 
+																																																							Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+																																																								args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+																																																								
+																																																							Runing_windows_process_with_time_and_memory_evaluation 
+																																																								Runing_simple_windows_process 
+																																																								
+																																																							Runing_simple_windows_process 
+																																																							
+																																																						Runing_windows_process_with_time_and_memory_evaluation 
+																																																							Runing_simple_windows_process 
+																																																							
+																																																						Runing_windows_process_with_time_and_memory_evaluation 
+																																																							Runing_simple_windows_process 
+																																																							time_usage: 0 
+																																																							memory_usage: 0 
+																																																						Test: 47133 -23627 
+																																																							Output: 47133 
+																																																							Answer: 47133
+ 
+																																																						
+																																																					Rederecting_input_and_output_to_pipe 
+																																																					Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																																						args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																																						time_usage: 0 
+																																																						memory_usage: 0 
+																																																					Test: -97014 68338 
+																																																						Output: 68338 
+																																																						Answer: 68338
+ 
+																																																					
+																																																																																																	Rederecting_input_and_output_to_pipe 	
+						time_usage: 0 
+																																																																						memory_usage: 	0 
+																																Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																																																args:			 	D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 	 
+																																			Test: -48434 -32555 
+																																																					Output: -32555 
+																																																					Answer: -32555
+ 
+																																																				
+																																																			Rederecting_input_and_output_to_pipe 
+																																																			Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																																				args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																																				
+																																																			Runing_simple_windows_process 
+																																																			
+																																																		Runing_simple_windows_process 
+																																																		time_usage: 0 
+																																																		memory_usage: 0 
+																																																	Test: -35539 -13038 
+																																																		Output: -13038 
+																																																		Answer: -13038
+ 
+																																																	
+																																																Rederecting_input_and_output_to_pipe 
+																																																Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																																	args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																																	
+																																																Runing_simple_windows_process 
+																																																time_usage: 0 
+																																																memory_usage: 0 
+																																															Test: -71408 -49214 
+																																																Output: -49214 
+																																																Answer: -49214
+ 
+																																															
+																																														Rederecting_input_and_output_to_pipe 
+																																														Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																															args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																															
+																																														Runing_simple_windows_process 
+																																														time_usage: 0 
+																																														memory_usage: 0 
+																																													Test: 80354 82337 
+																																														Output: 82337 
+																																														Answer: 82337
+ 
+																																													
+																																												Rederecting_input_and_output_to_pipe 
+																																												Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																													args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																													time_usage: 0	 	
+																																																												
+																																												Runing_simple_windows_process 
+																											memory_usage: 0 
+																																											Test: -93626 -89069 
+																																												Output: -89069 
+																																												Answer: -89069
+ 
+																																											
+																																										Rederecting_input_and_output_to_pipe 
+																																										Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																											args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																											Taking_next_test 
+																																											Checking_test# 87 
+																																												Rederecting_input_and_output_to_pipe 
+																																																	Creating_windows_process_with_name:	 		D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe	 	
+																																																											time_usage: 0 
+																																																																			memory_usage: 	0		 	
+																																																						time_usage:	 	0 
+																																														time_usage:											 	0			 	
+								args:	 	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 	 	
+																																																																		memory_usage:	 	0		 	
+									
+													memory_usage: 0	 	
+																																																																																																																													Test:			 		68265 39191		 										
+																																															Runing_simple_windows_process	
+ 	
+																									Test:										Test:	 		 	15090 -8147	 64474 98073	
+								 		
+																	Output:				 		68265	 						
+																																																																																																															Runing_simple_windows_process				 		
+									Output:	Output:	  	9807315090	 	
+													Answer:	 	68265
+	 	
+																											 									
+																																					Answer:		 	15090
+	 		
+																	
+																																															
+																						Answer: 		98073
+	 	
+																																														Rederecting_input_and_output_to_pipe						 	
+																					Rederecting_input_and_output_to_pipe 	
+																					
+																																																																											Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																						args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																							Rederecting_input_and_output_to_pipe	 	
+													Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																							args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																							Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																								args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																								
+																																																																																										Runing_windows_process_with_time_and_memory_evaluation 
+														
+																																																						Runing_simple_windows_process	 	
+																						
+																																													Runing_simple_windows_process	 		
+			
+																																					Runing_simple_windows_process 
+																																					Runing_simple_windows_process 
+																																					time_usage: 0 
+																																					memory_usage: 0 
+																																				time_usage: 0 
+																																				memory_usage: 0 
+																																			Test: -46681 -13733 
+																																				Output: -13733 
+																																				Answer: -13733
+ 
+																																			
+																																		Rederecting_input_and_output_to_pipe 
+																																		Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																			args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																			time_usage: 0 
+																																			memory_usage: 0 
+																																		Test: -25603 32516 
+																																			Output: 32516 
+																																			Answer: 32516
+ 
+																																		
+																																	Rederecting_input_and_output_to_pipe 
+																																	Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																		args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																		time_usage: 0 
+																																														memory_usage:	 	0 	
+																		Test: 3239 -58763 
+																																		Output: 	3239	 
+																																																																	Test: 		57641 80889Answer: 
+		 	3239
+	 	
+																																																									
+					Output: 80889 
+																																																																
+		Answer:								 	80889
+							 			
+																																																																																				
+Runing_simple_windows_process		 	
+																														
+																																		time_usage:			 	0																																						 	time_usage:	
+											 	0	 
+																		Runing_simple_windows_process		 	
+																																																																																	time_usage:	 	0 
+										time_usage:							 			0 
+																								Rederecting_input_and_output_to_pipe		 		
+										memory_usage:		 	memory_usage:	 	0	memory_usage:		 0 0 	
+																							Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																											args: 	D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 	 	
+																								Test: -97256 22669 
+																												Output: 22669 
+															memory_usage:	 	0 
+																											Test: 87091 11666 
+																												Output: 87091 
+																												Answer: 87091
+ 
+																											
+
+																																																	Rederecting_input_and_output_to_pipe	 	
+	Test: 14176 -37218 
+																											Output: 14176 
+																											Answer: 14176
+ 
+																										
+																									Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																							args:	 	D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 	 	
+									Rederecting_input_and_output_to_pipe 
+																										Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																											args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+ 
+													Answer: 22669
+ 
+																										
+																									Test: 81544 8689 
+																																								Rederecting_input_and_output_to_pipe 
+												Output: 81544 
+																										Answer: 81544
+ 
+																																																		Creating_windows_process_with_name:	 
+D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																									args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																									Rederecting_input_and_output_to_pipe 
+																									Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																										args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+						Rederecting_input_and_output_to_pipe 
+																										Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																											args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																											
+																										Runing_simple_windows_process 
+																										
+																									Runing_simple_windows_process 
+																									
+																								Runing_simple_windows_process 
+																								
+																							Runing_simple_windows_process 
+																							
+																						Runing_simple_windows_process 
+																						
+																					Runing_simple_windows_process 
+																					time_usage: 0 
+																					memory_usage: 0 
+																				Test: -65035 72474 
+																					Output: 72474 
+																					Answer: 72474
+ 
+																				
+																			Rederecting_input_and_output_to_pipe 
+																			Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																				args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																				time_usage: 0 
+																				memory_usage: 0 
+																			Test: 35935 -67561 
+																				Output: 35935 
+																				Answer: 35935
+ 
+																			
+																		Rederecting_input_and_output_to_pipe 
+																		Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																			args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																			
+																		
+																	Runing_simple_windows_process 
+																	Runing_simple_windows_process 
+																	time_usage: 0 
+																	memory_usage: 0 
+																Test: 48704 -75958 
+																	Output: 48704 
+																	Answer: 48704
+ 
+																
+															Rederecting_input_and_output_to_pipe 
+															Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																time_usage: 0 
+																memory_usage: 0 
+															Test: -17441 63959 
+																Output: 63959 
+																Answer: 63959
+ 
+															
+														Rederecting_input_and_output_to_pipe 
+														Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+															args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+															time_usage: 0 
+															memory_usage: 0 
+														Test: -4362 -44647 
+															Output: -4362 
+															Answer: -4362
+ 
+														
+													Rederecting_input_and_output_to_pipe 
+													Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+														args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																											
+
+																								
+						Runing_simple_windows_process	 			
+Runing_simple_windows_process	 	
+									Runing_simple_windows_process 
+											Result_evoluation 
+												time: 0 
+												memory: 0 
+												ok_test_passed 
+													
+												
+											time_usage: 0 
+																			memory_usage:	 	0time_usage:  
+0 
+										memory_usage: 0 
+									Test: 85244 54234 
+										Output: 85244 
+										Answer: 85244
+ 
+									
+								Test: 26637 -31504 
+									Output: 26637 
+									Answer: 26637
+ 
+								
+							Rederecting_input_and_output_to_pipe 
+							Rederecting_input_and_output_to_pipe 
+							Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+													args:	 	D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 	 Creating_windows_process_with_name:
+ D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+									args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+									
+								Runing_simple_windows_process 
+								
+							Runing_simple_windows_process 
+							time_usage: 0 
+							memory_usage: 0 
+						Test: -25645 90244 
+							Output: 90244 
+							Answer: 90244
+ 
+						
+					Rederecting_input_and_output_to_pipe 
+					Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+						args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+						Taking_next_test 
+						Checking_test# 88 
+							Rederecting_input_and_output_to_pipe 
+							Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+								args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+								
+							Runing_simple_windows_process 
+							
+						Runing_windows_process_with_time_and_memory_evaluation 
+							Runing_simple_windows_process 
+							Result_evoluation 
+								time: 0 
+								memory: 0 
+								ok_test_passed 
+									
+								
+							Result_evoluation 
+								time: 0 
+								memory: 0 
+								ok_test_passed 
+									
+															time_usage: 0 	
+
+							memory_usage: 0 
+						Test: -7840 65782 
+							Output: 65782 
+							Answer: 65782
+ 
+						
+					Rederecting_input_and_output_to_pipe 
+					Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+						args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+						Result_evoluation 
+							time: 0 
+							memory: 0 
+							ok_test_passed 
+								
+							
+						Result_evoluation 
+							time: 0 
+							memory: 0 
+							ok_test_passed 
+								
+							
+						
+					Runing_simple_windows_process 
+					Result_evoluation 
+						time: 0 
+						memory: 0 
+						ok_test_passed 
+							
+						
+					Result_evoluation 
+						time: 0 
+						memory: 0 
+						ok_test_passed 
+							
+						
+					time_usage: 0 
+					memory_usage: 0 
+				Test: -39377 95287 
+					Output: 95287 
+					Answer: 95287
+ 
+				
+			Rederecting_input_and_output_to_pipe 
+			Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+				args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+				Result_evoluation 
+					time: 0 
+					memory: 0 
+					ok_test_passed 
+						
+					
+				Taking_next_test 
+				Checking_test# 89 
+					Rederecting_input_and_output_to_pipe 
+					Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+						args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+						Taking_next_test 
+												Taking_next_test Checking_test#
+ 90 
+							Rederecting_input_and_output_to_pipe 
+							Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+								args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+								Checking_test# 91 
+																		Taking_next_testRederecting_input_and_output_to_pipe  
+
+									Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+										args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+										Checking_test# 92 
+											Rederecting_input_and_output_to_pipe 
+											Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+												args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+												
+											Runing_simple_windows_process 
+											
+										Runing_windows_process_with_time_and_memory_evaluation 
+											Runing_simple_windows_process 
+											
+										
+									Runing_windows_process_with_time_and_memory_evaluation 
+																Runing_simple_windows_process	 	
+		Runing_windows_process_with_time_and_memory_evaluation 
+											Runing_simple_windows_process 
+											
+										Runing_windows_process_with_time_and_memory_evaluation 
+											Runing_simple_windows_process 
+											Result_evoluation 
+												time: 0 
+												memory: 0 
+												ok_test_passed 
+													
+												
+											Result_evoluation 
+												time: 0 
+												memory: 0 
+												ok_test_passed 
+													
+												
+											Result_evoluation 
+												time: 0 
+												memory: 0 
+												ok_test_passed 
+													
+												
+											Result_evoluation 
+												time: 0 
+												memory: 0 
+												ok_test_passed 
+													
+												
+											Result_evoluation 
+												time: 0 
+												memory: 0 
+												ok_test_passed 
+													
+												
+											Result_evoluation 
+												time: 0 
+												memory: 0 
+												ok_test_passed 
+													
+												
+											Taking_next_test 
+											Checking_test# 93 
+												Rederecting_input_and_output_to_pipe 
+												Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+													args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+													Result_evoluation 
+														time: 0 
+																												memory:Result_evoluation  0 
+
+																	time:		 		0 
+															memory: 0 
+											ok_test_passed	 
+																								
+							ok_test_passed	 		
+																						
+											Result_evoluation	 	
+										
+																							time:	 		0 
+														memory: 0
+ 
+														ok_test_passed 
+															
+														
+													Taking_next_test 
+													Checking_test# 94 
+														Rederecting_input_and_output_to_pipe 
+														Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+															args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+															Taking_next_test 
+															Checking_test# 95 
+																Rederecting_input_and_output_to_pipe 
+																Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+																	args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+																	Taking_next_test 
+																	Taking_next_test 
+																	Taking_next_test 
+																	Taking_next_test 
+																																	Checking_test#	 	Checking_test# 9697 
+																			Checking_test# 98					 	
+			 	
+																																										Checking_test#	 	99						 			
+												Taking_next_test								 	Rederecting_input_and_output_to_pipe			
+					 			
+		Rederecting_input_and_output_to_pipe	 	
+													Rederecting_input_and_output_to_pipe	 	
+											Rederecting_input_and_output_to_pipe 
+																					Taking_next_test 
+																																																					Creating_windows_process_with_name:		 		D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe		 Creating_windows_process_with_name:
+ 		D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe		 				
+							Creating_windows_process_with_name:				 		D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe												 		
+																															args:		 					D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 	 	
+																																																														args:	Checking_test#		  						D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 100	 	
+			Taking_next_test  	
+	
+																																					args:						Creating_windows_process_with_name:  D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 	 		
+			D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe						Taking_next_test	 	
+		 			
+																Rederecting_input_and_output_to_pipe	 	
+										
+														args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+																											Runing_windows_process_with_time_and_memory_evaluation	 		
+																					Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe	 	
+																																																												args:	 	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+ 	
+															Runing_simple_windows_process 
+																										Runing_windows_process_with_time_and_memory_evaluation 
+																											Runing_simple_windows_process 
+																											Checking_test# 101	 	
+																										Checking_test# 102	 	
+																											Rederecting_input_and_output_to_pipe 
+																													Rederecting_input_and_output_to_pipe 
+																													Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+																																																											args:		 	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 	 	
+																									Creating_windows_process_with_name:	 	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe
+ 
+																																		args:	 	D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 	 	
+																						Runing_windows_process_with_time_and_memory_evaluation 
+																															Runing_simple_windows_process 
+																															Taking_next_test 
+																															Checking_test# 103 
+																																Rederecting_input_and_output_to_pipe 
+																																Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe 
+																																	args: D:\projects\VSCode\ChineseTester8\bin\resources\solutions\sol-3.exe  
+																																																																																
+														
+		
+																																																																																								Runing_windows_process_with_time_and_memory_evaluation	Runing_windows_process_with_time_and_memory_evaluation  
+
+				Runing_windows_process_with_time_and_memory_evaluation 
+																																																																												Runing_simple_windows_process		 	
+													Runing_simple_windows_process 
+							Runing_simple_windows_process 
+																																	
+																																Runing_windows_process_with_time_and_memory_evaluation 
+																																	Runing_simple_windows_process 
+																																	
+																																Runing_windows_process_with_time_and_memory_evaluation 
+																																	Runing_simple_windows_process 
+																																	
+																																Runing_windows_process_with_time_and_memory_evaluation 
+																																	Runing_simple_windows_process 
+																																	
+																																Runing_windows_process_with_time_and_memory_evaluation 
+																																	Runing_simple_windows_process 
+																																																																			Result_evoluationResult_evoluation  
+
+																																																																						time:time:  00  
+
+																																																																						memory:memory:  0 
+0	 	
+																																																										ok_test_passed	 	
+																		ok_test_passed 
+																																																												
+								
+																																																														
+			
+																																	Result_evoluation 
+																																		time: 0 
+																																		memory: 0 
+																																		ok_test_passed 
+																																			
+																																		
+																																	Result_evoluation 
+																																		time: 0 
+																																		memory: 0 
+																																		ok_test_passed 
+																																			
+																																		
+																																	Result_evoluation 
+																																		time: 0 
+																																		memory: 	0	 	
+																																																				Result_evoluation	 	
+																								ok_test_passed	 	
+																																												time:	 	0	 	
+																				
+																																																				memory:	 	0	 	
+				
+																																		ok_test_passed 
+																																			
+																																		
+																																	
+																																Runing_windows_process_with_time_and_memory_evaluation 
+																																	Runing_simple_windows_process 
+																																	Result_evoluation 
+																																		time: 0 
+																																																													memory:	 	0	 	
+			Result_evoluation 
+																																																																		time:	 	0 
+								ok_test_passed	 	
+																																																								memory:	 	0 
+						
+																																			
+																																		ok_test_passed 
+																																			
+																																		
+																																	time_usage: 0 
+																																	memory_usage: 0 
+																																Test: 92847 19012 
+																																	Output: 92847 
+																																	Answer: 92847
+ 
+																																
+																															Rederecting_input_and_output_to_pipe 
+																															Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																																args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																																
+																															Runing_simple_windows_process 
+																															Result_evoluation 
+																																time: 0 
+																																memory: 0 
+																																ok_test_passed 
+																																	
+																																
+																															Result_evoluation 
+																																time: 0 
+																																memory: 0 
+																																ok_test_passed 
+																																	
+																																
+																															Result_evoluation 
+																																time: 0 
+																																memory: 0 
+																																ok_test_passed 
+																																	
+																																
+																															Result_evoluation 
+																																time: 0 
+																																memory: 0 
+																																ok_test_passed 
+																																	
+																																
+																															time_usage: 0 
+																															memory_usage: 0 
+																														Test: 81472 -30608 
+																															Output: 81472 
+																															Answer: 81472
+ 
+																														
+																													Rederecting_input_and_output_to_pipe 
+																													Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																														args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																														time_usage: 0 
+																														memory_usage: 0 
+																													Test: -26291 -61890 
+																														Output: -26291 
+																														Answer: -26291
+ 
+																													
+																												Rederecting_input_and_output_to_pipe 
+																												Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																													args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																													
+																												Runing_simple_windows_process 
+																												time_usage: 0 
+																												memory_usage: 0 
+																											Test: -43175 -51117 
+																												Output: -43175 
+																												Answer: -43175
+ 
+																											
+																										Rederecting_input_and_output_to_pipe 
+																										Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																											args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																											time_usage: 0 
+																											memory_usage: 0 
+																										Test: 36868 -99183 
+																											Output: 36868 
+																											Answer: 36868
+ 
+																										
+																									Rederecting_input_and_output_to_pipe 
+																									Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																										args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																										time_usage: 0 
+																										memory_usage: 0 
+																									Test: 59133 -2994 
+																										Output: 59133 
+																										Answer: 59133
+ 
+																									
+																								Rederecting_input_and_output_to_pipe 
+																								Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																									args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																									time_usage: 0 
+																									memory_usage: 0 
+																								Test: -5955 48956 
+																									Output: 48956 
+																									Answer: 48956
+ 
+																								
+																							Rederecting_input_and_output_to_pipe 
+																							Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+																								args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																								time_usage: 0																								
+																													time_usage:		 		0 
+																							memory_usage: 0 
+															 	
+														Runing_simple_windows_process		 	
+																													Test:	 	-35152 -84537	 memory_usage:
+ 	0 
+																						
+												Output: -35152 
+																											Answer:	 	-35152
+	 	
+																									Runing_simple_windows_process					 					
+										
+				Test: 68991 55750 
+																				Output: 68991 
+																				Answer: 68991
+ 
+																			
+																		Rederecting_input_and_output_to_pipe 
+																		Rederecting_input_and_output_to_pipe 
+																																			Creating_windows_process_with_name: 		D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exeCreating_windows_process_with_name:  
+D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe	 	
+																																	args:		 			D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 	 	
+				args:	 	D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 	 
+											
+																			Runing_simple_windows_process 
+																			
+																		Runing_simple_windows_process 
+																		
+																	Runing_simple_windows_process 
+																	
+																															Runing_simple_windows_process	 time_usage:
+ 0 
+																														memory_usage:	 time_usage:0  0 
+				
+											memory_usage: 0 
+															Test:	 			-95352 -30803				 			
+														Test:	 		66693 -2288	 	
+																															time_usage:	 Output:Output: 0 
+		 					-30803	 	
+	66693	 	
+																			memory_usage:						 							Answer:	0Answer:   66693
+
+ 
+-30803
+	 	
+																						
+	
+																						Rederecting_input_and_output_to_pipe	 Rederecting_input_and_output_to_pipe
+ 	
+									Test: -55137 73046 
+												Output: 73046 
+												Answer: 73046
+ 
+											
+														Rederecting_input_and_output_to_pipe					 				
+							Creating_windows_process_with_name:	 Creating_windows_process_with_name:D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe
+ 	
+																					args:	 	D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe args:  
+D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+												Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+													args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+													
+												Runing_simple_windows_process 
+												time_usage: 0 
+												memory_usage: 0 
+											Test: -6404 -59418 
+												Output: -6404 
+												Answer: -6404
+ 
+											
+										Rederecting_input_and_output_to_pipe 
+										Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+											args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+																					
+
+										Runing_simple_windows_process	 	
+						Runing_simple_windows_process 
+									
+								Runing_simple_windows_process 
+								time_usage: 0 
+								memory_usage: 0 
+							Test: 9031 -39342 
+								Output: 9031 
+								Answer: 9031
+ 
+							
+						Rederecting_input_and_output_to_pipe 
+						Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+							args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+							time_usage: 0 
+							memory_usage: 0 
+						Test: 27172 -64624 
+							Output: 27172 
+							Answer: 27172
+ 
+						
+					Rederecting_input_and_output_to_pipe 
+					Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+						args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+						
+					Runing_simple_windows_process 
+					time_usage: 0 
+					memory_usage: 0 
+				Test: -89003 67311 
+					Output: 67311 
+					Answer: 67311
+ 
+				
+			Rederecting_input_and_output_to_pipe 
+			Creating_windows_process_with_name: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe 
+				args: D:\projects\VSCode\ChineseTester8\bin\resources\checkers\ch-3.exe  
+				
+			Runing_simple_windows_process 
+			
+		Runing_simple_windows_process 
+		
+	Runing_simple_windows_process 
+	Result_evoluation 
+		time: 0 
+		memory: 0 
+		ok_test_passed 
+			
+		
+	Result_evoluation 
+		time: 0 
+		memory: 0 
+		ok_test_passed 
+			
+		
+	Result_evoluation 
+		time: 0 
+		memory: 0 
+		ok_test_passed 
+			
+		
+	Result_evoluation 
+		time: 0 
+		memory: 0 
+			ok_test_passed	 	
+Result_evoluation	 	
+				
+		time:	 	0	 	
+Result_evoluation 	
+	
+		memory:		 time: 00 
+			memory: 0  
+
+					ok_test_passed	 	
+ok_test_passed	 		
+				
+				
+			
+
+	Result_evoluation 
+		time: 0 
+		memory: 0 
+		ok_test_passed 
+			
+		
+	Result_evoluation	 	Result_evoluation
+ 	
+				time:	 time: 0 
+	0 
+				memory: 	0memory:  
+0	 
+		ok_test_passed 
+						
+		ok_test_passed	 	
+		
+		
+		
+	Result_evoluation 
+		time: 0 
+		memory: 0 
+		ok_test_passed 
+			
+		
+	Result_evoluation 
+		time: 0 
+		memory: 0 
+		ok_test_passed 
+			
+		
+	Result_evoluation 
+		time: 0 
+		memory: 0 
+		ok_test_passed 
+			
+		
+		Result_evoluation 
+			time:Result_evoluation  
+0 
+			memory:	 	0	 time:
+ 0 
+				memory:	 	0ok_test_passed  
+
+				
+					
+ok_test_passed 
+			
+		
+	Result_evoluation 
+		time: 0 
+		memory: 0 
+		ok_test_passed 
+			
+		
+	Result_evoluation 
+		time: 0 
+		memory: 0 
+		ok_test_passed 
+			
+		
+	Updating_database 
+		Updating... 
+		Database_updated? 
+	Final_result: OK 
+	Final_time: 0 
+	Final_memory: 0 

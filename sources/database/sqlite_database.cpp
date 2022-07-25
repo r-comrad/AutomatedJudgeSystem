@@ -1,7 +1,7 @@
 #include "database/sqlite_database.hpp"
 
 //--------------------------------------------------------------------------------
-//					    SQLLITE INTERFACE  IMPLEMENTATION
+//                        SQLLITE INTERFACE  IMPLEMENTATION
 //--------------------------------------------------------------------------------
 
 SQLiteDatabase::SQLiteDatabase(dom::String aPath) :

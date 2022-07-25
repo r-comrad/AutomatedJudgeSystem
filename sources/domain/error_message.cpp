@@ -1,5 +1,7 @@
 #include "domain/error_message.hpp"
 
+#include "main/path.hpp"
+
 // std::ostream* dom::ErrorMessages::mLogStream    =  &std::cout;
 // std::ostream* dom::ErrorMessages::mErrorStream  =  &std::cout;
 
@@ -16,6 +18,7 @@ dom::Message::Message() noexcept
     #elif   defined(LOGS_TO_COUT_OUTPUT)
         mLogStream = &std::cout;
     #elif   defined(LOGS_TO_FILE_OUTPUT)
+        auto sss = LOGS_PATH + "out.log";
         mLogStream = new std::ofstream(LOGS_PATH + "out.log");
     #endif
 

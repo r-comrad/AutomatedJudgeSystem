@@ -4,16 +4,20 @@
 #include "domain/type.hpp"
 #include "domain/string.hpp"
 
+struct Limits
+{
+    uint_64 timeLimit;
+    uint_64 memoryLimit;
+};
+
 struct SubmissionInfo
 {
-public:
-	int ID;
-	int problemID;
+    int ID;
+    int problemID;
 
-	uint_64 timeLimit;
-	uint_64 memoryLimit;
-	dom::String solutionFileName;
-	dom::String checkerFileName;
+    Limits timeMemLim;
+    dom::String solutionFileName;
+    dom::String checkerFileName;
 };
 
 #endif // !SUBMISSION_INFO_HPP
