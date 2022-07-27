@@ -1,9 +1,7 @@
-#ifndef WINDOWS_PIPE_PROCESS_H
-#define WINDOWS_PIPE_PROCESS_H
+#ifndef WINDOWS_PIPE_PROCESS_HPP
+#define WINDOWS_PIPE_PROCESS_HPP
 
 //--------------------------------------------------------------------------------
-
-#include <string>
 
 #include "windows_process.hpp"
 
@@ -13,31 +11,31 @@ namespace proc
     {
     public:
         PipeWindowsProcess() noexcept = default;
-
-        PipeWindowsProcess(PipeWindowsProcess&& other) noexcept = default;
-        PipeWindowsProcess(const PipeWindowsProcess& other) noexcept = default;
-
-        PipeWindowsProcess& operator=(PipeWindowsProcess&& other) noexcept = default;
-        PipeWindowsProcess& operator=(const PipeWindowsProcess& other) noexcept = default;
-
         virtual ~PipeWindowsProcess();
 
-        void read(std::string& result) noexcept;
-        void write(const std::string& aMessage) noexcept;
-        virtual void IORedirection() noexcept;
-        virtual void create() noexcept;
+        PipeWindowsProcess(const PipeWindowsProcess& other) noexcept = default;  
+        PipeWindowsProcess& operator=(const PipeWindowsProcess& other) 
+            noexcept = default;
+
+        PipeWindowsProcess(PipeWindowsProcess&& other) noexcept = default;
+        PipeWindowsProcess& operator=(PipeWindowsProcess&& other) 
+            noexcept = default;
+        
+        virtual void IORedirection() noexcept final override;
+        void read(std::string& result) noexcept final override;
+        void write(const std::string& aMessage) noexcept final override;
 
     private:
-        virtual void closeHandles() noexcept;
-
         bool mIOSet = false;
         HANDLE mThisSTDIN;
         HANDLE mThisSTDOUT;
         HANDLE mChildSTDIN;
         HANDLE mChildSTDOUT;
+
+        virtual void closeHandles() noexcept;
     };
 }
 
 //--------------------------------------------------------------------------------
 
-#endif // !WINDOWS_PIPE_PROCESS_H
+#endif // !WINDOWS_PIPE_PROCESS_HPP

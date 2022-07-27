@@ -1,9 +1,17 @@
 #include "pipe_linux_process.hpp"
 
+//--------------------------------------------------------------------------------
+
+
+
+//--------------------------------------------------------------------------------
+
 proc::PipeLinuxProcess::PipeLinuxProcess() noexcept
 {
     IORedirection()
 }
+
+//--------------------------------------------------------------------------------
 
 void
 proc::PipeLinuxProcess::create(const std::vector<char*>& aParameters)
@@ -86,7 +94,11 @@ proc::PipeLinuxProcess::create(const std::vector<char*>& aParameters)
     }*/
 }
 
+//--------------------------------------------------------------------------------
+
 #define BUFFER_SIZE 65336 * 10
+
+//--------------------------------------------------------------------------------
 
 void
 proc::PipeLinuxProcess::IORedirection()
@@ -103,6 +115,7 @@ proc::PipeLinuxProcess::IORedirection()
     fcntl(mPipeB[1], F_SETPIPE_SZ, BUFFER_SIZE);
 }
 
+//--------------------------------------------------------------------------------
 
 void
 proc::PipeLinuxProcess::readPipe(str_ref result)
@@ -130,6 +143,8 @@ proc::PipeLinuxProcess::readPipe(str_ref result)
     WD_END_LOG;
 #endif // !PIPE_LOG_OUTPUT
 }
+
+//--------------------------------------------------------------------------------
 
 void
 proc::PipeLinuxProcess::writePipe(str_ref aMessage, PypeType aType)

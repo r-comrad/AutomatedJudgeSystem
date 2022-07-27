@@ -3,7 +3,6 @@
 
 #include <fstream>
 
-#include "flags.hpp"
 #include "type.hpp"
 #include "string.hpp"
 

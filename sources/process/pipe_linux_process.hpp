@@ -1,11 +1,11 @@
-#ifndef PIPE_LINUX_PROCESS_H
-#define PIPE_LINUX_PROCESS_H
+#ifndef PIPE_LINUX_PROCESS_HPP
+#define PIPE_LINUX_PROCESS_HPP
 
 //--------------------------------------------------------------------------------
 
 #include <string>
 
-
+namespace proc
 
 class PipeLinuxProcess //: public LinuxProcess
 {
@@ -28,4 +28,4 @@ private:
 
 //--------------------------------------------------------------------------------
 
-#endif // !PIPE_LINUX_PROCESS_H
+#endif // !PIPE_LINUX_PROCESS_HPP

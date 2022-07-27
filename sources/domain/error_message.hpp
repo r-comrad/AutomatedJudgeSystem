@@ -1,21 +1,14 @@
-#ifndef ERRORS_HPP
-#define ERRORS_HPP
+#ifndef ERROR_MESSAGE_HPP
+#define ERROR_MESSAGE_HPP
 
-//------------------------------------------------------------
-//                    ERROR MESSEGES DECLARATION
-//------------------------------------------------------------
+//--------------------------------------------------------------------------------
 
-#include <iostream>
-
-#include "flags.hpp"
-#include "type.hpp"
-#include "string.hpp"
-#include "path.hpp"
 #include <fstream>
 
-#ifdef BILL_WINDOWS
-// #include <windows.h>
-#endif // !BILL_WINDOWS
+#include "type.hpp"
+#include "string.hpp"
+
+//--------------------------------------------------------------------------------
 
 namespace dom
 {
@@ -103,15 +96,18 @@ namespace dom
     };
 }
 
+//--------------------------------------------------------------------------------
+
 /*
-ERROR FORMAT: <file or class name>, <function>, <approximate error number>, <error message>
+ERROR FORMAT: <file or class name>, <function>, 
+                <approximate error number>, <error message>
 */
 
 #ifdef _DBG_
     #define START_LOG_BLOCK(...)    dom::Message::globalMessages.startLogBlock(__VA_ARGS__)
     #define END_LOG_BLOCK(...)      dom::Message::globalMessages.endLogBlock(__VA_ARGS__)
     #define WRITE_LOG(...)          dom::Message::globalMessages.writeLog(__VA_ARGS__)
-    #define WRITE_LOG_ENDL          dom::Message::globalMessages.writeLogEndl
+    #define WRITE_LOG_ENDL(...)     dom::Message::globalMessages.writeLogEndl(__VA_ARGS__)
     #define WRITE_ERROR(...)        dom::Message::globalMessages.writeError(__VA_ARGS__)
 #else
     #define START_LOG_BLOCK(...)    void(0)
@@ -119,6 +115,8 @@ ERROR FORMAT: <file or class name>, <function>, <approximate error number>, <err
     #define WRITE_LOG(...)          void(0)
     #define WRITE_LOG_ENDL          void(0) 
     #define WRITE_ERROR(...)        void(0)    
-#endif // DEBUG
+#endif 
 
-#endif // !ERRORS_HPP
+//--------------------------------------------------------------------------------
+
+#endif // !ERROR_MESSAGE_HPP

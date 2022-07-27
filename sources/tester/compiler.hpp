@@ -33,21 +33,20 @@ namespace test
         };
 
     public:
-        Compiler() = default;
+        Compiler() noexcept = default;
         ~Compiler() = default;
 
-        Compiler(const Compiler& other) = default;
-        Compiler& operator= (const Compiler& other) = default;
+        Compiler(const Compiler& other) noexcept = default;
+        Compiler& operator= (const Compiler& other) noexcept = default;
 
         Compiler(Compiler&& other) noexcept = default;
         Compiler& operator= (Compiler&& other) noexcept = default;
 
         /*
         \brief Prepare a command that executes the child process and
-        compiles the file in specified directory if necessary.
-        \param aFileName A file with the code to execute.
-        \param aOutputName Specified compiler output path.
-        \param aCpmandParameters An array containing the resulting command.
+            compiles the file in specified directory if necessary.
+        \param aCode A struct with the path to code to execute,
+            output directory and language information.
         */
         dom::StringTable getExecutableCommand(CodeInfo&& aCode) const noexcept;
 
@@ -74,16 +73,18 @@ namespace test
 
         /*
         \brief Compile the cpp file and return the cmd command to execute it.
-        \param aFileName A cpp file information.
-        \return An array of strings with the commands for exe execution execution.
+        \param aInfo A cpp file information.
+        \return An array of strings with the commands for 
+            exe execution execution.
         */
         dom::StringTable prepareCommandForCPP(CPPInfo&& aInfo) 
             const noexcept;
 
         /*
         \brief Prepare the cmd command for python file interpretation.
-        \param aFileName A python file information.
-        \return An array of strings with the commands for python file einterpretation.
+        \param aInfo A python file information.
+        \return An array of strings with the commands for python 
+            file einterpretation.
         */
         dom::StringTable prepareCommandForPython(CPPInfo&& aInfo) 
             const noexcept;

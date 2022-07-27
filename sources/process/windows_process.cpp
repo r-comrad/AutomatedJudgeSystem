@@ -1,21 +1,30 @@
-//--------------------------------------------------------------------------------
 
 #include "windows_process.hpp"
+
+//--------------------------------------------------------------------------------
+
+#include "cputime/getCPUTime.hpp"
+
+#include "domain/error_message.hpp"
+
+//--------------------------------------------------------------------------------
 
 proc::WindowsProcess::WindowsProcess()  noexcept
 {
     ZeroMemory(&mProcessInfo, sizeof(PROCESS_INFORMATION));
     ZeroMemory(&mStartupInfo, sizeof(STARTUPINFOA));
-    setLimits({uint_64(1e18), uint_64(1e18)});
 
     mProcessArgs.switchToCharArray();
 }
 
+//--------------------------------------------------------------------------------
+
 proc::WindowsProcess::WindowsProcess(const WindowsProcess& other)  noexcept
 {
-    mProcessName = other.mProcessName;
-    mProcessArgs = other.mProcessArgs.getCopy(dom::String::StrType::CharArray);
+    *this = other;
 }
+
+//--------------------------------------------------------------------------------
 
 proc::WindowsProcess&
 proc::WindowsProcess::operator=(const WindowsProcess& other) noexcept
@@ -25,11 +34,6 @@ proc::WindowsProcess::operator=(const WindowsProcess& other) noexcept
     return *this;
 }
 
-// proc::WindowsProcess::~WindowsProcess()  noexcept
-// {
-//     //if (mFuture != nullptr) delete mFuture;
-// }
-
 //--------------------------------------------------------------------------------
 
 bool
@@ -38,9 +42,6 @@ proc::WindowsProcess::run() noexcept
     bool result = true;
     WRITE_LOG("Runing_simple_windows_process");
 
-    // if (getExitCode(mProcessInfo.hProcess) == STILL_ACTIVE)
-    // {
-    // }
     ResumeThread(mProcessInfo.hThread);
     WaitForSingleObject(mProcessInfo.hProcess, mTimeLimit);
 
@@ -65,20 +66,17 @@ proc::WindowsProcess::runWithLimits() noexcept
     uint_64 timeUsage = 0;
     uint_64 memoryUsage = 0;
 
-    int reservedTime = 200;
-    long long startTime = getCPUTime();
+    uint_64 reservedTime = 200;
+    uint_64 startTime = getCPUTime();
 
     if (run()) 
     {
         long long endTime = getCPUTime();
         timeUsage = endTime - startTime;
-
-    //    memoryUsage = mFuture->get();
+        result = { timeUsage , memoryUsage };
 
         WRITE_LOG("time_usage:", timeUsage);
         END_LOG_BLOCK("memory_usage:", memoryUsage);
-
-        result = { timeUsage , memoryUsage };
     }
 
     return result;
@@ -89,7 +87,7 @@ proc::WindowsProcess::runWithLimits() noexcept
 void 
 proc::WindowsProcess::setComand(const dom::StringTable& aParameters) noexcept
 {
-    mProcessName = dom::CharArray(aParameters[0]);
+    mProcessName = std::move(dom::CharArray(aParameters[0]));
     
     for(const auto& str : aParameters)
     {
@@ -106,14 +104,11 @@ proc::WindowsProcess::create() noexcept
 {
     START_LOG_BLOCK("Creating_windows_process_with_name:", mProcessName.get());
     WRITE_LOG("args:", mProcessArgs.getFront<char*>());
-
-    //mFuture = new std::future<long long>;
-   //  *mFuture = (std::async(std::launch::async, &proc::WindowsProcess::getMaxMemoryUsage,
-    //    this, std::ref(mProcessInfo), 1000000));
+    
+    IORedirection();
 
     //TODO:     if (name[0] == 0) name = NULL;
     if (CreateProcessA(
-        //TODO: without string
         mProcessName.get(),
         mProcessArgs.getFront<char*>(),
         NULL,
@@ -126,11 +121,16 @@ proc::WindowsProcess::create() noexcept
         &mProcessInfo
     ) == FALSE)
     {
-        WRITE_ERROR("Process", "create", 10, "Can't_start_process", mProcessName.get());
+        WRITE_ERROR("Process", "create", 10, "Can't_start_process", 
+            mProcessName.get());
     }
     END_LOG_BLOCK();
 }
 
+//--------------------------------------------------------------------------------
+/*
+** Next 5 functiona from Chinese tester
+*/
 //--------------------------------------------------------------------------------
 
 long long 
@@ -191,6 +191,8 @@ proc::WindowsProcess::getMaxMemoryUsage
     } while (getExitCode(processInfo.hProcess) == STILL_ACTIVE);
     return maxMemoryUsage;
 }
+
+//--------------------------------------------------------------------------------
 
 DWORD 
 proc::WindowsProcess::getExitCode(HANDLE& hProcess) noexcept

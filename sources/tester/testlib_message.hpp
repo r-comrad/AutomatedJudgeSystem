@@ -1,11 +1,13 @@
-#ifndef TESTLIB_MESSAGE_H
-#define TESTLIB_MESSAGE_H
+#ifndef TESTLIB_MESSAGE_HPP
+#define TESTLIB_MESSAGE_HPP
+
+//--------------------------------------------------------------------------------
 
 #include <string>
 
-#include "main/flags.hpp"
-
 #include "domain/type.hpp"
+
+//--------------------------------------------------------------------------------
 
 struct TestLibMessage
 {
@@ -18,9 +20,9 @@ public:
     std::string mAnswerSize;
     std::string mOutputSize;
 
-    void makeTestSizes();
-    void makeAnswerSizes();
-    void makeOutputSizes();
+    void makeTestSizes() noexcept;
+    void makeAnswerSizes() noexcept;
+    void makeOutputSizes() noexcept;
     
 private:
     union
@@ -29,7 +31,9 @@ private:
         uint_64 value;
     } StringSizeCoder{};
 
-    void makeSize(std::string& aStr, std::string& aSize);
+    void makeSize(std::string& aStr, std::string& aSize) noexcept;
 };
 
-#endif //TESTLIB_MESSAGE_H
+//--------------------------------------------------------------------------------
+
+#endif // !TESTLIB_MESSAGE_HPP

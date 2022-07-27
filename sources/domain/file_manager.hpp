@@ -4,8 +4,6 @@
 #include <fstream>
 #include <vector>
 
-#include "flags.hpp"
-
 #include "type.hpp"
 #include "string.hpp"
 #include "error_message.hpp"

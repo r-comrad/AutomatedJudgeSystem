@@ -1,29 +1,16 @@
-#ifndef WINDOWS_PROCESS_H
-#define WINDOWS_PROCESS_H
+#ifndef WINDOWS_PROCESS_HPP
+#define WINDOWS_PROCESS_HPP
 
 //--------------------------------------------------------------------------------
-//                CHILD PROCESS CREATION IMPLIMENTATION 
-//--------------------------------------------------------------------------------
-
-#define _CRT_SECURE_NO_WARNINGS
-
-#include <string>
-#include <vector>
-#include <iostream>
 
 #include "domain/type.hpp"
 #include "domain/string.hpp"
-#include "domain/error_message.hpp"
-#include "domain/path.hpp"
-#include "domain/pair.hpp"
 
 #include "base_process.hpp"
 
 //--------------------------------------------------------------------------------
 
-
 #define _CRT_SECURE_NO_WARNINGS
-#include <future>
 #include <windows.h>
 #include <userenv.h>
 #include <psapi.h>
@@ -32,8 +19,6 @@
 #include <atlalloc.h>
 #include <shlwapi.h>
 #include <cstdint>
-
-#include "CPUTime/getCPUTime.hpp"
 
 //--------------------------------------------------------------------------------
 
@@ -44,68 +29,60 @@ namespace proc
     public:
         /*
         \brief Base process constructor that initialize time and memory 
-        usage limits for child process.
-        (all child process have max time and memory usage limits
-        that defined in MAX_TIME_LIMIT and MAX_MEMORY_LIMIT)
-        \param aParameters Child process parameters for execution.
-        \param aTimeLimit Child process maximum time usage.
-        \param aMemoryLimit Child process maximum memory usage.
+            usage limits for child process.
+            (all child process have max time and memory usage limits
+            that defined in MAX_TIME_LIMIT and MAX_MEMORY_LIMIT)
         */
         WindowsProcess() noexcept;
-        
-        WindowsProcess(WindowsProcess&& other) noexcept = default;
-        WindowsProcess(const WindowsProcess& other) noexcept;
-
-        WindowsProcess& operator=(WindowsProcess&& other) noexcept = default;
-        WindowsProcess& operator=(const WindowsProcess& other) noexcept;
-
-
-        //virtual ~WindowsProcess() = default;
         virtual ~WindowsProcess() = default;
 
-        //NOC__NOD_FUNCs(WindowsProcess)
+        WindowsProcess(const WindowsProcess& other) noexcept;
+        WindowsProcess& operator=(const WindowsProcess& other) noexcept;
 
-        virtual void setComand(const dom::StringTable& aParameters) noexcept;
+        WindowsProcess(WindowsProcess&& other) noexcept = default;
+        WindowsProcess& operator=(WindowsProcess&& other) noexcept = default;
+
+        void setComand(const dom::StringTable& aParameters) 
+            noexcept final override;
+
         /*
         \brief Create a child process with the specified parameters.
-        \param aParameters Child process parameters for execution.
         */
-        virtual void create() noexcept;
+        void create() noexcept final override;
 
         /*
         \brief Executing the child process without time and memory 
-        usage evaluation.
+            usage evaluation.
         \return Returns true if the process is completed successfully.
         */
-        virtual bool run() noexcept;
+        bool run() noexcept final override;
 
         /*
         \brief Executing the child process with time and memory 
-        usage evaluation.
-        \return Returns the time and memory used by the process.
+            usage evaluation.
+        \return Returns the time and memory used by the process if 
+            the process is completed successfully.
         */
-        virtual std::optional<dom::Pair<uint_64>> runWithLimits() noexcept;
-
-    protected:
-        /*
-        \brief Redirecting input and output streams for a child process.
-        */
-
-        /*
-        \brief Closes the input and output handler for the child process.
-        (finishing of communication with the child process)
-        */
-    
-        virtual void closeHandles() noexcept = 0;
-        virtual void IORedirection() noexcept = 0;
+        std::optional<dom::Pair<uint_64>> runWithLimits() noexcept final override;
 
     protected:
         STARTUPINFOA mStartupInfo;
         PROCESS_INFORMATION mProcessInfo;
 
+        /*
+        \brief Redirecting input and output streams for a child process.
+        */
+        virtual void IORedirection() noexcept = 0;
+       
+        /*
+        \brief Closes the input and output handler for the child process.
+            (finishing of communication with the child process)
+        */
+        virtual void closeHandles() noexcept = 0;
+
     private:
-    //TODO: ptr
-    //    std::future<long long> *mFuture;
+        dom::CharSharedArray mProcessName;
+        dom::String mProcessArgs;
 
         long long getMillisecondsNow() noexcept;
 
@@ -114,15 +91,10 @@ namespace proc
 
         DWORD getExitCode(HANDLE&) noexcept;
         bool killProcess(PROCESS_INFORMATION&) noexcept;
-
-    private:
-        dom::CharSharedArray mProcessName;
-        //dom::CharArray mProcessArgs;
-        dom::String mProcessArgs;
     };
 
 }
 
 //--------------------------------------------------------------------------------
 
-#endif // WINDOWS_PROCESS_H
+#endif // !WINDOWS_PROCESS_HPP

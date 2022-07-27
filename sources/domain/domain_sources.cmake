@@ -7,8 +7,6 @@ set(
     file_manager.hpp
     file_manager.cpp
 
-    flags.hpp
-
     math.hpp
     math.cpp
 

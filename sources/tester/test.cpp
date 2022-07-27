@@ -1,97 +1,126 @@
 #include "test.hpp"
 
-Test::Test
+//--------------------------------------------------------------------------------
+
+uint_64 test::Test::globalTestersNumber = 0;
+
+//--------------------------------------------------------------------------------
+
+test::Test::Test
 (
     std::shared_ptr<proc::Process> aSolutionTemplate,
-    std::shared_ptr<proc::Process> aCheckerTemplate
+    std::shared_ptr<proc::Process> aCheckerTemplate,
+    ThreadSignals* aThreadSignals
 ) noexcept :
+    mNumberOfTester     (0),
+    mTestNumber         (0),
     mSolutionTemplate   (aSolutionTemplate),
     mCheckerTemplate    (aCheckerTemplate),
-    mTestState          (Test::TestState::Finished),
-    mVerdict            (OK),
+    mThreadSignals      (aThreadSignals),
+    mVerdict            (TestVerdict::OK),
     mUsedTime           (0),
     mUsedMemory         (0),
     mTestThread         ([](){})
 {}
 
-Test::~Test() 
+//--------------------------------------------------------------------------------
+
+test::Test::~Test() 
 {
     mTestThread.join();
 }
 
-Test::Test(const Test& other) noexcept
+//--------------------------------------------------------------------------------
+
+test::Test::Test(const Test& other) noexcept :
+    mNumberOfTester     (globalTestersNumber++),
+    mTestNumber         (0),
+    mSolutionTemplate   (other.mSolutionTemplate),
+    mCheckerTemplate    (other.mCheckerTemplate),
+    mThreadSignals      (other.mThreadSignals),
+    mVerdict            (TestVerdict::OK),
+    mUsedTime           (0),
+    mUsedMemory         (0),
+    mTestThread         ([](){})
 {
-    mTestState = Test::TestState::Finished;
-    mTestThread = std::thread([](){});
-
-    mVerdict = OK;
-    mUsedTime = 0;
-    mUsedMemory = 0;
-
-    mSolutionTemplate = other.mSolutionTemplate;
-    mCheckerTemplate = other.mCheckerTemplate;   
-
     mTimeLimit = other.mTimeLimit;    
-    mMemoryLimit = other.mMemoryLimit;    
+    mMemoryLimit = other.mMemoryLimit; 
+    mThreadSignals->push(mNumberOfTester);    
 }
 
-bool
-Test::isFinished() const noexcept
+//--------------------------------------------------------------------------------
+
+test::Test& 
+test::Test::operator=(const Test& other) noexcept
 {
-    return mTestState == TestState::Finished || mTestState == TestState::RunOut;
-}
-bool
-Test::testsAreOver() const noexcept
-{
-    return mTestState == TestState::RunOut;
+
+    *this = std::move(Test(other));
+    return *this;
 }
 
-std::string 
-Test::getVerdict() const noexcept
+//--------------------------------------------------------------------------------
+
+test::Test::TestVerdict
+test::Test::getVerdict() const noexcept
 {
     return mVerdict;
 }
 
+//--------------------------------------------------------------------------------
+
 uint_64 
-Test::getUsedTime() const noexcept
+test::Test::getUsedTime() const noexcept
 {
     return mUsedTime;
 }
 
+//--------------------------------------------------------------------------------
+
 uint_64
-Test::getUsedMemory() const noexcept
+test::Test::getUsedMemory() const noexcept
 {
     return mUsedMemory;
 }
 
+//--------------------------------------------------------------------------------
+
 void 
-Test::setLimits(const Limits& aTimeMemLimits) noexcept
+test::Test::setLimits(const Limits& aTimeMemLimits) noexcept
 {
     mTimeLimit = aTimeMemLimits.timeLimit;
     mMemoryLimit = aTimeMemLimits.memoryLimit;
 }
 
+//--------------------------------------------------------------------------------
+
 void 
-Test::run(data::DatabaseQuery& aDBQ) noexcept
+test::Test::run(data::DatabaseQuery& aDBQ) noexcept
 {
+    mThreadSignals->pop(mNumberOfTester);
     mTestThread.join();
-    mTestState = TestState::Testing;
     mTestThread = std::thread(&Test::runTesting, this, std::ref(aDBQ));
 }
 
+//--------------------------------------------------------------------------------
+
 void 
-Test::runTesting(data::DatabaseQuery& aDBQ) noexcept
+test::Test::runTesting(data::DatabaseQuery& aDBQ) noexcept
 {
-    getTest(aDBQ);
-    if (!testsAreOver()) 
+    if (getTest(aDBQ)) 
     {
         checkTest();
-        mTestState = TestState::Finished;
+        mThreadSignals->push(mNumberOfTester);
+    }
+    else
+    {
+        mThreadSignals->finishCurrentThread();
     }
 }
 
+//--------------------------------------------------------------------------------
+
 void 
-Test::checkTest() noexcept
+test::Test::checkTest() noexcept
 {
     START_LOG_BLOCK("Checking_test#", mTestNumber);
 
@@ -103,7 +132,7 @@ Test::checkTest() noexcept
 
     if (!testRes)
     {
-        mVerdict = TLE;
+        mVerdict = TestVerdict::TLE;
     }
     else
     {
@@ -130,15 +159,19 @@ Test::checkTest() noexcept
         mCheckerProcess.write(mTLM.mAnswer);
 
         mCheckerProcess.run();
-        mCheckerProcess.read(mVerdict);
+        
+        std::string temp;
     }
 
     resultEvoluation();
 }
 
-void 
-Test::getTest(data::DatabaseQuery& aDBQ) noexcept
+//--------------------------------------------------------------------------------
+
+bool 
+test::Test::getTest(data::DatabaseQuery& aDBQ) noexcept
 {
+    bool result = false;
     auto testData = aDBQ.getNextTest();
     if (testData.has_value())
     {
@@ -146,48 +179,51 @@ Test::getTest(data::DatabaseQuery& aDBQ) noexcept
         mTLM.mAnswer = std::move(testData.value().output);   
         mTLM.makeTestSizes();
         mTLM.makeAnswerSizes();
-
         mTestNumber = testData.value().testNum;
+        result = true;
     }
-    else
-    {
-        mTestState = TestState::RunOut;
-    }
+    return result;
 }
 
+//--------------------------------------------------------------------------------
+
 void
-Test::resultEvoluation() noexcept
+test::Test::resultEvoluation() noexcept
 {
     START_LOG_BLOCK("Result_evoluation");
     WRITE_LOG("time:",   mUsedTime);
     WRITE_LOG("memory:", mUsedMemory);
 
-    if (mVerdict.substr(0, 2) != "ok")
+    std::string temp;
+    mCheckerProcess.read(temp);
+    if (temp.substr(0, 2) != "ok")
     {
-        mVerdict = WA;
+        mVerdict = TestVerdict::WA;
         START_LOG_BLOCK("Result_not_okay");
-        END_LOG_BLOCK("Today_result_is:", mVerdict);
+        END_LOG_BLOCK("Checker_output:", temp);
     }
     else if (mUsedTime > mTimeLimit * 1000000)
     {
-        mVerdict = TLE;
+        mVerdict = TestVerdict::TLE;
         START_LOG_BLOCK("Result_is_TLE");
         WRITE_LOG("wanted:", mUsedTime);
         END_LOG_BLOCK("received:", mTimeLimit);
     }
     else if (mUsedMemory > mMemoryLimit)
     {
-        mVerdict = MLE;
+        mVerdict = TestVerdict::MLE;
         START_LOG_BLOCK("Result_is_MLE");
         WRITE_LOG("wanted:", mUsedMemory);
         END_LOG_BLOCK("received:", mMemoryLimit);
     }
     else
     {
-        mVerdict = OK;
+        mVerdict = TestVerdict::OK;
         START_LOG_BLOCK("ok_test_passed");
         END_LOG_BLOCK();
     }
 
     END_LOG_BLOCK();
 }
+
+//--------------------------------------------------------------------------------

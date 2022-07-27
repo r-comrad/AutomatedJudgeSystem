@@ -49,7 +49,7 @@ namespace test
         enum class CodeInfoType { Submission, Checker };
         
         CodeInfo(CodeInfoType aType) noexcept;
-        ~CodeInfo() noexcept = default;
+        ~CodeInfo() = default;
 
         CodeInfo(const CodeInfo& other) = delete;
         CodeInfo& operator= (const CodeInfo& other) = delete;
@@ -57,16 +57,17 @@ namespace test
         CodeInfo(CodeInfo&& other) noexcept = default;
         CodeInfo& operator= (CodeInfo&& other) noexcept = default;
 
+
         /*
         \brief Create a CPPInfo structure for the C++ file
-        by moving data from CodeInfo class.
+            by moving data from CodeInfo class.
         \return CPPInfo structure.
         */
         operator CPPInfo() noexcept;
 
         /*
         \brief Create a PythonInfo structure for the Python file
-        by moving data from CodeInfo class.
+            by moving data from CodeInfo class.
         \return PythonInfo structure.
         */
         operator PythonInfo() noexcept;
@@ -78,10 +79,11 @@ namespace test
 
         /*
         \brief Set the language for the current file. 
-        If the language is not specified, determine the language of the file 
-        from its extension.
+            If the language is not specified, 
+            determine the language of the file 
+            from its extension.
         \param aStr The file language.
-        If empty, extension of the first is used.
+            If empty, extension of the first is used.
         */
         void setLanguage(dom::String&& aStr = "") noexcept;
 

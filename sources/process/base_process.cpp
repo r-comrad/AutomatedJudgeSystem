@@ -1,5 +1,7 @@
 #include "base_process.hpp"
 
+//--------------------------------------------------------------------------------
+
 proc::BaseProcess::BaseProcess()  noexcept :
     mTimeLimit      (MAX_TIME_LIMIT),
     mMemoryLimit    (MAX_MEMORY_LIMIT)

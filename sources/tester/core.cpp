@@ -11,19 +11,16 @@
 
 //--------------------------------------------------------------------------------
 
-#define THREAD_COUNTS 30
-#define DEBUG_PLUS_SOLUTION_SUBMISSION 1
+#define THREAD_COUNTS 1
 
 //--------------------------------------------------------------------------------
 
-test::Core::Core
-(
-    std::string aDatabasePath
-) noexcept :
+test::Core::Core(const std::string& aDatabasePath) noexcept :
     mDBQ            (aDatabasePath),
-    mFinalVerdict   (OK),
+    mFinalVerdict   (Test::TestVerdict::OK),
     mFinalTime      (0),
-    mFinalMemory    (0)
+    mFinalMemory    (0),
+    mThreadSignals  (THREAD_COUNTS)
 {}
 
 //--------------------------------------------------------------------------------
@@ -41,7 +38,7 @@ test::Core::run(int aID) noexcept
     auto checkProc = prepareCheckerProcess(partInfo);
     solProc->setLimits(partInfo.timeMemLim);
 
-    Test testTemplate(solProc, checkProc);
+    Test testTemplate(solProc, checkProc, &mThreadSignals);
     testTemplate.setLimits(partInfo.timeMemLim);
     mTests.resize(THREAD_COUNTS, testTemplate);
 
@@ -51,7 +48,7 @@ test::Core::run(int aID) noexcept
 //--------------------------------------------------------------------------------
 
 std::shared_ptr<proc::Process>
-test::Core::prepareSolutionProcess(SubmissionInfo& aSubInfo) noexcept
+test::Core::prepareSolutionProcess(SubmissionInfo& aSubInfo) const noexcept
 {
     CodeInfo codeInfo(CodeInfo::CodeInfoType::Submission);
     codeInfo.setFileName(std::move(aSubInfo.solutionFileName));
@@ -61,7 +58,7 @@ test::Core::prepareSolutionProcess(SubmissionInfo& aSubInfo) noexcept
 //--------------------------------------------------------------------------------
 
 std::shared_ptr<proc::Process>
-test::Core::prepareCheckerProcess(SubmissionInfo& aSubInfo) noexcept
+test::Core::prepareCheckerProcess(SubmissionInfo& aSubInfo) const noexcept
 {
     CodeInfo codeInfo(CodeInfo::CodeInfoType::Checker);
     codeInfo.setFileName(std::move(aSubInfo.checkerFileName));
@@ -72,7 +69,8 @@ test::Core::prepareCheckerProcess(SubmissionInfo& aSubInfo) noexcept
 //--------------------------------------------------------------------------------
 
 std::shared_ptr<proc::Process> 
-test::Core::prepareFile(CodeInfo& aCodeInfo, SubmissionInfo& aSubInfo) noexcept
+test::Core::prepareFile(CodeInfo& aCodeInfo, SubmissionInfo& aSubInfo) 
+    const noexcept
 {
     std::shared_ptr<proc::Process> result = std::make_shared<proc::Process>();
 
@@ -92,53 +90,62 @@ test::Core::check(uint_64 aID) noexcept
 {
     START_LOG_BLOCK("Checking_participant_code");
 
- mTests.erase( mTests.begin());
+    while(!mThreadSignals.isAllThreadsFinished())
+    {         
+        auto signal = mThreadSignals.getSignal();
+        if (signal.has_value())
+        {
+            auto& test = mTests[signal.value()];
+            auto verdict = test.getVerdict();
 
-    bool stillTesting = true;
-    while(mTests.size())
-    {
-        for(auto it = mTests.begin(); mTests.size() && it != mTests.end();)
-        {          
-            if (it->isFinished())
+            if (mFinalVerdict != Test::TestVerdict::OK) 
             {
-                auto verdict = it->getVerdict();
-                stillTesting &= verdict == OK & !it->testsAreOver();
+                mFinalVerdict = verdict;
+            }
+            mFinalTime = std::max(mFinalTime, test.getUsedTime());
+            mFinalMemory = std::max(mFinalMemory, test.getUsedMemory());
 
-                if (mFinalVerdict == OK) 
-                {
-                    mFinalVerdict = verdict;
-                }
-                mFinalTime = std::max(mFinalTime, it->getUsedTime());
-                mFinalMemory = std::max(mFinalMemory, it->getUsedMemory());
-
-                if (stillTesting) 
-                {
-                    it->run(mDBQ);
-                }
-                else
-                {
-                    if (mTests.size() == 1 || it == mTests.begin()) 
-                    {
-                        int yy;
-                        yy = 0;
-                    }
-                    auto temp = it;
-if (it != mTests.begin()) --temp;
-else temp = ++mTests.begin();
-                    mTests.erase(it);
-                    it = temp;
-                }
-            }  
-
-            ++it;
-        }
+            if (!mThreadSignals.isCheckingFinalTests()) 
+            {
+                test.run(mDBQ);
+            }
+        }  
     }
 
-    mDBQ.writeResult(aID, mFinalVerdict, mFinalTime, mFinalMemory);
+    auto tempVerdict = verdictTostring(mFinalVerdict);
+    mDBQ.writeResult(aID, tempVerdict, mFinalTime, mFinalMemory);
 
-    WRITE_LOG     ("Final_result:", mFinalVerdict);
+    WRITE_LOG     ("Final_result:", tempVerdict);
     WRITE_LOG     ("Final_time:",   mFinalTime);
     END_LOG_BLOCK ("Final_memory:", mFinalMemory);
+}
+
+std::string
+test::Core::verdictTostring(const Test::TestVerdict& aVerdict) const noexcept
+{
+    std::string result;
+    switch (aVerdict)
+    {
+    case Test::TestVerdict::OK :
+        result = "ok";
+        break;
+    case Test::TestVerdict::WA :
+        result = "wa";
+        break;
+    case Test::TestVerdict::TLE :
+        result = "tl";
+        break;
+    case Test::TestVerdict::MLE :
+        result = "ml";
+        break;
+    case Test::TestVerdict::PE :
+        result = "wa";
+        break;
+    case Test::TestVerdict::NUN :
+        result = "wa";
+        break;
+    }
+    return result;
 }
 
 //--------------------------------------------------------------------------------
