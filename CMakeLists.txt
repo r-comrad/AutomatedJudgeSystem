@@ -32,7 +32,7 @@ add_subdirectory(libraries)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/sources)
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE
-                           BILL_WINDOWS LOGS_OUTPUT_TYPE=1 ERRORS_OUTPUT_TYPE=4)
+                           BILL_WINDOWS _DBG_ LOGS_OUTPUT_TYPE=1 ERRORS_OUTPUT_TYPE=4)
 if(WIN32)
     target_compile_definitions(${PROJECT_NAME} PRIVATE BILL_WINDOWS)
 else()

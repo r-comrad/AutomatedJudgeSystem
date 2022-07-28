@@ -1,6 +1,8 @@
 #ifndef DOM_PAIR_HPP
 #define DOM_PAIR_HPP
 
+//--------------------------------------------------------------------------------
+
 namespace dom
 {
     template<typename T1, typename T2 = T1>
@@ -136,13 +138,19 @@ namespace dom
         public:
             operator T1&() noexcept
             {
+                #ifdef _DBG_
                 if (mIndex != 0) exit(-1);
+                #endif
+
                 return mRes.x;
             }
 
             operator T2&() noexcept
             {
+                #ifdef _DBG_
                 if (mIndex != 1) exit(-1);
+                #endif
+
                 return mRes.y;
             }
 
@@ -163,5 +171,7 @@ namespace dom
             }
     };
 }
+
+//--------------------------------------------------------------------------------
 
 #endif // !DOM_PAIR_HPP

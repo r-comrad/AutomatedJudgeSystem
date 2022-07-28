@@ -1,16 +1,23 @@
-#ifndef DOM_MATH_H
-#define DOM_MATH_H
+#ifndef DOM_MATH_HPP
+#define DOM_MATH_HPP
+
+//--------------------------------------------------------------------------------
+
+#include <string>
 
 #include "type.hpp"
-#include "string.hpp"
+
+//--------------------------------------------------------------------------------
 
 namespace dom
 {
     class Math
     {
     public:
-        static uint_64 getHash(const std::string& aStr);
+        static uint_64 getHash(const std::string& aStr) const noexcept;
     };
 }
 
-#endif // !DOM_MATH_H
+//--------------------------------------------------------------------------------
+
+#endif // !DOM_MATH_HPP

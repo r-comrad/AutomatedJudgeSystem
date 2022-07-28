@@ -1,11 +1,19 @@
 #include "path.hpp"
 
+//--------------------------------------------------------------------------------
+
+#include "error_message.hpp"
+
+//--------------------------------------------------------------------------------
+
 std::string
 dom::Path::getMainPath() noexcept
 {
     static std::string globalMainPath = getMainPathOnce();
     return globalMainPath;
 }
+
+//--------------------------------------------------------------------------------
 
 std::string
 dom::Path::getExecutablePath() noexcept
@@ -14,14 +22,27 @@ dom::Path::getExecutablePath() noexcept
     return globalExecutablePath;
 }
 
+//--------------------------------------------------------------------------------
+
 std::string
 dom::Path::getMainPathOnce() noexcept
 {
     std::string path = getExecutablePath();
-    path.pop_back();
-    while(path.back() != '\\' && path.back() != '/') path.pop_back();
+    do path.pop_back();
+    while(path.back() != '\\' && path.back() != '/');
     return path;
 }
+
+//--------------------------------------------------------------------------------
+
+#if     defined(BILL_WINDOWS)
+    #include <windows.h>
+#elif   defined(LINUS_LINUX)
+    #include <unistd.h>
+    #include <limits.h>
+#endif
+
+//--------------------------------------------------------------------------------
 
 std::string
 dom::Path::getExecutablePathOnce() noexcept
@@ -31,12 +52,11 @@ dom::Path::getExecutablePathOnce() noexcept
     uint_8 size = GetModuleFileNameA(NULL, buffer, MAX_PATH);
     for (int i = 0; i < 1; ++i) while (buffer[--size] != L'\\');
     buffer[size + 1] = 0;
-    //return std::string(buffer).substr(0, size + 1);
     return std::string(buffer);
 #elif   defined(LINUS_LINUX)
     char buf[PATH_MAX + 1];
     if (readlink("/proc/self/exe", buf, sizeof(buf) - 1) == -1)
-        throw std::string("readlink() failed");
+        WRITE_ERROR("readlink() failed");
     std::string str(buf);
     int i = str.size() - 1;
     for (int j = 0; j < 1; --i)
@@ -49,3 +69,5 @@ dom::Path::getExecutablePathOnce() noexcept
     return "";
 #endif
 }
+
+//--------------------------------------------------------------------------------

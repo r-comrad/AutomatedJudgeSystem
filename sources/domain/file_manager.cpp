@@ -1,13 +1,19 @@
-#include "domain/file_manager.hpp"
+#include "file_manager.hpp"
+
+//--------------------------------------------------------------------------------
+
+#include "error_message.hpp"
+
+//--------------------------------------------------------------------------------
 
 void
 dom::copyFile
 (
     const std::string& aFromFileName,
     const std::string& aToFileName
-)
+) noexcept
 {
-    START_LOG_BLOCK("Copying file");
+    START_LOG_BLOCK("Copying_file");
     WRITE_LOG("From : ", aFromFileName);
     WRITE_LOG("To   : ", aToFileName);
 
@@ -16,53 +22,58 @@ dom::copyFile
 
     if (!fromFile.is_open()) 
     {
-        WRITE_ERROR("DOMAIN", "FILE_MANAGER", "FM#_0", "CANT_OPEN_FILE_FOR_READING", aFromFileName);
+        WRITE_ERROR("File", "copyFile","01", 
+            "CANT_OPEN_FILE_FOR_READING", aFromFileName);
     }
     if (!toFile.is_open()) 
     {
-        WRITE_ERROR("DOMAIN", "FILE_MANAGER", "FM#_0", "CANT_OPEN_FILE_FOR_WRITING", aToFileName);
+        WRITE_ERROR("File", "copyFile", "02", 
+            "CANT_OPEN_FILE_FOR_WRITING", aToFileName);
     }
 
     std::string s;
-    while (std::getline(fromFile, s, '\0')) 
-    {
-        toFile << s << '\n';
-    }
+    std::getline(fromFile, s, '\0')
+    toFile << s;
 
     END_LOG_BLOCK();
     WRITE_LOG_ENDL();
 }
 
-dom::File::File(const std::string& aFileName) :
+//--------------------------------------------------------------------------------
+
+dom::File::File(const std::string& aFileName) noexcept :
     mOut    (aFileName)
 {}
+
+//--------------------------------------------------------------------------------
 
 dom::File::~File()
 {
     mOut.close();
 }
 
-void 
-dom::File::write(const std::vector<std::string>& aMessage)
-{
-    for(const auto& i : aMessage) mOut << i << mDelimiter;
-    mOut << '\n';
-}
+//--------------------------------------------------------------------------------
 
 void
-dom::File::setDelimiter(const std::string& aDelimiter)
+dom::File::setDelimiter(const std::string& aDelimiter) noexcept
 {
     mDelimiter = aDelimiter;
 }
 
+//--------------------------------------------------------------------------------
+
 void
-dom::File::writeEndl()
+dom::File::writeEndl() noexcept
 {
     mOut << '\n';
 }
 
+//--------------------------------------------------------------------------------
+
 void
-dom::File::close()
+dom::File::close() noexcept
 {
     mOut.close();
 }
+
+//--------------------------------------------------------------------------------
