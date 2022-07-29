@@ -48,7 +48,7 @@ test::Core::run(int aID) noexcept
 //--------------------------------------------------------------------------------
 
 std::shared_ptr<proc::Process>
-test::Core::prepareSolutionProcess(SubmissionInfo& aSubInfo) const noexcept
+test::Core::prepareSolutionProcess(data::SubmissionInfo& aSubInfo) const noexcept
 {
     CodeInfo codeInfo(CodeInfo::CodeInfoType::Submission);
     codeInfo.setFileName(std::move(aSubInfo.solutionFileName));
@@ -58,7 +58,7 @@ test::Core::prepareSolutionProcess(SubmissionInfo& aSubInfo) const noexcept
 //--------------------------------------------------------------------------------
 
 std::shared_ptr<proc::Process>
-test::Core::prepareCheckerProcess(SubmissionInfo& aSubInfo) const noexcept
+test::Core::prepareCheckerProcess(data::SubmissionInfo& aSubInfo) const noexcept
 {
     CodeInfo codeInfo(CodeInfo::CodeInfoType::Checker);
     codeInfo.setFileName(std::move(aSubInfo.checkerFileName));
@@ -69,7 +69,7 @@ test::Core::prepareCheckerProcess(SubmissionInfo& aSubInfo) const noexcept
 //--------------------------------------------------------------------------------
 
 std::shared_ptr<proc::Process> 
-test::Core::prepareFile(CodeInfo& aCodeInfo, SubmissionInfo& aSubInfo) 
+test::Core::prepareFile(CodeInfo& aCodeInfo, data::SubmissionInfo& aSubInfo) 
     const noexcept
 {
     std::shared_ptr<proc::Process> result = std::make_shared<proc::Process>();

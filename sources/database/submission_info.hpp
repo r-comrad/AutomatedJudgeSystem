@@ -1,22 +1,31 @@
 #ifndef SUBMISSION_INFO_HPP
 #define SUBMISSION_INFO_HPP
 
+//--------------------------------------------------------------------------------
+
 #include "domain/string.hpp"
 
-struct Limits
-{
-    uint64_t timeLimit;
-    uint64_t memoryLimit;
-};
+//--------------------------------------------------------------------------------
 
-struct SubmissionInfo
+namespace data
 {
-    int ID;
-    int problemID;
+    struct Limits
+    {
+        uint64_t timeLimit;
+        uint64_t memoryLimit;
+    };
 
-    Limits timeMemLim;
-    dom::CharArray solutionFileName;
-    dom::CharArray checkerFileName;
-};
+    struct SubmissionInfo
+    {
+        int ID;
+        int problemID;
+
+        Limits timeMemLim;
+        dom::CharArray solutionFileName;
+        dom::CharArray checkerFileName;
+    };
+}
+
+//--------------------------------------------------------------------------------
 
 #endif // !SUBMISSION_INFO_HPP

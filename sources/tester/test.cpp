@@ -85,7 +85,7 @@ test::Test::getUsedMemory() const noexcept
 //--------------------------------------------------------------------------------
 
 void 
-test::Test::setLimits(const Limits& aTimeMemLimits) noexcept
+test::Test::setLimits(const data::Limits& aTimeMemLimits) noexcept
 {
     mTimeLimit = aTimeMemLimits.timeLimit;
     mMemoryLimit = aTimeMemLimits.memoryLimit;

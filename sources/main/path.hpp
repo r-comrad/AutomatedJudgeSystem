@@ -16,7 +16,7 @@
 #define CHECKER_PATH    CHINA_RESOURCES + "checkers/"
 #define SOLUTION_PATH   CHINA_RESOURCES + "solutions/"
 
-#undef LOGS_PATH
+#undef  LOGS_PATH
 #define LOGS_PATH       CHINA_RESOURCES + "logs/"
 
 #define CPP_COMPILER_NAME   COMPILERS +   "magicCPPCompiler.cmd"

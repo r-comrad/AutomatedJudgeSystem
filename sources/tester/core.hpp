@@ -44,12 +44,12 @@ namespace test
         uint64_t mFinalMemory;
 
         std::shared_ptr<proc::Process> prepareSolutionProcess
-            (SubmissionInfo& aSubInfo) const noexcept;
+            (data::SubmissionInfo& aSubInfo) const noexcept;
         std::shared_ptr<proc::Process> prepareCheckerProcess
-            (SubmissionInfo& aSubInfo) const noexcept;
+            (data::SubmissionInfo& aSubInfo) const noexcept;
         
         std::shared_ptr<proc::Process> prepareFile
-            (CodeInfo& aCodeInfo, SubmissionInfo& aSubInfo) const noexcept;
+            (CodeInfo& aCodeInfo, data::SubmissionInfo& aSubInfo) const noexcept;
         
         void check(uint64_t aID) noexcept;
 

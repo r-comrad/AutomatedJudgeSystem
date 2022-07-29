@@ -139,7 +139,7 @@ dom::Message::GetLastWinAPIError() noexcept
             );
 
         //Copy the error message into a std::string.
-        for (int i = 0; i < size; ++i)
+        for (size_t i = 0; i < size; ++i)
         {
             result.push_back(messageBuffer[i]);
         }

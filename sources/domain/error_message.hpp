@@ -4,8 +4,7 @@
 //--------------------------------------------------------------------------------
 
 #include <fstream>
-
-#include "string.hpp"
+#include <string>
 
 //--------------------------------------------------------------------------------
 
@@ -82,7 +81,7 @@ namespace dom
         \return String with error messege.
         */
         std::string GetLastWinAPIError() noexcept;
-        #endif // !BILL_WINDOWS
+        #endif
 
     private:
 

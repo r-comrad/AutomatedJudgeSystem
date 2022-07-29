@@ -41,7 +41,7 @@ namespace test
         uint64_t getUsedTime() const noexcept;
         uint64_t getUsedMemory() const noexcept;
 
-        void setLimits(const Limits& aTimeMemLimits) noexcept;
+        void setLimits(const data::Limits& aTimeMemLimits) noexcept;
 
         void run(data::DatabaseQuery& aDBQ) noexcept;
 

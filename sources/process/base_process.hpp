@@ -10,7 +10,7 @@
 #include "database/submission_info.hpp"
 
 //--------------------------------------------------------------------------------
-//                              PROCESS CREATION CONSTANTS 
+//                              RESOURCE LIMITS CONSTANTS 
 //--------------------------------------------------------------------------------
 
 #define MAX_TIME_LIMIT 5000
@@ -40,7 +40,8 @@ namespace proc
         BaseProcess(BaseProcess&& other) noexcept = default;
         BaseProcess& operator=(BaseProcess&& other) noexcept = default;
 
-        virtual void setComand(const dom::CharArrayTable& aParameters) noexcept = 0;
+        virtual void setComand(const dom::CharArrayTable& aParameters) 
+            noexcept = 0;
         
         /*
         \brief Create a child process with the specified parameters.
@@ -52,7 +53,7 @@ namespace proc
         \param aTimeMemLimits Child process maximum time usage and 
             process maximum memory usage.
         */
-        void setLimits(const Limits& aTimeMemLimits) noexcept;
+        void setLimits(const data::Limits& aTimeMemLimits) noexcept;
 
         /*
         \brief Executing the child process without time and memory 
@@ -67,7 +68,8 @@ namespace proc
         \return Returns the time and memory used by the process if 
             the process is completed successfully.
         */
-        virtual std::optional<dom::Pair<uint64_t>> runWithLimits() noexcept = 0;
+        virtual std::optional<dom::Pair<uint64_t>> runWithLimits() 
+            noexcept = 0;
 
         virtual void write(const std::string& aMessage) noexcept = 0;
         virtual void read(std::string& aMessage) noexcept = 0;

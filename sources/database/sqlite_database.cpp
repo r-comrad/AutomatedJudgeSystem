@@ -1,10 +1,8 @@
 #include "database/sqlite_database.hpp"
 
 //--------------------------------------------------------------------------------
-//                        SQLLITE INTERFACE  IMPLEMENTATION
-//--------------------------------------------------------------------------------
 
-SQLiteDatabase::SQLiteDatabase(const std::string& aPath) :
+data::SQLiteDatabase::SQLiteDatabase(const std::string& aPath) :
     mBase(NULL)
 {
     WRITE_LOG("Opening_database:", aPath);
@@ -13,29 +11,14 @@ SQLiteDatabase::SQLiteDatabase(const std::string& aPath) :
     //TODO: check don't work
 }
 
-SQLiteDatabase::~SQLiteDatabase() {}
+//--------------------------------------------------------------------------------
 
+data::SQLiteDatabase::~SQLiteDatabase() {}
 
-// void 
-// SQLiteDatabase::select
-// (
-//     dom::String&&       aTableName,
-//     dom::String&&       aColum,
-//     dom::String&&       aConditon,
-//     int                 aStatementID
-// )
+//--------------------------------------------------------------------------------
 
-// {
-//     if (aColum == "") aColum = "*";
-//     if (aConditon != "") aConditon.pushFront(" WHERE "); //= " WHERE " + std::move(aConditon);
-//     dom::String statement = "SELECT " + std::move(aColum);
-//     statement += " FROM " + std::move(aTableName);
-//     statement += std::move(aConditon);
-
-//     prepare(std::move(statement), aStatementID);
-// }
 void 
-SQLiteDatabase::select
+data::SQLiteDatabase::select
 (
     std::string&&       aTableName,
     std::string&&       aColum,
@@ -51,8 +34,10 @@ SQLiteDatabase::select
     prepare(std::move(statement), aStatementID);
 }
 
+//--------------------------------------------------------------------------------
+
 void 
-SQLiteDatabase::update
+data::SQLiteDatabase::update
 (
     std::string&&       aTableName,
     std::string&&       aValue,
@@ -67,8 +52,10 @@ SQLiteDatabase::update
     prepare(std::move(statement), aStatementID);
 }
 
+//--------------------------------------------------------------------------------
+
 std::optional<dom::CharArray>
-SQLiteDatabase::getTextFromRow(int aColumNumber, int aStatementID)
+data::SQLiteDatabase::getTextFromRow(int aColumNumber, int aStatementID)
 {
     std::optional<dom::CharArray> result = {};
     auto ptr = sqlite3_column_text(mStatement[aStatementID], aColumNumber);
@@ -76,27 +63,34 @@ SQLiteDatabase::getTextFromRow(int aColumNumber, int aStatementID)
     return result;
 }
 
+//--------------------------------------------------------------------------------
 
 dom::CharArray
-SQLiteDatabase::getText16FromRow(int aColumNumber, int aStatementID)
+data::SQLiteDatabase::getText16FromRow(int aColumNumber, int aStatementID)
 {
     return dom::CharArray(sqlite3_column_text16(mStatement[aStatementID], aColumNumber));
 }
 
+//--------------------------------------------------------------------------------
+
 int 
-SQLiteDatabase::getIntFromRow(int aColumNumber, int aStatementID)
+data::SQLiteDatabase::getIntFromRow(int aColumNumber, int aStatementID)
 {
     return sqlite3_column_int(mStatement[aStatementID], aColumNumber);
 }
 
+//--------------------------------------------------------------------------------
+
 int64_t
-SQLiteDatabase::getInt64FromRow(int aColumNumber, int aStatementID)
+data::SQLiteDatabase::getInt64FromRow(int aColumNumber, int aStatementID)
 {
     return sqlite3_column_int64(mStatement[aStatementID], aColumNumber);
 }
 
+//--------------------------------------------------------------------------------
+
 void 
-SQLiteDatabase::closeStatment(int aStatementID)
+data::SQLiteDatabase::closeStatment(int aStatementID)
 {
     sqlite3_finalize(mStatement[aStatementID]);
     mStatement[aStatementID] = NULL;
@@ -104,27 +98,18 @@ SQLiteDatabase::closeStatment(int aStatementID)
         mStatement[aStatementID] == NULL) mStatement.pop_back();
 }
 
+//--------------------------------------------------------------------------------
+
 int 
-SQLiteDatabase::step(int aStatementID)
+data::SQLiteDatabase::step(int aStatementID)
 {
     return sqlite3_step(mStatement[aStatementID]);
 }
 
-// dom::String
-// SQLiteDatabase::toAscii(dom::String s)
-// {
-//     //TODO: use my defines
-//     int cnt = 0;
-//     while (s[cnt++]);
-//     char* result = (char*) malloc(sizeof(char) * (cnt));
-//     result[cnt - 1] = 0;
-//     for (int i = 0; s[i];) result[i] = s[i++];
-//     return result;
-//     //TODO end
-// }
+//--------------------------------------------------------------------------------
 
 void 
-SQLiteDatabase::prepare(std::string&& aStatment, int aStatementID)
+data::SQLiteDatabase::prepare(std::string&& aStatment, int aStatementID)
 {
     if (mStatement.size() < aStatementID + 1)
     {
@@ -140,3 +125,5 @@ SQLiteDatabase::prepare(std::string&& aStatment, int aStatementID)
         nullptr                         /* OUT: Pointer to unused portion of zSql */
     ) != SQLITE_OK) WRITE_ERROR("SQLiteDatabase", "prepare", 10, "Can't_prepare_statement", aStatment);
 }
+
+//--------------------------------------------------------------------------------

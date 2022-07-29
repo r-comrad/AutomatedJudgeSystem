@@ -10,7 +10,7 @@ proc::BaseProcess::BaseProcess()  noexcept :
 //--------------------------------------------------------------------------------
 
 void
-proc::BaseProcess::setLimits(const Limits& aTimeMemLimits) noexcept
+proc::BaseProcess::setLimits(const data::Limits& aTimeMemLimits) noexcept
 {
     mTimeLimit = aTimeMemLimits.timeLimit;
     mMemoryLimit = aTimeMemLimits.memoryLimit;

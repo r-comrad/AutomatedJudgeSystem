@@ -3,6 +3,10 @@
 
 //--------------------------------------------------------------------------------
 
+#include "metaprogramming.hpp"
+
+//--------------------------------------------------------------------------------
+
 namespace dom
 {
     template<typename T1, typename T2 = T1>
@@ -29,24 +33,29 @@ namespace dom
             T2 second;
         };
 
+//--------------------------------------------------------------------------------
+
         Pair() noexcept :
             x(),
             y()
         {}
 
-        template <typename ARG>
-        Pair(ARG&& other) noexcept : 
+        template <typename Arg, typename =
+            enableIf<isSameWeak<Pair<T1, T2>, Arg>>>
+        Pair(Arg&& other) noexcept : 
             x(std::forward<T1>(other.x)),
             y(std::forward<T2>(other.y))
         {}
 
-        template <typename ARG1, typename ARG2>
-        Pair(ARG1&& xInit, ARG2&& yInit) noexcept :
+        template <typename Arg1, typename Arg2>
+        Pair(Arg1&& xInit, Arg2&& yInit) noexcept :
             x(std::forward<T1>(xInit)),
             y(std::forward<T2>(yInit))
         {}
 
         ~Pair() = default;
+
+//--------------------------------------------------------------------------------
 
         void operator+= (const Pair& other) noexcept
         {
@@ -59,53 +68,55 @@ namespace dom
             y -= other.y;
         }
 
-        template <typename ARG>
-        Pair& operator=(ARG&& other) noexcept
+//--------------------------------------------------------------------------------
+
+        template <typename Arg, typename =
+            enableIf<isSameWeak<Pair<T1, T2>, Arg>>>
+        Pair& operator=(Arg&& other) noexcept
         {
             x = std::forward<T1>(other.x);
             y = std::forward<T2>(other.y);
             return *this;
         }
 
-        friend Pair operator+ (const Pair& a1, const Pair& a2) noexcept
+//--------------------------------------------------------------------------------
+
+        template <typename Arg, typename =
+            enableIf<isSameWeak<Pair<T1, T2>, Arg>>>
+        friend Pair operator+ (Pair&& a1, Arg&& a2) noexcept
         {
-            Pair<T1, T2> res{ a1.x + a2.x, a1.y + a2.y };
-            return res;
+            a1.x += a2.x;
+            a1.y += a2.y;
+            return std::move(a1);
         }
         friend Pair operator+ (const Pair& a1, Pair&& a2) noexcept
         {
-            a2.x += a1.x;
-            a2.y += a1.y;
-            return a2;
+            return std::move(a2) + a1;
         }
-        friend Pair operator+ (Pair&& a1, const Pair& a2) noexcept
+        
+        friend Pair operator+ (const Pair& a1, const Pair& a2) noexcept
         {
-            return a2 + std::move(a1);
-        }
-        friend Pair operator+ (Pair&& a1, Pair&& a2) noexcept
-        {
-            return a2 + std::move(a1);
+            return Pair<T1, T2> { a1.x + a2.x, a1.y + a2.y };
         }
 
+//--------------------------------------------------------------------------------
 
-        friend Pair operator- (const Pair& a1, const Pair& a2) noexcept
+        template <typename Arg, typename =
+            enableIf<isSameWeak<Pair<T1, T2>, Arg>>>
+        friend Pair operator- (Pair&& a1, Arg&& a2) noexcept
         {
-            Pair<T1, T2> res{ a1.x - a2.x, a1.y - a2.y };
-            return res;
+            a1.x -= a2.x;
+            a1.y -= a2.y;
+            return std::move(a1);
         }
-        friend Pair operator- (const Pair& a1, Pair&& a2) noexcept
+        template <typename Arg, typename =
+            enableIf<isSameWeak<Pair<T1, T2>, Arg>>>
+        friend Pair operator- (const Pair& a1, Arg&& a2) noexcept
         {
-            Pair<T1, T2> res{ a1.x - a2.x, a1.y - a2.y };
-            return a2;
+            return Pair<T1, T2> { a1.x - a2.x, a1.y - a2.y };
         }
-        friend Pair operator- (Pair&& a1, const Pair& a2) noexcept
-        {
-            return a1 - std::move(a1);
-        }
-        friend Pair operator- (Pair&& a1, Pair&& a2) noexcept
-        {
-            return a1 - std::move(a1);
-        }
+
+//--------------------------------------------------------------------------------
 
         bool operator< (const Pair& other) const noexcept
         {
@@ -126,10 +137,12 @@ namespace dom
             return x != other.x || y != other.y;
         }
 
+//--------------------------------------------------------------------------------
+
         private:
         class PairBracketAccessResult
         {
-            friend Pair;
+        friend Pair;
         public:
             operator T1&() noexcept
             {
@@ -149,18 +162,22 @@ namespace dom
                 return mRes.y;
             }
 
+//--------------------------------------------------------------------------------
+
         private:
             Pair& mRes;
-            int mIndex;
+            uint8_t mIndex;
 
-            PairBracketAccessResult(Pair& aRes, int aIndex) noexcept :
+            PairBracketAccessResult(Pair& aRes, uint8_t aIndex) noexcept :
                 mRes    (aRes),
                 mIndex    (aIndex)
             {}
         };
 
+//--------------------------------------------------------------------------------
+
         public:
-            PairBracketAccessResult operator[] (const int& aIndex) noexcept
+            PairBracketAccessResult operator[] (uint8_t aIndex) noexcept
             {
                 return PairBracketAccessResult(*this, aIndex);
             }

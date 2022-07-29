@@ -2,17 +2,11 @@
 #define DATABASE_QUERY_HPP
 
 //--------------------------------------------------------------------------------
-//                            DATABASE QUERYS HANDLER DECLARATION
-//--------------------------------------------------------------------------------
 
-#include <fstream>
 #include <mutex>
 #include <optional>
 
-#include "domain/path.hpp"
 #include "domain/string.hpp"
-
-#include "main/path.hpp"
 
 #include "sqlite_database.hpp"
 #include "submission_info.hpp"
@@ -30,7 +24,6 @@ namespace data
             dom::CharArray output;
             uint32_t testNum;
         };
-
 
     public:
         /*
@@ -53,39 +46,34 @@ namespace data
         \param aTime Submission time usage.
         \param aMemory Submission memory usage.
         */
-        void writeResult(int aID, const std::string&  aResult, int aTime, int aMemory) noexcept;
+        void writeResult(int aID, const std::string&  aResult, int aTime, 
+            int aMemory) noexcept;
 
         /*
         \brief Retrieves the next test from the database and puts it in 
-        TestLibMessage struct. 
-        (according to current statment step and 
-        numbering of tests in the database)
+            TestLibMessage struct. 
+            (according to current statment step and 
+            numbering of tests in the database)
         \param aSudmissionInformation Problem info (ID) for test search.
         \param TestLibMessage  TestLibMessage structure for obtaining test.
         */
-        //void getNextTest(ProblemInformation& aSudmissionInformation, TestLibMessage& aTLM) noexcept;
         std::optional<TestData> getNextTest() noexcept;
-
-        /*
-        \brief Extracts all problem tests from the database and puts it in files.
-        \param aSudmissionInformation Problem info (ID) for tests search.
-        */
-        // void getAllTests(ProblemInformation& aSudmissionInformation) noexcept;
 
         void prepareTestsStatement(uint64_t aProblemID) noexcept;
 
     private:
         SQLiteDatabase mDatabase;
         int mReservedStatementNumber;
+
         std::mutex mTestMutex;
         uint32_t mTestNum;
-
         bool mTestAreOver;
 
         void getParticipantInfo(SubmissionInfo& aSubmissionInfo) noexcept;
         void getCheckerInfo(SubmissionInfo& aSubmissionInfo) noexcept;
     };
 }
+
 //--------------------------------------------------------------------------------
 
 #endif // !DATABASE_QUERY_HPP

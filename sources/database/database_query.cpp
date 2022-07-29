@@ -1,15 +1,6 @@
 #include "database/database_query.hpp"
 
 //--------------------------------------------------------------------------------
-//                        DATABASE QUERYS HANDLER IMPLEMENTATION
-//--------------------------------------------------------------------------------
-
-//UPDATE core_solutions SET result = hh WHERE id = 10
-//SELECT * FROM core_solutions WHERE id = 10
-//UPDATE core_solutions SET lang = "C:\task1\checker\checker.cpp" WHERE id = 10
-//UPDATE core_solutions SET file_name = "2/1.py" WHERE id = 3
-//UPDATE core_contests SET time_limit = 1000 WHERE id = 20
-//UPDATE core_contests SET memory_limit = 262144 WHERE id = 21
 
 data::DatabaseQuery::DatabaseQuery (const std::string& aDatabasePath) noexcept :
     mDatabase                   (aDatabasePath),
@@ -18,7 +9,9 @@ data::DatabaseQuery::DatabaseQuery (const std::string& aDatabasePath) noexcept :
     mTestAreOver                (false)
 {}
 
-SubmissionInfo 
+//--------------------------------------------------------------------------------
+
+data::SubmissionInfo 
 data::DatabaseQuery::getSubmissionInfo(int ID) noexcept
 {
     SubmissionInfo result;
@@ -27,13 +20,15 @@ data::DatabaseQuery::getSubmissionInfo(int ID) noexcept
     getParticipantInfo(result);
     getCheckerInfo(result);
 
-#ifdef BILL_WINDOWS
-#elif defined(LINUS_LINUX)
+    #ifdef BILL_WINDOWS
+    #elif defined(LINUS_LINUX)
     result.timeLimit /= 1000;
-#endif 
+    #endif 
 
     return result;
 }
+
+//--------------------------------------------------------------------------------
 
 void 
 data::DatabaseQuery::writeResult
@@ -56,11 +51,8 @@ data::DatabaseQuery::writeResult
     END_LOG_BLOCK("Database_updated?");
 }
 
-// void
-// data::DatabaseQuery::getNextTest
-// (
-//     TestLibMessage&         aTLM
-// ) noexcept
+//--------------------------------------------------------------------------------
+
 std::optional<data::DatabaseQuery::TestData>
 data::DatabaseQuery::getNextTest() noexcept
 {
@@ -71,7 +63,7 @@ data::DatabaseQuery::getNextTest() noexcept
         WRITE_LOG("Taking_next_test");
     
         mTestMutex.lock();
-        //if (mDatabase.step() != SQLITE_OK) break; TODO: fixing that shit
+        //if (mDatabase.step() != SQLITE_OK) break; TODO: fixing that
         mDatabase.step(mReservedStatementNumber);
         auto input = mDatabase.getTextFromRow(0, mReservedStatementNumber);
         auto output = mDatabase.getTextFromRow(1, mReservedStatementNumber);
@@ -93,47 +85,7 @@ data::DatabaseQuery::getNextTest() noexcept
     return result;
 }
 
-// void
-// data::DatabaseQuery::getAllTests(ProblemInformation& aSudmissionInformation) noexcept
-// {
-//     START_LOG_BLOCK("Geting_test_from_database");
-
-//     mDatabase.select("core_test", "input, output", "contest_id = " + std::to_string(aSudmissionInformation.mContestID));
-//     int cnt = 0;
-//     for (;; ++cnt)
-//     {
-//         mDatabase.step();
-//         //if (mDatabase.step() != SQLITE_OK) break; TODO: fixing that shit
-//         auto input = mDatabase.getTextFromRow(0);
-//         auto output = mDatabase.getTextFromRow(1);
-//         if (!input.has_value()) break;
-
-//         std::ofstream taskFile(TEST_PATH + std::to_string(aSudmissionInformation.mID) + "-" + std::to_string(cnt));
-//         std::ofstream ansFile(ANSWERS_PATH + std::to_string(aSudmissionInformation.mID) + "-" + std::to_string(cnt));
-
-//         if (!taskFile.is_open())
-//         {
-//             WRITE_ERROR("MDatabaseQuery", 10, "Can't_open_file", TEST_PATH + std::to_string(cnt));
-//             continue;//TODO
-//         }
-//         if (!ansFile.is_open())
-//         {
-//             WRITE_ERROR("MDatabaseQuery", 11, "Can't_open_file", ANSWERS_PATH + std::to_string(cnt));
-//             continue;
-//         }
-
-//         auto inStr = input.value().getFront();
-//         auto outStr = output.value().getFront();
-
-//         for (int i = 0; inStr[i];) taskFile << inStr[i++];
-//         for (int i = 0; outStr[i];) ansFile << outStr[i++];
-//     }
-//     aSudmissionInformation.mTestsCount = cnt;
-
-//     mDatabase.closeStatment();
-
-//     END_LOG_BLOCK("Tests_taken_from_pashae");
-// }
+//--------------------------------------------------------------------------------
 
 void
 data::DatabaseQuery::prepareTestsStatement(uint64_t aProblemID) noexcept
@@ -144,12 +96,15 @@ data::DatabaseQuery::prepareTestsStatement(uint64_t aProblemID) noexcept
     END_LOG_BLOCK("I'm_ready");
 }
 
+//--------------------------------------------------------------------------------
+
 void
 data::DatabaseQuery::getParticipantInfo(SubmissionInfo& aSubmissionInfo) noexcept
 {
     START_LOG_BLOCK("Geting_ID_and_name_from_database");
 
-    mDatabase.select("core_solutions", "file_name, contest_id", "id = " + std::to_string(aSubmissionInfo.ID));
+    mDatabase.select("core_solutions", "file_name, contest_id", "id = " + 
+        std::to_string(aSubmissionInfo.ID));
     mDatabase.step();
 
     aSubmissionInfo.problemID = mDatabase.getInt64FromRow(1);
@@ -160,17 +115,23 @@ data::DatabaseQuery::getParticipantInfo(SubmissionInfo& aSubmissionInfo) noexcep
     END_LOG_BLOCK("File_name:", aSubmissionInfo.solutionFileName);
 }
 
+//--------------------------------------------------------------------------------
+
 void
 data::DatabaseQuery::getCheckerInfo(SubmissionInfo& aSubmissionInfo) noexcept
 {
     START_LOG_BLOCK("Geting_limits_from_database");
 
-    mDatabase.select("core_contests", "time_limit, memory_limit, checker", "id = " + std::to_string(aSubmissionInfo.problemID));
+    mDatabase.select("core_contests", "time_limit, memory_limit, checker", 
+        "id = " + std::to_string(aSubmissionInfo.problemID));
     mDatabase.step();
-    aSubmissionInfo.timeMemLim = { uint64_t(mDatabase.getInt64FromRow(0)), uint64_t(mDatabase.getInt64FromRow(1))};
+    aSubmissionInfo.timeMemLim = { uint64_t(mDatabase.getInt64FromRow(0)), 
+        uint64_t(mDatabase.getInt64FromRow(1))};
     aSubmissionInfo.checkerFileName = mDatabase.getTextFromRow(2).value();
     mDatabase.closeStatment();
 
     WRITE_LOG("Time_limit:", aSubmissionInfo.timeMemLim.timeLimit);
     END_LOG_BLOCK("Memory_limit:", aSubmissionInfo.timeMemLim.memoryLimit);
 }
+
+//--------------------------------------------------------------------------------

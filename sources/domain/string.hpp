@@ -30,7 +30,10 @@ namespace dom
         using isBasicString = isOneOf<T, char*, const char[], std::string>;
         
         template<class T>
-        using isString = isOneOf<T, char*, const char[], std::string, dom::CharArray>;
+        using isString = isOneOf<T, char*, const char[], 
+            std::string, dom::CharArray>;
+
+//--------------------------------------------------------------------------------
 
     public:
         CharArray() noexcept;
@@ -42,7 +45,9 @@ namespace dom
         CharArray(CharArray&& other) noexcept = default;
         CharArray& operator= (CharArray&& other) noexcept = default;
 
-        template<typename S, typename = std::enable_if_t<isBasicString<S>::value>>
+//--------------------------------------------------------------------------------
+
+        template<typename S, typename = enableIf<isBasicString<S>>>
         CharArray(S&& aStr) noexcept : 
             mSize       (0),
             mCapacity   (0)
@@ -53,8 +58,10 @@ namespace dom
 
         explicit CharArray (const void* aStr) noexcept;
         explicit CharArray (const unsigned char* aStr) noexcept;
-        
-        template<typename S, typename = std::enable_if_t<isString<S>::value>>
+
+//--------------------------------------------------------------------------------
+     
+        template<typename S, typename = enableIf<isString<S>>>
         CharArray& operator= (S&& aStr) noexcept
         {
             *this = std::move(CharArray(std::forward<S>(aStr)));
@@ -63,13 +70,17 @@ namespace dom
         CharArray& operator= (const void* aStr) noexcept;
         CharArray& operator= (const unsigned char* aStr) noexcept;
 
-        template<typename S, typename = std::enable_if_t<isString<S>::value>>
+//--------------------------------------------------------------------------------
+
+        template<typename S, typename = enableIf<isString<S>>>
         void operator+= (S&& aStr) noexcept
         {
             add(std::forward<S>(aStr));
         }
 
-        template<typename S, typename = std::enable_if_t<isString<S>::value>>
+//--------------------------------------------------------------------------------
+
+        template<typename S, typename = enableIf<isString<S>>>
         void operator== (S&& aStr) noexcept
         {
             size_t i = 0, j = 0;
@@ -79,7 +90,9 @@ namespace dom
             }
             return true;
         }
-        
+
+//--------------------------------------------------------------------------------
+     
         void reserve(size_t aSize) noexcept; 
 
         operator char*() noexcept;
@@ -92,16 +105,16 @@ namespace dom
         bool isEmpty() const noexcept;
         size_t getSize() const noexcept;
         
-        // template<typename S, typename = std::enable_if_t<isString<S>::value>>
-        // void pushFront(S&& aStr) noexcept
-        // {
-        //     size_t combinedSize = getSize(aStr) + mSize;
-        //     CharArray temp;
-        //     temp.reserve(combinedSize);
-        //     temp.add(aStr);
-        //     temp.add(mData);
-        //     mData = std::move(temp.mData);
-        // }
+        template<typename S, typename = enableIf<isString<S>>>
+        void pushFront(S&& aStr) noexcept
+        {
+            size_t combinedSize = getSize(aStr) + mSize;
+            CharArray temp;
+            temp.reserve(combinedSize);
+            temp.add(aStr);
+            temp.add(mData);
+            mData = std::move(temp.mData);
+        }
 
         std::optional <std::string> backSubStr(char aDelimiter) const noexcept;
 
@@ -109,10 +122,14 @@ namespace dom
 
         auto& operator[](size_t aNum) noexcept;
 
+//--------------------------------------------------------------------------------
+
     private:
         std::unique_ptr<char[]> mData;
         size_t mCapacity; 
         size_t mSize; 
+
+//--------------------------------------------------------------------------------
 
         template<typename S>
         void add(S&& aStr) noexcept
@@ -132,6 +149,8 @@ namespace dom
             aTo[aStartInd] = '\0';
             return j;
         }
+
+//--------------------------------------------------------------------------------
 
         size_t getSize(const char* str)         const noexcept;
         size_t getSize(const std::string& str)  const noexcept;

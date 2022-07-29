@@ -19,6 +19,11 @@ namespace dom
 
     template<typename T, typename... Args>
     using isOneOf = typename std::disjunction<isSameWeak<T, Args>... >; 
+
+    template <typename Arg>
+    using enableIf = typename std::enable_if_t<Arg::value>;
 }
+
+//--------------------------------------------------------------------------------
 
 #endif // !DOM_METAPROGRAMMING_HPP

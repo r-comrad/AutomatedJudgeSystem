@@ -1,10 +1,13 @@
 #ifndef SUFFIX_TREE_HPP
 #define SUFFIX_TREE_HPP
 
+//--------------------------------------------------------------------------------
+
 #include <map>
 #include <memory>
+#include <string>
 
-#include "domain/string.hpp"
+//--------------------------------------------------------------------------------
 
 namespace alg
 {
@@ -36,5 +39,6 @@ namespace alg
     };
 }
 
+//--------------------------------------------------------------------------------
 
-#endif // SUFFIX_TREE_HPP!
+#endif // !SUFFIX_TREE_HPP
