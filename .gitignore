@@ -1,5 +1,11 @@
 /build
+
 /bin/*.pdb
+/bin/*.sqlite3
+/bin/*.log
+/bin/*.err
+/bin/media
+
 /libraries/*.h
 /libraries/*.c
 /libraries/*.hpp
