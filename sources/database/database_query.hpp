@@ -9,7 +9,6 @@
 #include <mutex>
 #include <optional>
 
-#include "domain/type.hpp"
 #include "domain/path.hpp"
 #include "domain/string.hpp"
 
@@ -27,9 +26,9 @@ namespace data
     private:
         struct TestData
         {
-            dom::String input;
-            dom::String output;
-            uint_32 testNum;
+            dom::CharArray input;
+            dom::CharArray output;
+            uint32_t testNum;
         };
 
 
@@ -73,13 +72,13 @@ namespace data
         */
         // void getAllTests(ProblemInformation& aSudmissionInformation) noexcept;
 
-        void prepareTestsStatement(uint_64 aProblemID) noexcept;
+        void prepareTestsStatement(uint64_t aProblemID) noexcept;
 
     private:
         SQLiteDatabase mDatabase;
         int mReservedStatementNumber;
         std::mutex mTestMutex;
-        uint_32 mTestNum;
+        uint32_t mTestNum;
 
         bool mTestAreOver;
 

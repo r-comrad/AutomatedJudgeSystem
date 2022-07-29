@@ -26,9 +26,9 @@ namespace test
     */
     struct CPPInfo
     {
-        dom::String inputFileName;
-        dom::String outputFileileName;
-        dom::String compilerName;
+        dom::CharArray inputFileName;
+        dom::CharArray outputFileileName;
+        dom::CharArray compilerName;
     };
 
     /*
@@ -36,8 +36,8 @@ namespace test
     */
     struct PythonInfo
     {
-        dom::String fileName;
-        dom::String interpretatorName;
+        dom::CharArray fileName;
+        dom::CharArray interpretatorName;
     };
 
     /*
@@ -74,8 +74,8 @@ namespace test
 
         std::string getFileLanguage() const noexcept;
 
-        void setFileName(dom::String&& aStr) noexcept;
-        void setDesirableOutputFileName(dom::String&& aStr) noexcept;
+        void setFileName(const dom::CharArray& aStr) noexcept;
+        void setDesirableOutputFileName(const dom::CharArray& aStr) noexcept;
 
         /*
         \brief Set the language for the current file. 
@@ -85,10 +85,34 @@ namespace test
         \param aStr The file language.
             If empty, extension of the first is used.
         */
-        void setLanguage(dom::String&& aStr = "") noexcept;
+        template 
+        <
+            typename S,
+            typename = typename std::enable_if
+            <
+                std::is_same
+                <
+                    dom::CharArray,
+                    typename std::decay<S>::type
+                >::value
+            >::type
+        >
+        void setLanguage(S&& aStr) noexcept
+        {
+            if (aStr.isEmpty())
+            {
+                setLanguage();
+            }
+            else
+            {
+                mCodeData[size_t(CellMap::Language)] = std::forward(aStr);
+            }
+        }
+
+        void setLanguage() noexcept;
 
     private:
-        dom::StringTable mCodeData;
+        dom::CharArrayTable mCodeData;
         std::optional <std::string> getFileExtension() const noexcept;
 
         enum class CellMap {Submission = 0, Output = 1, Language = 2};

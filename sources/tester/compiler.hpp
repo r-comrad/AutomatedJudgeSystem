@@ -48,7 +48,7 @@ namespace test
         \param aCode A struct with the path to code to execute,
             output directory and language information.
         */
-        dom::StringTable getExecutableCommand(CodeInfo&& aCode) const noexcept;
+        dom::CharArrayTable getExecutableCommand(CodeInfo&& aCode) const noexcept;
 
     private:
         /*
@@ -77,7 +77,7 @@ namespace test
         \return An array of strings with the commands for 
             exe execution execution.
         */
-        dom::StringTable prepareCommandForCPP(CPPInfo&& aInfo) 
+        dom::CharArrayTable prepareCommandForCPP(CPPInfo&& aInfo) 
             const noexcept;
 
         /*
@@ -86,7 +86,7 @@ namespace test
         \return An array of strings with the commands for python 
             file einterpretation.
         */
-        dom::StringTable prepareCommandForPython(CPPInfo&& aInfo) 
+        dom::CharArrayTable prepareCommandForPython(CPPInfo&& aInfo) 
             const noexcept;
     };
 }

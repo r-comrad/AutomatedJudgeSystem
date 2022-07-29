@@ -40,8 +40,8 @@ namespace test
         data::DatabaseQuery mDBQ;
 
         Test::TestVerdict mFinalVerdict;
-        uint_64 mFinalTime;
-        uint_64 mFinalMemory;
+        uint64_t mFinalTime;
+        uint64_t mFinalMemory;
 
         std::shared_ptr<proc::Process> prepareSolutionProcess
             (SubmissionInfo& aSubInfo) const noexcept;
@@ -51,7 +51,7 @@ namespace test
         std::shared_ptr<proc::Process> prepareFile
             (CodeInfo& aCodeInfo, SubmissionInfo& aSubInfo) const noexcept;
         
-        void check(uint_64 aID) noexcept;
+        void check(uint64_t aID) noexcept;
 
         std::string verdictTostring(const Test::TestVerdict& aVerdict) 
             const noexcept;

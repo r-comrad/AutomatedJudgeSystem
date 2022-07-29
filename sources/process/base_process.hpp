@@ -5,7 +5,6 @@
 
 #include <optional>
 
-#include "domain/type.hpp"
 #include "domain/string.hpp"
 #include "domain/pair.hpp"
 #include "database/submission_info.hpp"
@@ -41,7 +40,7 @@ namespace proc
         BaseProcess(BaseProcess&& other) noexcept = default;
         BaseProcess& operator=(BaseProcess&& other) noexcept = default;
 
-        virtual void setComand(const dom::StringTable& aParameters) noexcept = 0;
+        virtual void setComand(const dom::CharArrayTable& aParameters) noexcept = 0;
         
         /*
         \brief Create a child process with the specified parameters.
@@ -68,14 +67,14 @@ namespace proc
         \return Returns the time and memory used by the process if 
             the process is completed successfully.
         */
-        virtual std::optional<dom::Pair<uint_64>> runWithLimits() noexcept = 0;
+        virtual std::optional<dom::Pair<uint64_t>> runWithLimits() noexcept = 0;
 
         virtual void write(const std::string& aMessage) noexcept = 0;
         virtual void read(std::string& aMessage) noexcept = 0;
 
     protected:
-        uint_64 mTimeLimit;
-        uint_64 mMemoryLimit;
+        uint64_t mTimeLimit;
+        uint64_t mMemoryLimit;
     };
 
 }

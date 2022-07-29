@@ -136,7 +136,7 @@ data::DatabaseQuery::getNextTest() noexcept
 // }
 
 void
-data::DatabaseQuery::prepareTestsStatement(uint_64 aProblemID) noexcept
+data::DatabaseQuery::prepareTestsStatement(uint64_t aProblemID) noexcept
 {
     START_LOG_BLOCK("Prepare_geting_test_from_database");
     mDatabase.select("core_test", "input, output", "contest_id = " +
@@ -167,7 +167,7 @@ data::DatabaseQuery::getCheckerInfo(SubmissionInfo& aSubmissionInfo) noexcept
 
     mDatabase.select("core_contests", "time_limit, memory_limit, checker", "id = " + std::to_string(aSubmissionInfo.problemID));
     mDatabase.step();
-    aSubmissionInfo.timeMemLim = { uint_64(mDatabase.getInt64FromRow(0)), uint_64(mDatabase.getInt64FromRow(1))};
+    aSubmissionInfo.timeMemLim = { uint64_t(mDatabase.getInt64FromRow(0)), uint64_t(mDatabase.getInt64FromRow(1))};
     aSubmissionInfo.checkerFileName = mDatabase.getTextFromRow(2).value();
     mDatabase.closeStatment();
 

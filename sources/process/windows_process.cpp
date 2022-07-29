@@ -13,8 +13,6 @@ proc::WindowsProcess::WindowsProcess()  noexcept
 {
     ZeroMemory(&mProcessInfo, sizeof(PROCESS_INFORMATION));
     ZeroMemory(&mStartupInfo, sizeof(STARTUPINFOA));
-
-    mProcessArgs.switchToCharArray();
 }
 
 //--------------------------------------------------------------------------------
@@ -29,8 +27,8 @@ proc::WindowsProcess::WindowsProcess(const WindowsProcess& other)  noexcept
 proc::WindowsProcess&
 proc::WindowsProcess::operator=(const WindowsProcess& other) noexcept
 {
-    mProcessName = other.mProcessName;
-    mProcessArgs = other.mProcessArgs.getCopy(dom::String::StrType::CharArray);
+    mProcessName = other.mProcessName.getCopy();
+    mProcessArgs = other.mProcessArgs.getCopy();
     return *this;
 }
 
@@ -56,18 +54,18 @@ proc::WindowsProcess::run() noexcept
 
 //--------------------------------------------------------------------------------
 
-std::optional<dom::Pair<uint_64>> 
+std::optional<dom::Pair<uint64_t>> 
 proc::WindowsProcess::runWithLimits() noexcept
 {
     START_LOG_BLOCK("Runing_windows_process_with_time_and_memory_evaluation");
 
-    std::optional<dom::Pair<uint_64>> result = {}; 
+    std::optional<dom::Pair<uint64_t>> result = {}; 
 
-    uint_64 timeUsage = 0;
-    uint_64 memoryUsage = 0;
+    uint64_t timeUsage = 0;
+    uint64_t memoryUsage = 0;
 
-    uint_64 reservedTime = 200;
-    uint_64 startTime = getCPUTime();
+    uint64_t reservedTime = 200;
+    uint64_t startTime = getCPUTime();
 
     if (run()) 
     {
@@ -85,16 +83,10 @@ proc::WindowsProcess::runWithLimits() noexcept
 //--------------------------------------------------------------------------------
 
 void 
-proc::WindowsProcess::setComand(const dom::StringTable& aParameters) noexcept
+proc::WindowsProcess::setComand(const dom::CharArrayTable& aParameters) noexcept
 {
-    mProcessName = std::move(dom::CharArray(aParameters[0]));
-    
-    for(const auto& str : aParameters)
-    {
-        mProcessArgs += str;
-        mProcessArgs += " ";
-    }
-    mProcessArgs.merge();
+    mProcessName = aParameters[0].getCopy();
+    mProcessArgs = dom::CharArray(aParameters, ' ');
 }
 
 //--------------------------------------------------------------------------------
@@ -102,15 +94,16 @@ proc::WindowsProcess::setComand(const dom::StringTable& aParameters) noexcept
 void 
 proc::WindowsProcess::create() noexcept
 {
-    START_LOG_BLOCK("Creating_windows_process_with_name:", mProcessName.get());
-    WRITE_LOG("args:", mProcessArgs.getFront<char*>());
+    START_LOG_BLOCK("Creating_windows_process_with_name:", mProcessName);
+    WRITE_LOG("Args:", mProcessArgs);
     
     IORedirection();
 
-    //TODO:     if (name[0] == 0) name = NULL;
+    char* name = mProcessName;
+    if (mProcessName.getSize() == 0) name = NULL;
     if (CreateProcessA(
-        mProcessName.get(),
-        mProcessArgs.getFront<char*>(),
+        name,
+        mProcessArgs,
         NULL,
         NULL,
         TRUE,
@@ -122,7 +115,7 @@ proc::WindowsProcess::create() noexcept
     ) == FALSE)
     {
         WRITE_ERROR("Process", "create", 10, "Can't_start_process", 
-            mProcessName.get());
+            "Name:", mProcessName, "Args:", mProcessArgs);
     }
     END_LOG_BLOCK();
 }

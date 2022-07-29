@@ -2,7 +2,7 @@
 
 //--------------------------------------------------------------------------------
 
-uint_64 test::Test::globalTestersNumber = 0;
+uint64_t test::Test::globalTestersNumber = 0;
 
 //--------------------------------------------------------------------------------
 
@@ -68,7 +68,7 @@ test::Test::getVerdict() const noexcept
 
 //--------------------------------------------------------------------------------
 
-uint_64 
+uint64_t
 test::Test::getUsedTime() const noexcept
 {
     return mUsedTime;
@@ -76,7 +76,7 @@ test::Test::getUsedTime() const noexcept
 
 //--------------------------------------------------------------------------------
 
-uint_64
+uint64_t
 test::Test::getUsedMemory() const noexcept
 {
     return mUsedMemory;

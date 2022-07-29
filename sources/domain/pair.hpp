@@ -46,8 +46,7 @@ namespace dom
             y(std::forward<T2>(yInit))
         {}
 
-        // not default by purpose 
-        ~Pair(){}
+        ~Pair() = default;
 
         void operator+= (const Pair& other) noexcept
         {
@@ -85,10 +84,9 @@ namespace dom
         }
         friend Pair operator+ (Pair&& a1, Pair&& a2) noexcept
         {
-            a1.x += a2.x;
-            a1.y += a2.y;
-            return a1;
+            return a2 + std::move(a1);
         }
+
 
         friend Pair operator- (const Pair& a1, const Pair& a2) noexcept
         {
@@ -97,19 +95,16 @@ namespace dom
         }
         friend Pair operator- (const Pair& a1, Pair&& a2) noexcept
         {
-            a2.x -= a1.x;
-            a2.y -= a1.y;
+            Pair<T1, T2> res{ a1.x - a2.x, a1.y - a2.y };
             return a2;
         }
         friend Pair operator- (Pair&& a1, const Pair& a2) noexcept
         {
-            return a2 - std::move(a1);
+            return a1 - std::move(a1);
         }
         friend Pair operator- (Pair&& a1, Pair&& a2) noexcept
         {
-            a1.x -= a2.x;
-            a1.y -= a2.y;
-            return a1;
+            return a1 - std::move(a1);
         }
 
         bool operator< (const Pair& other) const noexcept

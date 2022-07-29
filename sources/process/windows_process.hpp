@@ -3,7 +3,6 @@
 
 //--------------------------------------------------------------------------------
 
-#include "domain/type.hpp"
 #include "domain/string.hpp"
 
 #include "base_process.hpp"
@@ -42,7 +41,7 @@ namespace proc
         WindowsProcess(WindowsProcess&& other) noexcept = default;
         WindowsProcess& operator=(WindowsProcess&& other) noexcept = default;
 
-        void setComand(const dom::StringTable& aParameters) 
+        void setComand(const dom::CharArrayTable& aParameters) 
             noexcept final override;
 
         /*
@@ -63,7 +62,7 @@ namespace proc
         \return Returns the time and memory used by the process if 
             the process is completed successfully.
         */
-        std::optional<dom::Pair<uint_64>> runWithLimits() noexcept final override;
+        std::optional<dom::Pair<uint64_t>> runWithLimits() noexcept final override;
 
     protected:
         STARTUPINFOA mStartupInfo;
@@ -81,8 +80,8 @@ namespace proc
         virtual void closeHandles() noexcept = 0;
 
     private:
-        dom::CharSharedArray mProcessName;
-        dom::String mProcessArgs;
+        dom::CharArray mProcessName;
+        dom::CharArray mProcessArgs;
 
         long long getMillisecondsNow() noexcept;
 

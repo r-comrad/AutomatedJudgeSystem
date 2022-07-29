@@ -101,6 +101,12 @@ dom::Message::writeLogEndl() noexcept
 //--------------------------------------------------------------------------------
 
 #ifdef BILL_WINDOWS
+    #include <windows.h>
+#endif
+
+//--------------------------------------------------------------------------------
+
+#ifdef BILL_WINDOWS
 std::string
 dom::Message::GetLastWinAPIError() noexcept
 {

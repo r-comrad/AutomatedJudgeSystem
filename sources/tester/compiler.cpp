@@ -2,7 +2,6 @@
 
 //--------------------------------------------------------------------------------
 
-#include "domain/type.hpp"
 #include "domain/path.hpp"
 #include "domain/error_message.hpp"
 
@@ -12,10 +11,10 @@
 
 //--------------------------------------------------------------------------------
 
-dom::StringTable
+dom::CharArrayTable
 test::Compiler::getExecutableCommand(CodeInfo&& aCode) const noexcept
 {
-    dom::StringTable result;
+    dom::CharArrayTable result;
 
     auto fileLanguage = Language(mLanguages.tree.get(aCode.getFileLanguage()));
 
@@ -41,31 +40,35 @@ test::Compiler::LanguageTree test::Compiler::mLanguages;
 
 test::Compiler::LanguageTree::LanguageTree() 
 {
-    tree.add("cpp", uint_32(Language::MAGIC_CPP));
-    tree.add("py", uint_32(Language::SNAKE));
+    tree.add("cpp", uint32_t(Language::MAGIC_CPP));
+    tree.add("py", uint32_t(Language::SNAKE));
 }
 
 //--------------------------------------------------------------------------------
 
-dom::StringTable
+dom::CharArrayTable
 test::Compiler::prepareCommandForCPP(CPPInfo&& aInfo) const noexcept
 {
-    dom::StringTable compileCommand;
+    dom::CharArrayTable compileCommand;
 
     //TODO: Move
     compileCommand.emplace_back(CPP_COMPILER_NAME);
     compileCommand.emplace_back(std::move(aInfo.inputFileName));    
     compileCommand.emplace_back(std::move(aInfo.outputFileileName));
     compileCommand.back() += ".exe";
-    compileCommand.back().merge();
 
     //TODO: compiler log output
     proc::PipeWindowsProcess compiler;
     compiler.setComand(compileCommand);
     compiler.create();
     compiler.run();
+    #ifdef _DBG_
+    std::string s;
+    compiler.read(s);
+    WRITE_LOG("Compiler_output:", s);
+    #endif
 
-    dom::StringTable result;
+    dom::CharArrayTable result;
     result.emplace_back(std::move(compileCommand.back()));
 
     return result;
@@ -73,10 +76,10 @@ test::Compiler::prepareCommandForCPP(CPPInfo&& aInfo) const noexcept
 
 //--------------------------------------------------------------------------------
 
-dom::StringTable
+dom::CharArrayTable
 test::Compiler::prepareCommandForPython(CPPInfo&& aInfo) const noexcept
 {
-    dom::StringTable result;
+    dom::CharArrayTable result;
     result.emplace_back("python3");
     result.emplace_back(std::move(aInfo.inputFileName));
     return result;

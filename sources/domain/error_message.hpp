@@ -5,7 +5,6 @@
 
 #include <fstream>
 
-#include "type.hpp"
 #include "string.hpp"
 
 //--------------------------------------------------------------------------------
@@ -20,7 +19,7 @@ namespace dom
         template<typename... Args>
         void startLogBlock(const Args&... args) noexcept
         {
-            for(sint_8 i = 0; i < mLogBlockCount; ++i) (*mLogStream) << '\t';
+            for(int8_t i = 0; i < mLogBlockCount; ++i) (*mLogStream) << '\t';
             ++mLogBlockCount;
 
             (void)std::initializer_list<bool>
@@ -34,7 +33,7 @@ namespace dom
         template<typename... Args>
         void endLogBlock(const Args&... args) noexcept
         {
-            for(sint_8 i = 0; i < mLogBlockCount; ++i) (*mLogStream) << '\t';
+            for(int8_t i = 0; i < mLogBlockCount; ++i) (*mLogStream) << '\t';
             --mLogBlockCount;
 
             (void)std::initializer_list<bool>
@@ -48,7 +47,7 @@ namespace dom
         template<typename... Args>
         void writeLog(const Args&... args) noexcept
         {
-            for(sint_8 i = 0; i < mLogBlockCount; ++i) (*mLogStream) << '\t';
+            for(int8_t i = 0; i < mLogBlockCount; ++i) (*mLogStream) << '\t';
 
             (void)std::initializer_list<bool>
             {
@@ -62,7 +61,7 @@ namespace dom
         void writeError(const Args&... args) noexcept
         {
             #ifdef ERRORS_TO_LOG_OUTPU
-                for(sint_8 i = 0; i < mLogBlockCount; ++i) (*mLogStream) << '\t';
+            for(sint_8 i = 0; i < mLogBlockCount; ++i) (*mLogStream) << '\t';
             #endif
 
             (*mErrorStream) << "ERROR" << ' ';
@@ -92,7 +91,7 @@ namespace dom
         std::ostream* mLogStream;
         std::ostream* mErrorStream;
 
-        sint_8 mLogBlockCount;
+        int8_t mLogBlockCount;
     };
 }
 

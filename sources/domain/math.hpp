@@ -5,8 +5,6 @@
 
 #include <string>
 
-#include "type.hpp"
-
 //--------------------------------------------------------------------------------
 
 namespace dom
@@ -14,7 +12,7 @@ namespace dom
     class Math
     {
     public:
-        static uint_64 getHash(const std::string& aStr) const noexcept;
+        static uint64_t getHash(const std::string& aStr) noexcept;
     };
 }
 

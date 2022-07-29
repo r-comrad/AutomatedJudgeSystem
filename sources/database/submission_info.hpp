@@ -1,13 +1,12 @@
 #ifndef SUBMISSION_INFO_HPP
 #define SUBMISSION_INFO_HPP
 
-#include "domain/type.hpp"
 #include "domain/string.hpp"
 
 struct Limits
 {
-    uint_64 timeLimit;
-    uint_64 memoryLimit;
+    uint64_t timeLimit;
+    uint64_t memoryLimit;
 };
 
 struct SubmissionInfo
@@ -16,8 +15,8 @@ struct SubmissionInfo
     int problemID;
 
     Limits timeMemLim;
-    dom::String solutionFileName;
-    dom::String checkerFileName;
+    dom::CharArray solutionFileName;
+    dom::CharArray checkerFileName;
 };
 
 #endif // !SUBMISSION_INFO_HPP

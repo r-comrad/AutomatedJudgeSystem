@@ -38,8 +38,8 @@ namespace test
         bool testsAreOver() const noexcept;
 
         TestVerdict getVerdict() const noexcept;
-        uint_64 getUsedTime() const noexcept;
-        uint_64 getUsedMemory() const noexcept;
+        uint64_t getUsedTime() const noexcept;
+        uint64_t getUsedMemory() const noexcept;
 
         void setLimits(const Limits& aTimeMemLimits) noexcept;
 
@@ -56,15 +56,15 @@ namespace test
         TestLibMessage mTLM;
 
         //TODO: error test number                
-        uint_64 mTestNumber;
-        const uint_64 mNumberOfTester;
-        static uint_64 globalTestersNumber;
+        uint64_t mTestNumber;
+        const uint64_t mNumberOfTester;
+        static uint64_t globalTestersNumber;
 
         TestVerdict mVerdict;
-        uint_64 mUsedTime;
-        uint_64 mUsedMemory;
-        uint_64 mTimeLimit;
-        uint_64 mMemoryLimit;
+        uint64_t mUsedTime;
+        uint64_t mUsedMemory;
+        uint64_t mTimeLimit;
+        uint64_t mMemoryLimit;
 
         void runTesting(data::DatabaseQuery& aDBQ) noexcept;
 

@@ -4,11 +4,11 @@
 //                        SQLLITE INTERFACE  IMPLEMENTATION
 //--------------------------------------------------------------------------------
 
-SQLiteDatabase::SQLiteDatabase(dom::String aPath) :
+SQLiteDatabase::SQLiteDatabase(const std::string& aPath) :
     mBase(NULL)
 {
     WRITE_LOG("Opening_database:", aPath);
-    if (sqlite3_open(aPath.getFront(), &mBase) != SQLITE_OK) 
+    if (sqlite3_open(aPath.c_str(), &mBase) != SQLITE_OK) 
         WRITE_ERROR("SQLiteDatabase", "constructor(string)", 0, "Can't_open_database ", aPath);
     //TODO: check don't work
 }
@@ -16,21 +16,37 @@ SQLiteDatabase::SQLiteDatabase(dom::String aPath) :
 SQLiteDatabase::~SQLiteDatabase() {}
 
 
+// void 
+// SQLiteDatabase::select
+// (
+//     dom::String&&       aTableName,
+//     dom::String&&       aColum,
+//     dom::String&&       aConditon,
+//     int                 aStatementID
+// )
+
+// {
+//     if (aColum == "") aColum = "*";
+//     if (aConditon != "") aConditon.pushFront(" WHERE "); //= " WHERE " + std::move(aConditon);
+//     dom::String statement = "SELECT " + std::move(aColum);
+//     statement += " FROM " + std::move(aTableName);
+//     statement += std::move(aConditon);
+
+//     prepare(std::move(statement), aStatementID);
+// }
 void 
 SQLiteDatabase::select
 (
-    dom::String&&       aTableName,
-    dom::String&&       aColum,
-    dom::String&&       aConditon,
+    std::string&&       aTableName,
+    std::string&&       aColum,
+    std::string&&       aConditon,
     int                 aStatementID
-)
-
+) noexcept
 {
     if (aColum == "") aColum = "*";
-    if (aConditon != "") aConditon.pushFront(" WHERE "); //= " WHERE " + std::move(aConditon);
-    dom::String statement = "SELECT " + std::move(aColum);
-    statement += " FROM " + std::move(aTableName);
-    statement += std::move(aConditon);
+    if (aConditon != "") aConditon = " WHERE " + std::move(aConditon);
+    std::string statement = "SELECT " + std::move(aColum) +
+        " FROM " + std::move(aTableName) + std::move(aConditon);
 
     prepare(std::move(statement), aStatementID);
 }
@@ -38,33 +54,33 @@ SQLiteDatabase::select
 void 
 SQLiteDatabase::update
 (
-    dom::String&&       aTableName,
-    dom::String&&       aValue,
-    dom::String&&       aConditon,
+    std::string&&       aTableName,
+    std::string&&       aValue,
+    std::string&&       aConditon,
     int                 aStatementID
 ) noexcept
 {
-    dom::String statement = "UPDATE " + std::move(aTableName);
-    statement += " SET " + std::move(aValue);
-    statement += " WHERE " + std::move(aConditon);
+    std::string statement = "UPDATE " + std::move(aTableName) +
+        " SET " + std::move(aValue) +
+        " WHERE " + std::move(aConditon);
 
     prepare(std::move(statement), aStatementID);
 }
 
-std::optional<dom::String>
+std::optional<dom::CharArray>
 SQLiteDatabase::getTextFromRow(int aColumNumber, int aStatementID)
 {
-    std::optional<dom::String> result = {};
+    std::optional<dom::CharArray> result = {};
     auto ptr = sqlite3_column_text(mStatement[aStatementID], aColumNumber);
-    if (ptr != nullptr) result = ptr;
+    if (ptr != nullptr) result = dom::CharArray(ptr);
     return result;
 }
 
 
-dom::String
+dom::CharArray
 SQLiteDatabase::getText16FromRow(int aColumNumber, int aStatementID)
 {
-    return (char*) sqlite3_column_text16(mStatement[aStatementID], aColumNumber);
+    return dom::CharArray(sqlite3_column_text16(mStatement[aStatementID], aColumNumber));
 }
 
 int 
@@ -73,7 +89,7 @@ SQLiteDatabase::getIntFromRow(int aColumNumber, int aStatementID)
     return sqlite3_column_int(mStatement[aStatementID], aColumNumber);
 }
 
-sint_64 
+int64_t
 SQLiteDatabase::getInt64FromRow(int aColumNumber, int aStatementID)
 {
     return sqlite3_column_int64(mStatement[aStatementID], aColumNumber);
@@ -108,10 +124,8 @@ SQLiteDatabase::step(int aStatementID)
 // }
 
 void 
-SQLiteDatabase::prepare(dom::String&& aStatment, int aStatementID)
+SQLiteDatabase::prepare(std::string&& aStatment, int aStatementID)
 {
-    aStatment.merge();
-
     if (mStatement.size() < aStatementID + 1)
     {
         mStatement.resize(aStatementID + 1);
@@ -120,7 +134,7 @@ SQLiteDatabase::prepare(dom::String&& aStatment, int aStatementID)
 
     if (sqlite3_prepare_v2(
         mBase,                          /* Database handle */
-        aStatment.getFront(),           /* SQL statement, UTF-8 encoded */
+        aStatment.c_str(),              /* SQL statement, UTF-8 encoded */
         -1,                             /* Maximum length of zSql in bytes. */
         &(mStatement[aStatementID]),    /* OUT: Statement handle */
         nullptr                         /* OUT: Pointer to unused portion of zSql */

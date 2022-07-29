@@ -11,7 +11,6 @@
 
 #include "SQLite/sqlite3.h"
 
-#include "domain/type.hpp"
 #include "domain/string.hpp"
 #include "domain/error_message.hpp"
 #include "domain/pair.hpp"
@@ -24,7 +23,7 @@ typedef sqlite3_stmt Statement;
 class SQLiteDatabase
 {
 public:
-    SQLiteDatabase(dom::String aPath);
+    SQLiteDatabase(const std::string& aPath);
     virtual ~SQLiteDatabase();
 
     //----------------------------------------------------------------------------
@@ -43,8 +42,11 @@ public:
     different cells for each query.
     If empty, the first cell (#0) is used.
     */
-    void select(dom::String&& aTableName, dom::String&& aColum = "", 
-        dom::String&& aConditon = "", int aStatementID = 0);
+    //template <typename S1, typename S2, typename S3>
+    //void select(S1&& aTableName, S2&& aColum = "", S3&& aConditon = "", 
+    //    int aStatementID = 0)
+    void select(std::string&& aTableName, std::string&& aColum = "", 
+        std::string&& aConditon = "", int aStatementID = 0) noexcept;
 
     /*
     \brief Prepare the sqlite UPDATE statement.
@@ -56,8 +58,8 @@ public:
     different cells for each query.
     If empty, the first cell (#0) is used.
     */
-    void update(dom::String&& aTableName, dom::String&& aValue, 
-        dom::String&& aConditon, int aStatementID = 0) noexcept;
+    void update(std::string&& aTableName, std::string&& aValue, 
+        std::string&& aConditon, int aStatementID = 0) noexcept;
 
     /*
     \brief Close the selected statment.
@@ -90,7 +92,7 @@ public:
     If empty, the first cell (#0) is used.
     \return Pointer to unt-8 string from specidied cell.
     */
-    std::optional<dom::String> getTextFromRow(int aColumNumber, int aStatementID = 0);
+    std::optional<dom::CharArray> getTextFromRow(int aColumNumber, int aStatementID = 0);
 
     /*
     \brief Gets UTF-16 string from colum of current row. The current line
@@ -102,7 +104,7 @@ public:
     If empty, the first cell (#0) is used.
     \return Pointer to unt-8 string from specidied cell.
     */
-    dom::String getText16FromRow(int aColumNumber, int aStatementID = 0);
+    dom::CharArray getText16FromRow(int aColumNumber, int aStatementID = 0);
 
     /*
     \brief Gets integer from colum of current row. The current line
@@ -126,7 +128,7 @@ public:
     If empty, the first cell (#0) is used.
     \return Number from specidied cell.
     */
-    sint_64 getInt64FromRow(int aColumNumber, int aStatementID = 0);
+    int64_t getInt64FromRow(int aColumNumber, int aStatementID = 0);
 
     //----------------------------------------------------------------------------
 
@@ -146,7 +148,7 @@ private:
     Base* mBase;
     std::vector<Statement*> mStatement;
 
-    void prepare(dom::String&& aStatment, int aStatementID);
+    void prepare(std::string&& aStatment, int aStatementID);
 };
 
 //--------------------------------------------------------------------------------

@@ -32,7 +32,7 @@ dom::copyFile
     }
 
     std::string s;
-    std::getline(fromFile, s, '\0')
+    std::getline(fromFile, s, '\0');
     toFile << s;
 
     END_LOG_BLOCK();

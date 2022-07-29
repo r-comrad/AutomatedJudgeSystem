@@ -49,7 +49,7 @@ dom::Path::getExecutablePathOnce() noexcept
 {
 #if     defined(BILL_WINDOWS)
     CHAR buffer[MAX_PATH] = { 0 };
-    uint_8 size = GetModuleFileNameA(NULL, buffer, MAX_PATH);
+    uint8_t size = GetModuleFileNameA(NULL, buffer, MAX_PATH);
     for (int i = 0; i < 1; ++i) while (buffer[--size] != L'\\');
     buffer[size + 1] = 0;
     return std::string(buffer);

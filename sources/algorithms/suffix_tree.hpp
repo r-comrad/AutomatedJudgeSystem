@@ -4,7 +4,6 @@
 #include <map>
 #include <memory>
 
-#include "domain/type.hpp"
 #include "domain/string.hpp"
 
 namespace alg
@@ -16,8 +15,8 @@ namespace alg
         ~SuffixTree() = default;
 
 
-        void add(const std::string& aName, uint_32 aFinishNumber) noexcept;
-        uint_32 get(const std::string& aName) const noexcept;
+        void add(const std::string& aName, uint32_t aFinishNumber) noexcept;
+        uint32_t get(const std::string& aName) const noexcept;
 
     private:
         struct Node
@@ -26,11 +25,11 @@ namespace alg
             ~Node() = default;
 
             bool mIsFinish;
-            uint_32 mFinishNumber;
+            uint32_t mFinishNumber;
             std::map<char, std::unique_ptr<Node>> mNextNodes;
 
-            void add(const std::string& aName, uint_32 aFinishValue, size_t aCurNum = 0) noexcept;
-            uint_32 get(const std::string& aName, size_t aCurNum = 0) const noexcept;
+            void add(const std::string& aName, uint32_t aFinishValue, size_t aCurNum = 0) noexcept;
+            uint32_t get(const std::string& aName, size_t aCurNum = 0) const noexcept;
         };
 
         std::unique_ptr<Node> mRoot;

@@ -11,7 +11,7 @@
 
 //--------------------------------------------------------------------------------
 
-#define THREAD_COUNTS 1
+#define THREAD_COUNTS 30
 
 //--------------------------------------------------------------------------------
 
@@ -79,14 +79,14 @@ test::Core::prepareFile(CodeInfo& aCodeInfo, SubmissionInfo& aSubInfo)
 
     Compiler comp;
     auto cmd = comp.getExecutableCommand(std::move(aCodeInfo));
-    result->setComand(cmd);
+    result->setComand(std::move(cmd));
     return result;
 }
 
 //--------------------------------------------------------------------------------
 
 void
-test::Core::check(uint_64 aID) noexcept
+test::Core::check(uint64_t aID) noexcept
 {
     START_LOG_BLOCK("Checking_participant_code");
 

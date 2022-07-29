@@ -54,39 +54,29 @@ test::CodeInfo::getFileLanguage() const noexcept
 //--------------------------------------------------------------------------------
 
 void
-test::CodeInfo::setFileName(dom::String&& aStr) noexcept
+test::CodeInfo::setFileName(const dom::CharArray& aStr) noexcept
 {
-    mCodeData[size_t(CellMap::Submission)] += std::move(aStr);
-    mCodeData[size_t(CellMap::Submission)].merge();
+    mCodeData[size_t(CellMap::Submission)] += aStr;
 }
 
 //--------------------------------------------------------------------------------
 
 void
-test::CodeInfo::setDesirableOutputFileName(dom::String&& aStr) noexcept
+test::CodeInfo::setDesirableOutputFileName(const dom::CharArray& aStr) noexcept
 {
-    mCodeData[size_t(CellMap::Output)] += std::move(aStr);
-    mCodeData[size_t(CellMap::Output)].merge();
+    mCodeData[size_t(CellMap::Output)] += aStr;
 }
 
 //--------------------------------------------------------------------------------
 
 void
-test::CodeInfo::setLanguage(dom::String&& aStr) noexcept
+test::CodeInfo::setLanguage() noexcept
 {
-    if (aStr.isEmpty())
-    {
-        auto ext = getFileExtension();
-        START_LOG_BLOCK ("GET_FILE_EXTENSION");
-        WRITE_LOG       ("HAS_FILE_EXTENSION:", ext.has_value());
-        END_LOG_BLOCK   ("FILE_EXTENSION:",     ext.value());
-        mCodeData[size_t(CellMap::Language)] = getFileExtension().value();
-    }
-    else
-    {
-        mCodeData[size_t(CellMap::Language)] = std::move(aStr);
-    }
-    mCodeData[size_t(CellMap::Language)].merge();
+    auto ext = getFileExtension();
+    START_LOG_BLOCK ("GET_FILE_EXTENSION");
+    WRITE_LOG       ("HAS_FILE_EXTENSION:", ext.has_value());
+    END_LOG_BLOCK   ("FILE_EXTENSION:",     ext.value());
+    mCodeData[size_t(CellMap::Language)] = ext.value();
 }
 
 //--------------------------------------------------------------------------------

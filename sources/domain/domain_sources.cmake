@@ -9,16 +9,14 @@ set(
 
     math.hpp
     math.cpp
+    
+    metaprogramming.hpp
 
     pair.hpp
 
     path.hpp
     path.cpp
 
-    storage.hpp
-
     string.hpp
     string.cpp
-
-    type.hpp
 )

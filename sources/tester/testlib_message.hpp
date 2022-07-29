@@ -5,8 +5,6 @@
 
 #include <string>
 
-#include "domain/type.hpp"
-
 //--------------------------------------------------------------------------------
 
 struct TestLibMessage
@@ -27,8 +25,8 @@ public:
 private:
     union
     {
-        uint_8 message[8];
-        uint_64 value;
+        uint8_t message[8];
+        uint64_t value;
     } StringSizeCoder{};
 
     void makeSize(std::string& aStr, std::string& aSize) noexcept;
