@@ -26,7 +26,7 @@ namespace dom
                 static_cast<bool>((*mLogStream) << args << ' ')...
             };
 
-            (*mLogStream) << '\n';
+            (*mLogStream) << std::endl;
         }
 
         template<typename... Args>
@@ -40,7 +40,7 @@ namespace dom
                 static_cast<bool>((*mLogStream) << args << ' ')...
             };
             
-            (*mLogStream) << '\n';
+            (*mLogStream) << std::endl;
         }
 
         template<typename... Args>
@@ -53,7 +53,7 @@ namespace dom
                 static_cast<bool>((*mLogStream) << args << ' ')...
             };
 
-            (*mLogStream) << '\n';
+            (*mLogStream) << std::endl;
         }
 
         template<typename... Args>
@@ -70,7 +70,7 @@ namespace dom
                 static_cast<bool>((*mErrorStream) << args << ' ')...
             };
 
-            (*mErrorStream) << '\n';
+            (*mErrorStream) << std::endl;
         }
 
         void writeLogEndl() noexcept;
@@ -111,7 +111,7 @@ ERROR FORMAT: <file or class name>, <function>,
     #define START_LOG_BLOCK(...)    void(0)
     #define END_LOG_BLOCK(...)      void(0)
     #define WRITE_LOG(...)          void(0)
-    #define WRITE_LOG_ENDL          void(0) 
+    #define WRITE_LOG_ENDL(...)     void(0) 
     #define WRITE_ERROR(...)        void(0)    
 #endif 
 

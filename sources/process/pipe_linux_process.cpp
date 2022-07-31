@@ -2,25 +2,50 @@
 
 //--------------------------------------------------------------------------------
 
+#include <cstring>
+#include <wait.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/time.h>
+#include <sys/resource.h>
 
+#include "domain/error_message.hpp"
 
 //--------------------------------------------------------------------------------
 
-proc::PipeLinuxProcess::PipeLinuxProcess() noexcept
+proc::PipeLinuxProcess::PipeLinuxProcess(const PipeLinuxProcess& other)  noexcept
 {
-    IORedirection()
+    *this = other;
+}
+
+//--------------------------------------------------------------------------------
+
+proc::PipeLinuxProcess&
+proc::PipeLinuxProcess::operator=(const PipeLinuxProcess& other) noexcept
+{
+    mParameters.reserve(other.mParameters.size());
+    for(auto& str : other.mParameters) mParameters.emplace_back(str.getCopy());
+    getRawParameters();
+    return *this;
+}
+
+//--------------------------------------------------------------------------------
+
+void 
+proc::PipeLinuxProcess::setComand(dom::CharArrayTable&& aParameters) noexcept
+{
+    mParameters = std::move(aParameters);
+    getRawParameters();
 }
 
 //--------------------------------------------------------------------------------
 
 void
-proc::PipeLinuxProcess::create(const std::vector<char*>& aParameters)
+proc::PipeLinuxProcess::create() noexcept
 {
-    //aParameters = aName + aParameters;
+    WRITE_LOG("Creating_process_with_name:", mRawParameters[0]);
 
-    WRITE_LOG("Creating_process_with_name:", aParameters[0]);
-    //WD_LOG("Parameters: " << aParameters[1]);
-    //signal(SIGCONT, MyProcess::handleContinueSignal);
+    IORedirection();
 
     mChildPID = fork();
     if (mChildPID == -1)
@@ -29,69 +54,63 @@ proc::PipeLinuxProcess::create(const std::vector<char*>& aParameters)
     }
     else if (!mChildPID)
     {
-        //write(mChildPipes[1], aMessage.c_str(),  aMessage.size());
-
-//        fcntl(mPipeA[0], F_SETPIPE_SZ, 65336 * 2);
-//        fcntl(mPipeA[1], F_SETPIPE_SZ, 65336 * 2);
-//        fcntl(mPipeB[0], F_SETPIPE_SZ, 65336 * 2);
-//        fcntl(mPipeB[1], F_SETPIPE_SZ, 65336 * 2);
-
         dup2(mPipeA[0], STDIN_FILENO);
         dup2(mPipeB[1], STDOUT_FILENO);
-
-        //        fcntl(mPipeA[0], F_SETPIPE_SZ, 65336 * 2);
-        //        fcntl(mPipeA[1], F_SETPIPE_SZ, 65336 * 2);
-        //        fcntl(mPipeB[0], F_SETPIPE_SZ, 65336 * 2);
-        //        fcntl(mPipeB[1], F_SETPIPE_SZ, 65336 * 2);
-
-        rlimit timeLimit;
-        timeLimit.rlim_cur = mTimeLimit;
-        timeLimit.rlim_max = mTimeLimit;
-        setrlimit(RLIMIT_CPU, &timeLimit);
-
-        rlimit memoryLimit;
-        memoryLimit.rlim_cur = mMemoryLimit;
-        memoryLimit.rlim_max = mMemoryLimit;
-        setrlimit(RLIMIT_STACK, &memoryLimit);
-
-        //        dup2(mChildPipes[0], STDIN_FILENO);
-        //        dup2(mParentPipes[1], STDOUT_FILENO);
-        //        signal(SIGCONT, handleContinueSignal2);
-                //if (mIsPaused) pause();
-
-        execvp(aParameters[0], &aParameters[0]);
-        //WD_ERROR(linux.exec.0, "cant start process");
+        auto itt  = &mRawParameters[0];
+        execvp(mRawParameters[0], &mRawParameters[0]);
     }
     else
     {
-        //        fcntl(mPipeA[0], F_SETPIPE_SZ, 65336 * 2);
-        //        fcntl(mPipeA[1], F_SETPIPE_SZ, 65336 * 2);
-        //        fcntl(mPipeB[0], F_SETPIPE_SZ, 65336 * 2);
-        //        fcntl(mPipeB[1], F_SETPIPE_SZ, 65336 * 2);
     }
+}
 
+//--------------------------------------------------------------------------------
 
-    /*
-    int id = fork();
-    if (id == 0)
+bool
+proc::PipeLinuxProcess::run() noexcept
+{
+    WRITE_LOG("Runing_simple_process");
+    wait(NULL);
+    return true;
+}
+
+//--------------------------------------------------------------------------------
+
+std::optional<dom::Pair<uint64_t>> 
+proc::PipeLinuxProcess::runWithLimits() noexcept
+{
+    START_LOG_BLOCK("Runing_process_with_time_and_memory_evaluation");
+
+    std::optional<dom::Pair<uint64_t>> result = {}; 
+
+    uint64_t timeUsage = 0;
+    uint64_t memoryUsage = 0;
+
+    rusage resourseUsage;
+    int status;
+    wait4(mChildPID, &status, 0, &resourseUsage);
+    int gg = WIFEXITED(status);
+
+    timeUsage += resourseUsage.ru_utime.tv_sec * 1000000L;
+    timeUsage += resourseUsage.ru_utime.tv_usec;
+    timeUsage += resourseUsage.ru_stime.tv_sec * 1000000L;
+    timeUsage += resourseUsage.ru_stime.tv_usec;
+
+    WRITE_LOG("status:",            status);
+    WRITE_LOG("WIFEXITED:",         WIFEXITED(status));
+    WRITE_LOG("WEXITSTATUS:",       WEXITSTATUS(status));
+    WRITE_LOG("WIFSIGNALED:",       WIFSIGNALED(status));
+    WRITE_LOG("WTERMSIG:",          WTERMSIG(status));
+    WRITE_LOG("WIFSTOPPED:",        WIFSTOPPED(status));
+
+    WRITE_LOG       ("time_usage:",    timeUsage);
+    END_LOG_BLOCK   ("memory_usage:",  memoryUsage);
+
+    if (WIFEXITED(status)) 
     {
-        int i = 0;
-        int j = 0;
-        //std::vector<const char*> param;
-        char* param[10];
-        while (true)
-        {
-            std::string s;
-            for(;aParameters[i] != ' '; ++i) s.push_back(aParameters[i]);
-            ++i;
-            param[j] = (char*) s.c_str();
-            ++j;
-        }*/
-        //char** param2 =
-        //param.push_back(NULL);
-       /* param[j] = NULL;
-        execv((char*) aName.c_str(), param);
-    }*/
+        result = {timeUsage, memoryUsage};
+    }
+    return result;
 }
 
 //--------------------------------------------------------------------------------
@@ -101,7 +120,7 @@ proc::PipeLinuxProcess::create(const std::vector<char*>& aParameters)
 //--------------------------------------------------------------------------------
 
 void
-proc::PipeLinuxProcess::IORedirection()
+proc::PipeLinuxProcess::IORedirection() noexcept
 {
     WRITE_LOG("Rederecting_input_and_output_to_pipe");
 
@@ -118,12 +137,8 @@ proc::PipeLinuxProcess::IORedirection()
 //--------------------------------------------------------------------------------
 
 void
-proc::PipeLinuxProcess::readPipe(str_ref result)
+proc::PipeLinuxProcess::readData(std::string& result) noexcept
 {
-#ifdef PIPE_LOGS
-    WRITE_LOG("Reading_from_pipe");
-#endif // !PIPE_LOG_OUTPUT
-
     result.clear();
     char buf[1024];
     memset(buf, 0, sizeof(buf));
@@ -133,41 +148,27 @@ proc::PipeLinuxProcess::readPipe(str_ref result)
         memset(buf, 0, sizeof(buf));
     }
     result += std::string(buf);
-
-    //    char buf[1024];
-    //    while (read(mPipefd[0], &buf, 1) > 0)
-    //        write(STDOUT_FILENO, &buf, 1);
-    //    close(mPipefd[0]);
-
-#ifdef PIPE_LOGS
-    WD_END_LOG;
-#endif // !PIPE_LOG_OUTPUT
 }
 
 //--------------------------------------------------------------------------------
 
 void
-proc::PipeLinuxProcess::writePipe(str_ref aMessage, PypeType aType)
+proc::PipeLinuxProcess::writeData(const std::string& aMessage) noexcept
 {
-#ifdef PIPE_LOGS
-    WRITE_LOG("Writing_from_pipe");
-#endif // !PIPE_LOG_OUTPUT
-
-    //aMessage.push_back('\n');
     write(mPipeA[1], aMessage.c_str(), aMessage.size());
-    if (aType == ZERO)
-    {
-        write(mPipeA[1], "\n\0", 2);
-    }
-    //    write(mPipefd[1], aMessage.c_str(), aMessage.size());
-    //    if (aType == ZERO)
-    //    {
-    //        write(mPipefd[1], "\n", 1);
-    //    }
-    //    close(mPipefd[1]);
-
-#ifdef PIPE_LOGS
-    WD_LOG("write " + std::to_string(bread) + " bites\n");
-    WD_END_LOG;
-#endif // !PIPE_LOG_OUTPUT
 }
+
+//--------------------------------------------------------------------------------
+
+void
+proc::PipeLinuxProcess::getRawParameters() noexcept
+{
+    mRawParameters.reserve(mParameters.size());
+    for(auto& ptr : mParameters)
+    {
+        mRawParameters.emplace_back(ptr);
+    }
+    mRawParameters.push_back(NULL);
+}
+
+//--------------------------------------------------------------------------------

@@ -81,7 +81,7 @@ namespace dom
 //--------------------------------------------------------------------------------
 
         template<typename S, typename = enableIf<isString<S>>>
-        void operator== (S&& aStr) noexcept
+        bool operator== (S&& aStr) noexcept
         {
             size_t i = 0, j = 0;
             while (mData[i] && aStr[j])

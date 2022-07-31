@@ -89,6 +89,10 @@ namespace dom
             a1.y += a2.y;
             return std::move(a1);
         }
+
+        //TODO: Linux can't handle this code for some
+        //      unknown reason 
+        #ifndef LINUS_LINUX
         friend Pair operator+ (const Pair& a1, Pair&& a2) noexcept
         {
             return std::move(a2) + a1;
@@ -98,6 +102,7 @@ namespace dom
         {
             return Pair<T1, T2> { a1.x + a2.x, a1.y + a2.y };
         }
+        #endif
 
 //--------------------------------------------------------------------------------
 

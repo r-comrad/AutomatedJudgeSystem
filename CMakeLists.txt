@@ -3,19 +3,34 @@ project(ChineseTeste VERSION 2.0)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-add_compile_options("/std:c++latest")
-# if (MSVC_VERSION GREATER_EQUAL "1900")
+
+if (MSVC_VERSION GREATER_EQUAL "1900")
+    add_compile_options("/std:c++latest")
 #     include(CheckCXXCompilerFlag)
 #     CHECK_CXX_COMPILER_FLAG("/std:c++20" _cpp_latest_flag_supported)
 #     if (_cpp_latest_flag_supported)
 #         add_compile_options("/std:c++20")
 #     endif()
-# endif()
+endif()
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 
 #ADD_DEFINITIONS("-DBOOST_ALL_NO_LIB")
 #find_package(Boost 1.40 COMPONENTS program_options REQUIRED)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -Wl,--no-as-needed -ldl")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_DEBUG")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lpqxx -lpq")
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
+
+set(PQXX /usr/include/pqxx)
+
+find_library(PQXX_LIB pqxx)
+find_library(PQ_LIB pq)
+
+ADD_DEFINITIONS("-DBOOST_ALL_NO_LIB")
+find_package(Boost 1.40 COMPONENTS program_options REQUIRED)
 
 # include_directories(ChineseTesters libraries)
 
@@ -24,6 +39,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/sources/sources.cmake)
 get_sources(${CMAKE_CURRENT_SOURCE_DIR}/sources SOURCES)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${PQXX_LIB} ${PQ_LIB})
 
 add_subdirectory(libraries)
 
@@ -32,7 +48,7 @@ add_subdirectory(libraries)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/sources)
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE
-                           BILL_WINDOWS _DBG_ LOGS_OUTPUT_TYPE=1 ERRORS_OUTPUT_TYPE=4)
+                           LINUS_LINUX _DBG_ LOGS_OUTPUT_TYPE=2 ERRORS_OUTPUT_TYPE=4)
 if(WIN32)
     target_compile_definitions(${PROJECT_NAME} PRIVATE BILL_WINDOWS)
 else()

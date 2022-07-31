@@ -110,7 +110,9 @@
         "source_location": "cpp",
         "span": "cpp",
         "syncstream": "cpp",
-        "resumable": "cpp"
+        "resumable": "cpp",
+        "*.tcc": "cpp",
+        "string_view": "cpp"
     },
     "workbench.editor.revealIfOpen" : true,
     "editor.detectIndentation": false,

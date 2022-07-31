@@ -4,6 +4,9 @@ set(
     base_process.cpp
     base_process.hpp
 
+    pipe_linux_process.cpp
+    pipe_linux_process.hpp
+
     pipe_windows_process.cpp
     pipe_windows_process.hpp
 

@@ -20,9 +20,8 @@ data::DatabaseQuery::getSubmissionInfo(int ID) noexcept
     getParticipantInfo(result);
     getCheckerInfo(result);
 
-    #ifdef BILL_WINDOWS
-    #elif defined(LINUS_LINUX)
-    result.timeLimit /= 1000;
+    #ifdef LINUS_LINUX
+    result.timeMemLim.timeLimit /= 1000;
     #endif 
 
     return result;
@@ -57,29 +56,35 @@ std::optional<data::DatabaseQuery::TestData>
 data::DatabaseQuery::getNextTest() noexcept
 {
     std::optional<TestData> result;
+
+    TestData data;
+    uint32_t tempNum;
+    std::optional<dom::CharArray> input;
+    std::optional<dom::CharArray> output;
+
+    mTestMutex.lock();
     if (!mTestAreOver)
     {
-        TestData data;
         WRITE_LOG("Taking_next_test");
-    
-        mTestMutex.lock();
         //if (mDatabase.step() != SQLITE_OK) break; TODO: fixing that
         mDatabase.step(mReservedStatementNumber);
-        auto input = mDatabase.getTextFromRow(0, mReservedStatementNumber);
-        auto output = mDatabase.getTextFromRow(1, mReservedStatementNumber);
-        mTestMutex.unlock();
+        input = mDatabase.getTextFromRow(0, mReservedStatementNumber);
+        output = mDatabase.getTextFromRow(1, mReservedStatementNumber);
+        tempNum = mTestNum++;
 
-        if (input.has_value())
-        {
-            data.input = std::move(input.value());
-            data.output = std::move(output.value());
-            data.testNum = mTestNum++;
-            result = std::make_optional<TestData>(std::move(data));
-        }
-        else
+        if (!input.has_value())
         {
             mTestAreOver = true;
         }
+    }
+    mTestMutex.unlock();
+
+    if (input.has_value())
+    {
+        data.input = std::move(input.value());
+        data.output = std::move(output.value());
+        data.testNum = tempNum;
+        result = std::make_optional<TestData>(std::move(data));
     }
 
     return result;
@@ -108,7 +113,17 @@ data::DatabaseQuery::getParticipantInfo(SubmissionInfo& aSubmissionInfo) noexcep
     mDatabase.step();
 
     aSubmissionInfo.problemID = mDatabase.getInt64FromRow(1);
-    aSubmissionInfo.solutionFileName = mDatabase.getTextFromRow(0).value();
+
+    auto fileName = mDatabase.getTextFromRow(0);
+    if (fileName.has_value())
+    {
+        aSubmissionInfo.solutionFileName = std::move(fileName.value());
+    }
+    else
+    {
+        WRITE_ERROR("DatabaseQuery", "getParticipantInfo", 10, 
+            "Can't_take_solution_filename_from_database");
+    }
     mDatabase.closeStatment();
 
     WRITE_LOG("Problem_ID:", aSubmissionInfo.problemID);
@@ -127,7 +142,18 @@ data::DatabaseQuery::getCheckerInfo(SubmissionInfo& aSubmissionInfo) noexcept
     mDatabase.step();
     aSubmissionInfo.timeMemLim = { uint64_t(mDatabase.getInt64FromRow(0)), 
         uint64_t(mDatabase.getInt64FromRow(1))};
-    aSubmissionInfo.checkerFileName = mDatabase.getTextFromRow(2).value();
+    
+    auto fileName = mDatabase.getTextFromRow(2);
+    if (fileName.has_value())
+    {
+        aSubmissionInfo.checkerFileName = std::move(fileName.value());
+    }
+    else
+    {
+        WRITE_ERROR("DatabaseQuery", "getParticipantInfo", 10, 
+            "Can't_take_checker_filename_from_database");
+    }
+    
     mDatabase.closeStatment();
 
     WRITE_LOG("Time_limit:", aSubmissionInfo.timeMemLim.timeLimit);

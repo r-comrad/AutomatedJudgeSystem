@@ -7,7 +7,7 @@
 
 #include "main/path.hpp"
 
-#include "process/pipe_windows_process.hpp"
+#include "process/process.hpp"
 
 //--------------------------------------------------------------------------------
 
@@ -52,24 +52,34 @@ test::Compiler::prepareCommandForCPP(CPPInfo&& aInfo) const noexcept
     dom::CharArrayTable compileCommand;
 
     //TODO: Move
+
+    #ifdef BILL_WINDOWS
     compileCommand.emplace_back(CPP_COMPILER_NAME);
     compileCommand.emplace_back(std::move(aInfo.inputFileName));    
     compileCommand.emplace_back(std::move(aInfo.outputFileileName));
     compileCommand.back() += ".exe";
-
-    //TODO: compiler log output
-    proc::PipeWindowsProcess compiler;
-    compiler.setComand(compileCommand);
-    compiler.create();
-    compiler.run();
-    #ifdef _DBG_
-    std::string s;
-    compiler.read(s);
-    WRITE_LOG("Compiler_output:", s);
+    #else
+    compileCommand.emplace_back("g++");
+    compileCommand.emplace_back(std::move(aInfo.inputFileName));    
+    compileCommand.emplace_back() += "-o";
+    compileCommand.emplace_back(std::move(aInfo.outputFileileName));
     #endif
 
     dom::CharArrayTable result;
-    result.emplace_back(std::move(compileCommand.back()));
+    result.emplace_back(compileCommand.back().getCopy());
+
+    //TODO: compiler log output
+    proc::Process compiler;
+    compiler.setComand(std::move(compileCommand));
+    compiler.create();
+    compiler.run();
+    #ifdef _DBG_
+    //std::string s;
+    //compiler.readData(s);
+    //WRITE_LOG("Compiler_output:", s);
+    #endif
+
+
 
     return result;
 }

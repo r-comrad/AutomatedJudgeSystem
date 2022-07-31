@@ -5,26 +5,48 @@
 
 #include <string>
 
+#include "base_process.hpp"
+
 namespace proc
-
-class PipeLinuxProcess //: public LinuxProcess
 {
-public:
-    enum PypeType { ZERO = 0, NO_ZERO = 1 };
+    class PipeLinuxProcess : public BaseProcess
+    {
+    public:
+        PipeLinuxProcess() noexcept = default;
+        virtual ~PipeLinuxProcess() = default;
+
+        PipeLinuxProcess(const PipeLinuxProcess& other) noexcept;
+        PipeLinuxProcess& operator=(const PipeLinuxProcess& other) noexcept;
+
+        PipeLinuxProcess(PipeLinuxProcess&& other) noexcept = default;
+        PipeLinuxProcess& operator=(PipeLinuxProcess&& other) noexcept = default;
 
 
-    PipeLinuxProcess() noexcept;
-    virtual ~PipeLinuxProcess() = default;
+        void setComand(dom::CharArrayTable&& aParameters) 
+            noexcept final override;
 
-    void readPipe(str_ref result);
-    void writePipe(str_ref aMessage, PypeType aType = ZERO);
+        void create() noexcept final override;
 
-private:
-    virtual void IORedirection();
+        bool run() noexcept final override;
+        std::optional<dom::Pair<uint64_t>> runWithLimits() noexcept final override;
+        
+        virtual void IORedirection() noexcept
+        ;
+        void readData(std::string& result) noexcept final override;
+        void writeData(const std::string& aMessage) noexcept final override;
 
-    int mParentPipes[2];
-    int mChildPipes[2];
-};
+    private:
+        dom::CharArrayTable mParameters;
+        std::vector<char*> mRawParameters;
+
+        void getRawParameters() noexcept;
+
+        int mChildPID;
+
+        int mPipeA[2];
+        int mPipeB[2];
+    };
+}
 
 //--------------------------------------------------------------------------------
 

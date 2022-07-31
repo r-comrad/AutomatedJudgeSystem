@@ -4,12 +4,17 @@
 //--------------------------------------------------------------------------------
 
 #include "pipe_windows_process.hpp"
+#include "pipe_linux_process.hpp"
 
 //--------------------------------------------------------------------------------
 
 namespace proc
 {
+    #if     defined(BILL_WINDOWS)
     class Process : public PipeWindowsProcess
+    #elif   defined(LINUS_LINUX)
+    class Process : public PipeLinuxProcess
+    #endif
     {
     public:
         Process() noexcept = default;

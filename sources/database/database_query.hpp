@@ -8,7 +8,7 @@
 
 #include "domain/string.hpp"
 
-#include "sqlite_database.hpp"
+#include "database.hpp"
 #include "submission_info.hpp"
 
 //--------------------------------------------------------------------------------
@@ -62,7 +62,7 @@ namespace data
         void prepareTestsStatement(uint64_t aProblemID) noexcept;
 
     private:
-        SQLiteDatabase mDatabase;
+        Database mDatabase;
         int mReservedStatementNumber;
 
         std::mutex mTestMutex;

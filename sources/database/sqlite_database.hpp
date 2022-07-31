@@ -21,11 +21,12 @@ namespace data
 {
     class SQLiteDatabase
     {
-        typedef sqlite3 Base;
-        typedef sqlite3_stmt Statement;
+        using Base = sqlite3;
+        using Statement = sqlite3_stmt;
+
     public:
         SQLiteDatabase(const std::string& aPath);
-        virtual ~SQLiteDatabase();
+        ~SQLiteDatabase();
 
 //--------------------------------------------------------------------------------
 //                            DATABASE QUERY FUNCTIONS

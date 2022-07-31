@@ -57,8 +57,8 @@ namespace test
 
         //TODO: error test number                
         uint64_t mTestNumber;
-        const uint64_t mNumberOfTester;
-        static uint64_t globalTestersNumber;
+        const int64_t mNumberOfTester;
+        static int64_t globalTestersNumber;
 
         TestVerdict mVerdict;
         uint64_t mUsedTime;
@@ -71,6 +71,8 @@ namespace test
         void checkTest() noexcept;
         bool getTest(data::DatabaseQuery& aDBQ) noexcept;
         void resultEvoluation() noexcept;
+
+        std::mutex mSpeshalForLinux;
     };
 }
 

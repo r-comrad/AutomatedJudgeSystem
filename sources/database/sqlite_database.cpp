@@ -59,7 +59,10 @@ data::SQLiteDatabase::getTextFromRow(int aColumNumber, int aStatementID)
 {
     std::optional<dom::CharArray> result = {};
     auto ptr = sqlite3_column_text(mStatement[aStatementID], aColumNumber);
-    if (ptr != nullptr) result = dom::CharArray(ptr);
+    if (ptr != nullptr) 
+    {
+        result = dom::CharArray(ptr);
+    }
     return result;
 }
 

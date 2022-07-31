@@ -4,8 +4,11 @@ set(
     database_query.cpp
     database_query.hpp
 
-    postgres.cpp
-    postgres.hpp
+    database.cpp
+    database.hpp
+
+    postgresql.cpp
+    postgresql.hpp
 
     sqlite_database.cpp
     sqlite_database.hpp

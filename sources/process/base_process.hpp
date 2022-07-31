@@ -10,21 +10,15 @@
 #include "database/submission_info.hpp"
 
 //--------------------------------------------------------------------------------
-//                              RESOURCE LIMITS CONSTANTS 
-//--------------------------------------------------------------------------------
-
-#define MAX_TIME_LIMIT 5000
-#define MAX_MEMORY_LIMIT 5000
-
-//--------------------------------------------------------------------------------
 
 namespace proc
 {
     class BaseProcess
     {
-    public:
-        enum class PypeType { ZERO = 0, NO_ZERO = 1 };
+        static const uint64_t MAX_TIME_LIMIT = 5000;
+        static const uint64_t MAX_MEMORY_LIMIT = 5000;
 
+    public:
         /*
         \brief Base process constructor that initialize time and memory 
             usage limits for child process.
@@ -40,7 +34,7 @@ namespace proc
         BaseProcess(BaseProcess&& other) noexcept = default;
         BaseProcess& operator=(BaseProcess&& other) noexcept = default;
 
-        virtual void setComand(const dom::CharArrayTable& aParameters) 
+        virtual void setComand(dom::CharArrayTable&& aParameters) 
             noexcept = 0;
         
         /*
@@ -68,11 +62,12 @@ namespace proc
         \return Returns the time and memory used by the process if 
             the process is completed successfully.
         */
+
         virtual std::optional<dom::Pair<uint64_t>> runWithLimits() 
             noexcept = 0;
 
-        virtual void write(const std::string& aMessage) noexcept = 0;
-        virtual void read(std::string& aMessage) noexcept = 0;
+        virtual void writeData(const std::string& aMessage) noexcept = 0;
+        virtual void readData(std::string& aMessage) noexcept = 0;
 
     protected:
         uint64_t mTimeLimit;

@@ -11,7 +11,7 @@
 
 //--------------------------------------------------------------------------------
 
-#define THREAD_COUNTS 30
+#define THREAD_COUNTS 2
 
 //--------------------------------------------------------------------------------
 
@@ -32,7 +32,7 @@ test::Core::run(int aID) noexcept
     mDBQ.prepareTestsStatement(partInfo.problemID);
 
     //TODO: remove (this is for debug)
-    partInfo.solutionFileName = "2\\plus.cpp";
+    partInfo.solutionFileName = "2/plus.cpp";
 
     auto solProc = prepareSolutionProcess(partInfo);
     auto checkProc = prepareCheckerProcess(partInfo);

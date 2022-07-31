@@ -1,6 +1,8 @@
 #ifndef WINDOWS_PROCESS_HPP
 #define WINDOWS_PROCESS_HPP
 
+#ifdef BILL_WINDOWS
+
 //--------------------------------------------------------------------------------
 
 #include "domain/string.hpp"
@@ -95,5 +97,7 @@ namespace proc
 }
 
 //--------------------------------------------------------------------------------
+
+#endif
 
 #endif // !WINDOWS_PROCESS_HPP

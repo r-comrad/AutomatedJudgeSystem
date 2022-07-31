@@ -2,7 +2,7 @@
 
 //--------------------------------------------------------------------------------
 
-uint64_t test::Test::globalTestersNumber = 0;
+int64_t test::Test::globalTestersNumber = 0;
 
 //--------------------------------------------------------------------------------
 
@@ -12,7 +12,7 @@ test::Test::Test
     std::shared_ptr<proc::Process> aCheckerTemplate,
     ThreadSignals* aThreadSignals
 ) noexcept :
-    mNumberOfTester     (0),
+    mNumberOfTester     (-1),
     mTestNumber         (0),
     mSolutionTemplate   (aSolutionTemplate),
     mCheckerTemplate    (aCheckerTemplate),
@@ -106,15 +106,23 @@ test::Test::run(data::DatabaseQuery& aDBQ) noexcept
 void 
 test::Test::runTesting(data::DatabaseQuery& aDBQ) noexcept
 {
+    START_LOG_BLOCK("Start_new_test", "Test_cell_num:" + std::to_string(mNumberOfTester));
+
     if (getTest(aDBQ)) 
     {
+        WRITE_LOG("Success", "Test_cell_num:" + std::to_string(mNumberOfTester));
         checkTest();
         mThreadSignals->push(mNumberOfTester);
+        WRITE_LOG("Success_finishing", "Test_cell_num:" + std::to_string(mNumberOfTester));
     }
     else
     {
+        WRITE_LOG("Failure", "Test_cell_num:" + std::to_string(mNumberOfTester));
         mThreadSignals->finishCurrentThread();
+        WRITE_LOG("Failure_finishing", "Test_cell_num:" + std::to_string(mNumberOfTester));
     }
+
+    END_LOG_BLOCK("End_test#", mTestNumber, "Test_cell_num:" + std::to_string(mNumberOfTester));
 }
 
 //--------------------------------------------------------------------------------
@@ -122,13 +130,15 @@ test::Test::runTesting(data::DatabaseQuery& aDBQ) noexcept
 void 
 test::Test::checkTest() noexcept
 {
-    START_LOG_BLOCK("Checking_test#", mTestNumber);
-
+    START_LOG_BLOCK("Checking_test#", mTestNumber, 
+        "Test_cell_num:" + std::to_string(mNumberOfTester));
+mSpeshalForLinux.lock();
     mSolutionProcess = *mSolutionTemplate;
     mSolutionProcess.create();
-    mSolutionProcess.write(mTLM.mTest);
-    mSolutionProcess.write("\n");
+    mSolutionProcess.writeData(mTLM.mTest);
+    mSolutionProcess.writeData("\n");
     auto testRes = mSolutionProcess.runWithLimits();
+mSpeshalForLinux.unlock();
 
     if (!testRes)
     {
@@ -138,28 +148,30 @@ test::Test::checkTest() noexcept
     {
         mUsedTime = testRes.value().first;
         mUsedMemory = testRes.value().second;
-        mSolutionProcess.read(mTLM.mOutput);
+mSpeshalForLinux.lock();
+        mSolutionProcess.readData(mTLM.mOutput);
+mSpeshalForLinux.unlock();
         mTLM.makeOutputSizes();
 
-        START_LOG_BLOCK ("Test:",   mTLM.mTest);
-        WRITE_LOG       ("Output:", mTLM.mOutput);
-        END_LOG_BLOCK   ("Answer:", mTLM.mAnswer);
+        START_LOG_BLOCK ("Test_cell_num:" + std::to_string(mNumberOfTester), "Test:",   mTLM.mTest);
+        WRITE_LOG       ("Test_cell_num:" + std::to_string(mNumberOfTester), "Output:", mTLM.mOutput);
+        END_LOG_BLOCK   ("Test_cell_num:" + std::to_string(mNumberOfTester), "Answer:", mTLM.mAnswer);
         END_LOG_BLOCK();
 
+mSpeshalForLinux.lock();
         mCheckerProcess = *mCheckerTemplate;
         mCheckerProcess.create();
+        mCheckerProcess.writeData(mTLM.mTestSize);
+        mCheckerProcess.writeData(mTLM.mTest);
 
-        mCheckerProcess.write(mTLM.mTestSize);
-        mCheckerProcess.write(mTLM.mTest);
+        mCheckerProcess.writeData(mTLM.mOutputSize);
+        mCheckerProcess.writeData(mTLM.mOutput);
 
-        mCheckerProcess.write(mTLM.mOutputSize);
-        mCheckerProcess.write(mTLM.mOutput);
-
-        mCheckerProcess.write(mTLM.mAnswerSize);
-        mCheckerProcess.write(mTLM.mAnswer);
+        mCheckerProcess.writeData(mTLM.mAnswerSize);
+        mCheckerProcess.writeData(mTLM.mAnswer);
 
         mCheckerProcess.run();
-        
+mSpeshalForLinux.unlock();
         std::string temp;
     }
 
@@ -190,12 +202,14 @@ test::Test::getTest(data::DatabaseQuery& aDBQ) noexcept
 void
 test::Test::resultEvoluation() noexcept
 {
-    START_LOG_BLOCK("Result_evoluation");
+    START_LOG_BLOCK("Test_cell_num:" + std::to_string(mNumberOfTester), "Result_evoluation");
     WRITE_LOG("time:",   mUsedTime);
     WRITE_LOG("memory:", mUsedMemory);
 
     std::string temp;
-    mCheckerProcess.read(temp);
+mSpeshalForLinux.lock();
+    mCheckerProcess.readData(temp);
+mSpeshalForLinux.unlock();
     if (temp.substr(0, 2) != "ok")
     {
         mVerdict = TestVerdict::WA;
@@ -219,7 +233,7 @@ test::Test::resultEvoluation() noexcept
     else
     {
         mVerdict = TestVerdict::OK;
-        START_LOG_BLOCK("ok_test_passed");
+        START_LOG_BLOCK("Test_cell_num:" + std::to_string(mNumberOfTester), "ok_test_passed");
         END_LOG_BLOCK();
     }
 

@@ -1,3 +1,4 @@
+#ifdef BILL_WINDOWS
 
 #include "windows_process.hpp"
 
@@ -240,3 +241,5 @@ proc::WindowsProcess::killProcess(PROCESS_INFORMATION& processInfo) noexcept
 }
 
 //--------------------------------------------------------------------------------
+
+#endif

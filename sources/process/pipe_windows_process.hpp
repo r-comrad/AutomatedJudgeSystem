@@ -1,6 +1,8 @@
 #ifndef WINDOWS_PIPE_PROCESS_HPP
 #define WINDOWS_PIPE_PROCESS_HPP
 
+#ifdef BILL_WINDOWS
+
 //--------------------------------------------------------------------------------
 
 #include "windows_process.hpp"
@@ -37,5 +39,7 @@ namespace proc
 }
 
 //--------------------------------------------------------------------------------
+
+#endif
 
 #endif // !WINDOWS_PIPE_PROCESS_HPP
