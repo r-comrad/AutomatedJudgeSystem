@@ -84,7 +84,7 @@ proc::WindowsProcess::runWithLimits() noexcept
 //--------------------------------------------------------------------------------
 
 void 
-proc::WindowsProcess::setComand(const dom::CharArrayTable& aParameters) noexcept
+proc::WindowsProcess::setComand(dom::CharArrayTable&& aParameters) noexcept
 {
     mProcessName = aParameters[0].getCopy();
     mProcessArgs = dom::CharArray(aParameters, ' ');
@@ -242,4 +242,4 @@ proc::WindowsProcess::killProcess(PROCESS_INFORMATION& processInfo) noexcept
 
 //--------------------------------------------------------------------------------
 
-#endif
+#endif // !BILL_WINDOWS

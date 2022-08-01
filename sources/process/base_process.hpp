@@ -72,6 +72,8 @@ namespace proc
     protected:
         uint64_t mTimeLimit;
         uint64_t mMemoryLimit;
+
+        virtual void IORedirection() noexcept = 0;
     };
 
 }

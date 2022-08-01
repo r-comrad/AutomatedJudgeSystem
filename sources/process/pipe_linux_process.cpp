@@ -1,5 +1,7 @@
 #include "pipe_linux_process.hpp"
 
+#ifdef LINUX_LINUX
+
 //--------------------------------------------------------------------------------
 
 #include <cstring>
@@ -172,3 +174,5 @@ proc::PipeLinuxProcess::getRawParameters() noexcept
 }
 
 //--------------------------------------------------------------------------------
+
+#endif !LINUX_LINUX

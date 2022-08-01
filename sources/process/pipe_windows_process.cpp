@@ -57,7 +57,7 @@ proc::PipeWindowsProcess::IORedirection() noexcept
 //--------------------------------------------------------------------------------
 
 void
-proc::PipeWindowsProcess::read(std::string& result) noexcept
+proc::PipeWindowsProcess::readData(std::string& result) noexcept
 {
     const size_t bufSize = 1024;
     char buf[bufSize];
@@ -85,7 +85,7 @@ proc::PipeWindowsProcess::read(std::string& result) noexcept
 //--------------------------------------------------------------------------------
 
 void
-proc::PipeWindowsProcess::write(const std::string& aMessage) 
+proc::PipeWindowsProcess::writeData(const std::string& aMessage) 
     noexcept
 {
     unsigned long bread;
@@ -107,4 +107,4 @@ proc::PipeWindowsProcess::closeHandles() noexcept
 
 //--------------------------------------------------------------------------------
 
-#endif
+#endif // !BILL_WINDOWS

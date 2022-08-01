@@ -1,5 +1,7 @@
 #include "postgresql.hpp"
 
+#ifdef POSTGRESQL
+
 //--------------------------------------------------------------------------------
 //					    SQLLITE INTERFACE  IMPLEMENTATION
 //--------------------------------------------------------------------------------
@@ -128,20 +130,18 @@ Posdtgres::prepare(std::string aStatment, int aStatementID)
         mResultIterator.resize(aStatementID + 1);
     }
 
-try
-{
-        mStatement[aStatementID] = std::make_unique<pqxx::work>(mConnexion);
-        mResult[aStatementID] = pqxx::result( mStatement[aStatementID]->exec(aStatment.c_str()));
-        mResultIterator[aStatementID] = --mResult[aStatementID].begin();
+    try
+    {
+            mStatement[aStatementID] = std::make_unique<pqxx::work>(mConnexion);
+            mResult[aStatementID] = pqxx::result( mStatement[aStatementID]->exec(aStatment.c_str()));
+            mResultIterator[aStatementID] = --mResult[aStatementID].begin();
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+        std::cout << e.what() << '\n';
+        WRITE_ERROR(e.what());
+    }
 }
-catch(const std::exception& e)
-{
-    std::cerr << e.what() << '\n';
-    std::cout << e.what() << '\n';
-    WRITE_ERROR(e.what());
-}
 
-
-
-
-}
+#endif // !POSTGRESQL

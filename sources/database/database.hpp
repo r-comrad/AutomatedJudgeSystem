@@ -12,7 +12,11 @@
 
 namespace data
 {
+    #if   defined(SQLITE)
     class Database : public SQLiteDatabase
+    #elif defined(POSTGRESQL)
+    class Database : public Posdtgres
+    #endif
     {
     public:
         Database(std::string aDBName) noexcept;

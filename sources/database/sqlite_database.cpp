@@ -1,5 +1,7 @@
 #include "database/sqlite_database.hpp"
 
+#ifdef SQLITE
+
 //--------------------------------------------------------------------------------
 
 data::SQLiteDatabase::SQLiteDatabase(const std::string& aPath) :
@@ -130,3 +132,5 @@ data::SQLiteDatabase::prepare(std::string&& aStatment, int aStatementID)
 }
 
 //--------------------------------------------------------------------------------
+
+#endif // !SQLITE

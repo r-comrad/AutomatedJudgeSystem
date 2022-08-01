@@ -43,7 +43,7 @@ namespace proc
         WindowsProcess(WindowsProcess&& other) noexcept = default;
         WindowsProcess& operator=(WindowsProcess&& other) noexcept = default;
 
-        void setComand(const dom::CharArrayTable& aParameters) 
+        void setComand(dom::CharArrayTable&& aParameters) 
             noexcept final override;
 
         /*
@@ -73,7 +73,6 @@ namespace proc
         /*
         \brief Redirecting input and output streams for a child process.
         */
-        virtual void IORedirection() noexcept = 0;
        
         /*
         \brief Closes the input and output handler for the child process.
@@ -98,6 +97,6 @@ namespace proc
 
 //--------------------------------------------------------------------------------
 
-#endif
+#endif // !BILL_WINDOWS
 
 #endif // !WINDOWS_PROCESS_HPP

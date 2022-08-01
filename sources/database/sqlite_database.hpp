@@ -1,8 +1,8 @@
 #ifndef SQLITE_DATABASE_HPP
 #define SQLITE_DATABASE_HPP
 
-//--------------------------------------------------------------------------------
-//                        SQLLITE INTERFACE DECLARATION
+#ifdef SQLITE
+
 //--------------------------------------------------------------------------------
 
 #include <iostream>
@@ -153,5 +153,7 @@ namespace data
 }
 
 //--------------------------------------------------------------------------------
+
+#endif // !SQLITE
 
 #endif // !SQLITE_DATABASE_HPP

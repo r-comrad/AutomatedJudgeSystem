@@ -24,8 +24,8 @@ namespace proc
             noexcept = default;
         
         virtual void IORedirection() noexcept final override;
-        void read(std::string& result) noexcept final override;
-        void write(const std::string& aMessage) noexcept final override;
+        void readData(std::string& result) noexcept final override;
+        void writeData(const std::string& aMessage) noexcept final override;
 
     private:
         bool mIOSet = false;
@@ -40,6 +40,6 @@ namespace proc
 
 //--------------------------------------------------------------------------------
 
-#endif
+#endif // !BILL_WINDOWS
 
 #endif // !WINDOWS_PIPE_PROCESS_HPP

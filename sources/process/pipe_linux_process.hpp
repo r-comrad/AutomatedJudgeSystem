@@ -1,6 +1,8 @@
 #ifndef PIPE_LINUX_PROCESS_HPP
 #define PIPE_LINUX_PROCESS_HPP
 
+#ifdef LINUX_LINUX
+
 //--------------------------------------------------------------------------------
 
 #include <string>
@@ -49,5 +51,7 @@ namespace proc
 }
 
 //--------------------------------------------------------------------------------
+
+#endif // !LINUX_LINUX
 
 #endif // !PIPE_LINUX_PROCESS_HPP
