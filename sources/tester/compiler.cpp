@@ -63,6 +63,7 @@ test::Compiler::prepareCommandForCPP(CPPInfo&& aInfo) const noexcept
     compileCommand.emplace_back(std::move(aInfo.inputFileName));    
     compileCommand.emplace_back() += "-o";
     compileCommand.emplace_back(std::move(aInfo.outputFileileName));
+    compileCommand.back() += ".exe";
     #endif
 
     dom::CharArrayTable result;

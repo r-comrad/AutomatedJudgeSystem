@@ -4,7 +4,10 @@
 //--------------------------------------------------------------------------------
 
 #include <fstream>
-#include <string>
+
+#include <iostream>
+
+#include "string.hpp"
 
 //--------------------------------------------------------------------------------
 
@@ -18,62 +21,34 @@ namespace dom
         template<typename... Args>
         void startLogBlock(const Args&... args) noexcept
         {
-            for(int8_t i = 0; i < mLogBlockCount; ++i) (*mLogStream) << '\t';
+            write(mLogStream, args...);
             ++mLogBlockCount;
-
-            (void)std::initializer_list<bool>
-            {
-                static_cast<bool>((*mLogStream) << args << ' ')...
-            };
-
-            (*mLogStream) << std::endl;
         }
 
         template<typename... Args>
         void endLogBlock(const Args&... args) noexcept
         {
-            for(int8_t i = 0; i < mLogBlockCount; ++i) (*mLogStream) << '\t';
+            write(mLogStream, args...);
             --mLogBlockCount;
-
-            (void)std::initializer_list<bool>
-            {
-                static_cast<bool>((*mLogStream) << args << ' ')...
-            };
-            
-            (*mLogStream) << std::endl;
         }
 
         template<typename... Args>
         void writeLog(const Args&... args) noexcept
         {
-            for(int8_t i = 0; i < mLogBlockCount; ++i) (*mLogStream) << '\t';
-
-            (void)std::initializer_list<bool>
-            {
-                static_cast<bool>((*mLogStream) << args << ' ')...
-            };
-
-            (*mLogStream) << std::endl;
+            write(mLogStream, args...);
         }
 
         template<typename... Args>
-        void writeError(const Args&... args) noexcept
+        void writeError(Args&&... args) noexcept
         {
-            #ifdef ERRORS_TO_LOG_OUTPU
-            for(sint_8 i = 0; i < mLogBlockCount; ++i) (*mLogStream) << '\t';
+            #ifdef ERRORS_TO_LOG_OUTPUT
+            write(mErrorStream, "ERROR", args...);
+            #else
+            writeWithoutTabulation(mErrorStream, "ERROR", args...);
             #endif
-
-            (*mErrorStream) << "ERROR" << ' ';
-
-            (void)std::initializer_list<bool>
-            {
-                static_cast<bool>((*mErrorStream) << args << ' ')...
-            };
-
-            (*mErrorStream) << std::endl;
         }
 
-        void writeLogEndl() noexcept;
+        void writeLogEndl() noexcept;   
 
         #ifdef BILL_WINDOWS
         /*
@@ -89,6 +64,52 @@ namespace dom
 
         std::ostream* mLogStream;
         std::ostream* mErrorStream;
+
+        template<typename... Args>
+        void write(std::ostream* aStream, Args&&... args) noexcept
+        {
+            std::string str;
+            for(int8_t i = 0; i < mLogBlockCount; ++i) str += '\t';
+            basicWrite(aStream, str, args...);
+        }
+
+        template<typename... Args>
+        void writeWithoutTabulation(std::ostream* aStream, Args&&... args) noexcept
+        {
+            std::string str;
+            basicWrite(aStream, str, args...);
+        }
+
+        template<typename... Args>
+        void basicWrite(std::ostream* aStream, std::string& str, Args&&... args) noexcept
+        {
+            ((void) (str+= toString(std::forward<Args>(args)) + " ", 0), ...);
+            str += '\n';
+
+            (*aStream) << str ;
+            (*aStream).flush();
+        }
+
+        template<typename S, typename = enableIfSame<S, std::string>>
+        std::string toString(S&& str)
+        {
+            return std::move(str);
+        }
+
+        std::string toString(const char* str)
+        {
+            return std::string(str);
+        }
+
+        std::string toString(char* str)
+        {
+            return std::string(str);
+        }
+
+        std::string toString(int64_t num)
+        {
+            return std::to_string(num);
+        }
 
         int8_t mLogBlockCount;
     };

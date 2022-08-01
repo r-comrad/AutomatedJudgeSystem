@@ -55,7 +55,7 @@
 #elif   ERRORS_OUTPUT_TYPE == 2
     #define ERRORS_TO_FILE_OUTPUT
 #elif   ERRORS_OUTPUT_TYPE == 4
-    #define ERRORS_TO_LOG_OUTPU
+    #define ERRORS_TO_LOG_OUTPUT
 #else
     #define ERROR_DEFAULT_OUTPUT
 #endif
@@ -85,7 +85,7 @@ dom::Message::Message() noexcept
         mErrorStream = &std::cout;
     #elif   defined(ERRORS_TO_FILE_OUTPUT)
         mErrorStream = new std::ofstream(ERRORS_PATH + "out.err");
-    #elif   defined(ERRORS_TO_LOG_OUTPU)
+    #elif   defined(ERRORS_TO_LOG_OUTPUT)
         mErrorStream = mLogStream;
     #endif
 }

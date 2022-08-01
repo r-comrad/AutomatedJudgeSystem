@@ -20,6 +20,7 @@ test::Test::Test
     mVerdict            (TestVerdict::OK),
     mUsedTime           (0),
     mUsedMemory         (0),
+    //mTestThread         (new std::thread([](){}))
     mTestThread         ([](){})
 {}
 
@@ -28,6 +29,7 @@ test::Test::Test
 test::Test::~Test() 
 {
     mTestThread.join();
+    //mTestThread->join();
 }
 
 //--------------------------------------------------------------------------------
@@ -41,6 +43,7 @@ test::Test::Test(const Test& other) noexcept :
     mVerdict            (TestVerdict::OK),
     mUsedTime           (0),
     mUsedMemory         (0),
+   // mTestThread         (new std::thread([](){}))
     mTestThread         ([](){})
 {
     mTimeLimit = other.mTimeLimit;    
@@ -99,6 +102,9 @@ test::Test::run(data::DatabaseQuery& aDBQ) noexcept
     mThreadSignals->pop(mNumberOfTester);
     mTestThread.join();
     mTestThread = std::thread(&Test::runTesting, this, std::ref(aDBQ));
+    // mTestThread->join();
+    // delete mTestThread;
+    // mTestThread = new std::thread(&Test::runTesting, this, std::ref(aDBQ));
 }
 
 //--------------------------------------------------------------------------------
@@ -106,23 +112,23 @@ test::Test::run(data::DatabaseQuery& aDBQ) noexcept
 void 
 test::Test::runTesting(data::DatabaseQuery& aDBQ) noexcept
 {
-    START_LOG_BLOCK("Start_new_test", "Test_cell_num:" + std::to_string(mNumberOfTester));
+    START_LOG_BLOCK("Start_new_test", "Test_cell_num:", mNumberOfTester);
 
     if (getTest(aDBQ)) 
     {
-        WRITE_LOG("Success", "Test_cell_num:" + std::to_string(mNumberOfTester));
+        WRITE_LOG("Success", "Test_cell_num:", mNumberOfTester);
         checkTest();
         mThreadSignals->push(mNumberOfTester);
-        WRITE_LOG("Success_finishing", "Test_cell_num:" + std::to_string(mNumberOfTester));
+        WRITE_LOG("Success_finishing", "Test_cell_num:", mNumberOfTester);
     }
     else
     {
-        WRITE_LOG("Failure", "Test_cell_num:" + std::to_string(mNumberOfTester));
+        WRITE_LOG("Failure", "Test_cell_num:", mNumberOfTester);
         mThreadSignals->finishCurrentThread();
-        WRITE_LOG("Failure_finishing", "Test_cell_num:" + std::to_string(mNumberOfTester));
+        WRITE_LOG("Failure_finishing", "Test_cell_num:", mNumberOfTester);
     }
 
-    END_LOG_BLOCK("End_test#", mTestNumber, "Test_cell_num:" + std::to_string(mNumberOfTester));
+    END_LOG_BLOCK("End_test#", mTestNumber, "Test_cell_num:", mNumberOfTester);
 }
 
 //--------------------------------------------------------------------------------
@@ -131,34 +137,33 @@ void
 test::Test::checkTest() noexcept
 {
     START_LOG_BLOCK("Checking_test#", mTestNumber, 
-        "Test_cell_num:" + std::to_string(mNumberOfTester));
-mSpeshalForLinux.lock();
+        "Test_cell_num:", mNumberOfTester);
+
     mSolutionProcess = *mSolutionTemplate;
     mSolutionProcess.create();
+    WRITE_LOG("Test_cell_num:", mNumberOfTester, "Write_data:",  mTLM.mTest);
     mSolutionProcess.writeData(mTLM.mTest);
     mSolutionProcess.writeData("\n");
     auto testRes = mSolutionProcess.runWithLimits();
-mSpeshalForLinux.unlock();
 
-    if (!testRes)
+    if (!testRes.has_value())
     {
+        WRITE_LOG       ("Test_cell_num:", mNumberOfTester, "Output:", mTLM.mOutput);
         mVerdict = TestVerdict::TLE;
     }
     else
     {
         mUsedTime = testRes.value().first;
         mUsedMemory = testRes.value().second;
-mSpeshalForLinux.lock();
+
         mSolutionProcess.readData(mTLM.mOutput);
-mSpeshalForLinux.unlock();
         mTLM.makeOutputSizes();
 
-        START_LOG_BLOCK ("Test_cell_num:" + std::to_string(mNumberOfTester), "Test:",   mTLM.mTest);
-        WRITE_LOG       ("Test_cell_num:" + std::to_string(mNumberOfTester), "Output:", mTLM.mOutput);
-        END_LOG_BLOCK   ("Test_cell_num:" + std::to_string(mNumberOfTester), "Answer:", mTLM.mAnswer);
+        START_LOG_BLOCK ("Test_cell_num:", mNumberOfTester, "Test:",   mTLM.mTest);
+        WRITE_LOG       ("Test_cell_num:", mNumberOfTester, "Output:", mTLM.mOutput);
+        END_LOG_BLOCK   ("Test_cell_num:", mNumberOfTester, "Answer:", mTLM.mAnswer);
         END_LOG_BLOCK();
 
-mSpeshalForLinux.lock();
         mCheckerProcess = *mCheckerTemplate;
         mCheckerProcess.create();
         mCheckerProcess.writeData(mTLM.mTestSize);
@@ -171,7 +176,7 @@ mSpeshalForLinux.lock();
         mCheckerProcess.writeData(mTLM.mAnswer);
 
         mCheckerProcess.run();
-mSpeshalForLinux.unlock();
+
         std::string temp;
     }
 
@@ -202,14 +207,14 @@ test::Test::getTest(data::DatabaseQuery& aDBQ) noexcept
 void
 test::Test::resultEvoluation() noexcept
 {
-    START_LOG_BLOCK("Test_cell_num:" + std::to_string(mNumberOfTester), "Result_evoluation");
+    START_LOG_BLOCK("Test_cell_num:", mNumberOfTester, "Result_evoluation");
     WRITE_LOG("time:",   mUsedTime);
     WRITE_LOG("memory:", mUsedMemory);
 
     std::string temp;
-mSpeshalForLinux.lock();
+
     mCheckerProcess.readData(temp);
-mSpeshalForLinux.unlock();
+
     if (temp.substr(0, 2) != "ok")
     {
         mVerdict = TestVerdict::WA;
@@ -233,7 +238,7 @@ mSpeshalForLinux.unlock();
     else
     {
         mVerdict = TestVerdict::OK;
-        START_LOG_BLOCK("Test_cell_num:" + std::to_string(mNumberOfTester), "ok_test_passed");
+        START_LOG_BLOCK("Test_cell_num:", mNumberOfTester, "ok_test_passed");
         END_LOG_BLOCK();
     }
 

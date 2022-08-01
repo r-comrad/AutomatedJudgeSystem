@@ -95,6 +95,7 @@ test::Core::check(uint64_t aID) noexcept
         auto signal = mThreadSignals.getSignal();
         if (signal.has_value())
         {
+            WRITE_LOG("Signal_number", signal.value());
             auto& test = mTests[signal.value()];
             auto verdict = test.getVerdict();
 

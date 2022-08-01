@@ -71,8 +71,6 @@ namespace test
         void checkTest() noexcept;
         bool getTest(data::DatabaseQuery& aDBQ) noexcept;
         void resultEvoluation() noexcept;
-
-        std::mutex mSpeshalForLinux;
     };
 }
 

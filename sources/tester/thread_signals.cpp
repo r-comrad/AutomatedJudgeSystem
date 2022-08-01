@@ -2,6 +2,10 @@
 
 //--------------------------------------------------------------------------------
 
+#include "domain/error_message.hpp"
+
+//--------------------------------------------------------------------------------
+
 test::ThreadSignals::ThreadSignals(size_t aThreadMaxCount) noexcept :
     mThreadMaxCount      (aThreadMaxCount),
     mFinishedThreadCount (0),
@@ -42,6 +46,7 @@ test::ThreadSignals::finishCurrentThread() noexcept
 std::optional<size_t>
 test::ThreadSignals::getSignal() noexcept
 {
+    //WRITE_LOG("Signals_count", mSignals.size());
     std::optional<size_t> result;
     mSignalMutex.lock();
     if (mSignals.size())
@@ -49,9 +54,11 @@ test::ThreadSignals::getSignal() noexcept
         result = mSignals.back();
         mSignals.pop_back();
         mFinishedThreadCount++;
+        WRITE_LOG("Signal_returned", result.value());
     }
     mSignalMutex.unlock();
 
+    //if (result.has_value()) WRITE_LOG("Signal_returned", result.value());
     return result;
 }
 

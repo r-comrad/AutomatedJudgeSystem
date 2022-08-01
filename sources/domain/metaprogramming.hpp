@@ -22,6 +22,9 @@ namespace dom
 
     template <typename Arg>
     using enableIf = typename std::enable_if_t<Arg::value>;
+
+    template <typename T1, typename T2>
+    using enableIfSame = typename std::enable_if_t<isSameWeak<T1, T2>::value>;
 }
 
 //--------------------------------------------------------------------------------
