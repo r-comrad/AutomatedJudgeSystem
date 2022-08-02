@@ -1,6 +1,6 @@
 #include "pipe_linux_process.hpp"
 
-#ifdef LINUX_LINUX
+#ifdef LINUS_LINUX
 
 //--------------------------------------------------------------------------------
 
@@ -175,4 +175,4 @@ proc::PipeLinuxProcess::getRawParameters() noexcept
 
 //--------------------------------------------------------------------------------
 
-#endif !LINUX_LINUX
+#endif // !LINUS_LINUX

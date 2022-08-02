@@ -4,7 +4,7 @@
 
 //--------------------------------------------------------------------------------
 
-Posdtgres::Posdtgres(std::string str) noexcept : 
+Posdtgres::Posdtgres() noexcept : 
     mConnexion
     {"                          \
         dbname = test_sys       \
@@ -61,11 +61,16 @@ Posdtgres::update
 
 //--------------------------------------------------------------------------------
 
-const unsigned char* 
+std::optional<dom::CharArray>
 Posdtgres::getTextFromRow(int aColumNumber, int aStatementID) noexcept
 {
-    auto str = mResultIterator[aStatementID][aColumNumber].as<const char*>();
-    return (const unsigned char* ) str;
+    std::optional<dom::CharArray> result = {};
+    auto ptr = mResultIterator[aStatementID][aColumNumber].as<const char*>();
+    if (ptr != nullptr) 
+    {
+        result = dom::CharArray(ptr);
+    }
+    return result;
 }
 
 //--------------------------------------------------------------------------------
@@ -80,7 +85,7 @@ Posdtgres::getText16FromRow(int aColumNumber, int aStatementID) noexcept
 //--------------------------------------------------------------------------------
 
 int 
-Posdtgres::getIntFromRow(int aColumNumber, int aStatementID)
+Posdtgres::getIntFromRow(int aColumNumber, int aStatementID) noexcept
 {
     return mResultIterator[aStatementID][aColumNumber].as<int>();
 }

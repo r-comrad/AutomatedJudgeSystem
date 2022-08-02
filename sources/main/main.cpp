@@ -9,7 +9,17 @@
 
 int main(int argc, char* argv[])
 {
-    int num = 3;
+    int num = 0;
+    std::string databasePath = "";
+
+    // For debug
+    #if     defined(SQLITE)
+    num = 3;
+    databasePath = DATABASE_PATH;
+    #elif   defined(POSTGRESQL)
+    num = 2;
+    #endif
+
     if (argc > 1)
     {
         num = std::stoi(std::string(argv[1]));
@@ -17,7 +27,10 @@ int main(int argc, char* argv[])
 
     WRITE_LOG("ID:", num);
     WRITE_LOG_ENDL();
-    test::Core core(DATABASE_PATH);
+
+
+    test::Core core(databasePath);
+
     core.run(num);
     
     return 0;

@@ -10,11 +10,20 @@ if (MSVC_VERSION GREATER_EQUAL "1900")
 else()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -Wl,--no-as-needed -ldl")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_DEBUG")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lpqxx -lpq")
+endif()
 
+# Database options
+if (1)
+    set(CMAKE_SQLITE 1)
+else()
+    set(CMAKE_POSTGRESQL 1)
+endif()
+
+if (CMAKE_POSTGRESQL)
     set(PQXX /usr/include/pqxx)
     find_library(PQXX_LIB pqxx)
     find_library(PQ_LIB pq)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lpqxx -lpq")
 endif()
 
 # Boost
@@ -29,9 +38,9 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/s
 
 #  Libraries 
 add_subdirectory(libraries)
-if (MSVC_VERSION GREATER_EQUAL "1900")
+if (CMAKE_SQLITE)
     target_compile_definitions(${PROJECT_NAME} PRIVATE SQLITE)
-else()
+elseif(CMAKE_POSTGRESQL)
     target_compile_definitions(${PROJECT_NAME} PRIVATE POSTGRESQL)
     target_link_libraries(${PROJECT_NAME} PRIVATE ${PQXX_LIB} ${PQ_LIB})
 endif()
@@ -41,7 +50,6 @@ if (MSVC_VERSION GREATER_EQUAL "1900")
     target_compile_definitions(${PROJECT_NAME} PRIVATE BILL_WINDOWS)
 else()
     target_compile_definitions(${PROJECT_NAME} PRIVATE LINUS_LINUX)
-    target_link_libraries(${PROJECT_NAME} PRIVATE ${PQXX_LIB} ${PQ_LIB})
 endif()
 target_compile_definitions(${PROJECT_NAME} PRIVATE
                            _DBG_ LOGS_OUTPUT_TYPE=2 ERRORS_OUTPUT_TYPE=4)

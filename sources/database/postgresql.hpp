@@ -5,20 +5,22 @@
 
 //--------------------------------------------------------------------------------
 
-#include <string>
 #include <vector>
 #include <memory>
+#include <optional>
+
+#include <pqxx/pqxx>
 
 #include "domain/error_message.hpp"
 
-#include <pqxx/pqxx>
+#include "domain/string.hpp"
 
 //--------------------------------------------------------------------------------
 
 class Posdtgres
 {
 public:
-	Posdtgres(std::string str) noexcept;
+	Posdtgres() noexcept;
 	virtual ~Posdtgres() = default;
 
     Posdtgres(const Posdtgres& other) = delete;
@@ -90,7 +92,7 @@ public:
 	    If empty, the first cell (#0) is used.
 	\return Pointer to unt-8 string from specidied cell.
 	*/
-	const unsigned char* getTextFromRow(int aColumNumber, int aStatementID = 0) 
+	std::optional<dom::CharArray> getTextFromRow(int aColumNumber, int aStatementID = 0) 
         noexcept;
 
 	/*
