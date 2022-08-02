@@ -12,8 +12,6 @@
 #include "SQLite/sqlite3.h"
 
 #include "domain/string.hpp"
-#include "domain/error_message.hpp"
-#include "domain/pair.hpp"
 
 //--------------------------------------------------------------------------------
 
@@ -25,8 +23,14 @@ namespace data
         using Statement = sqlite3_stmt;
 
     public:
-        SQLiteDatabase(const std::string& aPath);
-        ~SQLiteDatabase();
+        SQLiteDatabase(const std::string& aPath) noexcept;
+        ~SQLiteDatabase() = default;
+
+        SQLiteDatabase(const SQLiteDatabase& other) = delete;
+        SQLiteDatabase& operator=(const SQLiteDatabase& other) = delete;
+
+        SQLiteDatabase(SQLiteDatabase&& other) noexcept = default;
+        SQLiteDatabase& operator=(SQLiteDatabase&& other) noexcept = default;
 
 //--------------------------------------------------------------------------------
 //                            DATABASE QUERY FUNCTIONS
@@ -66,7 +70,7 @@ namespace data
             that should be closed.
             If empty, the first cell (#0) is used.
         */
-        void closeStatment(int aStatementID = 0);
+        void closeStatment(int aStatementID = 0) noexcept;
 
         /*
         \brief Make a step for the selected statment.
@@ -75,7 +79,7 @@ namespace data
             If empty, the first cell (#0) is used.
         \return SQLLite step status.
         */
-        int    step(int aStatementID = 0);
+        int step(int aStatementID = 0) noexcept;
 
 //--------------------------------------------------------------------------------
 //                        INFORMATION RECEIVING FUNCTIONS
@@ -92,7 +96,7 @@ namespace data
         \return Pointer to unt-8 string from specidied cell.
         */
         std::optional<dom::CharArray> getTextFromRow(int aColumNumber, 
-            int aStatementID = 0);
+            int aStatementID = 0) noexcept;
 
         /*
         \brief Gets UTF-16 string from colum of current row. The current line
@@ -104,7 +108,7 @@ namespace data
             If empty, the first cell (#0) is used.
         \return Pointer to unt-8 string from specidied cell.
         */
-        dom::CharArray getText16FromRow(int aColumNumber, int aStatementID = 0);
+        dom::CharArray getText16FromRow(int aColumNumber, int aStatementID = 0) noexcept;
 
         /*
         \brief Gets integer from colum of current row. The current line
@@ -116,7 +120,7 @@ namespace data
             If empty, the first cell (#0) is used.
         \return Number from specidied cell.
         */
-        int getIntFromRow(int aColumNumber, int aStatementID = 0);
+        int getIntFromRow(int aColumNumber, int aStatementID = 0) noexcept;
 
         /*
         \brief Gets large nteger from colum of current row. The current line
@@ -128,7 +132,7 @@ namespace data
             If empty, the first cell (#0) is used.
         \return Number from specidied cell.
         */
-        int64_t getInt64FromRow(int aColumNumber, int aStatementID = 0);
+        int64_t getInt64FromRow(int aColumNumber, int aStatementID = 0) noexcept;
 
 //--------------------------------------------------------------------------------
 
@@ -148,7 +152,7 @@ namespace data
         Base* mBase;
         std::vector<Statement*> mStatement;
 
-        void prepare(std::string&& aStatment, int aStatementID);
+        void prepare(std::string&& aStatment, int aStatementID) noexcept;
     };
 }
 

@@ -2,6 +2,10 @@
 
 //--------------------------------------------------------------------------------
 
+#include "domain/error_message.hpp"
+
+//--------------------------------------------------------------------------------
+
 data::DatabaseQuery::DatabaseQuery (const std::string& aDatabasePath) noexcept :
     mDatabase                   (aDatabasePath),
     mReservedStatementNumber    (0),

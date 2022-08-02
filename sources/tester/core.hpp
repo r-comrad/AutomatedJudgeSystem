@@ -33,6 +33,8 @@ namespace test
         void run(int aID) noexcept;
 
     private:
+        static const int8_t THREAD_COUNTS = 30;
+
         test::ThreadSignals mThreadSignals;
         std::vector<Test> mTests;
         data::DatabaseQuery mDBQ;

@@ -7,8 +7,8 @@ set(
     compiler.cpp
     compiler.hpp
 
-    core.hpp 
     core.cpp
+    core.hpp 
 
     test.cpp
     test.hpp
@@ -16,6 +16,6 @@ set(
     testlib_message.cpp
     testlib_message.hpp
 
-    thread_signals.hpp
     thread_signals.cpp
+    thread_signals.hpp
 )

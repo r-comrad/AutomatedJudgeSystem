@@ -33,6 +33,12 @@ namespace data
         DatabaseQuery(const std::string& aDatabasePath) noexcept;
         ~DatabaseQuery() = default;
 
+        DatabaseQuery(const DatabaseQuery& other) = delete;
+        DatabaseQuery& operator=(const DatabaseQuery& other) = delete;
+
+        DatabaseQuery(DatabaseQuery&& other) noexcept = default;
+        DatabaseQuery& operator=(DatabaseQuery&& other) noexcept = default;
+
         /*
         \brief Retrieves the problem information (ID, file names, restrictions) 
         from the database and puts it in the SubmissionInfo structure.

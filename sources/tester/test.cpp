@@ -2,6 +2,10 @@
 
 //--------------------------------------------------------------------------------
 
+#include "domain/error_message.hpp"
+
+//--------------------------------------------------------------------------------
+
 int64_t test::Test::globalTestersNumber = 0;
 
 //--------------------------------------------------------------------------------
@@ -20,7 +24,6 @@ test::Test::Test
     mVerdict            (TestVerdict::OK),
     mUsedTime           (0),
     mUsedMemory         (0),
-    //mTestThread         (new std::thread([](){}))
     mTestThread         ([](){})
 {}
 
@@ -29,7 +32,6 @@ test::Test::Test
 test::Test::~Test() 
 {
     mTestThread.join();
-    //mTestThread->join();
 }
 
 //--------------------------------------------------------------------------------
@@ -43,7 +45,6 @@ test::Test::Test(const Test& other) noexcept :
     mVerdict            (TestVerdict::OK),
     mUsedTime           (0),
     mUsedMemory         (0),
-   // mTestThread         (new std::thread([](){}))
     mTestThread         ([](){})
 {
     mTimeLimit = other.mTimeLimit;    
@@ -102,9 +103,6 @@ test::Test::run(data::DatabaseQuery& aDBQ) noexcept
     mThreadSignals->pop(mNumberOfTester);
     mTestThread.join();
     mTestThread = std::thread(&Test::runTesting, this, std::ref(aDBQ));
-    // mTestThread->join();
-    // delete mTestThread;
-    // mTestThread = new std::thread(&Test::runTesting, this, std::ref(aDBQ));
 }
 
 //--------------------------------------------------------------------------------

@@ -39,7 +39,7 @@ namespace dom
         }
 
         template<typename... Args>
-        void writeError(Args&&... args) noexcept
+        void writeError(const Args&... args) noexcept
         {
             #ifdef ERRORS_TO_LOG_OUTPUT
             write(mErrorStream, "ERROR", args...);
@@ -70,14 +70,14 @@ namespace dom
         {
             std::string str;
             for(int8_t i = 0; i < mLogBlockCount; ++i) str += '\t';
-            basicWrite(aStream, str, args...);
+            basicWrite(aStream, str, std::forward<Args>(args)...);
         }
 
         template<typename... Args>
         void writeWithoutTabulation(std::ostream* aStream, Args&&... args) noexcept
         {
             std::string str;
-            basicWrite(aStream, str, args...);
+            basicWrite(aStream, str, std::forward<Args>(args)...);
         }
 
         template<typename... Args>
@@ -91,22 +91,17 @@ namespace dom
         }
 
         template<typename S, typename = enableIfSame<S, std::string>>
-        std::string toString(S&& str)
+        std::string toString(S&& str) noexcept
         {
-            return std::move(str);
+            return std::forward<S>(str);
         }
 
-        std::string toString(const char* str)
-        {
-            return std::string(str);
-        }
-
-        std::string toString(char* str)
+        std::string toString(const char* str) noexcept
         {
             return std::string(str);
         }
 
-        std::string toString(int64_t num)
+        std::string toString(int64_t num) noexcept
         {
             return std::to_string(num);
         }

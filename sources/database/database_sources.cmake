@@ -12,4 +12,6 @@ set(
 
     sqlite_database.cpp
     sqlite_database.hpp
+
+    submission_info.hpp
 )

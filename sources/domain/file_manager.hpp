@@ -22,8 +22,8 @@ namespace dom
         File(const File& other) = delete;
         File& operator=(const File& other) = delete;
 
-        File(File&& other) = default;
-        File& operator=(File&& other) = default;
+        File(File&& other)  noexcept= default;
+        File& operator=(File&& other) noexcept = default;
 
         template<typename... Args>
         void write(Args... args) noexcept

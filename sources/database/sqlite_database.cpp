@@ -4,7 +4,11 @@
 
 //--------------------------------------------------------------------------------
 
-data::SQLiteDatabase::SQLiteDatabase(const std::string& aPath) :
+#include "domain/error_message.hpp"
+
+//--------------------------------------------------------------------------------
+
+data::SQLiteDatabase::SQLiteDatabase(const std::string& aPath) noexcept :
     mBase(NULL)
 {
     WRITE_LOG("Opening_database:", aPath);
@@ -12,10 +16,6 @@ data::SQLiteDatabase::SQLiteDatabase(const std::string& aPath) :
         WRITE_ERROR("SQLiteDatabase", "constructor(string)", 0, "Can't_open_database ", aPath);
     //TODO: check don't work
 }
-
-//--------------------------------------------------------------------------------
-
-data::SQLiteDatabase::~SQLiteDatabase() {}
 
 //--------------------------------------------------------------------------------
 
@@ -57,7 +57,7 @@ data::SQLiteDatabase::update
 //--------------------------------------------------------------------------------
 
 std::optional<dom::CharArray>
-data::SQLiteDatabase::getTextFromRow(int aColumNumber, int aStatementID)
+data::SQLiteDatabase::getTextFromRow(int aColumNumber, int aStatementID) noexcept
 {
     std::optional<dom::CharArray> result = {};
     auto ptr = sqlite3_column_text(mStatement[aStatementID], aColumNumber);
@@ -71,7 +71,7 @@ data::SQLiteDatabase::getTextFromRow(int aColumNumber, int aStatementID)
 //--------------------------------------------------------------------------------
 
 dom::CharArray
-data::SQLiteDatabase::getText16FromRow(int aColumNumber, int aStatementID)
+data::SQLiteDatabase::getText16FromRow(int aColumNumber, int aStatementID) noexcept
 {
     return dom::CharArray(sqlite3_column_text16(mStatement[aStatementID], aColumNumber));
 }
@@ -79,7 +79,7 @@ data::SQLiteDatabase::getText16FromRow(int aColumNumber, int aStatementID)
 //--------------------------------------------------------------------------------
 
 int 
-data::SQLiteDatabase::getIntFromRow(int aColumNumber, int aStatementID)
+data::SQLiteDatabase::getIntFromRow(int aColumNumber, int aStatementID) noexcept
 {
     return sqlite3_column_int(mStatement[aStatementID], aColumNumber);
 }
@@ -87,7 +87,7 @@ data::SQLiteDatabase::getIntFromRow(int aColumNumber, int aStatementID)
 //--------------------------------------------------------------------------------
 
 int64_t
-data::SQLiteDatabase::getInt64FromRow(int aColumNumber, int aStatementID)
+data::SQLiteDatabase::getInt64FromRow(int aColumNumber, int aStatementID) noexcept
 {
     return sqlite3_column_int64(mStatement[aStatementID], aColumNumber);
 }
@@ -95,7 +95,7 @@ data::SQLiteDatabase::getInt64FromRow(int aColumNumber, int aStatementID)
 //--------------------------------------------------------------------------------
 
 void 
-data::SQLiteDatabase::closeStatment(int aStatementID)
+data::SQLiteDatabase::closeStatment(int aStatementID) noexcept
 {
     sqlite3_finalize(mStatement[aStatementID]);
     mStatement[aStatementID] = NULL;
@@ -106,7 +106,7 @@ data::SQLiteDatabase::closeStatment(int aStatementID)
 //--------------------------------------------------------------------------------
 
 int 
-data::SQLiteDatabase::step(int aStatementID)
+data::SQLiteDatabase::step(int aStatementID) noexcept
 {
     return sqlite3_step(mStatement[aStatementID]);
 }
@@ -114,7 +114,7 @@ data::SQLiteDatabase::step(int aStatementID)
 //--------------------------------------------------------------------------------
 
 void 
-data::SQLiteDatabase::prepare(std::string&& aStatment, int aStatementID)
+data::SQLiteDatabase::prepare(std::string&& aStatment, int aStatementID) noexcept
 {
     if (mStatement.size() < aStatementID + 1)
     {

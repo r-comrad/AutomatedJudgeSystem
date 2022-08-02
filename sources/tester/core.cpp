@@ -11,10 +11,6 @@
 
 //--------------------------------------------------------------------------------
 
-#define THREAD_COUNTS 30
-
-//--------------------------------------------------------------------------------
-
 test::Core::Core(const std::string& aDatabasePath) noexcept :
     mDBQ            (aDatabasePath),
     mFinalVerdict   (Test::TestVerdict::OK),

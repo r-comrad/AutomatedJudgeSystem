@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.21)
 
-set(DIRS SQLite CPUTime)
+set(DIRS CPUTime SQLite)
 foreach(DIR IN LISTS DIRS)
     add_subdirectory(${DIR})
     target_include_directories(${DIR} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")

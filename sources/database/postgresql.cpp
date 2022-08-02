@@ -3,30 +3,28 @@
 #ifdef POSTGRESQL
 
 //--------------------------------------------------------------------------------
-//					    SQLLITE INTERFACE  IMPLEMENTATION
-//--------------------------------------------------------------------------------
 
-Posdtgres::Posdtgres
-(std::string str) : mConnexion
-  {"                        \
-    dbname = test_sys       \
-    user = sys_user         \
-    password = 123321       \
-    hostaddr = 127.0.0.1    \
-    port = 5432             \
-  "}
+Posdtgres::Posdtgres(std::string str) noexcept : 
+    mConnexion
+    {"                          \
+        dbname = test_sys       \
+        user = sys_user         \
+        password = 123321       \
+        hostaddr = 127.0.0.1    \
+        port = 5432             \
+    "}
 {
     if (mConnexion.is_open()) 
     {
-        //std::cout << "Opened database successfully: " << mConnexion.dbname() << std::endl;
         WRITE_LOG("Opened_database_successfully");
     } 
     else 
     {
         WRITE_LOG("Can't_open_database");
-        //std::cout << "Can't open database" << std::endl;
     }
 }
+
+//--------------------------------------------------------------------------------
 
 void 
 Posdtgres::select
@@ -35,15 +33,17 @@ Posdtgres::select
     std::string aColum,
     std::string aConditon,
     int aStatementID
-)
-
+) noexcept
 {
     if (aColum == "") aColum = "*";
     if (aConditon != "") aConditon = " WHERE " + aConditon;
-    std::string statement = "SELECT " + aColum + " FROM " + aTableName + aConditon;
+    std::string statement = "SELECT " + aColum +
+        " FROM " + aTableName + aConditon;
     
     prepare(statement, aStatementID);
 }
+
+//--------------------------------------------------------------------------------
 
 void 
 Posdtgres::update
@@ -52,27 +52,32 @@ Posdtgres::update
     std::string aValue,
     std::string aConditon,
     int aStatementID
-)
+) noexcept
 {
-    std::string statement = "UPDATE " + aTableName + " SET " + aValue + " WHERE " + aConditon;
+    std::string statement = "UPDATE " + aTableName + " SET " + aValue +
+         " WHERE " + aConditon;
     prepare(statement, aStatementID);
 }
 
+//--------------------------------------------------------------------------------
+
 const unsigned char* 
-Posdtgres::getTextFromRow(int aColumNumber, int aStatementID)
+Posdtgres::getTextFromRow(int aColumNumber, int aStatementID) noexcept
 {
     auto str = mResultIterator[aStatementID][aColumNumber].as<const char*>();
     return (const unsigned char* ) str;
 }
 
-
+//--------------------------------------------------------------------------------
 
 const char* 
-Posdtgres::getText16FromRow(int aColumNumber, int aStatementID)
+Posdtgres::getText16FromRow(int aColumNumber, int aStatementID) noexcept
 {
     auto str = mResultIterator[aStatementID][aColumNumber].as<std::string>();
     return str.c_str();
 }
+
+//--------------------------------------------------------------------------------
 
 int 
 Posdtgres::getIntFromRow(int aColumNumber, int aStatementID)
@@ -80,14 +85,18 @@ Posdtgres::getIntFromRow(int aColumNumber, int aStatementID)
     return mResultIterator[aStatementID][aColumNumber].as<int>();
 }
 
+//--------------------------------------------------------------------------------
+
 int64_t 
-Posdtgres::getInt64FromRow(int aColumNumber, int aStatementID)
+Posdtgres::getInt64FromRow(int aColumNumber, int aStatementID) noexcept
 {
         return mResultIterator[aStatementID][aColumNumber].as<int64_t>();
 }
 
+//--------------------------------------------------------------------------------
+
 void 
-Posdtgres::closeStatment(int aStatementID)
+Posdtgres::closeStatment(int aStatementID) noexcept
 {
     if (mStatement.size() <= aStatementID) return;
     mStatement[aStatementID]->commit();
@@ -100,15 +109,19 @@ Posdtgres::closeStatment(int aStatementID)
     }
 }
 
+//--------------------------------------------------------------------------------
+
 int 
-Posdtgres::step(int aStatementID)
+Posdtgres::step(int aStatementID) noexcept
 {
     mResultIterator[aStatementID]++;
     return 0;
 }
 
+//--------------------------------------------------------------------------------
+
 char* 
-Posdtgres::toAscii(const unsigned char* s)
+Posdtgres::toAscii(const unsigned char* s) noexcept
 {
     //TODO: use my defines
     int cnt = 0;
@@ -120,8 +133,10 @@ Posdtgres::toAscii(const unsigned char* s)
     //TODO end
 }
 
+//--------------------------------------------------------------------------------
+
 void 
-Posdtgres::prepare(std::string aStatment, int aStatementID)
+Posdtgres::prepare(std::string aStatment, int aStatementID) noexcept
 {
     if (mStatement.size() < aStatementID + 1)
     {
@@ -132,16 +147,18 @@ Posdtgres::prepare(std::string aStatment, int aStatementID)
 
     try
     {
-            mStatement[aStatementID] = std::make_unique<pqxx::work>(mConnexion);
-            mResult[aStatementID] = pqxx::result( mStatement[aStatementID]->exec(aStatment.c_str()));
-            mResultIterator[aStatementID] = --mResult[aStatementID].begin();
+        mStatement[aStatementID] = 
+            std::make_unique<pqxx::work>(mConnexion);
+        mResult[aStatementID] = pqxx::result( mStatement[aStatementID]->
+            exec(aStatment.c_str()));
+        mResultIterator[aStatementID] = --mResult[aStatementID].begin();
     }
     catch(const std::exception& e)
     {
-        std::cerr << e.what() << '\n';
-        std::cout << e.what() << '\n';
         WRITE_ERROR(e.what());
     }
 }
+
+//--------------------------------------------------------------------------------
 
 #endif // !POSTGRESQL
