@@ -33,7 +33,11 @@ namespace test
         void run(int aID) noexcept;
 
     private:
+        #if     defined(BILL_WINDOWS)
         static const int8_t THREAD_COUNTS = 30;
+        #elif   defined(LINUS_LINUX)
+        static const int8_t THREAD_COUNTS = 1;
+        #endif
 
         test::ThreadSignals mThreadSignals;
         std::vector<Test> mTests;
