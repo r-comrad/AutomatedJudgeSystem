@@ -13,7 +13,10 @@ data::SQLiteDatabase::SQLiteDatabase(const std::string& aPath) noexcept :
 {
     WRITE_LOG("Opening_database:", aPath);
     if (sqlite3_open(aPath.c_str(), &mBase) != SQLITE_OK) 
-        WRITE_ERROR("SQLiteDatabase", "constructor(string)", 0, "Can't_open_database ", aPath);
+    {
+        WRITE_ERROR("SQLiteDatabase", "constructor(string)", 0, 
+                    "Can't_open_database ", aPath);
+    }
     //TODO: check don't work
 }
 
@@ -31,7 +34,8 @@ data::SQLiteDatabase::select
     if (aColum == "") aColum = "*";
     if (aConditon != "") aConditon = " WHERE " + std::move(aConditon);
     std::string statement = "SELECT " + std::move(aColum) +
-        " FROM " + std::move(aTableName) + std::move(aConditon);
+                            " FROM " + std::move(aTableName) +
+                            std::move(aConditon);
 
     prepare(std::move(statement), aStatementID);
 }
@@ -48,8 +52,8 @@ data::SQLiteDatabase::update
 ) noexcept
 {
     std::string statement = "UPDATE " + std::move(aTableName) +
-        " SET " + std::move(aValue) +
-        " WHERE " + std::move(aConditon);
+                            " SET " + std::move(aValue) +
+                            " WHERE " + std::move(aConditon);
 
     prepare(std::move(statement), aStatementID);
 }
@@ -71,9 +75,11 @@ data::SQLiteDatabase::getTextFromRow(int aColumNumber, int aStatementID) noexcep
 //--------------------------------------------------------------------------------
 
 dom::CharArray
-data::SQLiteDatabase::getText16FromRow(int aColumNumber, int aStatementID) noexcept
+data::SQLiteDatabase::getText16FromRow(int aColumNumber, int aStatementID)
+    noexcept
 {
-    return dom::CharArray(sqlite3_column_text16(mStatement[aStatementID], aColumNumber));
+    return dom::CharArray
+        (sqlite3_column_text16(mStatement[aStatementID], aColumNumber));
 }
 
 //--------------------------------------------------------------------------------
@@ -128,7 +134,11 @@ data::SQLiteDatabase::prepare(std::string&& aStatment, int aStatementID) noexcep
         -1,                             /* Maximum length of zSql in bytes. */
         &(mStatement[aStatementID]),    /* OUT: Statement handle */
         nullptr                         /* OUT: Pointer to unused portion of zSql */
-    ) != SQLITE_OK) WRITE_ERROR("SQLiteDatabase", "prepare", 10, "Can't_prepare_statement", aStatment);
+    ) != SQLITE_OK) 
+    {
+        WRITE_ERROR("SQLiteDatabase", "prepare", 10, 
+                    "Can't_prepare_statement", aStatment);
+    }
 }
 
 //--------------------------------------------------------------------------------

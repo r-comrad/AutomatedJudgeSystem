@@ -12,6 +12,6 @@ The test system compiled for Windows or Linux by setting the BILL_WINDOWS or LIN
 
 The SQLITE or POSTGRESQL preprocessor definitions specify the database to be used. 
 
-The \_DBG\_ preprocessor definition turn on log and error output. LOGS_OUTPUT_TYPE and ERRORS_OUTPUT_TYPE define the way log and error messages are printed. Precise values for these definitions can be found in domain/error_message.cpp file. 
+The \_DBG\_ preprocessor definition turn on log and error output. LOGS_OUTPUT_TYPE and ERRORS_OUTPUT_TYPE define the way log and error messages are printed. Precise values for these definitions can be found in domain/error_message.hpp file. 
 
 To start the testing process, you need to run a test system with a single argument - the number of the participant submission in the database. After testing is completed, the database will be updated.

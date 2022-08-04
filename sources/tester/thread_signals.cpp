@@ -54,7 +54,7 @@ test::ThreadSignals::getSignal() noexcept
         result = mSignals.back();
         mSignals.pop_back();
         mFinishedThreadCount++;
-        WRITE_LOG("Signal_returned", result.value());
+        //WRITE_LOG("Signal_returned", result.value());
     }
     mSignalMutex.unlock();
 

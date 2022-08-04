@@ -27,9 +27,6 @@ test::Core::run(int aID) noexcept
     auto partInfo = mDBQ.getSubmissionInfo(aID);
     mDBQ.prepareTestsStatement(partInfo.problemID);
 
-    //TODO: remove (this is for debug)
-    partInfo.solutionFileName = "2/plus.cpp";
-
     auto solProc = prepareSolutionProcess(partInfo);
     auto checkProc = prepareCheckerProcess(partInfo);
     solProc->setLimits(partInfo.timeMemLim);
@@ -95,7 +92,7 @@ test::Core::check(uint64_t aID) noexcept
             auto& test = mTests[signal.value()];
             auto verdict = test.getVerdict();
 
-            if (mFinalVerdict != Test::TestVerdict::OK) 
+            if (mFinalVerdict == Test::TestVerdict::OK) 
             {
                 mFinalVerdict = verdict;
             }

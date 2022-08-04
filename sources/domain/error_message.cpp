@@ -11,56 +11,6 @@
 #include "main/path.hpp"
 
 //--------------------------------------------------------------------------------
-/*
-** This section shows all available values for
-** the LOGS_OUTPUT_TYPE flag / ERRORS_OUTPUT_TYPE flag
-** and what these values represent.
-** -------------------------------
-** LOGS_OUTPUT_TYPE values:
-**
-** LOGS_DEFAULT_OUTPUT     = 0
-** LOGS_TO_COUT_OUTPUT     = 1
-** LOGS_TO_FILE_OUTPUT     = 2
-**
-** DEFAULT = LOGS_TO_COUT_OUTPUT
-** -------------------------------
-** ERRORS_OUTPUT_TYPE values:
-**
-** ERRORS_DEFAULT_OUTPUT    = 0
-** ERRORS_TO_COUT_OUTPUT    = 1
-** ERRORS_TO_FILE_OUTPUT    = 2
-** ERRORS_TO_LOG_OUTPU      = 4
-**
-** DEFAULT = ERRORS_TO_COUT_OUTPUT
-** -------------------------------
-*/
-//--------------------------------------------------------------------------------
-
-#if     LOGS_OUTPUT_TYPE == 0
-    #define LOGS_DEFAULT_OUTPUT
-#elif   LOGS_OUTPUT_TYPE == 1
-    #define LOGS_TO_COUT_OUTPUT
-#elif   LOGS_OUTPUT_TYPE == 2
-    #define LOGS_TO_FILE_OUTPUT
-#else
-    #define LOG_DEFAULT_OUTPUT
-#endif
-
-//--------------------------------------------------------------------------------
-
-#if     ERRORS_OUTPUT_TYPE == 0
-    #define ERRORS_DEFAULT_OUTPUT
-#elif   ERRORS_OUTPUT_TYPE == 1
-    #define ERRORS_TO_COUT_OUTPUT
-#elif   ERRORS_OUTPUT_TYPE == 2
-    #define ERRORS_TO_FILE_OUTPUT
-#elif   ERRORS_OUTPUT_TYPE == 4
-    #define ERRORS_TO_LOG_OUTPUT
-#else
-    #define ERROR_DEFAULT_OUTPUT
-#endif
-
-//--------------------------------------------------------------------------------
 
 dom::Message dom::Message::globalMessages;
 
@@ -114,7 +64,7 @@ dom::Message::GetLastWinAPIError() noexcept
 
     //Get the error message ID, if any.
     DWORD errorMessageID = ::GetLastError();
-    if (errorMessageID == 0) 
+    if (errorMessageID != 0) 
     {
         LPSTR messageBuffer = nullptr;
 

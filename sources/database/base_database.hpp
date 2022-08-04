@@ -1,38 +1,27 @@
-#ifndef SQLITE_DATABASE_HPP
-#define SQLITE_DATABASE_HPP
-
-#ifdef SQLITE
+#ifndef BASE_DATABASE_HPP
+#define BASE_DATABASE_HPP
 
 //--------------------------------------------------------------------------------
 
-#include <iostream>
-#include <vector>
 #include <optional>
 
-#include "SQLite/sqlite3.h"
-
 #include "domain/string.hpp"
-
-#include "base_database.hpp"
 
 //--------------------------------------------------------------------------------
 
 namespace data
 {
-    class SQLiteDatabase : public BaseDatabase
+    class BaseDatabase
     {
-        using Base = sqlite3;
-        using Statement = sqlite3_stmt;
-
     public:
-        SQLiteDatabase(const std::string& aPath) noexcept;
-        ~SQLiteDatabase() = default;
+        BaseDatabase() noexcept = default;
+        ~BaseDatabase() = default;
 
-        SQLiteDatabase(const SQLiteDatabase& other) = delete;
-        SQLiteDatabase& operator=(const SQLiteDatabase& other) = delete;
+        BaseDatabase(const BaseDatabase& other) = delete;
+        BaseDatabase& operator=(const BaseDatabase& other) = delete;
 
-        SQLiteDatabase(SQLiteDatabase&& other) noexcept = default;
-        SQLiteDatabase& operator=(SQLiteDatabase&& other) noexcept = default;
+        BaseDatabase(BaseDatabase&& other) noexcept = default;
+        BaseDatabase& operator=(BaseDatabase&& other) noexcept = default;
 
 //--------------------------------------------------------------------------------
 //                            DATABASE QUERY FUNCTIONS
@@ -50,9 +39,8 @@ namespace data
             different cells for each query.
             If empty, the first cell (#0) is used.
         */
-        void select(std::string&& aTableName, std::string&& aColum = "", 
-            std::string&& aConditon = "", int aStatementID = 0) 
-            noexcept final override;
+        virtual void select(std::string&& aTableName, std::string&& aColum = "", 
+            std::string&& aConditon = "", int aStatementID = 0) noexcept = 0;
 
         /*
         \brief Prepare the sqlite UPDATE statement.
@@ -64,9 +52,8 @@ namespace data
             different cells for each query.
             If empty, the first cell (#0) is used.
         */
-        void update(std::string&& aTableName, std::string&& aValue, 
-            std::string&& aConditon, int aStatementID = 0) 
-            noexcept final override;
+        virtual void update(std::string&& aTableName, std::string&& aValue, 
+            std::string&& aConditon, int aStatementID = 0) noexcept = 0;
 
         /*
         \brief Close the selected statment.
@@ -74,7 +61,7 @@ namespace data
             that should be closed.
             If empty, the first cell (#0) is used.
         */
-        void closeStatment(int aStatementID = 0) noexcept final override;
+        virtual void closeStatment(int aStatementID = 0) noexcept = 0;
 
         /*
         \brief Make a step for the selected statment.
@@ -83,7 +70,7 @@ namespace data
             If empty, the first cell (#0) is used.
         \return SQLLite step status.
         */
-        int step(int aStatementID = 0) noexcept final override;
+        virtual int step(int aStatementID = 0) noexcept = 0;
 
 //--------------------------------------------------------------------------------
 //                        INFORMATION RECEIVING FUNCTIONS
@@ -99,8 +86,8 @@ namespace data
             If empty, the first cell (#0) is used.
         \return Pointer to unt-8 string from specidied cell.
         */
-        std::optional<dom::CharArray> getTextFromRow(int aColumNumber, 
-            int aStatementID = 0) noexcept final override;
+        virtual std::optional<dom::CharArray> getTextFromRow(int aColumNumber, 
+            int aStatementID = 0) noexcept = 0;
 
         /*
         \brief Gets UTF-16 string from colum of current row. The current line
@@ -112,8 +99,7 @@ namespace data
             If empty, the first cell (#0) is used.
         \return Pointer to unt-8 string from specidied cell.
         */
-        dom::CharArray getText16FromRow(int aColumNumber, int aStatementID = 0)
-            noexcept final override;
+        virtual dom::CharArray getText16FromRow(int aColumNumber, int aStatementID = 0) noexcept = 0;
 
         /*
         \brief Gets integer from colum of current row. The current line
@@ -125,11 +111,10 @@ namespace data
             If empty, the first cell (#0) is used.
         \return Number from specidied cell.
         */
-        int getIntFromRow(int aColumNumber, int aStatementID = 0) 
-            noexcept final override;
+        virtual int getIntFromRow(int aColumNumber, int aStatementID = 0) noexcept = 0;
 
         /*
-        \brief Gets large nteger from colum of current row. The current line
+        \brief Gets large iteger from colum of current row. The current line
             defined by the statement step.
         \param aColumNumber The number of the column with number to get.
         \param aStatementID Number of statment array cell to use.
@@ -138,21 +123,10 @@ namespace data
             If empty, the first cell (#0) is used.
         \return Number from specidied cell.
         */
-        int64_t getInt64FromRow(int aColumNumber, int aStatementID = 0)
-            noexcept final override;
-
-//--------------------------------------------------------------------------------
-
-    private:
-        Base* mBase;
-        std::vector<Statement*> mStatement;
-
-        void prepare(std::string&& aStatment, int aStatementID) noexcept;
+        virtual int64_t getInt64FromRow(int aColumNumber, int aStatementID = 0) noexcept = 0;
     };
 }
 
 //--------------------------------------------------------------------------------
 
-#endif // !SQLITE
-
-#endif // !SQLITE_DATABASE_HPP
+#endif // !BASE_DATABASE_HPP

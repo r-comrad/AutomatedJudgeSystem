@@ -40,8 +40,7 @@ namespace dom
             y()
         {}
 
-        template <typename Arg, typename =
-            enableIf<isSameWeak<Pair<T1, T2>, Arg>>>
+        template <typename Arg, typename = enableIfSame<Pair<T1, T2>, Arg>>
         Pair(Arg&& other) noexcept : 
             x(std::forward<T1>(other.x)),
             y(std::forward<T2>(other.y))
@@ -70,8 +69,7 @@ namespace dom
 
 //--------------------------------------------------------------------------------
 
-        template <typename Arg, typename =
-            enableIf<isSameWeak<Pair<T1, T2>, Arg>>>
+        template <typename Arg, typename = enableIfSame<Pair<T1, T2>, Arg>>
         Pair& operator=(Arg&& other) noexcept
         {
             x = std::forward<T1>(other.x);
@@ -81,8 +79,7 @@ namespace dom
 
 //--------------------------------------------------------------------------------
 
-        template <typename Arg, typename =
-            enableIf<isSameWeak<Pair<T1, T2>, Arg>>>
+        template <typename Arg, typename = enableIfSame<Pair<T1, T2>, Arg>>
         friend Pair operator+ (Pair&& a1, Arg&& a2) noexcept
         {
             a1.x += a2.x;
@@ -106,16 +103,14 @@ namespace dom
 
 //--------------------------------------------------------------------------------
 
-        template <typename Arg, typename =
-            enableIf<isSameWeak<Pair<T1, T2>, Arg>>>
+        template <typename Arg, typename = enableIfSame<Pair<T1, T2>, Arg>>
         friend Pair operator- (Pair&& a1, Arg&& a2) noexcept
         {
             a1.x -= a2.x;
             a1.y -= a2.y;
             return std::move(a1);
         }
-        template <typename Arg, typename =
-            enableIf<isSameWeak<Pair<T1, T2>, Arg>>>
+        template <typename Arg, typename = enableIfSame<Pair<T1, T2>, Arg>>
         friend Pair operator- (const Pair& a1, Arg&& a2) noexcept
         {
             return Pair<T1, T2> { a1.x - a2.x, a1.y - a2.y };

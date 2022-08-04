@@ -120,7 +120,7 @@ namespace dom
 
         CharArray getCopy() const noexcept;
 
-        auto& operator[](size_t aNum) noexcept;
+        char& operator[](size_t aNum) noexcept;
 
 //--------------------------------------------------------------------------------
 

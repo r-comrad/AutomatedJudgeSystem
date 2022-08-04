@@ -1,7 +1,5 @@
-#ifndef CORE_H
-#define CORE_H
-
-//--------------------------------------------------------------------------------
+#ifndef CORE_HPP
+#define CORE_HPP
 
 //--------------------------------------------------------------------------------
 
@@ -34,9 +32,9 @@ namespace test
 
     private:
         #if     defined(BILL_WINDOWS)
-        static const int8_t THREAD_COUNTS = 30;
+        static const uint8_t THREAD_COUNTS = 1;
         #elif   defined(LINUS_LINUX)
-        static const int8_t THREAD_COUNTS = 1;
+        static const uint8_t THREAD_COUNTS = 1;
         #endif
 
         test::ThreadSignals mThreadSignals;
@@ -64,4 +62,4 @@ namespace test
 
 //--------------------------------------------------------------------------------
 
-#endif // !CORE_H
+#endif // !CORE_HPP

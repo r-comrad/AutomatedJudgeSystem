@@ -114,16 +114,16 @@ test::Test::runTesting(data::DatabaseQuery& aDBQ) noexcept
 
     if (getTest(aDBQ)) 
     {
-        WRITE_LOG("Success", "Test_cell_num:", mNumberOfTester);
+        //WRITE_LOG("Success", "Test_cell_num:", mNumberOfTester);
         checkTest();
         mThreadSignals->push(mNumberOfTester);
-        WRITE_LOG("Success_finishing", "Test_cell_num:", mNumberOfTester);
+        //WRITE_LOG("Success_finishing", "Test_cell_num:", mNumberOfTester);
     }
     else
     {
-        WRITE_LOG("Failure", "Test_cell_num:", mNumberOfTester);
+        //WRITE_LOG("Failure", "Test_cell_num:", mNumberOfTester);
         mThreadSignals->finishCurrentThread();
-        WRITE_LOG("Failure_finishing", "Test_cell_num:", mNumberOfTester);
+        //WRITE_LOG("Failure_finishing", "Test_cell_num:", mNumberOfTester);
     }
 
     END_LOG_BLOCK("End_test#", mTestNumber, "Test_cell_num:", mNumberOfTester);

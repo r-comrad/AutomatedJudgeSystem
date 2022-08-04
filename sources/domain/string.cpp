@@ -162,7 +162,7 @@ dom::CharArray::getCopy() const noexcept
 
 //--------------------------------------------------------------------------------
 
-auto&
+char&
 dom::CharArray::operator[](size_t aNum) noexcept
 {
     return mData[aNum];

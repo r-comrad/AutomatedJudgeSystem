@@ -97,11 +97,11 @@ proc::WindowsProcess::create() noexcept
 {
     START_LOG_BLOCK("Creating_windows_process_with_name:", mProcessName);
     WRITE_LOG("Args:", mProcessArgs);
-    
+
     IORedirection();
 
     char* name = mProcessName;
-    if (mProcessName.getSize() == 0) name = NULL;
+    if (mProcessName.isEmpty()) name = NULL;
     if (CreateProcessA(
         name,
         mProcessArgs,
@@ -117,6 +117,8 @@ proc::WindowsProcess::create() noexcept
     {
         WRITE_ERROR("Process", "create", 10, "Can't_start_process", 
             "Name:", mProcessName, "Args:", mProcessArgs);
+        WRITE_ERROR("Process", "create", 11, 
+                    dom::Message::globalMessages.GetLastWinAPIError());
     }
     END_LOG_BLOCK();
 }

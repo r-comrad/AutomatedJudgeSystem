@@ -10,6 +10,56 @@
 #include "string.hpp"
 
 //--------------------------------------------------------------------------------
+/*
+** This section shows all available values for
+** the LOGS_OUTPUT_TYPE flag / ERRORS_OUTPUT_TYPE flag
+** and what these values represent.
+** -------------------------------
+** LOGS_OUTPUT_TYPE values:
+**
+** LOGS_DEFAULT_OUTPUT     = 0
+** LOGS_TO_COUT_OUTPUT     = 1
+** LOGS_TO_FILE_OUTPUT     = 2
+**
+** DEFAULT = LOGS_TO_COUT_OUTPUT
+** -------------------------------
+** ERRORS_OUTPUT_TYPE values:
+**
+** ERRORS_DEFAULT_OUTPUT    = 0
+** ERRORS_TO_COUT_OUTPUT    = 1
+** ERRORS_TO_FILE_OUTPUT    = 2
+** ERRORS_TO_LOG_OUTPUT     = 4
+**
+** DEFAULT = ERRORS_TO_COUT_OUTPUT
+** -------------------------------
+*/
+//--------------------------------------------------------------------------------
+
+#if     LOGS_OUTPUT_TYPE == 0
+    #define LOGS_DEFAULT_OUTPUT
+#elif   LOGS_OUTPUT_TYPE == 1
+    #define LOGS_TO_COUT_OUTPUT
+#elif   LOGS_OUTPUT_TYPE == 2
+    #define LOGS_TO_FILE_OUTPUT
+#else
+    #define LOG_DEFAULT_OUTPUT
+#endif
+
+//--------------------------------------------------------------------------------
+
+#if     ERRORS_OUTPUT_TYPE == 0
+    #define ERRORS_DEFAULT_OUTPUT
+#elif   ERRORS_OUTPUT_TYPE == 1
+    #define ERRORS_TO_COUT_OUTPUT
+#elif   ERRORS_OUTPUT_TYPE == 2
+    #define ERRORS_TO_FILE_OUTPUT
+#elif   ERRORS_OUTPUT_TYPE == 4
+    #define ERRORS_TO_LOG_OUTPUT
+#else
+    #define ERROR_DEFAULT_OUTPUT
+#endif
+
+//--------------------------------------------------------------------------------
 
 namespace dom
 {
@@ -19,36 +69,39 @@ namespace dom
         static Message globalMessages;
 
         template<typename... Args>
-        void startLogBlock(const Args&... args) noexcept
+        void startLogBlock(Args&&... args) noexcept
         {
-            write(mLogStream, args...);
+            write(mLogStream, std::forward<Args>(args)...);
             ++mLogBlockCount;
         }
 
         template<typename... Args>
-        void endLogBlock(const Args&... args) noexcept
+        void endLogBlock(Args&&... args) noexcept
         {
-            write(mLogStream, args...);
+            write(mLogStream, std::forward<Args>(args)...);
             --mLogBlockCount;
         }
 
         template<typename... Args>
-        void writeLog(const Args&... args) noexcept
+        void writeLog(Args&&... args) noexcept
         {
-            write(mLogStream, args...);
+            write(mLogStream, std::forward<Args>(args)...);
         }
 
         template<typename... Args>
-        void writeError(const Args&... args) noexcept
+        void writeError(Args&&... args) noexcept
         {
             #ifdef ERRORS_TO_LOG_OUTPUT
-            write(mErrorStream, "ERROR", args...);
+            write(mErrorStream, "ERROR", std::forward<Args>(args)...);
             #else
-            writeWithoutTabulation(mErrorStream, "ERROR", args...);
+            basicWrite
+                (mErrorStream, "ERROR", std::forward<Args>(args)...);
             #endif
         }
 
         void writeLogEndl() noexcept;   
+
+//--------------------------------------------------------------------------------
 
         #ifdef BILL_WINDOWS
         /*
@@ -59,30 +112,26 @@ namespace dom
         #endif
 
     private:
-
-        Message() noexcept;
-
         std::ostream* mLogStream;
         std::ostream* mErrorStream;
+
+        int8_t mLogBlockCount;
+
+//--------------------------------------------------------------------------------
+
+        Message() noexcept;
 
         template<typename... Args>
         void write(std::ostream* aStream, Args&&... args) noexcept
         {
-            std::string str;
-            for(int8_t i = 0; i < mLogBlockCount; ++i) str += '\t';
-            basicWrite(aStream, str, std::forward<Args>(args)...);
+            basicWrite(aStream, std::string(mLogBlockCount, '\t'), 
+                std::forward<Args>(args)...);
         }
 
         template<typename... Args>
-        void writeWithoutTabulation(std::ostream* aStream, Args&&... args) noexcept
+        void basicWrite(std::ostream* aStream, Args&&... args) noexcept
         {
             std::string str;
-            basicWrite(aStream, str, std::forward<Args>(args)...);
-        }
-
-        template<typename... Args>
-        void basicWrite(std::ostream* aStream, std::string& str, Args&&... args) noexcept
-        {
             ((void) (str+= toString(std::forward<Args>(args)) + " ", 0), ...);
             str += '\n';
 
@@ -105,8 +154,6 @@ namespace dom
         {
             return std::to_string(num);
         }
-
-        int8_t mLogBlockCount;
     };
 }
 
@@ -130,6 +177,11 @@ ERROR FORMAT: <file or class name>, <function>,
     #define WRITE_LOG_ENDL(...)     void(0) 
     #define WRITE_ERROR(...)        void(0)    
 #endif 
+
+//--------------------------------------------------------------------------------
+
+#undef LOGS_OUTPUT_TYPE
+#undef ERRORS_OUTPUT_TYPE
 
 //--------------------------------------------------------------------------------
 
