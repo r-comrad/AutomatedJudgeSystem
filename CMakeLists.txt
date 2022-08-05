@@ -1,5 +1,9 @@
+#--------------------------------------------------------------------------------
+
 cmake_minimum_required(VERSION 3.21.3)
 project(AutomatedJudgeSystem VERSION 3.0)
+
+#--------------------------------------------------------------------------------
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -31,13 +35,16 @@ endif()
 #find_package(Boost 1.40 COMPONENTS program_options REQUIRED)
 
 #  Code include
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake_scripts/cmake_scripts.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/libraries/libraries.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/sources/sources.cmake)
-get_sources(${CMAKE_CURRENT_SOURCE_DIR}/sources SOURCES)
-add_executable(${PROJECT_NAME} ${SOURCES})
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/sources)
 
-#  Libraries 
-add_subdirectory(libraries)
+get_libraries(SOURCES_LIST ${CMAKE_CURRENT_SOURCE_DIR})
+get_sources(SOURCES_LIST ${CMAKE_CURRENT_SOURCE_DIR})
+add_executable(${PROJECT_NAME} ${SOURCES_LIST})
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/libraries)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/sources)
+
 if (CMAKE_SQLITE)
     target_compile_definitions(${PROJECT_NAME} PRIVATE SQLITE)
 elseif(CMAKE_POSTGRESQL)
@@ -60,3 +67,5 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin/$<0:>)
 set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME ${PROJECT_NAME})
 set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX _V${CMAKE_PROJECT_VERSION}_${Configuration}.exe)
+
+#--------------------------------------------------------------------------------

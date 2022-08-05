@@ -4,7 +4,7 @@
 
 //--------------------------------------------------------------------------------
 
-#include "cputime/getCPUTime.hpp"
+#include "CPUTime/getCPUTime.hpp"
 
 #include "domain/error_message.hpp"
 
