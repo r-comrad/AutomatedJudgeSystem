@@ -1,19 +1,19 @@
 #--------------------------------------------------------------------------------
 
-cmake_minimum_required(VERSION 2.8.2)
-project(download_archive)
+set (DOWNLOAD_FOLDER ${CMAKE_CURRENT_BINARY_DIR}/download)
 
-#--------------------------------------------------------------------------------
+function(download_archive TARGET_DIR ARCHIVE_URL)
+    message("Downloading download_archive ${ARCHIVE_URL} to ${TARGET_DIR}")
 
-include(ExternalProject)
+    configure_file(${CMAKE_CURRENT_FUNCTION_LIST_DIR}/downloader.cmake
+                    ${DOWNLOAD_FOLDER}/CMakeLists.txt)
 
-ExternalProject_Add(downloader
-    SOURCE_DIR ${TARGET_DIR}
-    URL ${ARCHIVE_URL}
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND     ""
-    INSTALL_COMMAND   ""
-    TEST_COMMAND      ""
-)
+    execute_process(COMMAND ${CMAKE_COMMAND} .
+                    WORKING_DIRECTORY ${DOWNLOAD_FOLDER})
+    execute_process(COMMAND ${CMAKE_COMMAND} --build .
+                    WORKING_DIRECTORY ${DOWNLOAD_FOLDER})
+
+    file(REMOVE_RECURSE ${DOWNLOAD_FOLDER})
+endfunction()
 
 #--------------------------------------------------------------------------------

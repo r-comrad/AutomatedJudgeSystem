@@ -12,3 +12,5 @@
 /libraries/*/*.c
 /libraries/*/*.hpp
 /libraries/*/*.cpp
+
+!/libraries/CPUTime/getCPUTime.hpp
