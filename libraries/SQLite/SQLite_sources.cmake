@@ -10,9 +10,9 @@ set(
     sqlite3ext.h
 )
 
-foreach(FILE IN LISTS SQLITE_SOURCES)
-    list (APPEND FILE_NAMES ${CMAKE_CURRENT_LIST_DIR}/${FILE})
-endforeach()
+# foreach(FILE IN LISTS SQLITE_SOURCES)
+#     list (APPEND FILE_NAMES ${CMAKE_CURRENT_LIST_DIR}/${FILE})
+# endforeach()
 
 set(
     FILE_HASHS
@@ -26,27 +26,32 @@ set(
 
 set (URL https://www.sqlite.org/2022/sqlite-amalgamation-3390200.zip)
 
-list (LENGTH FILE_HASHS SIZE)
-math(EXPR SIZE "${SIZE} - 1")
 
-set (ALREADY_DOWNLOAD 0)
-foreach(NUM RANGE ${SIZE})
-    list(GET FILE_NAMES ${NUM} FILE_PATH)
-    list(GET FILE_HASHS ${NUM} HASH)
+list(GET  SQLITE_SOURCES 1 RESULT)
 
-    check_file(RESULT ${FILE_PATH} ${HASH})
-    if ((NOT ${RESULT}) AND (NOT ${ALREADY_DOWNLOAD}))
-        download_archive(${CMAKE_CURRENT_BINARY_DIR}/temp_lib ${URL})
-        set (ALREADY_DOWNLOAD 1)
-    endif()
+prepare_lib(${URL} ${CMAKE_CURRENT_LIST_DIR} "${SQLITE_SOURCES}" "${FILE_HASHS}" )
 
-    if (NOT ${RESULT})
-        message("Copy file ${FILE} to ${CMAKE_CURRENT_LIST_DIR}")
-        list(GET SQLITE_SOURCES ${NUM} FILE)
-        file(COPY_FILE ${CMAKE_CURRENT_BINARY_DIR}/temp_lib/${FILE}
-            ${FILE_PATH})
-    endif()
-endforeach(NUM RANGE)
+
+# get_corrupt_files(RESULT FILE_NAMES FILE_HASHS)
+
+# list (LENGTH RESULT SIZE)
+# if(${SIZE})
+#     download_archive(${CMAKE_CURRENT_BINARY_DIR}/temp_lib ${URL})
+
+#     foreach(NUM RANGE ${SIZE})
+#     list(GET RESULT ${NUM} CORRUPT_FILE)
+
+#     list(GET FILE_NAMES ${CORRUPT_FILE} FILE_PATH)
+#     list(GET SQLITE_SOURCES ${CORRUPT_FILE} FILE)
+
+#     message("Copy file ${FILE} to ${CMAKE_CURRENT_LIST_DIR}")
+#     file(COPY_FILE ${CMAKE_CURRENT_BINARY_DIR}/temp_lib/${FILE}
+#         ${FILE_PATH})
+
+#     endforeach(NUM RANGE)
+
+# endif()
+
 
 #--------------------------------------------------------------------------------
 
