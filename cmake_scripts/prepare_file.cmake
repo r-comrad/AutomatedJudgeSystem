@@ -2,8 +2,6 @@
 
 cmake_minimum_required(VERSION 3.21.3)
 
-set (CASH_TYPE SHA256)
-
 #--------------------------------------------------------------------------------
 
 function(download_file PATH_TO_FILE URL FILE_HASH)

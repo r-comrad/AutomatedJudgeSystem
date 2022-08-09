@@ -1,13 +1,16 @@
 #--------------------------------------------------------------------------------
 
+set (CASH_TYPE MD5)
+
 macro(check_file RESULT PATH_TO_FILE FILE_HASH)
     if (NOT EXISTS ${PATH_TO_FILE})
         message("File ${PATH_TO_FILE} doesn't exist")
         set(${RESULT} 0)
     else()
         file(${CASH_TYPE} ${PATH_TO_FILE} CURRENT_HASH) 
-        if(NOT ${CURRENT_HASH} EQUAL ${FILE_HASH})
-        message("File ${PATH_TO_FILE} corrupted")
+        string(COMPARE NOTEQUAL ${FILE_HASH} ${CURRENT_HASH} HASH_COMPARE)
+        if(${HASH_COMPARE})
+            message("File ${PATH_TO_FILE} corrupted")
             set(${RESULT} 0)
         else()
             set(${RESULT} 1)

@@ -7,7 +7,6 @@ function(prepare_lib URL PATH FILE_NAMES FILE_HASHS)
 
     get_corrupt_files(CORRUPT_FILE_NUMS "${FILE_PATHS}" "${FILE_HASHS}")
 
-    message(----->"${CORRUPT_FILE_NUMS}")
     list (LENGTH CORRUPT_FILE_NUMS SIZE)
     if(${SIZE})
         download_archive(${CMAKE_CURRENT_BINARY_DIR}/temp_lib ${URL})
