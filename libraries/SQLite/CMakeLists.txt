@@ -1,5 +1,15 @@
 #--------------------------------------------------------------------------------
 
+add_library(
+    SQLite
+
+    shell.c
+    sqlite3.c
+
+    sqlite3.h
+    sqlite3ext.h
+)
+
 set(
     SQLITE_SOURCES
 
@@ -23,5 +33,7 @@ set(
 set (URL https://www.sqlite.org/2022/sqlite-amalgamation-3390200.zip)
 
 prepare_lib(${URL} ${CMAKE_CURRENT_LIST_DIR} "${SQLITE_SOURCES}" "${FILE_HASHS}" )
+
+target_compile_definitions(${PROJECT_NAME} PRIVATE SQLITE)
 
 #--------------------------------------------------------------------------------

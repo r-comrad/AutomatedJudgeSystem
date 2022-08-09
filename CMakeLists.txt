@@ -10,8 +10,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Compile options
 if (MSVC_VERSION GREATER_EQUAL "1900")
+    set(OS BILL_WINDOWS)
     add_compile_options("/std:c++latest")
 else()
+    set(OS LINUS_LINUX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -Wl,--no-as-needed -ldl")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_DEBUG")
 endif()
@@ -44,6 +46,13 @@ get_sources(SOURCES_LIST ${CMAKE_CURRENT_SOURCE_DIR})
 add_executable(${PROJECT_NAME} ${SOURCES_LIST})
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/libraries)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/sources)
+add_subdirectory(libraries)
+
+if(${OS} EQUAL LINUS_LINUX)
+    #TODO: sqlite have second main in linux
+    add_subdirectory(libraries)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE SQLITE)
+endif()
 
 if (CMAKE_SQLITE)
     target_compile_definitions(${PROJECT_NAME} PRIVATE SQLITE)
