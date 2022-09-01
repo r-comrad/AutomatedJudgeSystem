@@ -7,16 +7,17 @@
 
 //--------------------------------------------------------------------------------
 
+#include <sys/resource.h>
 int main(int argc, char* argv[])
 {
     int num = 0;
     std::string databasePath = "";
 
     // For debug
-    #if     defined(SQLITE)
+    #if     defined(DB_SQLITE)
     num = 3;
     databasePath = DATABASE_PATH;
-    #elif   defined(POSTGRESQL)
+    #elif   defined(DB_POSTGRESQL)
     num = 2;
     #endif
 

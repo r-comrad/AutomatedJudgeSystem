@@ -1,6 +1,6 @@
 #include "database/sqlite_database.hpp"
 
-#ifdef SQLITE
+#ifdef DB_SQLITE
 
 //--------------------------------------------------------------------------------
 
@@ -143,4 +143,4 @@ data::SQLiteDatabase::prepare(std::string&& aStatment, int aStatementID) noexcep
 
 //--------------------------------------------------------------------------------
 
-#endif // !SQLITE
+#endif // !DB_SQLITE

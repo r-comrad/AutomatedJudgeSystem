@@ -1,7 +1,7 @@
 #ifndef POSTGRESQL_HPP
 #define POSTGRESQL_HPP
 
-#ifdef POSTGRESQL
+#ifdef DB_POSTGRESQL
 
 //--------------------------------------------------------------------------------
 
@@ -157,6 +157,6 @@ private:
 
 //--------------------------------------------------------------------------------
 
-#endif // !POSTGRESQL
+#endif // !DB_POSTGRESQL
 
 #endif // !POSTGRESQL_HPP

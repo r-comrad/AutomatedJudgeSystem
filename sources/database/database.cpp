@@ -3,7 +3,7 @@
 //--------------------------------------------------------------------------------
 
 data::Database::Database(std::string aDBName) noexcept
-    #ifdef SQLITE
+    #ifdef DB_SQLITE
     :
     SQLiteDatabase(aDBName)
     #endif

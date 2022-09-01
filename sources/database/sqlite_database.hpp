@@ -1,7 +1,7 @@
 #ifndef SQLITE_DATABASE_HPP
 #define SQLITE_DATABASE_HPP
 
-#ifdef SQLITE
+#ifdef DB_SQLITE
 
 //--------------------------------------------------------------------------------
 
@@ -153,6 +153,6 @@ namespace data
 
 //--------------------------------------------------------------------------------
 
-#endif // !SQLITE
+#endif // !DB_SQLITE
 
 #endif // !SQLITE_DATABASE_HPP

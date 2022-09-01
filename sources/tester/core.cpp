@@ -83,7 +83,8 @@ test::Core::check(uint64_t aID) noexcept
 {
     START_LOG_BLOCK("Checking_participant_code");
 
-    while(!mThreadSignals.isAllThreadsFinished())
+    while(mFinalVerdict == Test::TestVerdict::OK && 
+        !mThreadSignals.isAllThreadsFinished())
     {         
         auto signal = mThreadSignals.getSignal();
         if (signal.has_value())

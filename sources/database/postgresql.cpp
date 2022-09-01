@@ -1,6 +1,6 @@
 #include "postgresql.hpp"
 
-#ifdef POSTGRESQL
+#ifdef DB_POSTGRESQL
 
 //--------------------------------------------------------------------------------
 
@@ -14,6 +14,7 @@ Posdtgres::Posdtgres() noexcept :
         port = 5432             \
     "}
 {
+     WRITE_LOG("Opening_postgresql)database");
     if (mConnexion.is_open()) 
     {
         WRITE_LOG("Opened_database_successfully");
@@ -166,4 +167,4 @@ Posdtgres::prepare(std::string aStatment, int aStatementID) noexcept
 
 //--------------------------------------------------------------------------------
 
-#endif // !POSTGRESQL
+#endif // !DB_POSTGRESQL

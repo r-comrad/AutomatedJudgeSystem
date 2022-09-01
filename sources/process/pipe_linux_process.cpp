@@ -58,7 +58,12 @@ proc::PipeLinuxProcess::create() noexcept
     {
         dup2(mPipeA[0], STDIN_FILENO);
         dup2(mPipeB[1], STDOUT_FILENO);
-        auto itt  = &mRawParameters[0];
+
+        rlimit timeLimit;
+        timeLimit.rlim_cur = 5;
+        timeLimit.rlim_max = 5;
+        if (setrlimit(RLIMIT_CPU, &timeLimit) != 0) exit(0);
+
         execvp(mRawParameters[0], &mRawParameters[0]);
     }
     else
@@ -129,11 +134,17 @@ proc::PipeLinuxProcess::IORedirection() noexcept
     pipe(mPipeA);
     pipe(mPipeB);
 
+    for(auto i : {mPipeA, mPipeB})
+    {
+        for(size_t j = 0; j < 2; ++j)
+        {
+            fcntl(i[j], F_SETPIPE_SZ, BUFFER_SIZE);
 
-    fcntl(mPipeA[0], F_SETPIPE_SZ, BUFFER_SIZE);
-    fcntl(mPipeA[1], F_SETPIPE_SZ, BUFFER_SIZE);
-    fcntl(mPipeB[0], F_SETPIPE_SZ, BUFFER_SIZE);
-    fcntl(mPipeB[1], F_SETPIPE_SZ, BUFFER_SIZE);
+            int flags;
+            flags = fcntl(i[j], F_GETFL, 0);
+            fcntl(i[j], F_SETFL, flags | O_NONBLOCK);
+        }
+    }
 }
 
 //--------------------------------------------------------------------------------
@@ -144,6 +155,7 @@ proc::PipeLinuxProcess::readData(std::string& result) noexcept
     result.clear();
     char buf[1024];
     memset(buf, 0, sizeof(buf));
+
     while (read(mPipeB[0], &buf, 1024) == 1024)
     {
         result += std::string(buf);

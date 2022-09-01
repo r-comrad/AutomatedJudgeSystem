@@ -1,7 +1,7 @@
 #--------------------------------------------------------------------------------
 
 cmake_minimum_required(VERSION 3.21.3)
-project(AutomatedJudgeSystem VERSION 3.0)
+project(ChineseTester VERSION 3.1)
 
 #--------------------------------------------------------------------------------
 
@@ -19,13 +19,13 @@ else()
 endif()
 
 # Database options
-if (1)
-    set(CMAKE_SQLITE 1)
+if (0)
+    set(DB DB_SQLITE)
 else()
-    set(CMAKE_POSTGRESQL 1)
+    set(DB DB_POSTGRESQL)
 endif()
 
-if (CMAKE_POSTGRESQL)
+if (${DB} MATCHES DB_POSTGRESQL)
     set(PQXX /usr/include/pqxx)
     find_library(PQXX_LIB pqxx)
     find_library(PQ_LIB pq)
@@ -48,16 +48,10 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/li
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/sources)
 add_subdirectory(libraries)
 
-if(${OS} EQUAL LINUS_LINUX)
-    #TODO: sqlite have second main in linux
-    add_subdirectory(libraries)
-    target_compile_definitions(${PROJECT_NAME} PRIVATE SQLITE)
-endif()
-
-if (CMAKE_SQLITE)
-    target_compile_definitions(${PROJECT_NAME} PRIVATE SQLITE)
-elseif(CMAKE_POSTGRESQL)
-    target_compile_definitions(${PROJECT_NAME} PRIVATE POSTGRESQL)
+if (${DB} MATCHES DB_SQLITE)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE DB_SQLITE)
+elseif(${DB} MATCHES DB_POSTGRESQL)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE DB_POSTGRESQL)
     target_link_libraries(${PROJECT_NAME} PRIVATE ${PQXX_LIB} ${PQ_LIB})
 endif()
 

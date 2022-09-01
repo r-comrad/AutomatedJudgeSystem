@@ -12,9 +12,9 @@
 
 namespace data
 {
-    #if   defined(SQLITE)
+    #if   defined(DB_SQLITE)
     class Database : public SQLiteDatabase
-    #elif defined(POSTGRESQL)
+    #elif defined(DB_POSTGRESQL)
     class Database : public Posdtgres
     #endif
     {
