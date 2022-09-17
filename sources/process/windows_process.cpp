@@ -95,6 +95,14 @@ proc::WindowsProcess::setComand(dom::CharArrayTable&& aParameters) noexcept
 void 
 proc::WindowsProcess::create() noexcept
 {
+    //TODO: remove
+    // std::string sss = mProcessArgs.getString();
+    // for(auto& i : sss) if (i == '/') i = '\\';
+    // mProcessArgs = sss;
+    // sss = mProcessArgs.getString();
+    // std::cout << sss << "\n";
+
+
     START_LOG_BLOCK("Creating_windows_process_with_name:", mProcessName);
     WRITE_LOG("Args:", mProcessArgs);
 

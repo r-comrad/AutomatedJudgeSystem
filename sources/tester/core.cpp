@@ -48,12 +48,12 @@ test::Core::run(int aID) noexcept
         while(true)
         {
             if (gCnt < 0) break;
-            // if (lCnt == gCnt)
-            // {
-            //     mFinalVerdict = Test::TestVerdict::TLE;
-            //     break;
-            // }
-            lCnt = gCnt;;
+            if (lCnt == gCnt)
+            {
+                mFinalVerdict = Test::TestVerdict::TLE;
+                break;
+            }
+            lCnt = gCnt;
             std::this_thread::sleep_for(std::chrono::milliseconds(3000));
         }
         tt.join();

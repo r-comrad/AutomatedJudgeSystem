@@ -91,7 +91,15 @@ dom::CharArrayTable
 test::Compiler::prepareCommandForPython(CPPInfo&& aInfo) const noexcept
 {
     dom::CharArrayTable result;
+
+    #if     defined(LINUS_LINUX)
     result.emplace_back("python3");
+    #elif   defined(BILL_WINDOWS)
+    result.emplace_back("C:\\Windows\\System32\\cmd.exe");
+    result.emplace_back("/c");
+    result.emplace_back("python.exe");
+    #endif
+
     result.emplace_back(std::move(aInfo.inputFileName));
     return result;
 }

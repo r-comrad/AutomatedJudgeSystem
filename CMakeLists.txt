@@ -19,7 +19,7 @@ else()
 endif()
 
 # Database options
-if (0)
+if (1)
     set(DB DB_SQLITE)
 else()
     set(DB DB_POSTGRESQL)
