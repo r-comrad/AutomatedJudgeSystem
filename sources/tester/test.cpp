@@ -121,6 +121,7 @@ test::Test::runTesting(data::DatabaseQuery& aDBQ) noexcept
     }
     else
     {
+        WRITE_LOG("No_tests_left");
         //WRITE_LOG("Failure", "Test_cell_num:", mNumberOfTester);
         mThreadSignals->finishCurrentThread();
         //WRITE_LOG("Failure_finishing", "Test_cell_num:", mNumberOfTester);
@@ -136,6 +137,12 @@ test::Test::checkTest() noexcept
 {
     START_LOG_BLOCK("Checking_test#", mTestNumber, 
         "Test_cell_num:", mNumberOfTester);
+
+        if (mTestNumber == 101)
+        {
+            int yy = 0;
+            ++yy;
+        }
 
     mSolutionProcess = *mSolutionTemplate;
     mSolutionProcess.create();

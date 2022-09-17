@@ -42,6 +42,8 @@ data::DatabaseQuery::writeResult
     int                 aMemory
 ) noexcept
 {
+    mDatabase.closeStatment(0);
+
     START_LOG_BLOCK("Updating_database");
     WRITE_LOG("Updating...");
 

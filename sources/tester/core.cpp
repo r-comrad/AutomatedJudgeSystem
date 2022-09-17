@@ -9,6 +9,9 @@
 
 #include "compiler.hpp"
 
+#include <thread>
+std::atomic<int> gCnt = 0;
+
 //--------------------------------------------------------------------------------
 
 test::Core::Core(const std::string& aDatabasePath) noexcept :
@@ -35,7 +38,37 @@ test::Core::run(int aID) noexcept
     testTemplate.setLimits(partInfo.timeMemLim);
     mTests.resize(THREAD_COUNTS, testTemplate);
 
-    check(aID);
+    //check(aID);
+
+    //TODO: remove
+    try
+    {
+        std::thread tt(&test::Core::check, this, aID);
+        int lCnt = 2e9;
+        while(true)
+        {
+            if (gCnt < 0) break;
+            // if (lCnt == gCnt)
+            // {
+            //     mFinalVerdict = Test::TestVerdict::TLE;
+            //     break;
+            // }
+            lCnt = gCnt;;
+            std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+        }
+        tt.join();
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+
+    auto tempVerdict = verdictTostring(mFinalVerdict);
+    mDBQ.writeResult(aID, tempVerdict, mFinalTime, mFinalMemory);
+
+    WRITE_LOG     ("Final_result:", tempVerdict);
+    WRITE_LOG     ("Final_time:",   mFinalTime);
+    END_LOG_BLOCK ("Final_memory:", mFinalMemory);
 }
 
 //--------------------------------------------------------------------------------
@@ -83,12 +116,18 @@ test::Core::check(uint64_t aID) noexcept
 {
     START_LOG_BLOCK("Checking_participant_code");
 
+    // TODO: remove mFinalVerdict == Test::TestVerdict::OK
     while(mFinalVerdict == Test::TestVerdict::OK && 
         !mThreadSignals.isAllThreadsFinished())
     {         
         auto signal = mThreadSignals.getSignal();
+        //WRITE_LOG("gg in", gCnt);
         if (signal.has_value())
         {
+            //TODO: remove
+            ++gCnt;
+            //WRITE_LOG("inc");
+
             WRITE_LOG("Signal_number", signal.value());
             auto& test = mTests[signal.value()];
             auto verdict = test.getVerdict();
@@ -100,19 +139,21 @@ test::Core::check(uint64_t aID) noexcept
             mFinalTime = std::max(mFinalTime, test.getUsedTime());
             mFinalMemory = std::max(mFinalMemory, test.getUsedMemory());
 
-            if (!mThreadSignals.isCheckingFinalTests()) 
+            if (!mThreadSignals.isCheckingFinalTests() && 
+                mFinalVerdict == Test::TestVerdict::OK) 
             {
                 test.run(mDBQ);
             }
-        }  
+        }
+        // else
+        // {
+        //     WRITE_LOG("NO", signal.has_value());
+        // }
+        //WRITE_LOG("gg out", gCnt);
     }
-
-    auto tempVerdict = verdictTostring(mFinalVerdict);
-    mDBQ.writeResult(aID, tempVerdict, mFinalTime, mFinalMemory);
-
-    WRITE_LOG     ("Final_result:", tempVerdict);
-    WRITE_LOG     ("Final_time:",   mFinalTime);
-    END_LOG_BLOCK ("Final_memory:", mFinalMemory);
+    
+    //TODO: remove
+    gCnt = -1;
 }
 
 std::string

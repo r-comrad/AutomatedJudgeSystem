@@ -12,8 +12,9 @@
 #include <pqxx/pqxx>
 
 #include "domain/error_message.hpp"
-
 #include "domain/string.hpp"
+
+#include "base_database.hpp"
 
 //--------------------------------------------------------------------------------
 

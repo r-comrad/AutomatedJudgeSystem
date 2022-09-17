@@ -62,7 +62,7 @@ proc::PipeLinuxProcess::create() noexcept
         rlimit timeLimit;
         timeLimit.rlim_cur = 5;
         timeLimit.rlim_max = 5;
-        if (setrlimit(RLIMIT_CPU, &timeLimit) != 0) exit(0);
+        //if (setrlimit(RLIMIT_CPU, &timeLimit) != 0) exit(0);
 
         execvp(mRawParameters[0], &mRawParameters[0]);
     }
