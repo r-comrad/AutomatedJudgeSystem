@@ -5,6 +5,7 @@
 
 #include <map>
 #include <thread>
+#include <future>
 #include <memory>
 
 #include "database/database_query.hpp"
@@ -28,11 +29,18 @@ namespace test
             ThreadSignals* aThreadSignals) noexcept;
         ~Test();
 
-        Test(const Test& other) noexcept;
-        Test& operator=(const Test& other) noexcept;
+        // Test(const Test& other) noexcept;
+        // Test& operator=(const Test& other) noexcept;
 
         Test(Test&& other) noexcept = default;
-        Test& operator=(Test&& other) noexcept = default;
+        //Test& operator=(Test&& other) noexcept = default;
+
+
+        Test(const Test& other) noexcept = delete;
+        Test& operator=(const Test& other) noexcept = delete;
+
+        //Test(Test&& other) noexcept = delete;
+        Test& operator=(Test&& other) noexcept = delete;
 
         bool isFinished() const noexcept;    
         bool testsAreOver() const noexcept;
@@ -53,6 +61,7 @@ namespace test
 
         test::ThreadSignals* mThreadSignals;
         std::thread mTestThread;
+        //std::future<void> mTestThread;
         TestLibMessage mTLM;
 
         //TODO: error test number                

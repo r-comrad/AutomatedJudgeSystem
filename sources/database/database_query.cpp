@@ -11,7 +11,9 @@ data::DatabaseQuery::DatabaseQuery (const std::string& aDatabasePath) noexcept :
     mReservedStatementNumber    (0),
     mTestNum                    (1),
     mTestAreOver                (false)
-{}
+{
+    WRITE_LOG("Creating_database_quare");
+}
 
 //--------------------------------------------------------------------------------
 

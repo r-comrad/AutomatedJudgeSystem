@@ -4,24 +4,51 @@
 
 //--------------------------------------------------------------------------------
 
-Posdtgres::Posdtgres() noexcept : 
-    mConnexion
-    {"                          \
-        dbname = test_sys       \
-        user = sys_user         \
-        password = 123321       \
-        hostaddr = 127.0.0.1    \
-        port = 5432             \
-    "}
+Posdtgres::Posdtgres() noexcept 
+// : 
+//     mConnexion
+//     {"                          \
+//         dbname = test_sys       \
+//         user = sys_user         \
+//         password = 123321       \
+//         hostaddr = 127.0.0.1    \
+//         port = 5432             \
+//     "}
+    // {"                          \
+    //     dbname = test_sys       \
+    //     user = sys_user         \
+    //     password = 1209root     \
+    //     hostaddr = 127.0.0.1    \
+    //     port = 5432             \
+    // "}
 {
-     WRITE_LOG("Opening_postgresql)database");
-    if (mConnexion.is_open()) 
+    WRITE_LOG("Creating_postgresql_database_connection");
+    try
+    {
+        mConnexion = new pqxx::connection
+        {"                          \
+            dbname = test_sys       \
+            user = sys_user         \
+            password = 1209root     \
+            hostaddr = 127.0.0.1    \
+            port = 5432             \
+        "};
+    }
+    catch(const std::exception& e)
+    {
+        WRITE_ERROR(e.what());
+        exit(0);
+    }
+
+    WRITE_LOG("Opening_postgresql_database");
+    if (mConnexion->is_open()) 
     {
         WRITE_LOG("Opened_database_successfully");
     } 
     else 
     {
         WRITE_LOG("Can't_open_database");
+        exit(0);
     }
 }
 
@@ -154,7 +181,7 @@ Posdtgres::prepare(std::string aStatment, int aStatementID) noexcept
     try
     {
         mStatement[aStatementID] = 
-            std::make_unique<pqxx::work>(mConnexion);
+            std::make_unique<pqxx::work>(*mConnexion);
         mResult[aStatementID] = pqxx::result( mStatement[aStatementID]->
             exec(aStatment.c_str()));
         mResultIterator[aStatementID] = --mResult[aStatementID].begin();

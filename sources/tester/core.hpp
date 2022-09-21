@@ -34,7 +34,7 @@ namespace test
         #if     defined(BILL_WINDOWS)
         static const uint8_t THREAD_COUNTS = 30;
         #elif   defined(LINUS_LINUX)
-        static const uint8_t THREAD_COUNTS = 2;
+        static const uint8_t THREAD_COUNTS = 1;
         #endif
 
         test::ThreadSignals mThreadSignals;

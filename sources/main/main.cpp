@@ -9,6 +9,8 @@
 
 int main(int argc, char* argv[])
 {
+    WRITE_LOG("Start_main");
+
     int num = 0;
     std::string databasePath = "";
 

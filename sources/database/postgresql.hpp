@@ -148,7 +148,7 @@ public:
 	char* toAscii(const unsigned char* input) noexcept;
 
 private:
-	pqxx::connection mConnexion;
+	pqxx::connection* mConnexion;
 	std::vector<std::unique_ptr<pqxx::work>> mStatement;
 	std::vector<pqxx::result> mResult;
 	std::vector<pqxx::result::const_iterator> mResultIterator;

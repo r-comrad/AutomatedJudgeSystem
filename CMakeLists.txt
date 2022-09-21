@@ -1,7 +1,7 @@
 #--------------------------------------------------------------------------------
 
 cmake_minimum_required(VERSION 3.21.3)
-project(ChineseTester VERSION 3.2)
+project(ChineseTester VERSION 3.4)
 
 #--------------------------------------------------------------------------------
 
@@ -14,12 +14,15 @@ if (MSVC_VERSION GREATER_EQUAL "1900")
     add_compile_options("/std:c++latest")
 else()
     set(OS LINUS_LINUX)
+    #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -Wl,--no-as-needed -ldl")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -Wl,--no-as-needed -ldl")
+    #find_package (Threads)
+
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_DEBUG")
 endif()
 
 # Database options
-if (1)
+if (0)
     set(DB DB_SQLITE)
 else()
     set(DB DB_POSTGRESQL)
@@ -48,6 +51,8 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/li
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/sources)
 add_subdirectory(libraries)
 
+#target_link_libraries (${PROJECT_NAME} Threads::Threads)
+
 if (${DB} MATCHES DB_SQLITE)
     target_compile_definitions(${PROJECT_NAME} PRIVATE DB_SQLITE)
 elseif(${DB} MATCHES DB_POSTGRESQL)
@@ -59,6 +64,7 @@ endif()
 if (MSVC_VERSION GREATER_EQUAL "1900")
     target_compile_definitions(${PROJECT_NAME} PRIVATE BILL_WINDOWS)
 else()
+    
     target_compile_definitions(${PROJECT_NAME} PRIVATE LINUS_LINUX)
 endif()
 target_compile_definitions(${PROJECT_NAME} PRIVATE

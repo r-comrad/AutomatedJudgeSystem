@@ -20,7 +20,9 @@ test::Core::Core(const std::string& aDatabasePath) noexcept :
     mFinalTime      (0),
     mFinalMemory    (0),
     mThreadSignals  (THREAD_COUNTS)
-{}
+{
+    WRITE_LOG("Creating_core");
+}
 
 //--------------------------------------------------------------------------------
 
@@ -34,9 +36,18 @@ test::Core::run(int aID) noexcept
     auto checkProc = prepareCheckerProcess(partInfo);
     solProc->setLimits(partInfo.timeMemLim);
 
-    Test testTemplate(solProc, checkProc, &mThreadSignals);
-    testTemplate.setLimits(partInfo.timeMemLim);
-    mTests.resize(THREAD_COUNTS, testTemplate);
+    //Test testTemplate(solProc, checkProc, &mThreadSignals);
+    //testTemplate.setLimits(partInfo.timeMemLim);
+    //mTests.resize(THREAD_COUNTS, testTemplate);
+    mTests.reserve(THREAD_COUNTS);
+    //Test test(solProc, checkProc, &mThreadSignals);
+    for(int i = 0; i < THREAD_COUNTS; ++i)
+    {
+
+        mTests.emplace_back(solProc, checkProc, &mThreadSignals);
+        mTests.back().setLimits(partInfo.timeMemLim);
+    }
+
 
     //check(aID);
 
@@ -51,7 +62,14 @@ test::Core::run(int aID) noexcept
             if (lCnt == gCnt)
             {
                 mFinalVerdict = Test::TestVerdict::TLE;
-                break;
+                auto tempVerdict = verdictTostring(mFinalVerdict);
+                mDBQ.writeResult(aID, tempVerdict, mFinalTime, mFinalMemory);
+
+                WRITE_LOG     ("Final_result:", tempVerdict);
+                WRITE_LOG     ("Final_time:",   mFinalTime);
+                END_LOG_BLOCK ("Final_memory:", mFinalMemory);
+
+                exit(0);
             }
             lCnt = gCnt;
             std::this_thread::sleep_for(std::chrono::milliseconds(3000));
